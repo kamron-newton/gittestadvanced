@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="c735f297-4049-43c3-bb2f-27dcc1eeb939" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="CreateToken" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="c735f297-4049-43c3-bb2f-27dcc1eeb939fileName">CreateToken</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="restrequest" name="CreateToken" id="4295dc1f-7c9c-436a-a70d-f280acae5d53">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/tokens" methodName="Create Token" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="CreateToken" id="d20336c1-056d-46bf-8b35-4057faea8a47" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="content-type" value="application/x-www-form-urlencoded" xmlns="http://eviware.com/soapui/config"/></con:setting>
+        </con:settings>
+        <con:request>grant_type=password&amp;username=${#Project#SystemUser}&amp;password=${#Project#SystemUserPassword}&amp;response_type=token</con:request>
+        <con:originalUri>http://10.231.168.44/api/v1/authorization/tokens</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="98004478-db02-43e8-b8c4-4fe85a9017bb" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Basic ${#Project#BasicAuthorization}"/>
+          <con:entry key="content-type" value="application/x-www-form-urlencoded"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="7b3a1d8c-092b-49fd-bbba-801df02742f3">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="e460ab9c-c6df-4159-a900-cca111c2e400">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="120f0817-c2aa-498a-ba10-54f000886d16">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TranferTokenToProjectProps" id="b1508ede-743b-4cac-a0ed-bc91347ce811">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>AuthToken</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>CreateToken</con:sourceStep>
+        <con:sourcePath>$['AccessToken']</con:sourcePath>
+        <con:targetType>AuthToken</con:targetType>
+        <con:targetStep>#Project#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:targetTransferType>JSONPATH</con:targetTransferType>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>b1508ede-743b-4cac-a0ed-bc91347ce811</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:environmentSpec>
+    <con:entry environmentId="e460ab9c-c6df-4159-a900-cca111c2e400">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+    <con:entry environmentId="120f0817-c2aa-498a-ba10-54f000886d16">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+  </con:environmentSpec>
+</con:testCase>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="626702d0-938b-4f2d-af1d-770eab4dd6ae" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertOrganization" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="626702d0-938b-4f2d-af1d-770eab4dd6aefileName">UpsertOrganization</con:setting>
+    <con:setting id="GeneratableJUnitReport@Style">Multiple Pages</con:setting>
+    <con:setting id="GeneratableJUnitReport@Folder">C:\Git\Reports</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="Organizations" id="8789eb0f-930c-4f5a-881e-987704d982dd">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Organizations.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>true</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>OrganizationCode</con:property>
+      <con:property>OrganizationDescription</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>8</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetOrganizationByCode" id="fe59b0e4-88ad-4e59-aef7-952354213364">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/organizations/{organizationCode}" methodName="GetOrganizationByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetOrganizationByCode" id="ab67f298-521e-42fe-96c8-41b99fe78a26" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/organizations/organizationCode</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="d0e54a46-9a76-4696-a0ff-cdc52a63fdcc" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="organizationCode" value="${Organizations#OrganizationCode}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>organizationCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="OrgCondition" id="218443fd-2ea4-445c-a5ca-58fa34fb3f78">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${GetOrganizationByCode#HarResponse#$[\'status\']}' ).toInteger()
+if (status != 200) testRunner.gotoStepByName("AddOrganization")
+ else
+ 	testRunner.gotoStepByName("UpdateOrganization")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddOrganization" id="686dc52b-68ec-4e60-9fd5-268bf5d30b04">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/organizations" methodName="AddOrganization" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddOrganization" id="d9144dc1-ca81-4d36-a070-574ea4e7654f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "OrgCode" : "${Organizations#OrganizationCode}",\r
+   "Description" : "${Organizations#OrganizationDescription}",\r
+   "Status" : "A"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/organizations</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="383ac297-e618-4376-a2a0-6aadc4c37418" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value=""/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateOrganization" id="2b60d25d-7c49-4fb8-8087-77839a13e67f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/organizations/{organizationCode}" methodName="UpdateOrganization" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateOrganization" id="58c72e71-f99b-4ee7-a0d8-fd1e771b68f8" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "OrgCode":"${Organizations#OrganizationCode}",
+  "Description":"${Organizations#OrganizationDescription}",
+  "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/organizations/organizationCode</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="019a3a23-3af5-4e20-9105-b3a492cab222" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="organizationCode" value="${Organizations#OrganizationCode}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>organizationCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="OrgLoop" id="0d4b9778-3e9e-4062-8653-19c1fcf020f4">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>Organizations</dataSourceStep>
+      <targetStep>GetOrganizationByCode</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>8789eb0f-930c-4f5a-881e-987704d982dd</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0d4b9778-3e9e-4062-8653-19c1fcf020f4</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2b60d25d-7c49-4fb8-8087-77839a13e67f</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>686dc52b-68ec-4e60-9fd5-268bf5d30b04</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>218443fd-2ea4-445c-a5ca-58fa34fb3f78</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

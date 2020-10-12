@@ -3,6 +3,256 @@
   <con:settings>
     <con:setting id="c1b5663d-a326-4d44-bd29-30c1c55bd62dfileName">UpsertPointType</con:setting>
   </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="PointTypes" id="e7b32a1f-94a9-4b63-b95a-61213f1867e0">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/PointTypes.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>PointTypeCode</con:property>
+      <con:property>PointTypeDescription</con:property>
+      <con:property>PointTypeShortDescription</con:property>
+      <con:property>RedeemableInd</con:property>
+      <con:property>IsGiftable</con:property>
+      <con:property>SubType1Code</con:property>
+      <con:property>SubType1ShortDesc</con:property>
+      <con:property>SubType1Desc</con:property>
+      <con:property>SubType1ExpiryInd</con:property>
+      <con:property>SubType1ExpiryTimeUnit</con:property>
+      <con:property>SubType1ExpiryTimeValue</con:property>
+      <con:property>SubType2Code</con:property>
+      <con:property>SubType2ShortDesc</con:property>
+      <con:property>SubType2Desc</con:property>
+      <con:property>SubType2ExpiryInd</con:property>
+      <con:property>SubType2ExpiryTimeUnit</con:property>
+      <con:property>SubType2ExpiryTimeValue</con:property>
+      <con:property>CostPerPoint</con:property>
+      <con:property>CurrencyCode</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>3</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPointTypes" id="9518d5be-f5e3-42ea-9383-ebcc1e7ccf02">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes" methodName="GetPointTypes" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPointTypes" id="fc4889be-6254-4831-879b-efc7362da181" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="1999620e-a4f7-496d-9231-e8f18a9b828e" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="pointTypeCode" value="${PointTypes#PointTypeCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>pointTypeCode</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="PointTypeCond" id="d2422902-a4f5-4aed-ac5a-4eed5433c696">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def refPointTypeId = context.expand( '${GetPointTypes#Response#$[0][\'RefPointTypeId\']}' )
+if (refPointTypeId == "" ) 
+    testRunner.gotoStepByName("AddPointType")
+else
+     testRunner.gotoStepByName("PointTypeId")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddPointType" id="078736a7-4950-48a8-bdf3-1b56e2e07449">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes" methodName="AddPointType" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddPointType" id="fe0a2eb7-b9ef-475d-98e3-3dca0547ed79" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "PointSubTypes": [
+    {
+      "PointSubTypeCode": "${PointTypes#SubType1Code}" ,
+      "Desc": "${PointTypes#SubType1Desc}",
+      "ShortDesc": "${PointTypes#SubType1ShortDesc}",
+      "ExpiryInd": "${PointTypes#SubType1ExpiryInd}",
+       "ExpiryTimeValue":${PointTypes#SubType1ExpiryTimeValue} ,
+      "ExpiryTimeUnit": "${PointTypes#SubType1ExpiryTimeUnit}",
+    },
+   {
+      "PointSubTypeCode":  "${PointTypes#SubType2Code}",
+      "Desc": "${PointTypes#SubType2Desc}",
+      "ShortDesc": "${PointTypes#SubType2ShortDesc}",
+      "ExpiryInd": "${PointTypes#SubType2ExpiryInd}",
+      "ExpiryTimeValue":${PointTypes#SubType2ExpiryTimeValue} ,
+      "ExpiryTimeUnit": "${PointTypes#SubType2ExpiryTimeUnit}",
+    }
+  ],
+  "PointTypeCode": "${PointTypes#PointTypeCode}",
+  "PointTypeShortDescription": "${PointTypes#PointTypeShortDescription}",
+  "PointTypeDescription":  "${PointTypes#PointTypeDescription}",
+  "RedeemableInd":"${PointTypes#RedeemableInd}" ,
+  "IsGiftable": "${PointTypes#IsGiftable}",
+   "CostPerPoint":${PointTypes#CostPerPoint},
+   "CurrencyCode":"${PointTypes#CurrencyCode}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="bb680f09-e207-4ad5-9192-8dd2b5bda769" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="PointTypeId" id="4eefaae1-66ac-4fed-923f-36860d901aa9">
+    <con:settings/>
+    <con:config>
+      <script>def refPointTypeId = context.expand( '${GetPointTypes#Response#$[0][\'RefPointTypeId\']}' )
+def response = context.expand( '${AddPointType#Response}' )
+
+if(response==null || response =="")
+  	return refPointTypeId;
+ else
+ {
+    refPointTypeId = context.expand( '${AddPointType#Response#$[\'RefPointTypeId\']}' )
+    return refPointTypeId;
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdatePointType" id="fe39db70-886b-4997-b33f-165062b3b3c6">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes/{pointTypeId}" methodName="UpdatePointType" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdatePointType" id="c3246cb2-a557-465e-aa9e-3f67cc8f1808" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{ 
+  "PointTypeCode": "${PointTypes#PointTypeCode}",
+  "PointTypeShortDescription": "${PointTypes#PointTypeShortDescription}",
+  "PointTypeDescription":  "${PointTypes#PointTypeDescription}",
+  "RedeemableInd": "${PointTypes#RedeemableInd}",
+  "IsGiftable": "${PointTypes#IsGiftable}",
+  "CostPerPoint":${PointTypes#CostPerPoint},
+  "CurrencyCode":"${PointTypes#CurrencyCode}",
+  "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes/pointTypeId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="12f7d738-bf96-499b-a50a-ae52de21ce05" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="pointTypeId" value="${PointTypeId#result}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>pointTypeId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPointTypeById" id="7089c728-632e-4b75-a3d1-54363b32db71">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes/{pointTypeId}" methodName="GetPointTypeById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPointTypeById" id="2899880f-171d-48a4-b4b0-3e0ed267ef6b" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes/pointTypeId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="81d52ca7-f327-44c7-a619-e138b85ea255" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="pointTypeId" value="${UpdatePointType#Response#$['RefPointTypeId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>pointTypeId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="PointTypeLoop" id="9a33ce6f-f68f-422d-b8f8-fbbc91a17b27">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>PointTypes</dataSourceStep>
+      <targetStep>GetPointTypes</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>7089c728-632e-4b75-a3d1-54363b32db71</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
 </con:testCase>

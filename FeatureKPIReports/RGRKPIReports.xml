@@ -929,6 +929,115 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="GetDifferentDate" id="9eeb1e2e-2e15-454f-8658-7a5ce1d3991a">
+    <con:settings/>
+    <con:config>
+      <script>import java.text.SimpleDateFormat
+
+// Gets the current date
+def date = new Date()
+def currentDate = new SimpleDateFormat("MM/dd/yyyy")
+
+final Calendar calendar = Calendar.getInstance();
+calendar.setTime(date);
+
+// Add +1 day to the current date
+calendar.add(Calendar.DAY_OF_YEAR, 1);
+def nextDayDate = currentDate.format(calendar.getTime()); 
+log.info(nextDayDate)
+testRunner.testCase.testSuite.project.setPropertyValue( "NextDayDate", nextDayDate)
+
+// Add +365 days to the current date
+calendar.add(Calendar.DAY_OF_YEAR, 365);
+def nextYearDate = currentDate.format(calendar.getTime()); 
+log.info(nextYearDate)
+testRunner.testCase.testSuite.project.setPropertyValue( "NextYearDate", nextYearDate)
+
+
+def reportType = context.expand( '${KPIReports#ReportType}' )
+
+if(reportType == "TOTALCUSTOMERS" || reportType == "MONTHENROLLMENTS" || reportType == "MONTHTRANSACTIONS" || reportType == "MONTHPOINTS" ||reportType == "DAILYPROGRAMSUMMARY")
+{
+	testRunner.gotoStepByName("GetKPIReportsNextDayDate")
+	testRunner.gotoStepByName("GetKPIReportsNextYearDate")
+} else
+	testRunner.gotoStepByName("GetKPIReportsNextDayDate")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetKPIReportsNextDayDate" id="373bd0e0-ce3d-499e-a752-a602242333e3">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/reports/kpi/{reportType}" methodName="GetKPIReports" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetKPIReportsNextDayDate" id="6deb6f51-102b-4600-9f87-bffced64e994" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://d1aldv-pveapi.skynetlowerenv.com/api/v1/reports/kpi/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="aa599a00-8d25-4582-bdc9-52bab91e8a31" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="TOTALCUSTOMERS"/>
+          <con:entry key="reportDate" value="${#Project#NextDayDate}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>reportDate</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetKPIReportsNextYearDate" id="2419626e-9812-477b-867a-d64b2b4f3cfa">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/reports/kpi/{reportType}" methodName="GetKPIReports" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetKPIReportsNextYearDate" id="6deb6f51-102b-4600-9f87-bffced64e994" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://d1aldv-pveapi.skynetlowerenv.com/api/v1/reports/kpi/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="aa599a00-8d25-4582-bdc9-52bab91e8a31" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="TOTALCUSTOMERS"/>
+          <con:entry key="reportDate" value="${#Project#NextYearDate}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>reportDate</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:testStep type="datasourceloop" name="KPIReportsLoop" id="254a6816-1dbb-441e-90a3-cb82ed4f2ef6">
     <con:settings/>
     <con:config>
@@ -937,7 +1046,16 @@
       <discardResults>true</discardResults>
     </con:config>
   </con:testStep>
-  <con:properties/>
+  <con:properties>
+    <con:property>
+      <con:name>NextDate</con:name>
+      <con:value>10/30/2020</con:value>
+    </con:property>
+    <con:property>
+      <con:name>NextDayDate</con:name>
+      <con:value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>b989eaa9-4f7c-4cc9-bf20-dcdb05e64e1f</con:testStepId>
@@ -986,6 +1104,16 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>254a6816-1dbb-441e-90a3-cb82ed4f2ef6</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>9eeb1e2e-2e15-454f-8658-7a5ce1d3991a</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2419626e-9812-477b-867a-d64b2b4f3cfa</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

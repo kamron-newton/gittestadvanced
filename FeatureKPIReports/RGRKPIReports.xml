@@ -860,6 +860,29 @@
       <discardResults>true</discardResults>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="GetDifferentDates" id="9eeb1e2e-2e15-454f-8658-7a5ce1d3991a">
+    <con:settings/>
+    <con:config>
+      <script>import java.text.SimpleDateFormat
+
+// Gets the current date
+def date = new Date()
+def currentDate = new SimpleDateFormat("MM/dd/yyyy")
+
+final Calendar calendar = Calendar.getInstance();
+calendar.setTime(date);
+
+// Add +1 day to the current date
+calendar.add(Calendar.DAY_OF_YEAR, 1);
+def nextDayDate = currentDate.format(calendar.getTime()); 
+testRunner.testCase.testSuite.project.setPropertyValue( "NextDayDate", nextDayDate)
+
+// Add +365 days to the current date
+calendar.add(Calendar.DAY_OF_YEAR, 365);
+def nextYearDate = currentDate.format(calendar.getTime()); 
+testRunner.testCase.testSuite.project.setPropertyValue( "NextYearDate", nextYearDate)</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="datasource" name="KPIReports" id="09f95d92-f52b-4a55-8b91-7d57d43feb83">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -929,33 +952,13 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="GetDifferentDate" id="9eeb1e2e-2e15-454f-8658-7a5ce1d3991a">
+  <con:testStep type="groovy" name="GetKPIReportsCond" id="b2aeea16-a3cc-412c-bb36-6e563729635d">
     <con:settings/>
     <con:config>
-      <script>import java.text.SimpleDateFormat
-
-// Gets the current date
-def date = new Date()
-def currentDate = new SimpleDateFormat("MM/dd/yyyy")
-
-final Calendar calendar = Calendar.getInstance();
-calendar.setTime(date);
-
-// Add +1 day to the current date
-calendar.add(Calendar.DAY_OF_YEAR, 1);
-def nextDayDate = currentDate.format(calendar.getTime()); 
-log.info(nextDayDate)
-testRunner.testCase.testSuite.project.setPropertyValue( "NextDayDate", nextDayDate)
-
-// Add +365 days to the current date
-calendar.add(Calendar.DAY_OF_YEAR, 365);
-def nextYearDate = currentDate.format(calendar.getTime()); 
-log.info(nextYearDate)
-testRunner.testCase.testSuite.project.setPropertyValue( "NextYearDate", nextYearDate)
-
-
+      <script>// Reading all the reports from the DataSource File
 def reportType = context.expand( '${KPIReports#ReportType}' )
 
+// Adding a condition based on reportType
 if(reportType == "TOTALCUSTOMERS" || reportType == "MONTHENROLLMENTS" || reportType == "MONTHTRANSACTIONS" || reportType == "MONTHPOINTS" ||reportType == "DAILYPROGRAMSUMMARY")
 {
 	testRunner.gotoStepByName("GetKPIReportsNextDayDate")
@@ -986,7 +989,7 @@ if(reportType == "TOTALCUSTOMERS" || reportType == "MONTHENROLLMENTS" || reportT
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="reportType" value="TOTALCUSTOMERS"/>
+          <con:entry key="reportType" value="${KPIReports#ReportType}"/>
           <con:entry key="reportDate" value="${#Project#NextDayDate}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -1023,7 +1026,7 @@ if(reportType == "TOTALCUSTOMERS" || reportType == "MONTHENROLLMENTS" || reportT
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="reportType" value="TOTALCUSTOMERS"/>
+          <con:entry key="reportType" value="${KPIReports#ReportType}"/>
           <con:entry key="reportDate" value="${#Project#NextYearDate}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -1043,7 +1046,7 @@ if(reportType == "TOTALCUSTOMERS" || reportType == "MONTHENROLLMENTS" || reportT
     <con:config>
       <dataSourceStep>KPIReports</dataSourceStep>
       <targetStep>GenerateKPIReports</targetStep>
-      <discardResults>true</discardResults>
+      <discardResults>false</discardResults>
     </con:config>
   </con:testStep>
   <con:properties>
@@ -1114,6 +1117,11 @@ if(reportType == "TOTALCUSTOMERS" || reportType == "MONTHENROLLMENTS" || reportT
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>2419626e-9812-477b-867a-d64b2b4f3cfa</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>b2aeea16-a3cc-412c-bb36-6e563729635d</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:resource name="GenerateKPIReports" path="/api/v1/infrastructure/kpi/{reportType}" id="4015c3b9-a736-43de-b008-66296363f6a4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config">
+<con:resource name="GetKPIReports" path="/api/v1/reports/kpi/{reportType}" id="af0adae6-dad6-4f5d-bc09-a59ae98906c1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="4015c3b9-a736-43de-b008-66296363f6a4fileName">GenerateKPIReports</con:setting>
+    <con:setting id="af0adae6-dad6-4f5d-bc09-a59ae98906c1fileName">GetKPIReports</con:setting>
   </con:settings>
   <con:parameters>
     <con:parameter required="true">
@@ -10,8 +10,14 @@
       <con:style>TEMPLATE</con:style>
       <con:default>reportType</con:default>
     </con:parameter>
+    <con:parameter required="true">
+      <con:name>reportDate</con:name>
+      <con:value>{reportDate}</con:value>
+      <con:style>QUERY</con:style>
+      <con:default>{reportDate}</con:default>
+    </con:parameter>
   </con:parameters>
-  <con:method name="GenerateKPI" id="6cbba147-f7f4-49a8-9deb-0402b63c542e" method="POST">
+  <con:method name="GetKPIReports" id="4f4df47d-dbce-48b1-89ca-940773e7066b" method="GET">
     <con:settings/>
     <con:parameters>
       <con:parameter required="true">
@@ -27,33 +33,17 @@
         <con:default/>
       </con:parameter>
       <con:parameter required="true">
-        <con:name>content-type</con:name>
-        <con:value/>
-        <con:style>HEADER</con:style>
-        <con:default/>
-      </con:parameter>
-      <con:parameter required="true">
         <con:name>Authorization</con:name>
         <con:value/>
         <con:style>HEADER</con:style>
         <con:default/>
       </con:parameter>
     </con:parameters>
-    <con:representation type="FAULT">
-      <con:mediaType>application/json</con:mediaType>
-      <con:status>400</con:status>
-      <con:params/>
-      <con:element xmlns:rep="https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType">rep:Fault</con:element>
-    </con:representation>
-    <con:representation type="REQUEST">
-      <con:mediaType>application/json</con:mediaType>
-      <con:params/>
-    </con:representation>
     <con:representation type="RESPONSE">
-      <con:mediaType>application/json; charset=utf-8</con:mediaType>
-      <con:status>200</con:status>
+      <con:mediaType xsi:nil="true"/>
+      <con:status>0</con:status>
       <con:params/>
-      <con:element xmlns:rep="https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType">rep:Response</con:element>
+      <con:element>data</con:element>
     </con:representation>
     <con:representation type="FAULT">
       <con:mediaType xsi:nil="true"/>
@@ -61,13 +51,25 @@
       <con:params/>
       <con:element>data</con:element>
     </con:representation>
+    <con:representation type="RESPONSE">
+      <con:mediaType>application/json; charset=utf-8</con:mediaType>
+      <con:status>200</con:status>
+      <con:params/>
+      <con:element xmlns:kpi="https://d1aldv-pveapi.skynetlowerenv.com/api/v1/reports/kpi/">kpi:Response</con:element>
+    </con:representation>
+    <con:representation type="FAULT">
+      <con:mediaType>application/json</con:mediaType>
+      <con:status>400</con:status>
+      <con:params/>
+      <con:element xmlns:kpi="https://q3alin-pveapi.skynetlowerenv.com/api/v1/reports/kpi/">kpi:Fault</con:element>
+    </con:representation>
     <con:representation type="FAULT">
       <con:mediaType>application/json; charset=utf-8</con:mediaType>
       <con:status>400</con:status>
       <con:params/>
-      <con:element xmlns:rep="https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType">rep:Fault</con:element>
+      <con:element xmlns:kpi="https://q3alin-pveapi.skynetlowerenv.com/api/v1/reports/kpi/">kpi:Fault</con:element>
     </con:representation>
-    <con:request name="GenerateKPI" id="bb504b09-3d63-442d-8d28-3a30395d794c" mediaType="application/json" postQueryString="false">
+    <con:request name="GetKPIReports" id="6deb6f51-102b-4600-9f87-bffced64e994" mediaType="application/json">
       <con:settings>
         <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
       </con:settings>
@@ -80,16 +82,15 @@
       <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
       <con:parameters>
         <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-        <con:entry key="content-type" value="application/json"/>
         <con:entry key="Accept-Language" value="en-US"/>
         <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
       </con:parameters>
       <con:parameterOrder>
         <con:entry>reportType</con:entry>
-        <con:entry>Authorization</con:entry>
+        <con:entry>reportDate</con:entry>
         <con:entry>Program-Code</con:entry>
         <con:entry>Accept-Language</con:entry>
-        <con:entry>content-type</con:entry>
+        <con:entry>Authorization</con:entry>
       </con:parameterOrder>
     </con:request>
   </con:method>

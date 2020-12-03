@@ -1444,6 +1444,7 @@
               <con:operator>&lt;=</con:operator>
               <con:enabled>true</con:enabled>
               <con:expectedValue>${GenerateKPIReportsMonthPoints#Response#$['CurrentMonthPoints']['TotalPoints']}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
               <con:numberType>true</con:numberType>
             </con:elements>
             <con:originalMessage><![CDATA[<Response xmlns="https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType">
@@ -1483,6 +1484,96 @@
           <con:entry>content-type</con:entry>
         </con:parameterOrder>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GenerateKPIReportsTopBonusAfterActivity" id="38fff331-5d4f-42f7-8e89-67d5eb22176b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPI" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReportsTopBonusAfterActivity" id="bb504b09-3d63-442d-8d28-3a30395d794c" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9214f705-2f0a-4be1-9107-a8a985969c34" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="TOPBONUS"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetKPIReportsTopBonusAfterActivity" id="04024625-1c4c-40f4-bb96-0a5d055a3427">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/reports/kpi/{reportType}" methodName="GetKPIReports" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetKPIReportsTopBonusAfterActivity" id="6deb6f51-102b-4600-9f87-bffced64e994" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://d1aldv-pveapi.skynetlowerenv.com/api/v1/reports/kpi/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="aa599a00-8d25-4582-bdc9-52bab91e8a31" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="TOPBONUS"/>
+          <con:entry key="reportDate" value="${#Project#NextYearDate}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>reportDate</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="TopBonusAfterActivityAssertion" id="062c2f6c-61e0-4df8-9c50-ddeb0fb2da55">
+    <con:settings/>
+    <con:config>
+      <script>def fixedMomentCode = context.expand( '${GetKPIReports#Response#$[\'TopBonuses\'][0][\'BonusCode\']}')
+def topBonusBefore = context.expand( '${GetKPIReportsTopBonus#Response#$[\'TopBonuses\'][?(@.BonusCode==\''+fixedMomentCode+'\')].PointsAmount}' ).replace("[","").replace("]","").toBigDecimal()
+//return topBonusBefore.replace("[","").replace("]","").toBigDecimal();
+
+def topBonusAfter = context.expand( '${GetKPIReportsTopBonusAfterActivity#Response#$[\'TopBonuses\'][?(@.BonusCode==\''+fixedMomentCode+'\')].PointsAmount}' ).replace("[","").replace("]","").toBigDecimal()
+//return topBonusAfter.replace("[","").replace("]","").toBigDecimal();
+
+//def topBonusBefore = context.expand( '${TopBonusBeforeActivity#result}')
+//def topBonusAfter = context.expand( '${TopBonusAfterActivity#result}')
+assert topBonusBefore &lt;= topBonusAfter</script>
     </con:config>
   </con:testStep>
   <con:properties/>

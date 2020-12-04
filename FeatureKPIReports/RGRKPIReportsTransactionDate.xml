@@ -1197,7 +1197,7 @@
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="MessageContentAssertion" id="12065961-c283-40f8-a0be-59f7c6db2223" name="TotalDailyPointsBefore &lt;= TotalDailyPointsAfter">
+        <con:assertion type="MessageContentAssertion" id="12065961-c283-40f8-a0be-59f7c6db2223" name="TotalDailyPointsBeforeActivity &lt;= TotalDailyPointsAfterActivity">
           <con:configuration xsi:type="con:MessageContentAssertion">
             <con:elements>
               <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
@@ -1423,7 +1423,7 @@
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="MessageContentAssertion" name="TotalPointsBefore &lt;= TotalPointsAfter" id="2f2f333b-6fb1-4cdc-ae72-59e7cdab45d1">
+        <con:assertion type="MessageContentAssertion" name="TotalPointsBeforeActivity &lt;= TotalPointsAfterActivity" id="2f2f333b-6fb1-4cdc-ae72-59e7cdab45d1">
           <con:configuration xsi:type="con:MessageContentAssertion">
             <con:elements>
               <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
@@ -1565,15 +1565,351 @@
     <con:settings/>
     <con:config>
       <script>def fixedMomentCode = context.expand( '${GetKPIReports#Response#$[\'TopBonuses\'][0][\'BonusCode\']}')
-def topBonusBefore = context.expand( '${GetKPIReportsTopBonus#Response#$[\'TopBonuses\'][?(@.BonusCode==\''+fixedMomentCode+'\')].PointsAmount}' ).replace("[","").replace("]","").toBigDecimal()
-//return topBonusBefore.replace("[","").replace("]","").toBigDecimal();
+def topBonusBeforeActivity = context.expand( '${GetKPIReportsTopBonus#Response#$[\'TopBonuses\'][?(@.BonusCode==\''+fixedMomentCode+'\')].PointsAmount}' ).replace("[","").replace("]","").toBigDecimal()
+def topBonusAfterActivity = context.expand( '${GetKPIReportsTopBonusAfterActivity#Response#$[\'TopBonuses\'][?(@.BonusCode==\''+fixedMomentCode+'\')].PointsAmount}' ).replace("[","").replace("]","").toBigDecimal()
 
-def topBonusAfter = context.expand( '${GetKPIReportsTopBonusAfterActivity#Response#$[\'TopBonuses\'][?(@.BonusCode==\''+fixedMomentCode+'\')].PointsAmount}' ).replace("[","").replace("]","").toBigDecimal()
-//return topBonusAfter.replace("[","").replace("]","").toBigDecimal();
-
-//def topBonusBefore = context.expand( '${TopBonusBeforeActivity#result}')
-//def topBonusAfter = context.expand( '${TopBonusAfterActivity#result}')
-assert topBonusBefore &lt;= topBonusAfter</script>
+assert topBonusBeforeActivity &lt;= topBonusAfterActivity</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddAdjustment" id="bb7ba70b-ce34-4e4b-bed3-197090b04d57">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="AddAdjustment" resourcePath="/api/v1/profiles/{profileId}/adjustments" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddAdjustment" id="201df897-2a9e-46b6-814a-720fee3ac52e" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "AdjustmentReasonCode": "PPGOODW",
+  "AdjustmentComment": "Automated adjustment for reward progress test",
+  "NumPoints": "1000"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/adjustments</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="3e0f5849-4a67-4f0f-8241-de038e9d20ee" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfileRGR#Response#$['ProfileId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GenerateKPIReportsDailySummaryAfterAdjustment" id="8514df0f-3eca-4a89-8681-dc0b7bdf89aa">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPI" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReportsDailySummaryAfterAdjustment" id="bb504b09-3d63-442d-8d28-3a30395d794c" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9214f705-2f0a-4be1-9107-a8a985969c34" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="MessageContentAssertion" id="12065961-c283-40f8-a0be-59f7c6db2223" name="TotalDailyPointsBeforeAdjustment &lt;= TotalDailyPointsAfterAdjustment">
+          <con:configuration xsi:type="con:MessageContentAssertion">
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:ReportType[1]</con:xpath>
+              <con:element>ReportType</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DAILYPROGRAMSUMMARY</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:KpiSummaryReportId[1]</con:xpath>
+              <con:element>KpiSummaryReportId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>4bbeba53-8ce0-4eb6-af37-5767df645d03</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:TotalEnrollments[1]</con:xpath>
+              <con:element>TotalEnrollments</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>18</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:TotalRevenue[1]</con:xpath>
+              <con:element>TotalRevenue</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>33158.85</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:CurrencyCode[1]</con:xpath>
+              <con:element>CurrencyCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>USD</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:TotalTransactions[1]</con:xpath>
+              <con:element>TotalTransactions</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>41</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:TotalPointsEarned[1]</con:xpath>
+              <con:element>TotalPointsEarned</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>&lt;=</con:operator>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>${GenerateKPIReportsDailySummaryAfterActivity#Response#$['DailyProgramSummary']['TotalPointsEarned']}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>true</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:ReportStartDate[1]</con:xpath>
+              <con:element>ReportStartDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2020-12-02T00:00:00Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:ReportEndDate[1]</con:xpath>
+              <con:element>ReportEndDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2020-12-02T23:59:59.999Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:ProgramCode[1]</con:xpath>
+              <con:element>ProgramCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PP</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:Status[1]</con:xpath>
+              <con:element>Status</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>A</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:CreateUser[1]</con:xpath>
+              <con:element>CreateUser</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AUTO_USER</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:CreateDate[1]</con:xpath>
+              <con:element>CreateDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2020-12-01T13:32:48.584755Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:UpdateUser[1]</con:xpath>
+              <con:element>UpdateUser</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AUTO_USER</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:UpdateDate[1]</con:xpath>
+              <con:element>UpdateDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2020-12-02T00:57:54.7650586Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:originalMessage><![CDATA[<Response xmlns="https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType">
+   <ReportType>DAILYPROGRAMSUMMARY</ReportType>
+   <DailyProgramSummary>
+      <KpiSummaryReportId>4bbeba53-8ce0-4eb6-af37-5767df645d03</KpiSummaryReportId>
+      <TotalEnrollments>18</TotalEnrollments>
+      <TotalRevenue>33158.85</TotalRevenue>
+      <CurrencyCode>USD</CurrencyCode>
+      <TotalTransactions>41</TotalTransactions>
+      <TotalPointsEarned>9163756.8</TotalPointsEarned>
+      <ReportStartDate>2020-12-02T00:00:00Z</ReportStartDate>
+      <ReportEndDate>2020-12-02T23:59:59.999Z</ReportEndDate>
+      <ProgramCode>PP</ProgramCode>
+      <Status>A</Status>
+      <CreateUser>AUTO_USER</CreateUser>
+      <CreateDate>2020-12-01T13:32:48.584755Z</CreateDate>
+      <UpdateUser>AUTO_USER</UpdateUser>
+      <UpdateDate>2020-12-02T00:57:54.7650586Z</UpdateDate>
+   </DailyProgramSummary>
+</Response>]]></con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="DAILYPROGRAMSUMMARY"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GenerateKPIReportsMonthPointsAfterAdjustment" id="2459b8df-2037-41fe-a376-fd8f773a68e4">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPI" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReportsMonthPointsAfterAdjustment" id="bb504b09-3d63-442d-8d28-3a30395d794c" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9214f705-2f0a-4be1-9107-a8a985969c34" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="MessageContentAssertion" name="TotalPointsBeforeAdjustment == TotalPointsAfterAdjustment" id="2f2f333b-6fb1-4cdc-ae72-59e7cdab45d1">
+          <con:configuration xsi:type="con:MessageContentAssertion">
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:ReportType[1]</con:xpath>
+              <con:element>ReportType</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>MONTHPOINTS</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType';
+//ns1:Response[1]/ns1:CurrentMonthPoints[1]/ns1:TotalPoints[1]</con:xpath>
+              <con:element>TotalPoints</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>${GenerateKPIReportsMonthPointsAfterActivity#Response#$['CurrentMonthPoints']['TotalPoints']}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>true</con:numberType>
+            </con:elements>
+            <con:originalMessage><![CDATA[<Response xmlns="https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/reportType">
+   <ReportType>MONTHPOINTS</ReportType>
+   <CurrentMonthPoints>
+      <KpiMonthlyPointsId>eae5b7be-a0e7-44d8-933f-776cb152618b</KpiMonthlyPointsId>
+      <TotalPoints>6541370.60755</TotalPoints>
+      <ReportStartDate>2020-12-01T00:00:00Z</ReportStartDate>
+      <ReportEndDate>2020-12-01T23:59:59.999Z</ReportEndDate>
+      <ProgramCode>PP</ProgramCode>
+      <Status>A</Status>
+      <CreateUser>AUTO_USER</CreateUser>
+      <CreateDate>2020-12-01T13:32:47.757697Z</CreateDate>
+      <UpdateUser>AUTO_USER</UpdateUser>
+      <UpdateDate>2020-12-02T01:18:38.197189Z</UpdateDate>
+   </CurrentMonthPoints>
+</Response>]]></con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="MONTHPOINTS"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:properties/>

@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:resource name="Transaction(v2)" path="/api/v2" id="ac992b68-5b47-4501-9a16-0ea65fe142db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config">
+<con:resource name="Reports" path="/api/v1/reports" id="49d91a62-56fd-4cd1-8504-06aed8911e80" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="ac992b68-5b47-4501-9a16-0ea65fe142dbfileName">Transaction%28v2%29</con:setting>
+    <con:setting id="49d91a62-56fd-4cd1-8504-06aed8911e80fileName">Reports</con:setting>
   </con:settings>
   <con:parameters/>
-  <con:resource name="Financial" path="transaction" id="6018347e-7881-4866-8a19-3fb7280d3214">
+  <con:resource name="KPIReports" path="kpi/{reportType}" id="11f06764-2592-41af-bccd-983ce2c5264a">
     <con:settings/>
-    <con:parameters/>
-    <con:method name="ProcessTransaction" id="55c2c58a-f11d-4397-b8b9-184d38e1b3bd" method="POST">
+    <con:parameters>
+      <con:parameter required="true">
+        <con:name>reportType</con:name>
+        <con:value>reportType</con:value>
+        <con:style>TEMPLATE</con:style>
+        <con:default>reportType</con:default>
+      </con:parameter>
+    </con:parameters>
+    <con:method name="GetKPIReports" id="1588fee1-24c3-40ad-9ed4-92d0a1b72c86" method="GET">
       <con:settings/>
       <con:parameters>
         <con:parameter required="true">
-          <con:name>Authorization</con:name>
+          <con:name>reportDate</con:name>
           <con:value/>
-          <con:style>HEADER</con:style>
+          <con:style>QUERY</con:style>
           <con:default/>
         </con:parameter>
         <con:parameter required="true">
-          <con:name>content-type</con:name>
+          <con:name>Authorization</con:name>
           <con:value/>
           <con:style>HEADER</con:style>
           <con:default/>
@@ -39,13 +46,21 @@
         <con:mediaType>application/json; charset=utf-8</con:mediaType>
         <con:status>200</con:status>
         <con:params/>
-        <con:element xmlns:tran="https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction">tran:Response</con:element>
+        <con:element xmlns:top="https://q3alin-pveapi.skynetlowerenv.com/api/v1/reports/kpi/TOPBONUS">top:Response</con:element>
       </con:representation>
-      <con:representation type="REQUEST">
+      <con:representation type="FAULT">
         <con:mediaType>application/json</con:mediaType>
+        <con:status>400</con:status>
         <con:params/>
+        <con:element xmlns:abcd="https://q3alin-pveapi.skynetlowerenv.com/api/v1/reports/kpi/ABCD">abcd:Fault</con:element>
       </con:representation>
-      <con:request name="ProcessTransaction" id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" postQueryString="false">
+      <con:representation type="FAULT">
+        <con:mediaType>application/json; charset=utf-8</con:mediaType>
+        <con:status>400</con:status>
+        <con:params/>
+        <con:element xmlns:tot="https://q3alin-pveapi.skynetlowerenv.com/api/v1/reports/kpi/TOTALCUSTOMERS">tot:Fault</con:element>
+      </con:representation>
+      <con:request name="GetKPIReports" id="abeaa011-f26f-4a3a-aaeb-22f72374db7f" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -58,32 +73,18 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="reportDate" value="reportDate"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>reportDate</con:entry>
           <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
           <con:entry>Accept-Language</con:entry>
           <con:entry>Program-Code</con:entry>
         </con:parameterOrder>
       </con:request>
     </con:method>
   </con:resource>
-  <con:method name="Method 1" id="435bac81-42d1-4754-b94e-f5d0062a351c" method="GET">
-    <con:settings/>
-    <con:parameters/>
-    <con:request name="Request 1" id="dfc288e1-4c69-41e0-96c3-91e1ea362f78" mediaType="application/json">
-      <con:settings/>
-      <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
-      <con:request/>
-      <con:credentials>
-        <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-        <con:authType>No Authorization</con:authType>
-      </con:credentials>
-      <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-      <con:parameters/>
-    </con:request>
-  </con:method>
 </con:resource>

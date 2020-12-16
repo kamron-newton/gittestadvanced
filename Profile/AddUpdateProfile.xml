@@ -91,10 +91,10 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddProfileNew" id="5d531d47-1509-48e5-ad2b-3a5fe7ca1536">
+  <con:testStep type="restrequest" name="AddProfile" id="5d531d47-1509-48e5-ad2b-3a5fe7ca1536">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/profiles" methodName="ProcessProfile" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="AddProfileNew" id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="AddProfile" id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -189,23 +189,22 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileByID" id="453395e2-2963-41a7-9d2f-daf9eead6442">
+  <con:testStep type="restrequest" name="GetProfileByIDNew" id="a66135f7-7f88-4c86-b9ea-01ccb5b6d253">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}" methodName="GetProfileByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProfileByID" id="5f13c035-5675-441b-aedb-a78e3edcb213" mediaType="application/json">
+      <con:restRequest name="GetProfileByIDNew" id="caa82c6c-fb0c-4527-9a62-8abf1c42fa9d" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>http://10.231.168.44/api/v1/profiles/0253436f-7a5a-4c69-b95b-a5616e0c0cd4</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="19a1b3b9-79f7-43dd-b113-61eb8875483f" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/dba3b353-51f3-4853-ae11-622b791c330e</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="278f93e6-b2dd-45a6-907b-a31f10b52ca3" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="15db7b88-d40d-4815-a895-37386b1801c7" name="Gender">
+        <con:assertion type="JsonPath Match" name="Gender" id="cfa899dd-1a3f-40a9-a58e-f7f6bc06a6b6">
           <con:configuration>
             <path>$['Gender']</path>
             <content>${Profile#Gender}</content>
@@ -214,7 +213,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="f8e5b71e-89c5-44d8-a84a-3b9e95f59bc1" name="AddressLine1">
+        <con:assertion type="JsonPath Match" name="AddressLine1" id="f04dddde-55a7-431c-9cb8-5d8f4107c3e2">
           <con:configuration>
             <path>$['Addresses'][0]['AddressLine1']</path>
             <content>${Profile#AddressLine1}</content>
@@ -223,7 +222,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="42996197-6236-4f22-9657-b1ea766986c8" name="State - Configured in reference to City">
+        <con:assertion type="JsonPath Match" name="State - Configured in reference to City" id="90c0f3e7-5af0-4335-97ed-a76e901067ad">
           <con:configuration>
             <path>$.Addresses[?(@.City=='${Profile#City}')].StateCode</path>
             <content>[${Profile#StateCode}]</content>
@@ -232,7 +231,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="f422567d-71b0-4666-a81f-e18c76ecf652" name="SourceEmailAddress">
+        <con:assertion type="JsonPath Match" name="SourceEmailAddress" id="bc0c74cb-f29e-4c86-ad70-46c9f7dc8b19">
           <con:configuration>
             <path>$['Emails'][0]['SourceEmailAddress']</path>
             <content>${Profile#EmailAddress}</content>
@@ -241,7 +240,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="17ad9d36-3532-4e39-85b0-766b2c17b918" name="Phone-ChannelCode">
+        <con:assertion type="JsonPath Match" name="Phone-ChannelCode" id="3381e4d2-e596-428c-b8c6-d32f850ca453">
           <con:configuration>
             <path>$.Phones[?(@.PhoneNumber=='${Profile#PhoneNumber}')].ChannelCode</path>
             <content>[${Profile#PhoneChannelCode}]</content>
@@ -257,7 +256,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${AddProfileNew#Response#$['ProfileId']}"/>
+          <con:entry key="profileId" value="${AddProfile#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -266,14 +265,9 @@
           <con:entry>profileId</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Program-Code</con:entry>
-          <con:entry>Accept-Language</con:entry>
           <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
         </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="120f0817-c2aa-498a-ba10-54f000886d16">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
@@ -363,18 +357,18 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateProfileAddressNew" id="c85a345c-f9ec-4e7d-9df4-806417e5a3d9">
+  <con:testStep type="restrequest" name="UpdateProfileAddress" id="c85a345c-f9ec-4e7d-9df4-806417e5a3d9">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/profiles" methodName="ProcessProfile" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateProfileAddressNew" id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="UpdateProfileAddress" id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request>{
-  "ProfileId": "${GetProfileByID#Response#$['ProfileId']}",
+  "ProfileId": "${GetProfileByIDNew#Response#$['ProfileId']}",
   "Addresses": [
     {
-     "AddressId" : "${GetProfileByID#Response#$['Addresses'][0]['AddressId']}",
+     "AddressId" : "${GetProfileByIDNew#Response#$['Addresses'][0]['AddressId']}",
       "AddressLine1":"${UpdateProfileChannels#NewAddressLine1}",
       "AddressLine2": "${UpdateProfileChannels#NewAddressLine2}",
       "AddressLine3": "",
@@ -418,23 +412,22 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileByIDToVerifyNewAddress" id="92c7eeec-adf5-4413-91a4-98158776c72d">
+  <con:testStep type="restrequest" name="GetProfileByIDToVerifyNewAddressNew" id="d9b8f831-2bc0-4a45-8019-d67afacb2b3a">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}" methodName="GetProfileByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProfileByIDToVerifyNewAddress" id="5f13c035-5675-441b-aedb-a78e3edcb213" mediaType="application/json">
+      <con:restRequest name="GetProfileByIDToVerifyNewAddressNew" id="caa82c6c-fb0c-4527-9a62-8abf1c42fa9d" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>http://10.231.168.44/api/v1/profiles/0253436f-7a5a-4c69-b95b-a5616e0c0cd4</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="19a1b3b9-79f7-43dd-b113-61eb8875483f" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/dba3b353-51f3-4853-ae11-622b791c330e</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f2ea50a6-c63f-4138-9729-60f783ddeaea" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="f8e5b71e-89c5-44d8-a84a-3b9e95f59bc1" name="New AddressLine1">
+        <con:assertion type="JsonPath Match" name="New AddressLine1" id="99207db1-c686-4c80-8e1d-2eb1563cdadb">
           <con:configuration>
             <path>$['Addresses'][0]['AddressLine1']</path>
             <content>${UpdateProfileChannels#NewAddressLine1}</content>
@@ -443,7 +436,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="42996197-6236-4f22-9657-b1ea766986c8" name="New State - Configured in reference to City">
+        <con:assertion type="JsonPath Match" name="New State - Configured in reference to City" id="1566b3ff-0c15-49d1-9a31-bdc612b50eeb">
           <con:configuration>
             <path>$.Addresses[?(@.City=='${UpdateProfileChannels#NewCity}')].StateCode</path>
             <content>[${UpdateProfileChannels#NewStateCode}]</content>
@@ -459,7 +452,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${AddProfileNew#Response#$['ProfileId']}"/>
+          <con:entry key="profileId" value="${AddProfile#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -468,26 +461,21 @@
           <con:entry>profileId</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Program-Code</con:entry>
-          <con:entry>Accept-Language</con:entry>
           <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
         </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="120f0817-c2aa-498a-ba10-54f000886d16">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateProfilePhoneNew" id="5e4c3c51-36e8-4b10-a8e0-0c1ee64e2d87">
+  <con:testStep type="restrequest" name="UpdateProfilePhone" id="5e4c3c51-36e8-4b10-a8e0-0c1ee64e2d87">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/profiles" methodName="ProcessProfile" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateProfilePhoneNew" id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="UpdateProfilePhone" id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request>{
-  "ProfileId": "${GetProfileByID#Response#$['ProfileId']}",
+  "ProfileId": "${GetProfileByIDNew#Response#$['ProfileId']}",
   "Phones": [
     {
       "PhoneNumber":  "${UpdateProfileChannels#NewPhoneNumber}",
@@ -525,23 +513,22 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileByIDToVerifyNewPhone" id="dd7a1d7b-15c5-44ff-b528-f41d73276405">
+  <con:testStep type="restrequest" name="GetProfileByIDToVerifyNewPhoneNew" id="5235551f-c498-4dfd-a440-2511cdd028d1">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}" methodName="GetProfileByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProfileByIDToVerifyNewPhone" id="5f13c035-5675-441b-aedb-a78e3edcb213" mediaType="application/json">
+      <con:restRequest name="GetProfileByIDToVerifyNewPhoneNew" id="caa82c6c-fb0c-4527-9a62-8abf1c42fa9d" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>http://10.231.168.44/api/v1/profiles/0253436f-7a5a-4c69-b95b-a5616e0c0cd4</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="19a1b3b9-79f7-43dd-b113-61eb8875483f" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/dba3b353-51f3-4853-ae11-622b791c330e</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="dd9a1be5-3c29-492c-a5a7-646d55e9bf0d" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="17ad9d36-3532-4e39-85b0-766b2c17b918" name="Phone-ChannelCode">
+        <con:assertion type="JsonPath Match" name="Phone-ChannelCode" id="ba10dd9c-730a-448e-a840-7412fd5030af">
           <con:configuration>
             <path>$.Phones[?(@.PhoneNumber=='${Profile#PhoneNumber}')].ChannelCode</path>
             <content>[${Profile#PhoneChannelCode}]</content>
@@ -557,7 +544,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${AddProfileNew#Response#$['ProfileId']}"/>
+          <con:entry key="profileId" value="${AddProfile#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -566,29 +553,14 @@
           <con:entry>profileId</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Program-Code</con:entry>
-          <con:entry>Accept-Language</con:entry>
           <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
         </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="120f0817-c2aa-498a-ba10-54f000886d16">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
   <con:properties/>
   <con:reportParameters/>
-  <con:breakPoints>
-    <con:testStepId>92c7eeec-adf5-4413-91a4-98158776c72d</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>dd7a1d7b-15c5-44ff-b528-f41d73276405</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>5d531d47-1509-48e5-ad2b-3a5fe7ca1536</con:testStepId>
     <con:status>NONE</con:status>
@@ -601,6 +573,16 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>5e4c3c51-36e8-4b10-a8e0-0c1ee64e2d87</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>a66135f7-7f88-4c86-b9ea-01ccb5b6d253</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>d9b8f831-2bc0-4a45-8019-d67afacb2b3a</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

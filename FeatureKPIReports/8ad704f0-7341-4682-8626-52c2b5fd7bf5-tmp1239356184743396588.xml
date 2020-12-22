@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="66490c77-a23d-40cc-b736-cc9a48d11099" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGRKPIReports" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="8ad704f0-7341-4682-8626-52c2b5fd7bf5" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGRKPIReportsTransactionDate" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="66490c77-a23d-40cc-b736-cc9a48d11099fileName">RGRKPIReports</con:setting>
+    <con:setting id="8ad704f0-7341-4682-8626-52c2b5fd7bf5fileName">RGRKPIReportsTransactionDate</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="EnableDisableProgSettings" id="b989eaa9-4f7c-4cc9-bf20-dcdb05e64e1f">
+  <con:testStep type="datasource" name="EnableDisableProgSettings" id="126ed00a-36c3-4bfa-ab31-1f0e0e30d2ab">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -34,7 +34,7 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="EnableOrDisableProgramSetting" id="d8972e3a-9c25-4e87-89bc-2c8f214a0fec">
+  <con:testStep type="restrequest" name="EnableOrDisableProgramSetting" id="f9dc45b9-a0ca-4438-8714-1a84c91b833a">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programsettings" methodName="UpdateProgramSettings" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="EnableOrDisableProgramSetting" id="d3640b0f-5085-4ed6-8b0e-f59fb4fdaab6" mediaType="application/json" postQueryString="false">
@@ -61,7 +61,7 @@
 }
 ]</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programsettings</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="990c4908-1edb-4c64-b556-4ce91bf25da3" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="e99165e2-21af-4e2d-8fb2-72a18ba0f34b" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -87,12 +87,332 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="datasource" name="RandomProfile" id="da5fa505-3356-4195-b445-be0d4ec19156">
+  <con:testStep type="restrequest" name="GenerateKPIReports" id="207ab55d-f49e-44cf-a46c-78565ef0b31f">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GenerateKPIReport" resourcePath="/api/v1/infrastructure/kpi/{reportType}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReports" id="18d330c5-3044-41b4-85fe-af0e3f5e21a7" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/TOPBONUS</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="62385564-9a0f-4c4a-bf1a-1c90d751434c" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="reportType" value="TOPBONUS"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetKPIReports" id="0695b38a-0d0a-48ac-9459-c7dad760c923">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/reports/kpi/{reportType}" methodName="GetKPIReports" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetKPIReports" id="abeaa011-f26f-4a3a-aaeb-22f72374db7f" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/reports/kpi/TOPBONUS</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="3957567b-a7c8-4ab3-ad92-85b7ad59ddfa" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="TOPBONUS"/>
+          <con:entry key="reportDate" value="${#Project#NextYearDate}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>reportDate</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetMomentByCode" id="bd4775a1-622d-424f-83f4-548d712fc59f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/momentmgmt/moment/{momentCode}" methodName="GetMomentByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetMomentByCode" id="dd52f0c5-0006-459f-bcbd-9cf595dabc6c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt/moment/SKUBONUSTXN2094223</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="99ac3e66-0880-4fb2-8da1-91656c04fe66" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="momentCode" value="${GetKPIReports#Response#$['TopBonuses'][0]['BonusCode']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>momentCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ActivateMoment" id="32877b22-6acd-428e-ac8c-407aa7485a59">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/momentmgmt/{momentId}/activate" methodName="ActivateMoment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ActivateMoment" id="ce0a792b-c6e9-44d0-82d5-5bba6cfc49b9" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt/f930a112-562f-4965-85e0-9d2855aa6421/activate</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="0baa4459-de50-43d5-8932-298cd852336c" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="momentId" value="${GetMomentByCode#Response#$['MomentId']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>momentId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="MomentEngineReload" id="ba20b1ff-51c7-4245-a140-6b2f3a0b0be7">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/operations/engine/refresh" methodName="RefreshEngine" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="MomentEngineReload" id="57c47b89-fe65-498e-93ba-cc0119906e4b" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/operations/engine</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="d9438ca6-017d-437e-a4c3-e8d8dab48d62" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="isSyncProcess" value="True"/>
+          <con:entry key="refreshAllEngines" value="True"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>refreshAllEngines</con:entry>
+          <con:entry>isSyncProcess</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GenerateKPIReportsDailySummary" id="f7a03090-b144-4b65-9a3d-e5c94866a637">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPIReport" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReportsDailySummary" id="e362e737-b461-4f3e-a8d7-60a3225c5296" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/DAILYPROGRAMSUMMARY</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="117d3d14-845d-4b93-a20e-9521fb6d53c2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="DAILYPROGRAMSUMMARY"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GenerateKPIReportsMonthPoints" id="a0d1473b-2922-4c0a-9dcc-fd01b9315670">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPIReport" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReportsMonthPoints" id="e362e737-b461-4f3e-a8d7-60a3225c5296" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/MONTHPOINTS</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="6e97347b-5a0e-4872-bda5-6d79771c0851" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="MONTHPOINTS"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GenerateKPIReportsTopBonus" id="36e56598-bbad-4c9f-a96b-df8bca38f8b3">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPIReport" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReportsTopBonus" id="e362e737-b461-4f3e-a8d7-60a3225c5296" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/TOPBONUS</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="6a681302-b8ca-40f8-8151-42097b5bc30b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="TOPBONUS"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetKPIReportsTopBonus" id="4facb02b-1535-475c-b5eb-54926e9eeaf4">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/reports/kpi/{reportType}" methodName="GetKPIReports" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetKPIReportsTopBonus" id="abeaa011-f26f-4a3a-aaeb-22f72374db7f" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/reports/kpi/TOPBONUS</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="bc042c7c-a34a-4d6e-ac15-c8885a761dba" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="TOPBONUS"/>
+          <con:entry key="reportDate" value="${#Project#NextYearDate}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>reportDate</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="RandomProfile" id="b418fe65-9421-49b3-9b34-c28593e15344">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="Data Generator">
         <con:configuration>
-          <generatedDataCount>5</generatedDataCount>
+          <generatedDataCount>1</generatedDataCount>
           <generatorsTotalNumber>60</generatorsTotalNumber>
           <lastSelectedProperty>1</lastSelectedProperty>
           <GeneratorType0>SET</GeneratorType0>
@@ -575,7 +895,7 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddProfileRGR" id="a49cf495-1305-44f5-b28f-20fdd95259ca">
+  <con:testStep type="restrequest" name="AddProfileRGR" id="055965b6-0bc8-4d55-8e45-0c258f16b661">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/profiles" methodName="ProcessProfile" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="AddProfileRGR" id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" postQueryString="false">
@@ -638,7 +958,7 @@
    "EnrollChannelCode": "${RandomProfile#EnrollChannelCode}"
  }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="24d330b8-67e6-4004-b012-1c4512a7f8b3" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="2532afeb-bd5c-4db5-a7a2-014473b782c7" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -664,7 +984,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="datasource" name="PurchaseTransaction" id="cb18886e-4eaa-4800-b70a-e68130bc29b6">
+  <con:testStep type="datasource" name="PurchaseTransaction" id="c9ee0dcb-3d36-4412-b29c-02b861ae6366">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -785,13 +1105,15 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddTransaction" id="d2e8f7be-c6bb-4774-9134-0a2015867f13">
+  <con:testStep type="restrequest" name="AddTransaction" id="f627c696-6118-4905-8380-2432018b86b1">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v2/transaction" methodName="ProcessTransaction" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="AddTransaction" id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" postQueryString="false">
+    <con:config service="RestAPIs" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddTransaction" id="62565ddf-87e2-4080-b820-10f9690f23da" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
    "ProfileId" : "${AddProfileRGR#Response#$['ProfileId']}",
    "TransactionTypeCode" : "${PurchaseTransaction#TransactionTypeCode}",
@@ -829,7 +1151,7 @@
    ]
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="dfb10cca-de7b-4807-9775-0666454639f8" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="5f6a45d0-be5e-4db4-af6b-0d7e38f9bf12" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -846,95 +1168,56 @@
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
-        <con:parameterOrder>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Program-Code</con:entry>
-        </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="datasourceloop" name="ProfileLoop" id="dacf4ea2-5303-424a-90e6-b216ca2b43ca">
-    <con:settings/>
-    <con:config>
-      <dataSourceStep>RandomProfile</dataSourceStep>
-      <targetStep>AddProfileRGR</targetStep>
-      <discardResults>true</discardResults>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="GetDifferentDates" id="9eeb1e2e-2e15-454f-8658-7a5ce1d3991a">
-    <con:settings/>
-    <con:config>
-      <script>import java.text.SimpleDateFormat
-
-// Gets the current date
-def date = new Date()
-def currentDate = new SimpleDateFormat("MM/dd/yyyy")
-
-final Calendar calendar = Calendar.getInstance();
-calendar.setTime(date);
-
-// Add +1 day to the current date
-calendar.add(Calendar.DAY_OF_YEAR, 1);
-def nextDayDate = currentDate.format(calendar.getTime()); 
-testRunner.testCase.testSuite.project.setPropertyValue( "NextDayDate", nextDayDate)
-
-// Add +365 days to the current date
-calendar.add(Calendar.DAY_OF_YEAR, 365);
-def nextYearDate = currentDate.format(calendar.getTime()); 
-testRunner.testCase.testSuite.project.setPropertyValue( "NextYearDate", nextYearDate)
-
-def today = new Date()
-def yesterday = today - 1;
-def yesterdaysDate = yesterday.format("MM/dd/yyyy");
-testRunner.testCase.testSuite.project.setPropertyValue( "YesterdaysDate", yesterdaysDate)</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="datasource" name="KPIReports" id="09f95d92-f52b-4a55-8b91-7d57d43feb83">
-    <con:settings/>
-    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:dataSource type="File">
-        <con:configuration>
-          <fileName>${#Project#ProjectPath}/References/KPIReports.csv</fileName>
-          <separator>,</separator>
-          <trim>true</trim>
-          <charset>Cp1252</charset>
-          <quotedValues>false</quotedValues>
-        </con:configuration>
-      </con:dataSource>
-      <con:shared>true</con:shared>
-      <con:restartShared>true</con:restartShared>
-      <con:property>ProgramCode</con:property>
-      <con:property>ReportType</con:property>
-      <con:property>TileName</con:property>
-      <con:property>TileId</con:property>
-      <con:property>Status</con:property>
-      <con:startRow>1</con:startRow>
-      <con:endRow/>
-      <con:recordsPerIteration>1</con:recordsPerIteration>
-      <con:completeLastOperation>true</con:completeLastOperation>
-      <con:trimValues>false</con:trimValues>
-      <con:entitizeValues>false</con:entitizeValues>
-      <con:restartOnRun>true</con:restartOnRun>
-      <con:expandProperties>false</con:expandProperties>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="GenerateKPIReportsNew" id="9c3b53f5-9455-4add-b438-e21b94c1b7c1">
+  <con:testStep type="restrequest" name="GenerateKPIReportsDailySummaryAfterActivity" id="24e233c8-72c3-430a-ba24-7ff5582d28a1">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPIReport" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GenerateKPIReportsNew" id="e362e737-b461-4f3e-a8d7-60a3225c5296" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="GenerateKPIReportsDailySummaryAfterActivity" id="e362e737-b461-4f3e-a8d7-60a3225c5296" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:request>{
-  "ReportType": "${KPIReports#ReportType}"
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/TOPBONUS</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="023c216b-c80d-460e-834e-6d3c2a6ae62b" name="Valid HTTP Status Codes">
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/DAILYPROGRAMSUMMARY</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="95e9f0e2-b19f-4908-85f4-616c6ed8b10d" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="MessageContentAssertion" name="TotalDailyPointsBeforeActivity &lt;= TotalDailyPointsAfterActivity" id="bda88a88-ab66-4e70-a496-82fd70dc835e">
+          <con:configuration xsi:type="con:MessageContentAssertion">
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/DAILYPROGRAMSUMMARY';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:TotalPointsEarned[1]</con:xpath>
+              <con:element>TotalPointsEarned</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>&lt;=</con:operator>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>${GenerateKPIReportsDailySummary#Response#$['DailyProgramSummary']['TotalPointsEarned']}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>true</con:numberType>
+            </con:elements>
+            <con:originalMessage><![CDATA[<Response xmlns="https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/DAILYPROGRAMSUMMARY">
+   <ReportType>DAILYPROGRAMSUMMARY</ReportType>
+   <DailyProgramSummary>
+      <KpiSummaryReportId>c3f15afb-ee47-4b97-8b29-94d6e7c47b0a</KpiSummaryReportId>
+      <TotalEnrollments>742</TotalEnrollments>
+      <TotalRevenue>81628.58</TotalRevenue>
+      <CurrencyCode>USD</CurrencyCode>
+      <TotalTransactions>175</TotalTransactions>
+      <TotalPointsEarned>15757418.32755</TotalPointsEarned>
+      <ReportStartDate>2020-12-16T00:00:00Z</ReportStartDate>
+      <ReportEndDate>2020-12-16T23:59:59.999Z</ReportEndDate>
+      <ProgramCode>PP</ProgramCode>
+      <Status>A</Status>
+      <CreateUser>BATCH_USER</CreateUser>
+      <CreateDate>2020-12-15T14:44:53.535449Z</CreateDate>
+      <UpdateUser>AUTO_USER</UpdateUser>
+      <UpdateDate>2020-12-16T15:10:42.4016576Z</UpdateDate>
+   </DailyProgramSummary>
+</Response>]]></con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -944,7 +1227,7 @@ testRunner.testCase.testSuite.project.setPropertyValue( "YesterdaysDate", yester
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="reportType" value="${KPIReports#ReportType}"/>
+          <con:entry key="reportType" value="DAILYPROGRAMSUMMARY"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -959,30 +1242,83 @@ testRunner.testCase.testSuite.project.setPropertyValue( "YesterdaysDate", yester
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="GetKPIReportsCond" id="b2aeea16-a3cc-412c-bb36-6e563729635d">
+  <con:testStep type="restrequest" name="GenerateKPIReportsMonthPointsAfterActivity" id="cd08cb25-e3f0-47c9-9f42-51b81a040247">
     <con:settings/>
-    <con:config>
-      <script>// Reading all the reports from the DataSource File
-def reportType = context.expand( '${KPIReports#ReportType}' )
-
-// Adding a condition based on reportType
-if(reportType == "TOTALCUSTOMERS" || reportType == "MONTHENROLLMENTS" || reportType == "MONTHTRANSACTIONS" || reportType == "MONTHPOINTS" ||reportType == "DAILYPROGRAMSUMMARY")
-{
-	testRunner.gotoStepByName("GetKPIReportsNextYearDateNew")
-} else
-	testRunner.gotoStepByName("GetKPIReportsNextDayDateNew")</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="GetKPIReportsNextYearDateNew" id="73afce90-4e20-4781-9ce0-1f758a90588a">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/reports/kpi/{reportType}" methodName="GetKPIReports" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetKPIReportsNextYearDateNew" id="abeaa011-f26f-4a3a-aaeb-22f72374db7f" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPIReport" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReportsMonthPointsAfterActivity" id="e362e737-b461-4f3e-a8d7-60a3225c5296" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/reports/kpi/TOTALCUSTOMERS</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="6dfe7ddc-6b46-4d23-83ff-916d911cb74e" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/MONTHPOINTS</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="81ec185c-3cab-4c84-836d-9c31ddf4307a" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="MessageContentAssertion" name="TotalPointsBeforeActivity &lt;= TotalPointsAfterActivity" id="4ffc3631-08a8-41a3-b3ca-6512f79d18b8">
+          <con:configuration xsi:type="con:MessageContentAssertion">
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/MONTHPOINTS';
+//ns1:Response[1]/ns1:CurrentMonthPoints[1]/ns1:TotalPoints[1]</con:xpath>
+              <con:element>TotalPoints</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>&lt;=</con:operator>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>${GenerateKPIReportsMonthPoints#Response#$['CurrentMonthPoints']['TotalPoints']}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>true</con:numberType>
+            </con:elements>
+            <con:originalMessage><![CDATA[<Response xmlns="https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/MONTHPOINTS">
+   <ReportType>MONTHPOINTS</ReportType>
+   <CurrentMonthPoints>
+      <KpiMonthlyPointsId>873655aa-5b48-4aac-a19e-6fb667fd816c</KpiMonthlyPointsId>
+      <TotalPoints>162885134.6806</TotalPoints>
+      <ReportStartDate>2020-12-01T00:00:00Z</ReportStartDate>
+      <ReportEndDate>2020-12-15T23:59:59.999Z</ReportEndDate>
+      <ProgramCode>PP</ProgramCode>
+      <Status>A</Status>
+      <CreateUser>AUTO_USER</CreateUser>
+      <CreateDate>2020-12-15T15:43:11.530218Z</CreateDate>
+      <UpdateUser>AUTO_USER</UpdateUser>
+      <UpdateDate>2020-12-16T15:16:39.9613936Z</UpdateDate>
+   </CurrentMonthPoints>
+</Response>]]></con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="MONTHPOINTS"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GenerateKPIReportsTopBonusAfterActivity" id="7eee9de6-373a-44d2-80d6-91d28d86d219">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPIReport" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReportsTopBonusAfterActivity" id="e362e737-b461-4f3e-a8d7-60a3225c5296" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/TOPBONUS</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="1674dc7f-c75c-4258-8c90-5b3bba9271c1" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -995,7 +1331,44 @@ if(reportType == "TOTALCUSTOMERS" || reportType == "MONTHENROLLMENTS" || reportT
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="reportType" value="${KPIReports#ReportType}"/>
+          <con:entry key="reportType" value="TOPBONUS"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetKPIReportsTopBonusAfterActivity" id="cd1536d9-d253-4047-8b13-795cc547c3de">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/reports/kpi/{reportType}" methodName="GetKPIReports" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetKPIReportsTopBonusAfterActivity" id="abeaa011-f26f-4a3a-aaeb-22f72374db7f" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/reports/kpi/TOPBONUS</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="7397bec4-b86b-4e82-8334-10b0aceebf9a" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="TOPBONUS"/>
           <con:entry key="reportDate" value="${#Project#NextYearDate}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -1010,19 +1383,33 @@ if(reportType == "TOTALCUSTOMERS" || reportType == "MONTHENROLLMENTS" || reportT
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetKPIReportsNextDayDateNew" id="0f2399f7-22f1-4c26-82ed-844d858d8871">
+  <con:testStep type="groovy" name="TopBonusAfterActivityAssertion" id="062c2f6c-61e0-4df8-9c50-ddeb0fb2da55">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/reports/kpi/{reportType}" methodName="GetKPIReports" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetKPIReportsNextDayDateNew" id="abeaa011-f26f-4a3a-aaeb-22f72374db7f" mediaType="application/json">
+    <con:config>
+      <script>def fixedMomentCode = context.expand( '${GetKPIReports#Response#$[\'TopBonuses\'][0][\'BonusCode\']}')
+def topBonusAfterActivity = context.expand( '${GetKPIReportsTopBonusAfterActivity#Response#$[\'TopBonuses\'][?(@.BonusCode==\''+fixedMomentCode+'\')].PointsAmount[0]}' ).toBigDecimal()
+def topBonusBeforeActivity = context.expand( '${GetKPIReportsTopBonus#Response#$[\'TopBonuses\'][?(@.BonusCode==\''+fixedMomentCode+'\')].PointsAmount[0]}' ).toBigDecimal()
+
+assert topBonusBeforeActivity &lt;= topBonusAfterActivity</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddAdjustment" id="a35077be-9ced-4b5c-9a0c-4bd10087ef74">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/adjustments" methodName="AddAdjustment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddAdjustment" id="9a3422f2-f90a-4dcd-9195-4f82d76a9c75" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/reports/kpi/TOPBONUS</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="aa9c3a75-cdac-4fb8-9748-0738adc7cc37" name="Valid HTTP Status Codes">
+        <con:request>{
+  "AdjustmentReasonCode": "PPGOODW",
+  "AdjustmentComment": "Automated adjustment for reward progress test",
+  "NumPoints": "${pointsAmount}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/d14921c7-c653-45fc-8ad6-8ea455ac2be5/adjustments</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="32b4e384-378e-4ff1-b9c1-41549cbd29df" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200</codes>
+            <codes>201</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -1032,107 +1419,250 @@ if(reportType == "TOTALCUSTOMERS" || reportType == "MONTHENROLLMENTS" || reportT
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="reportType" value="${KPIReports#ReportType}"/>
-          <con:entry key="reportDate" value="${#Project#NextDayDate}"/>
+          <con:entry key="pointsAmount" value="1000"/>
+          <con:entry key="profileId" value="${AddProfileRGR#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>reportType</con:entry>
-          <con:entry>reportDate</con:entry>
+          <con:entry>profileId</con:entry>
+          <con:entry>pointsAmount</con:entry>
           <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
           <con:entry>Accept-Language</con:entry>
           <con:entry>Program-Code</con:entry>
         </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="datasourceloop" name="KPIReportsLoop" id="254a6816-1dbb-441e-90a3-cb82ed4f2ef6">
+  <con:testStep type="restrequest" name="GenerateKPIReportsDailySummaryAfterAdjustment" id="42df15e5-ae76-40ec-ae7a-dbda4932769e">
     <con:settings/>
-    <con:config>
-      <dataSourceStep>KPIReports</dataSourceStep>
-      <targetStep>GenerateKPIReportsNew</targetStep>
-      <discardResults>false</discardResults>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPIReport" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReportsDailySummaryAfterAdjustment" id="e362e737-b461-4f3e-a8d7-60a3225c5296" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/DAILYPROGRAMSUMMARY</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="8a4921fc-33f1-46e8-9cba-b694f5d8c723" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="MessageContentAssertion" name="TotalDailyPointsBeforeAdjustment &lt;= TotalDailyPointsAfterAdjustment" id="4131411f-a2fa-46c9-a661-86ff79b04eb9">
+          <con:configuration xsi:type="con:MessageContentAssertion">
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/DAILYPROGRAMSUMMARY';
+//ns1:Response[1]/ns1:DailyProgramSummary[1]/ns1:TotalPointsEarned[1]</con:xpath>
+              <con:element>TotalPointsEarned</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>&lt;=</con:operator>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>${GenerateKPIReportsDailySummaryAfterActivity#Response#$['DailyProgramSummary']['TotalPointsEarned']}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>true</con:numberType>
+            </con:elements>
+            <con:originalMessage><![CDATA[<Response xmlns="https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/DAILYPROGRAMSUMMARY">
+   <ReportType>DAILYPROGRAMSUMMARY</ReportType>
+   <DailyProgramSummary>
+      <KpiSummaryReportId>c3f15afb-ee47-4b97-8b29-94d6e7c47b0a</KpiSummaryReportId>
+      <TotalEnrollments>748</TotalEnrollments>
+      <TotalRevenue>82168.58</TotalRevenue>
+      <CurrencyCode>USD</CurrencyCode>
+      <TotalTransactions>181</TotalTransactions>
+      <TotalPointsEarned>15759828.32755</TotalPointsEarned>
+      <ReportStartDate>2020-12-16T00:00:00Z</ReportStartDate>
+      <ReportEndDate>2020-12-16T23:59:59.999Z</ReportEndDate>
+      <ProgramCode>PP</ProgramCode>
+      <Status>A</Status>
+      <CreateUser>BATCH_USER</CreateUser>
+      <CreateDate>2020-12-15T14:44:53.535449Z</CreateDate>
+      <UpdateUser>AUTO_USER</UpdateUser>
+      <UpdateDate>2020-12-16T15:27:41.5161633Z</UpdateDate>
+   </DailyProgramSummary>
+</Response>]]></con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="DAILYPROGRAMSUMMARY"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties>
-    <con:property>
-      <con:name>NextDate</con:name>
-      <con:value>10/30/2020</con:value>
-    </con:property>
-    <con:property>
-      <con:name>NextDayDate</con:name>
-      <con:value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
-    </con:property>
-  </con:properties>
+  <con:testStep type="restrequest" name="GenerateKPIReportsMonthPointsAfterAdjustment" id="445aa99a-81b1-4a62-9899-4b27b357cd0c">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/kpi/{reportType}" methodName="GenerateKPIReport" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GenerateKPIReportsMonthPointsAfterAdjustment" id="e362e737-b461-4f3e-a8d7-60a3225c5296" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/MONTHPOINTS</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="0dcc8fdf-56d2-452c-bfa1-c0375d255cd0" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="MessageContentAssertion" name="TotalPointsBeforeAdjustment == TotalPointsAfterAdjustment" id="d75a725c-e9da-4845-95e6-6c3989b5fb88">
+          <con:configuration xsi:type="con:MessageContentAssertion">
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/MONTHPOINTS';
+//ns1:Response[1]/ns1:CurrentMonthPoints[1]/ns1:TotalPoints[1]</con:xpath>
+              <con:element>TotalPoints</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>${GenerateKPIReportsMonthPointsAfterActivity#Response#$['CurrentMonthPoints']['TotalPoints']}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:originalMessage><![CDATA[<Response xmlns="https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/kpi/MONTHPOINTS">
+   <ReportType>MONTHPOINTS</ReportType>
+   <CurrentMonthPoints>
+      <KpiMonthlyPointsId>873655aa-5b48-4aac-a19e-6fb667fd816c</KpiMonthlyPointsId>
+      <TotalPoints>162885134.6806</TotalPoints>
+      <ReportStartDate>2020-12-01T00:00:00Z</ReportStartDate>
+      <ReportEndDate>2020-12-15T23:59:59.999Z</ReportEndDate>
+      <ProgramCode>PP</ProgramCode>
+      <Status>A</Status>
+      <CreateUser>AUTO_USER</CreateUser>
+      <CreateDate>2020-12-15T15:43:11.530218Z</CreateDate>
+      <UpdateUser>AUTO_USER</UpdateUser>
+      <UpdateDate>2020-12-16T15:29:44.2965633Z</UpdateDate>
+   </CurrentMonthPoints>
+</Response>]]></con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reportType" value="MONTHPOINTS"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>reportType</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
-    <con:testStepId>b989eaa9-4f7c-4cc9-bf20-dcdb05e64e1f</con:testStepId>
+    <con:testStepId>f9dc45b9-a0ca-4438-8714-1a84c91b833a</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>da5fa505-3356-4195-b445-be0d4ec19156</con:testStepId>
+    <con:testStepId>055965b6-0bc8-4d55-8e45-0c258f16b661</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>cb18886e-4eaa-4800-b70a-e68130bc29b6</con:testStepId>
+    <con:testStepId>f627c696-6118-4905-8380-2432018b86b1</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>dacf4ea2-5303-424a-90e6-b216ca2b43ca</con:testStepId>
+    <con:testStepId>207ab55d-f49e-44cf-a46c-78565ef0b31f</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>09f95d92-f52b-4a55-8b91-7d57d43feb83</con:testStepId>
+    <con:testStepId>0695b38a-0d0a-48ac-9459-c7dad760c923</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>254a6816-1dbb-441e-90a3-cb82ed4f2ef6</con:testStepId>
+    <con:testStepId>f7a03090-b144-4b65-9a3d-e5c94866a637</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>9eeb1e2e-2e15-454f-8658-7a5ce1d3991a</con:testStepId>
+    <con:testStepId>a0d1473b-2922-4c0a-9dcc-fd01b9315670</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>b2aeea16-a3cc-412c-bb36-6e563729635d</con:testStepId>
+    <con:testStepId>36e56598-bbad-4c9f-a96b-df8bca38f8b3</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>d8972e3a-9c25-4e87-89bc-2c8f214a0fec</con:testStepId>
+    <con:testStepId>4facb02b-1535-475c-b5eb-54926e9eeaf4</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>a49cf495-1305-44f5-b28f-20fdd95259ca</con:testStepId>
+    <con:testStepId>24e233c8-72c3-430a-ba24-7ff5582d28a1</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>d2e8f7be-c6bb-4774-9134-0a2015867f13</con:testStepId>
+    <con:testStepId>cd08cb25-e3f0-47c9-9f42-51b81a040247</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>9c3b53f5-9455-4add-b438-e21b94c1b7c1</con:testStepId>
+    <con:testStepId>7eee9de6-373a-44d2-80d6-91d28d86d219</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>73afce90-4e20-4781-9ce0-1f758a90588a</con:testStepId>
+    <con:testStepId>42df15e5-ae76-40ec-ae7a-dbda4932769e</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>0f2399f7-22f1-4c26-82ed-844d858d8871</con:testStepId>
+    <con:testStepId>cd1536d9-d253-4047-8b13-795cc547c3de</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>bd4775a1-622d-424f-83f4-548d712fc59f</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>32877b22-6acd-428e-ac8c-407aa7485a59</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>ba20b1ff-51c7-4245-a140-6b2f3a0b0be7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>a35077be-9ced-4b5c-9a0c-4bd10087ef74</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

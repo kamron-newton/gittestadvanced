@@ -38,16 +38,16 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetRoleByRoleCode" id="8632d223-1399-4e71-a9e6-d9bcbbc18912">
+  <con:testStep type="restrequest" name="GetActiveRoles" id="d6a1c785-2f91-4c77-94bd-833aa535b414">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/security/roles" methodName="GetSystemRoles" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetRoleByRoleCode" id="f416ffd7-285a-4aaf-b39d-bb036e1e65c2" mediaType="application/json">
+      <con:restRequest name="GetActiveRoles" id="38bd61e6-682d-47f2-8c91-81a9956a7cda" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/roles</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="d1ada363-388d-411d-b22c-c9e7c402a824" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="ade59e19-3703-4265-8833-72fc7449c632" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -59,24 +59,24 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser]#OtherUserAuthToken}"/>
+          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser#CreateTokenOtherUser]#Response#$['AccessToken']}"/>
           <con:entry key="roleName" value="${Users#RoleCode}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="status" value="A"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>Authorization</con:entry>
-          <con:entry>Accept-Language</con:entry>
           <con:entry>status</con:entry>
           <con:entry>roleName</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
         </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateSystemUser-OneProgram" id="0e35ce74-6618-4fed-8e30-8c9f225148b6">
+  <con:testStep type="restrequest" name="UpdateSystemUser-OneProgram" id="e28a9559-e507-4911-9ee9-c078906a48bf">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/security/users/user" methodName="UpdateSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateSystemUser-OneProgram" id="f3a93e5a-d537-4890-8b4b-1419c4b1c78a" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="UpdateSystemUser-OneProgram" id="82490ea2-63a3-4b2c-8b6e-c8f6f9ea17a8" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -86,7 +86,7 @@
   "LastName": "${Users#LastName}",
   "EmailAddress": "${Users#EmailAddress}",
   "Status" : "A",
-  "RoleId": "${GetRoleByRoleCode#Response#$[0].RoleId}",
+  "RoleId": "${GetActiveRoles#Response#$[?(@.RoleCode=='${Users#RoleCode}')]['RoleId'][0]}",
   "IsTestUser": "${Users#IsTestUser}",
   "DaysExpire": ${Users#DaysExpire},
   "UserPrograms": [
@@ -96,7 +96,7 @@
   ]
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/security/users/user</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="e54d46f0-f0de-4448-8c53-1a0fbebcb237" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="84f9e12f-282b-41a9-9cf5-144d3bb89b1c" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -108,7 +108,7 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser]#OtherUserAuthToken}"/>
+          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser#CreateTokenOtherUser]#Response#$['AccessToken']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -118,16 +118,16 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetUserPrograms" id="e8010715-432e-43e6-896e-582f936a5beb">
+  <con:testStep type="restrequest" name="GetUserPrograms" id="06191324-5422-4416-b044-ae48a8f20a6e">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/userpreferences/programs" methodName="GetProgramsByToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetUserPrograms" id="06ea07e5-8ff8-4986-ae70-83496dfbf027" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/userpreferences/programs" methodName="GetProgramByToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetUserPrograms" id="2f5b0e75-e33c-42e2-8b64-208e2e20516a" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/authorization/userpreferences/programs</con:originalUri>
-        <con:assertion type="JsonPath Match" id="7ec0f4af-b402-4563-b24b-8a305434e8ec" name="ProgramIsPreferred">
+        <con:assertion type="JsonPath Match" name="ProgramIsPreferred" id="af3afd3a-c023-4b94-a9a7-264bfe110a73">
           <con:configuration>
             <path>[?(@.ProgramCode=='PP')].IsPreferredProgram[0]</path>
             <content>${Users#IsPreferredProgram}</content>
@@ -136,7 +136,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="26b3babb-2862-439f-be53-16d51b728d28" name="ProgramCodeMatches">
+        <con:assertion type="JsonPath Match" name="ProgramCodeMatches" id="7fefd1b2-2e36-40bd-8fe5-ea9494f2f1f6">
           <con:configuration>
             <path>[?(@.IsPreferredProgram==true)].ProgramCode[0]</path>
             <content>${Users#ProgramCode}</content>
@@ -145,7 +145,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="92dd38ea-30d3-458e-a4f1-de1b316f09fc" name="NotProgramCode">
+        <con:assertion type="JsonPath Match" name="NotProgramCode" id="74f7c1a9-76cb-4206-bd1c-5728c1edac62">
           <con:configuration>
             <path>$[?(@.ProgramCode!='PP')]</path>
             <content>[]</content>
@@ -160,7 +160,7 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser]#OtherUserAuthToken}"/>
+          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser#CreateTokenOtherUser]#Response#$['AccessToken']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -170,10 +170,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateSystemUser-AllPrograms" id="dd876193-1115-4470-b3d4-c7bb2b2ccc6f">
+  <con:testStep type="restrequest" name="UpdateSystemUser-AllPrograms" id="02d91eb3-0822-48b3-9f7c-b0f7357f318b">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/security/users/user" methodName="UpdateSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateSystemUser-AllPrograms" id="f3a93e5a-d537-4890-8b4b-1419c4b1c78a" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="UpdateSystemUser-AllPrograms" id="82490ea2-63a3-4b2c-8b6e-c8f6f9ea17a8" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -183,12 +183,12 @@
   "LastName": "${Users#LastName}",
   "EmailAddress": "${Users#EmailAddress}",
   "Status" : "A",
-  "RoleId": "${GetRoleByRoleCode#Response#$[?(@.RoleCode=='${Users#RoleCode}')].RoleId[0]}",
+  "RoleId": "${GetActiveRoles#Response#$[?(@.RoleCode=='${Users#RoleCode}')]['RoleId'][0]}",
   "IsTestUser": "${Users#IsTestUser}",
   "DaysExpire": ${Users#DaysExpire}
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/security/users/user</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="caed65cd-4bfa-4729-87d7-dee772d11e80" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="92545544-365c-4d69-98e3-03b3ec3e3a27" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -200,7 +200,7 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser]#OtherUserAuthToken}"/>
+          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser#CreateTokenOtherUser]#Response#$['AccessToken']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -210,16 +210,16 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetUserPrograms-All" id="7837a427-b8e1-4cd8-b742-dccf0a96fb93">
+  <con:testStep type="restrequest" name="GetUserPrograms-All" id="0508cb03-e920-4981-813f-61b02970b771">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/userpreferences/programs" methodName="GetProgramsByToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetUserPrograms-All" id="06ea07e5-8ff8-4986-ae70-83496dfbf027" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/userpreferences/programs" methodName="GetProgramByToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetUserPrograms-All" id="2f5b0e75-e33c-42e2-8b64-208e2e20516a" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/authorization/userpreferences/programs</con:originalUri>
-        <con:assertion type="JsonPath Match" id="7ec0f4af-b402-4563-b24b-8a305434e8ec" name="ProgramIsPreferred">
+        <con:assertion type="JsonPath Match" name="ProgramIsPreferred" id="c09b894f-0f10-46df-970a-32993a6cdb7e">
           <con:configuration>
             <path>[?(@.ProgramCode=='PP')].IsPreferredProgram[0]</path>
             <content>${Users#IsPreferredProgram}</content>
@@ -228,7 +228,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="26b3babb-2862-439f-be53-16d51b728d28" name="ProgramCodeMatches">
+        <con:assertion type="JsonPath Match" name="ProgramCodeMatches" id="3ef65088-9a9f-48f9-9b68-f221131b7fa3">
           <con:configuration>
             <path>[?(@.IsPreferredProgram==true)].ProgramCode[0]</path>
             <content>${Users#ProgramCode}</content>
@@ -237,7 +237,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="92dd38ea-30d3-458e-a4f1-de1b316f09fc" name="ProgramCode-PP">
+        <con:assertion type="JsonPath Match" name="ProgramCode-PP" id="5573c9d7-1648-44f3-9d53-19e0053933c3">
           <con:configuration>
             <path>[?(@.ProgramCode=='PP')].ProgramCode[0]</path>
             <content>PP</content>
@@ -246,7 +246,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" name="ProgramCode-GR" id="b0e2bf26-5fd4-49d6-a078-04bb68083a54">
+        <con:assertion type="JsonPath Match" name="ProgramCode-GR" id="6b822e3d-606f-40cc-94ac-2d5ce4920bdb">
           <con:configuration>
             <path>[?(@.ProgramCode=='GR')].ProgramCode[0]</path>
             <content>GR</content>
@@ -261,7 +261,7 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser]#OtherUserAuthToken}"/>
+          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser#CreateTokenOtherUser]#Response#$['AccessToken']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -271,10 +271,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateSystemUser-TwoPrograms" id="beacaa59-b3eb-41ef-a692-afd1969f90c9">
+  <con:testStep type="restrequest" name="UpdateSystemUser-TwoPrograms" id="27c8aa26-117b-42f5-8ad2-6c611245c55a">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/security/users/user" methodName="UpdateSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateSystemUser-TwoPrograms" id="f3a93e5a-d537-4890-8b4b-1419c4b1c78a" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="UpdateSystemUser-TwoPrograms" id="82490ea2-63a3-4b2c-8b6e-c8f6f9ea17a8" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -284,7 +284,7 @@
   "LastName": "${Users#LastName}",
   "EmailAddress": "${Users#EmailAddress}",
   "Status" : "A",
-  "RoleId": "${GetRoleByRoleCode#Response#$[?(@.RoleCode=='${Users#RoleCode}')].RoleId[0]}",
+  "RoleId": "${GetActiveRoles#Response#$[?(@.RoleCode=='${Users#RoleCode}')]['RoleId'][0]}",
   "IsTestUser": "${Users#IsTestUser}",
   "DaysExpire": ${Users#DaysExpire},
   "UserPrograms": [
@@ -297,7 +297,7 @@
   ]
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/security/users/user</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="caed65cd-4bfa-4729-87d7-dee772d11e80" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="1c73289a-894f-4ae5-adc3-7ae69f8664e3" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -309,7 +309,7 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser]#OtherUserAuthToken}"/>
+          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser#CreateTokenOtherUser]#Response#$['AccessToken']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -319,16 +319,16 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetUserPrograms-Two" id="6f87e656-2e35-4398-ad44-70a8e0586472">
+  <con:testStep type="restrequest" name="GetUserPrograms-Two" id="2d873a7c-df9b-4f0f-ab9e-208145e5e5dc">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/userpreferences/programs" methodName="GetProgramsByToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetUserPrograms-Two" id="06ea07e5-8ff8-4986-ae70-83496dfbf027" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/userpreferences/programs" methodName="GetProgramByToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetUserPrograms-Two" id="2f5b0e75-e33c-42e2-8b64-208e2e20516a" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/authorization/userpreferences/programs</con:originalUri>
-        <con:assertion type="JsonPath Match" id="7ec0f4af-b402-4563-b24b-8a305434e8ec" name="ProgramIsPreferred">
+        <con:assertion type="JsonPath Match" name="ProgramIsPreferred" id="0164505f-03fb-467d-ba18-0252a016d9b0">
           <con:configuration>
             <path>[?(@.ProgramCode=='PP')].IsPreferredProgram[0]</path>
             <content>${Users#IsPreferredProgram}</content>
@@ -337,7 +337,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="26b3babb-2862-439f-be53-16d51b728d28" name="ProgramCodeMatches">
+        <con:assertion type="JsonPath Match" name="ProgramCodeMatches" id="5f0be71f-31e8-44f1-94a4-c3ef61891808">
           <con:configuration>
             <path>[?(@.IsPreferredProgram==true)].ProgramCode[0]</path>
             <content>${Users#ProgramCode}</content>
@@ -346,7 +346,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="92dd38ea-30d3-458e-a4f1-de1b316f09fc" name="ProgramCode-PP">
+        <con:assertion type="JsonPath Match" name="ProgramCode-PP" id="21c1524f-4aae-4fce-8947-b3ecf1797802">
           <con:configuration>
             <path>[?(@.ProgramCode=='PP')].ProgramCode[0]</path>
             <content>PP</content>
@@ -355,7 +355,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" name="ProgramCode-IR" id="b0e2bf26-5fd4-49d6-a078-04bb68083a54">
+        <con:assertion type="JsonPath Match" name="ProgramCode-IR" id="35bdebb0-654c-4e89-9c6f-165a9aaab35b">
           <con:configuration>
             <path>[?(@.ProgramCode=='IR')].ProgramCode[0]</path>
             <content>IR</content>
@@ -370,7 +370,7 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser]#OtherUserAuthToken}"/>
+          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser#CreateTokenOtherUser]#Response#$['AccessToken']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -380,10 +380,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateSystemUser-AllProgramsFinal" id="64450d3e-e777-4219-95d4-116d0d3a7cc1">
+  <con:testStep type="restrequest" name="UpdateSystemUser-AllProgramFinal" id="83d1ac59-f476-4e06-84bb-180c4fcfc059">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/security/users/user" methodName="UpdateSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateSystemUser-AllProgramsFinal" id="f3a93e5a-d537-4890-8b4b-1419c4b1c78a" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="UpdateSystemUser-AllProgramFinal" id="82490ea2-63a3-4b2c-8b6e-c8f6f9ea17a8" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -393,12 +393,12 @@
   "LastName": "${Users#LastName}",
   "EmailAddress": "${Users#EmailAddress}",
   "Status" : "A",
-  "RoleId": "${GetRoleByRoleCode#Response#$[?(@.RoleCode=='${Users#RoleCode}')].RoleId[0]}",
+  "RoleId": "${GetActiveRoles#Response#$[?(@.RoleCode=='${Users#RoleCode}')]['RoleId'][0]}",
   "IsTestUser": "${Users#IsTestUser}",
   "DaysExpire": ${Users#DaysExpire}
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/security/users/user</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="caed65cd-4bfa-4729-87d7-dee772d11e80" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="6e0d3fc9-81bd-47de-85ad-0c10bdf98131" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -410,7 +410,7 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser]#OtherUserAuthToken}"/>
+          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser#CreateTokenOtherUser]#Response#$['AccessToken']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -420,16 +420,16 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetUserPrograms-AllFinal" id="a06484d0-6819-4281-bfc8-d12bfd332769">
+  <con:testStep type="restrequest" name="GetUserPrograms-AllFinal" id="93552fdb-3662-446c-8d96-9b60940d897c">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/userpreferences/programs" methodName="GetProgramsByToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetUserPrograms-AllFinal" id="06ea07e5-8ff8-4986-ae70-83496dfbf027" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/userpreferences/programs" methodName="GetProgramByToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetUserPrograms-AllFinal" id="2f5b0e75-e33c-42e2-8b64-208e2e20516a" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/authorization/userpreferences/programs</con:originalUri>
-        <con:assertion type="JsonPath Match" id="7ec0f4af-b402-4563-b24b-8a305434e8ec" name="ProgramIsPreferred">
+        <con:assertion type="JsonPath Match" name="ProgramIsPreferred" id="cfa379ff-44bb-418d-aa3a-ba39a76dbf66">
           <con:configuration>
             <path>[?(@.ProgramCode=='PP')].IsPreferredProgram[0]</path>
             <content>${Users#IsPreferredProgram}</content>
@@ -438,7 +438,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="26b3babb-2862-439f-be53-16d51b728d28" name="ProgramCodeMatches">
+        <con:assertion type="JsonPath Match" name="ProgramCodeMatches" id="95191f43-0e09-46a1-ad29-906fdd09c67f">
           <con:configuration>
             <path>[?(@.IsPreferredProgram==true)].ProgramCode[0]</path>
             <content>${Users#ProgramCode}</content>
@@ -447,7 +447,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="92dd38ea-30d3-458e-a4f1-de1b316f09fc" name="ProgramCode-PP">
+        <con:assertion type="JsonPath Match" name="ProgramCode-PP" id="b62bbcdc-26de-4eed-977b-f988ac310ec8">
           <con:configuration>
             <path>[?(@.ProgramCode=='PP')].ProgramCode[0]</path>
             <content>PP</content>
@@ -456,7 +456,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" name="ProgramCode-GR" id="b0e2bf26-5fd4-49d6-a078-04bb68083a54">
+        <con:assertion type="JsonPath Match" name="ProgramCode-GR" id="e6ed422a-2366-4fb8-ba0f-7772ae08b0e6">
           <con:configuration>
             <path>[?(@.ProgramCode=='GR')].ProgramCode[0]</path>
             <content>GR</content>
@@ -471,7 +471,7 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser]#OtherUserAuthToken}"/>
+          <con:entry key="Authorization" value="OAuth ${#[RGRUserManagement#CreateTokenOtherUser#CreateTokenOtherUser]#Response#$['AccessToken']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -485,6 +485,46 @@
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>bf462da9-140b-40f4-a1c4-93d7a86994f8</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>06191324-5422-4416-b044-ae48a8f20a6e</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0508cb03-e920-4981-813f-61b02970b771</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2d873a7c-df9b-4f0f-ab9e-208145e5e5dc</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>d6a1c785-2f91-4c77-94bd-833aa535b414</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>02d91eb3-0822-48b3-9f7c-b0f7357f318b</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>27c8aa26-117b-42f5-8ad2-6c611245c55a</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>83d1ac59-f476-4e06-84bb-180c4fcfc059</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e28a9559-e507-4911-9ee9-c078906a48bf</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

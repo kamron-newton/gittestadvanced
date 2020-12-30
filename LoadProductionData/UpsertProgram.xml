@@ -13,7 +13,7 @@
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
-          <quotedValues>false</quotedValues>
+          <quotedValues>true</quotedValues>
         </con:configuration>
       </con:dataSource>
       <con:shared>true</con:shared>
@@ -34,7 +34,7 @@
       <con:property>TermsAndConditions2</con:property>
       <con:property>TermsAndConditions3</con:property>
       <con:startRow>1</con:startRow>
-      <con:endRow>7</con:endRow>
+      <con:endRow>8</con:endRow>
       <con:recordsPerIteration>1</con:recordsPerIteration>
       <con:completeLastOperation>true</con:completeLastOperation>
       <con:trimValues>false</con:trimValues>
@@ -55,7 +55,7 @@
         <con:assertion type="Valid HTTP Status Codes" id="eb247f0f-2728-4d4a-8c65-5af17a76b4f2" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200</codes>
+            <codes>200,400</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -72,6 +72,135 @@
         </con:parameters>
         <con:parameterOrder>
           <con:entry>programCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ProgCondition" id="c9ad97cb-c996-4806-8f99-dbfccbf75736">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${GetProgramByCode#HarResponse#$[\'status\']}' ).toInteger()
+if (status != 200) testRunner.gotoStepByName("AddProgram")
+ else
+ 	testRunner.gotoStepByName("UpdateProgram")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddProgram" id="465ca007-4b73-435f-83d9-d9320df90c62">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programs" methodName="AddProgram" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddProgram" id="750178db-17eb-4f01-a0e1-44e1fa718bab" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "OrgCode":"${Programs#OrganizationCode}",
+  "ProgramCode": "${Programs#ProgramCode}",  
+  "Name": "${Programs#ProgramName}",
+  "Description": "${Programs#ProgramDescription}",
+  "BusinessAllianceManager": "${Programs#ProgramBusinessAllianceManager}",
+  "TermsAndConditions1": "${Programs#TermsAndConditions1}",
+  "TermsAndConditions2": "${Programs#TermsAndConditions2}",
+  "TermsAndConditions3": "${Programs#TermsAndConditions3}",
+  "Status": "A",
+  "StartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
+  "PointTypes": [
+    {
+      "PointTypeCode": "${Programs#PointTypeCode1}",
+      "DefaultIndicator": "${Programs#IsDefaultPointType1}",
+    },
+  {
+      "PointTypeCode": "${Programs#PointTypeCode2}",
+      "DefaultIndicator": "${Programs#IsDefaultPointType2}",
+    },
+		{
+		  "PointTypeCode": "${Programs#PointTypeCode3}",
+		  "DefaultIndicator": "${Programs#IsDefaultPointType3}"
+		}
+  ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programs</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="66868e03-cc46-4105-8367-10122a834320" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateProgram" id="f17f6bba-1ba7-478a-81bc-31acf7cfc57f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programs" methodName="UpdateProgram" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateProgram" id="bd535db1-3698-4b73-b908-a3a99845318f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "OrgCode":"${Programs#OrganizationCode}",
+  "ProgramCode": "${Programs#ProgramCode}",  
+  "Name": "${Programs#ProgramName}",
+  "Description": "${Programs#ProgramDescription}",
+  "BusinessAllianceManager": "${Programs#ProgramBusinessAllianceManager}",
+  "TermsAndConditions1": "${Programs#TermsAndConditions1}",
+  "TermsAndConditions2": "${Programs#TermsAndConditions2}",
+  "TermsAndConditions3": "${Programs#TermsAndConditions3}",
+  "Status": "A",
+  "StartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
+  "PointTypes": [
+    {
+      "PointTypeCode": "${Programs#PointTypeCode1}",
+      "DefaultIndicator": "${Programs#IsDefaultPointType1}",
+    },
+  {
+      "PointTypeCode": "${Programs#PointTypeCode2}",
+      "DefaultIndicator": "${Programs#IsDefaultPointType2}",
+    },
+		{
+		  "PointTypeCode": "${Programs#PointTypeCode3}",
+		  "DefaultIndicator": "${Programs#IsDefaultPointType3}"
+		}
+  ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programs</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="cf39ae4e-174b-4dc4-8ac5-b3b65462eabc" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${Programs#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
           <con:entry>Authorization</con:entry>
           <con:entry>content-type</con:entry>
           <con:entry>Accept-Language</con:entry>
@@ -97,6 +226,21 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>25d9bae2-76cc-4161-8ee0-105ea0e77a3d</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>465ca007-4b73-435f-83d9-d9320df90c62</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f17f6bba-1ba7-478a-81bc-31acf7cfc57f</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>c9ad97cb-c996-4806-8f99-dbfccbf75736</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

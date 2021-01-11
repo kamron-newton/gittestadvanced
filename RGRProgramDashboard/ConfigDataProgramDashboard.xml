@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="f840545d-2cb0-4213-b5b7-abb3edc0fef9" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ConfigDataProgramDashboard" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="f840545d-2cb0-4213-b5b7-abb3edc0fef9fileName">ConfigDataProgramDashboard</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="UniqueOrgCode" id="55851e82-7b87-47d0-8202-c6032e69b1f9">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>1</generatedDataCount>
+          <generatorsTotalNumber>2</generatorsTotalNumber>
+          <lastSelectedProperty>0</lastSelectedProperty>
+          <GeneratorType0>STR</GeneratorType0>
+          <PropertyName0>OrgCode</PropertyName0>
+          <repetitionCountOrgCode>0</repetitionCountOrgCode>
+          <repeatValuesOrgCode>false</repeatValuesOrgCode>
+          <PasswordDataGeneratorUseSpacesOrgCode>false</PasswordDataGeneratorUseSpacesOrgCode>
+          <PasswordDataGeneratorUsePunctuationMarksOrgCode>false</PasswordDataGeneratorUsePunctuationMarksOrgCode>
+          <PasswordDataGeneratorUseLettersOrgCode>true</PasswordDataGeneratorUseLettersOrgCode>
+          <PasswordDataGeneratorUseDigitsOrgCode>true</PasswordDataGeneratorUseDigitsOrgCode>
+          <PasswordDataGeneratorMaxCharacterCountOrgCode>8</PasswordDataGeneratorMaxCharacterCountOrgCode>
+          <PasswordDataGeneratorMinCharacterCountOrgCode>8</PasswordDataGeneratorMinCharacterCountOrgCode>
+          <GeneratorType1>SET</GeneratorType1>
+          <PropertyName1>Status</PropertyName1>
+          <repetitionCountStatus>0</repetitionCountStatus>
+          <repeatValuesStatus>false</repeatValuesStatus>
+          <ValueFromSetIsSequenceValueStatus>false</ValueFromSetIsSequenceValueStatus>
+          <ValueFromSetStringsStatus>Sample 1</ValueFromSetStringsStatus>
+          <ValueFromSetStringsStatus/>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>OrgCode</con:property>
+      <con:property>Status</con:property>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="OrganizationCond" id="0b3a1a94-a4bc-401b-97f1-c5b98bc56556">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def orgCode = context.expand( '${UniqueOrgCode#OrgCode}' )
+def orgCodeUpper = orgCode.toUpperCase();
+
+testRunner.testCase.testSuite.project.setPropertyValue( "OrgCodeUpper", orgCodeUpper)</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddOrganization" id="38c7812a-6a64-43a0-bb5d-5b078426a980">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="AddOrganization" resourcePath="/api/v1/referencedata/programs/organizations" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddOrganization" id="54e192ee-5162-45f1-b832-94c78c811fdb" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+   "OrgCode" : "${#Project#OrgCodeUpper}",
+   "Description" : "Organization ${#Project#OrgCodeUpper}",
+   "Status" : "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/organizations</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9891d21b-8f21-4e72-bc28-e37ba4a74153" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="UniquePointType" id="6e7acf9a-fa73-466f-a732-b46555772d46">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>1</generatedDataCount>
+          <generatorsTotalNumber>7</generatorsTotalNumber>
+          <lastSelectedProperty>1</lastSelectedProperty>
+          <GeneratorType0>SET</GeneratorType0>
+          <PropertyName0>RedeemableInd</PropertyName0>
+          <repetitionCountRedeemableInd>0</repetitionCountRedeemableInd>
+          <repeatValuesRedeemableInd>false</repeatValuesRedeemableInd>
+          <ValueFromSetIsSequenceValueRedeemableInd>true</ValueFromSetIsSequenceValueRedeemableInd>
+          <ValueFromSetStringsRedeemableInd>TRUE</ValueFromSetStringsRedeemableInd>
+          <GeneratorType1>SET</GeneratorType1>
+          <PropertyName1>IsGiftable</PropertyName1>
+          <repetitionCountIsGiftable>0</repetitionCountIsGiftable>
+          <repeatValuesIsGiftable>false</repeatValuesIsGiftable>
+          <ValueFromSetIsSequenceValueIsGiftable>true</ValueFromSetIsSequenceValueIsGiftable>
+          <ValueFromSetStringsIsGiftable>FALSE</ValueFromSetStringsIsGiftable>
+          <GeneratorType2>SET</GeneratorType2>
+          <PropertyName2>SubType1ExpiryInd</PropertyName2>
+          <repetitionCountSubType1ExpiryInd>0</repetitionCountSubType1ExpiryInd>
+          <repeatValuesSubType1ExpiryInd>false</repeatValuesSubType1ExpiryInd>
+          <ValueFromSetIsSequenceValueSubType1ExpiryInd>false</ValueFromSetIsSequenceValueSubType1ExpiryInd>
+          <ValueFromSetStringsSubType1ExpiryInd>TRUE</ValueFromSetStringsSubType1ExpiryInd>
+          <ValueFromSetStringsSubType1ExpiryInd/>
+          <GeneratorType3>SET</GeneratorType3>
+          <PropertyName3>SubType1ExpiryTimeUnit</PropertyName3>
+          <repetitionCountSubType1ExpiryTimeUnit>0</repetitionCountSubType1ExpiryTimeUnit>
+          <repeatValuesSubType1ExpiryTimeUnit>false</repeatValuesSubType1ExpiryTimeUnit>
+          <ValueFromSetIsSequenceValueSubType1ExpiryTimeUnit>false</ValueFromSetIsSequenceValueSubType1ExpiryTimeUnit>
+          <ValueFromSetStringsSubType1ExpiryTimeUnit>M</ValueFromSetStringsSubType1ExpiryTimeUnit>
+          <GeneratorType4>INT</GeneratorType4>
+          <PropertyName4>SubType1ExpiryTimeValue</PropertyName4>
+          <repetitionCountSubType1ExpiryTimeValue>0</repetitionCountSubType1ExpiryTimeValue>
+          <repeatValuesSubType1ExpiryTimeValue>false</repeatValuesSubType1ExpiryTimeValue>
+          <IntegerDataGeneratorMinValueSubType1ExpiryTimeValue>12</IntegerDataGeneratorMinValueSubType1ExpiryTimeValue>
+          <IntegerDataGeneratorMaxValueSubType1ExpiryTimeValue>12</IntegerDataGeneratorMaxValueSubType1ExpiryTimeValue>
+          <IntegerDataGeneratorStepValueSubType1ExpiryTimeValue>0</IntegerDataGeneratorStepValueSubType1ExpiryTimeValue>
+          <IntegerDataGeneratorConsequentValuesSubType1ExpiryTimeValue>true</IntegerDataGeneratorConsequentValuesSubType1ExpiryTimeValue>
+          <GeneratorType5>STR</GeneratorType5>
+          <PropertyName5>PointType1</PropertyName5>
+          <repetitionCountPointType1>0</repetitionCountPointType1>
+          <repeatValuesPointType1>false</repeatValuesPointType1>
+          <PasswordDataGeneratorUseSpacesPointType1>false</PasswordDataGeneratorUseSpacesPointType1>
+          <PasswordDataGeneratorUsePunctuationMarksPointType1>false</PasswordDataGeneratorUsePunctuationMarksPointType1>
+          <PasswordDataGeneratorUseLettersPointType1>true</PasswordDataGeneratorUseLettersPointType1>
+          <PasswordDataGeneratorUseDigitsPointType1>true</PasswordDataGeneratorUseDigitsPointType1>
+          <PasswordDataGeneratorMaxCharacterCountPointType1>8</PasswordDataGeneratorMaxCharacterCountPointType1>
+          <PasswordDataGeneratorMinCharacterCountPointType1>8</PasswordDataGeneratorMinCharacterCountPointType1>
+          <GeneratorType6>STR</GeneratorType6>
+          <PropertyName6>PointType2</PropertyName6>
+          <repetitionCountPointType2>0</repetitionCountPointType2>
+          <repeatValuesPointType2>false</repeatValuesPointType2>
+          <PasswordDataGeneratorUseSpacesPointType2>false</PasswordDataGeneratorUseSpacesPointType2>
+          <PasswordDataGeneratorUsePunctuationMarksPointType2>false</PasswordDataGeneratorUsePunctuationMarksPointType2>
+          <PasswordDataGeneratorUseLettersPointType2>true</PasswordDataGeneratorUseLettersPointType2>
+          <PasswordDataGeneratorUseDigitsPointType2>true</PasswordDataGeneratorUseDigitsPointType2>
+          <PasswordDataGeneratorMaxCharacterCountPointType2>8</PasswordDataGeneratorMaxCharacterCountPointType2>
+          <PasswordDataGeneratorMinCharacterCountPointType2>8</PasswordDataGeneratorMinCharacterCountPointType2>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>PointType1</con:property>
+      <con:property>PointType2</con:property>
+      <con:property>RedeemableInd</con:property>
+      <con:property>IsGiftable</con:property>
+      <con:property>SubType1ExpiryInd</con:property>
+      <con:property>SubType1ExpiryTimeUnit</con:property>
+      <con:property>SubType1ExpiryTimeValue</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>2</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="PointTypeCond" id="77ddb667-b6d8-431f-8297-12b73b46d5e2">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def pointType1 = context.expand( '${UniquePointType#PointType1}' )
+def pointTypeUpper1 = pointType1.toUpperCase();
+
+testRunner.testCase.testSuite.project.setPropertyValue( "PointTypeUpper1", pointTypeUpper1)
+
+def pointType2 = context.expand( '${UniquePointType#PointType2}' )
+def pointTypeUpper2 = pointType2.toUpperCase();
+
+testRunner.testCase.testSuite.project.setPropertyValue( "PointTypeUpper2", pointTypeUpper2)</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UniquePointType1" id="44f5618d-4fa6-40a6-939a-da1f95dea555">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes" methodName="AddPointType" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UniquePointType1" id="6c6293e5-b8a7-49d6-8d68-c0c2d4059238" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "PointSubTypes": [
+    {
+      "PointSubTypeCode": "${#Project#PointTypeUpper1}" ,
+      "Desc": "SubPoints ${#Project#PointTypeUpper1}",
+      "ShortDesc": "SubPoints ${#Project#PointTypeUpper1}",
+      "ExpiryInd": "${UniquePointType#SubType1ExpiryInd}",
+      "ExpiryTimeValue": "${UniquePointType#SubType1ExpiryTimeValue}" ,
+      "ExpiryTimeUnit": "${UniquePointType#SubType1ExpiryTimeUnit}",
+    }
+  ],
+  "PointTypeCode": "${#Project#PointTypeUpper1}",
+  "PointTypeShortDescription": "AutoPoints ${#Project#PointTypeUpper1}",
+  "PointTypeDescription":  "AutoPoints ${#Project#PointTypeUpper1}",
+  "RedeemableInd": "${UniquePointType#RedeemableInd}",
+  "IsGiftable": "${UniquePointType#IsGiftable}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="61b41aa9-132f-4dc8-a9e6-aa26e9e2ac35" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UniquePointType2" id="6780d390-61be-4a6a-9baf-18a9c5b9171a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes" methodName="AddPointType" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UniquePointType2" id="6c6293e5-b8a7-49d6-8d68-c0c2d4059238" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "PointSubTypes": [
+    {
+      "PointSubTypeCode": "${#Project#PointTypeUpper2}" ,
+      "Desc": "SubPoints ${#Project#PointTypeUpper2}",
+      "ShortDesc": "SubPoints ${#Project#PointTypeUpper2}",
+      "ExpiryInd": "${UniquePointType#SubType1ExpiryInd}",
+      "ExpiryTimeValue": "${UniquePointType#SubType1ExpiryTimeValue}" ,
+      "ExpiryTimeUnit": "${UniquePointType#SubType1ExpiryTimeUnit}",
+    }
+  ],
+  "PointTypeCode": "${#Project#PointTypeUpper2}",
+  "PointTypeShortDescription": "AutoPoints ${#Project#PointTypeUpper2}",
+  "PointTypeDescription":  "AutoPoints ${#Project#PointTypeUpper2}",
+  "RedeemableInd": "${UniquePointType#RedeemableInd}",
+  "IsGiftable": "${UniquePointType#IsGiftable}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="61b41aa9-132f-4dc8-a9e6-aa26e9e2ac35" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>55851e82-7b87-47d0-8202-c6032e69b1f9</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0b3a1a94-a4bc-401b-97f1-c5b98bc56556</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>6e7acf9a-fa73-466f-a732-b46555772d46</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>77ddb667-b6d8-431f-8297-12b73b46d5e2</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>6780d390-61be-4a6a-9baf-18a9c5b9171a</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

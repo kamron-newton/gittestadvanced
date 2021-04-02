@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="f107afc0-d57d-4e66-9b5b-8efdc332aa13" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertTier" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="f107afc0-d57d-4e66-9b5b-8efdc332aa13fileName">UpsertTier</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="Tiers" id="a9d4944b-c6af-481f-8c55-1d5b05b5de79">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>FusionWebApiAutomationV2/References/Tiers.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>true</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>TierCode</con:property>
+      <con:property>TierName</con:property>
+      <con:property>TierDescription</con:property>
+      <con:property>VipInd</con:property>
+      <con:property>Rank</con:property>
+      <con:property>RequalFlag</con:property>
+      <con:property>MonthsValid</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>20</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetTierByCode" id="9265fd59-2706-404c-9a3a-f4daa5d1bd18">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/tiers/{tierCode}" methodName="GetTierByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetTierByCode" id="f2e77156-c9a5-41a4-8d7d-7e1511c30327" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/tiers/tierCode</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="e13d5a39-2a55-46ff-b066-4f372860a1f8" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="tierCode" value="${Tiers#TierCode}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>tierCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="TierCondition" id="50c553ea-4915-4447-ba8a-9e3417bcd992">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${GetTierByCode#HarResponse#$[\'status\']}' ).toInteger()
+if (status != 200) testRunner.gotoStepByName("AddTier")
+ else
+ 	testRunner.gotoStepByName("UpdateTier")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddTier" id="9daecfee-52f1-458f-acce-763cb2ccb14a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/tiers" methodName="AddTier" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddTier" id="4f6c044d-f055-46fe-9ca6-ffc0b7004bd8" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "TierCode" : "${Tiers#TierCode}",\r
+   "TierName" : "${Tiers#TierName}",\r
+   "TierDescription" : "${Tiers#TierDescription}",\r
+   "VipInd" : ${Tiers#VipInd},\r
+   "Rank" : ${Tiers#Rank},\r
+   "RequalFlag" : ${Tiers#RequalFlag},\r
+   "MonthsValid" : ${Tiers#MonthsValid}
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/api/v1/referencedata/programs/tiers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="4c8dda50-d445-4e24-9df3-0e867f6e3eaa" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${Tiers#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateTier" id="654e6544-c0b2-4aad-8ebe-d62490c1425e">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/tiers/{tierCode}" methodName="UpdateTier" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateTier" id="19b03cab-abe6-41f2-9403-f90dbb4a9fcc" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "TierCode": "${Tiers#TierCode}",
+  "TierName": "${Tiers#TierName}",
+  "TierDescription": "${Tiers#TierDescription}",
+  "VipInd": ${Tiers#VipInd},
+  "Rank": ${Tiers#Rank},
+  "RequalFlag": ${Tiers#RequalFlag},
+  "MonthsValid": ${Tiers#MonthsValid},
+  "Status" : "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/tiers/tierCode</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f7ffc48e-05f1-44e0-b43d-4a5eaf28cb00" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="tierCode" value="${Tiers#TierCode}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${Tiers#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>tierCode</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="Tier Loop" id="87c2d8a6-0799-4b76-ad20-678bbf879b70">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>Tiers</dataSourceStep>
+      <targetStep>GetTierByCode</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>a9d4944b-c6af-481f-8c55-1d5b05b5de79</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>9daecfee-52f1-458f-acce-763cb2ccb14a</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>87c2d8a6-0799-4b76-ad20-678bbf879b70</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>50c553ea-4915-4447-ba8a-9e3417bcd992</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

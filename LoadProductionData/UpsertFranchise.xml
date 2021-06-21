@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" id="da6ef64b-5205-4a84-98db-adb738935b1c" keepSession="false" name="UpsertFranchise" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="da6ef64b-5205-4a84-98db-adb738935b1cfileName">UpsertFranchise</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep id="f7737185-5ce0-4c55-81d5-80e10eb50713" name="Franchise" type="datasource">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Franchises.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>ChainName</con:property>
+      <con:property>FranchiseCode</con:property>
+      <con:property>FranchiseName</con:property>
+      <con:property>FranchiseDescription</con:property>
+      <con:property>AddressLine1</con:property>
+      <con:property>AddressLine2</con:property>
+      <con:property>City</con:property>
+      <con:property>StateCode</con:property>
+      <con:property>PostalCode</con:property>
+      <con:property>CountryCode</con:property>
+      <con:property>OwnerFirstName</con:property>
+      <con:property>OwnerLastName</con:property>
+      <con:property>ContactFirstName</con:property>
+      <con:property>ContactLastName</con:property>
+      <con:property>ContactEmailAddress</con:property>
+      <con:property>ContactPhoneNumber</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>27</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="fdbcad97-6af7-46b6-a4f6-13773cf8a209" name="GetFranchiseByCode" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="GetFranchiseByCode" resourcePath="/api/v1/referencedata/transactions/chains/franchises/{franchiseCode}" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="14307fdc-b4c4-488c-a2cf-3d0520daccf2" mediaType="application/json" name="GetFranchiseByCode">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/chains/franchises/franchiseCode</con:originalUri>
+        <con:assertion id="f5bfea61-fa0c-4067-80a1-a8eb371b6e08" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="franchiseCode" value="${Franchise#FranchiseCode}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>franchiseCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="637143ab-82f6-46b9-825c-53a08103be0f" name="FranchiseCondition" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${GetFranchiseByCode#HarResponse#$[\'status\']}' ).toInteger()
+if (status != 200) testRunner.gotoStepByName("AddFranchise")
+ else
+ 	testRunner.gotoStepByName("UpdateFranchise")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="4eca1a04-23b6-4cec-932e-91e9653b7f37" name="AddFranchise" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="AddFranchise" resourcePath="/api/v1/referencedata/transactions/chains/franchises" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="4de29677-8e65-4e9b-8672-7f83bc7e0ce4" mediaType="application/json" name="AddFranchise" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ChainName":  "${Franchise#ChainName}",
+  "FranchiseCode": "${Franchise#FranchiseCode}",
+  "FranchiseName": "${Franchise#FranchiseName}",
+  "FranchiseDescription": "${Franchise#FranchiseDescription}",
+  "AddressLine1": "${Franchise#AddressLine1}",
+  "AddressLine2": "${Franchise#AddressLine2}",
+  "City":"${Franchise#City}",
+  "StateCode":"${Franchise#StateCode}",
+  "PostalCode": "${Franchise#PostalCode}",
+  "CountryCode": "${Franchise#CountryCode}",
+  "OwnerFirstName": "${Franchise#OwnerFirstName}",
+  "OwnerLastName":"${Franchise#OwnerLastName}",
+  "ContactFirstName": "${Franchise#ContactFirstName}",
+  "ContactLastName": "${Franchise#ContactLastName}",
+  "ContactEmailAddress": "${Franchise#ContactEmailAddress}",
+  "ContactPhoneNumber": "${Franchise#ContactPhoneNumber}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/chains/franchises</con:originalUri>
+        <con:assertion id="88c16593-4edb-4156-be3f-b23b7ab8ce07" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="1ae0c218-47c7-47a3-8c49-71e2266add52" name="UpdateFranchise" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="UpdateFranchise" resourcePath="/api/v1/referencedata/transactions/chains/franchises/{franchiseCode}" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="0a55f11f-2b3b-4c3a-bd54-e4758403d73e" mediaType="application/json" name="UpdateFranchise" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ChainName":  "${Franchise#ChainName}",
+  "FranchiseCode": "${Franchise#FranchiseCode}",
+  "FranchiseName": "${Franchise#FranchiseName}",
+  "FranchiseDescription": "${Franchise#FranchiseDescription}",
+  "AddressLine1": "${Franchise#AddressLine1}",
+  "AddressLine2": "${Franchise#AddressLine2}",
+  "City":"${Franchise#City}",
+  "Status":"A",
+  "StateCode":"${Franchise#StateCode}",
+  "PostalCode": "${Franchise#PostalCode}",
+  "CountryCode": "${Franchise#CountryCode}",
+  "OwnerFirstName": "${Franchise#OwnerFirstName}",
+  "OwnerLastName":"${Franchise#OwnerLastName}",
+  "ContactFirstName": "${Franchise#ContactFirstName}",
+  "ContactLastName": "${Franchise#ContactLastName}",
+  "ContactEmailAddress": "${Franchise#ContactEmailAddress}",
+  "ContactPhoneNumber": "${Franchise#ContactPhoneNumber}",
+  "ForceUpdateChildren":true
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/chains/franchises/franchiseCode</con:originalUri>
+        <con:assertion id="4321b0c0-8486-48df-9706-16448f723bc4" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="franchiseCode" value="${Franchise#FranchiseCode}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>franchiseCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="4b6f3ccf-4f40-4b25-b4ab-04a1b8eca237" name="FranschiseLoop" type="datasourceloop">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>Franchise</dataSourceStep>
+      <targetStep>GetFranchiseByCode</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>f7737185-5ce0-4c55-81d5-80e10eb50713</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>637143ab-82f6-46b9-825c-53a08103be0f</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>4eca1a04-23b6-4cec-932e-91e9653b7f37</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>1ae0c218-47c7-47a3-8c49-71e2266add52</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

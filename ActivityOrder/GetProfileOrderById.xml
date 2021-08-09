@@ -4,6 +4,73 @@
     <con:setting id="b391be48-f746-4b1e-9f32-c74d27ac99d9fileName">GetProfileOrderById</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="restrequest" name="GetProfileOrderById" id="c3b63761-457a-4d3d-97c8-3bc1c05b96f4">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/catalogs/orders/{orderId}" methodName="GetProfileOrderById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileOrderById" id="92047192-20ce-4022-a194-72c068fa9db7" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/catalogs/orders/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="745506e4-6e95-4275-a362-23ded5436bfa" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="87310187-9d8a-461c-bb6f-0cf6ad7a3765" name="Validate Order Id">
+          <con:configuration>
+            <path>$.OrderId</path>
+            <content>${#[ActivityOrder#PlaceOrderWithQtyOne#PlaceOrder]#Response#$['OrderId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="df0050c4-3c8d-4302-ae97-4f9356a93ad3" name="Validate Profile Id">
+          <con:configuration>
+            <path>$.OrderDetails[?(@.OrderId=='${OrderId}')].ProfileId</path>
+            <content>[${#[ActivityOrder#AddProfileCart#AddProfile]#Response#$['ProfileId']}]</content>
+            <allowWildcards>true</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="29f757e6-ca6b-4202-89a3-773b4960b564" name="Validation RewardId">
+          <con:configuration>
+            <path>$.OrderDetails[?(@.OrderId=='${OrderId}')].RewardId</path>
+            <content>[${#[ActivityOrder#AddFixedPointRew#RewardId]#result}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="orderId" value="${#[ActivityOrder#PlaceOrderWithQtyOne#PlaceOrder]#Response#$['OrderId']}"/>
+          <con:entry key="profileId" value="${#[ActivityOrder#PlaceOrderWithQtyOne#PlaceOrder]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>orderId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
   <con:environmentSpec>

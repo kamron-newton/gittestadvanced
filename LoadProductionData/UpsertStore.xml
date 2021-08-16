@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="aeefc558-13cf-4597-b408-f9312469074a" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertStore" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="aeefc558-13cf-4597-b408-f9312469074afileName">UpsertStore</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="Stores" id="6ef0a755-438d-449b-84db-e32d07397c96">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Stores.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ChainName</con:property>
+      <con:property>FranchiseCode</con:property>
+      <con:property>ChainPriority</con:property>
+      <con:property>StoreCode</con:property>
+      <con:property>StoreName</con:property>
+      <con:property>StoreType</con:property>
+      <con:property>AddressLine1</con:property>
+      <con:property>AddressLine2</con:property>
+      <con:property>City</con:property>
+      <con:property>StateCode</con:property>
+      <con:property>PostalCode</con:property>
+      <con:property>CountryCode</con:property>
+      <con:property>ManagerFirstName</con:property>
+      <con:property>ManagerLastName</con:property>
+      <con:property>ManagerEmailAddr</con:property>
+      <con:property>GeofenceRadius</con:property>
+      <con:property>Latitude</con:property>
+      <con:property>Longitude</con:property>
+      <con:property>WrongAddressLine1</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>127</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetStoreByCode" id="4b0517f8-67d9-4c2d-9ac4-290d2d5654df">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/chains/stores/{storeCode}" methodName="GetStoreByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetStoreByCode" id="63143a09-8d8b-49ce-98a9-87122f165b86" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/chains/stores/storeCode</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="3b129d4f-33c0-468c-9fd3-bf4d6c377dc4" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="storeCode" value="${Stores#StoreCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>storeCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="StoreCondition" id="40660f0b-0083-467b-9740-d87d17e91e9d">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+def status = context.expand( '${GetStoreByCode#HarResponse#$[\'status\']}' ).toInteger()
+if (status != 200) 
+	testRunner.gotoStepByName("AddStoreRef") 
+else  	
+	testRunner.gotoStepByName("UpdateStore")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddStoreRef" id="661db3b6-dc54-4389-9c51-561087071ae6">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/chains/stores" methodName="AddStore" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="2ea7f730-2333-4f02-b1aa-dd8119a5fb79" mediaType="application/json" name="AddStoreRef" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ChainName":  "${Stores#ChainName}",
+  "FranchiseCode": "${Stores#FranchiseCode}",
+  "ChainPriority":"${Stores#ChainPriority}" ,
+  "StoreCode": "${Stores#StoreCode}",
+  "StoreName": "${Stores#StoreName}",
+  "StoreType": "${Stores#StoreType}",
+  "AddressLine1": "${Stores#AddressLine1}",
+  "AddressLine2": "${Stores#AddressLine2}",
+  "City":"${Stores#City}",
+  "StateCode":"${Stores#StateCode}",
+  "PostalCode": "${Stores#PostalCode}",
+  "CountryCode": "${Stores#CountryCode}",
+  "ManagerFirstName": "${Stores#ManagerFirstName}",
+  "ManagerLastName":"${Stores#ManagerLastName}",
+  "ManagerEmailAddr": "${Stores#ManagerEmailAddr}",
+  "GeofenceRadius": "${Stores#GeofenceRadius}",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/chains/stores</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f005f30e-4944-4087-993f-ae674242fe6f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateStore" id="1b416877-b668-4fd0-86ac-c4662f62baf0">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/chains/stores/{storeCode}" methodName="UpdateStore" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateStore" id="7ccd7736-c9ea-497b-bf6f-3a93dfeaef58" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "ChainName" : "${Stores#ChainName}",\r
+   "FranchiseCode" : "${Stores#FranchiseCode}",\r
+   "ChainPriority" : "${Stores#ChainPriority}",\r
+   "StoreCode" : "${Stores#StoreCode}",\r
+   "StoreName" : "${Stores#StoreName}",\r
+   "StoreType" : "${Stores#StoreType}",\r
+   "AddressLine1" : "${Stores#AddressLine1}",\r
+   "AddressLine2" : "${Stores#AddressLine2}",\r
+   "City" : "${Stores#City}",\r
+   "StateCode" : "${Stores#StateCode}",\r
+   "PostalCode" : "${Stores#PostalCode}",\r
+   "CountryCode" : "${Stores#CountryCode}",\r
+   "ManagerFirstName" : "${Stores#ManagerFirstName}",\r
+   "ManagerLastName" : "${Stores#ManagerLastName}",\r
+   "ManagerEmailAddr" : "${Stores#ManagerEmailAddr}",\r
+   "GeofenceRadius" : "${Stores#GeofenceRadius}",\r
+   "Latitude" : "${Stores.Stores#csv.Latitude}",\r
+   "Longitude" : "${Stores.Stores#csv.Longitude}",\r
+   "Status" : "A"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/chains/stores/storeCode</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="eedf5e3f-8ae2-461c-804b-8b561a190c70" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="storeCode" value="${Stores#StoreCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>storeCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="StoreLoop" id="943cbb6f-6ff5-4dc1-b5d2-16a86c0fdf57">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>Stores</dataSourceStep>
+      <targetStep>GetStoreByCode</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>6ef0a755-438d-449b-84db-e32d07397c96</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>661db3b6-dc54-4389-9c51-561087071ae6</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>40660f0b-0083-467b-9740-d87d17e91e9d</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>1b416877-b668-4fd0-86ac-c4662f62baf0</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

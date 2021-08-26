@@ -32,26 +32,64 @@
   <con:testStep type="calltestcase" name="Run AddProfileCartVarPoint" id="35dff0df-c85c-409d-8079-b43b801a8d54">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>dc6e6e38-9ac5-4ccd-bdf8-d5db27e1ab87</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>NumPoints</con:name>
-          <con:value>1000</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties>
-        <con:entry>NumPoints</con:entry>
-      </con:returnProperties>
-      <con:runMode>PARALLELL</con:runMode>
+      <con:targetTestCase>7c00f085-e9fe-4dab-b852-9b0361102fb5</con:targetTestCase>
+      <con:properties></con:properties>
+      <con:returnProperties></con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Run GetProfileCart" id="589f0016-4b48-43e1-8ab2-8ea72e9d865c">
+  <con:testStep type="restrequest" name="GetProfileCart" id="2ca4bab4-00cf-4a83-b404-8293c007bc21">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>b8812c19-8e6f-48c8-a0ed-9e124336f6e9</con:targetTestCase>
-      <con:properties/>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/catalogs/cartitems" methodName="GetProfileCart" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileCart" id="01658e25-68a6-47e7-8c7f-f44cf536bcd3" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/rewards/catalogs/cartitems</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9f08f83a-72f1-4d8e-8496-4f42db8075cf" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="3cccb987-d858-4d42-8d7d-a2e80dadb056" name="RewardId Validation">
+          <con:configuration>
+            <path>$.ProfileCartItems[?(@.RewardCode=='${#[ActivityOrder#AddVariablePointCert]#rewardCode}')].RewardId</path>
+            <content>[${#[ActivityOrder#AddVariablePointCert#RewardId]#result}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="034444e1-27a6-41cd-82fc-8199116ca32d" name="profile Id Validation">
+          <con:configuration>
+            <path>$.ProfileCartItems[?(@.RewardCode=='${#[ActivityOrder#AddVariablePointCert]#rewardCode}')].ProfileId</path>
+            <content>[${#[ActivityOrder#AddProfileCartVarPoint#AddProfile]#Response#$['ProfileId']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[ActivityOrder#AddProfileCartVarPoint#AddProfile]#Response#$['ProfileId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:properties/>

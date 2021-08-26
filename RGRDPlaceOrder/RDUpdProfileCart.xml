@@ -56,13 +56,67 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Run GetProfileCart" id="18d08571-4d5b-4e28-940a-f427400f2c2a">
+  <con:testStep type="restrequest" name="GetProfileCart" id="21617d41-ee07-45c0-94e2-c9146869984d">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>b8812c19-8e6f-48c8-a0ed-9e124336f6e9</con:targetTestCase>
-      <con:properties/>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/catalogs/cartitems" methodName="GetProfileCart" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileCart" id="01658e25-68a6-47e7-8c7f-f44cf536bcd3" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/rewards/catalogs/cartitems</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9f08f83a-72f1-4d8e-8496-4f42db8075cf" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="1d80226d-dde2-4a70-9b80-a09c9b5bdfd5" name="Validating Profile Id">
+          <con:configuration>
+            <path>$.ProfileCartItems[?(@.RewardCode=='${#[ActivityOrder#AddVariablePointCert]#rewardCode}')].ProfileId</path>
+            <content>[${UpdateProfileCartItem#Response#$['ProfileId']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="4dca72e0-ad62-40fd-96c9-8c8a3ef832cc" name="Reward Id validation">
+          <con:configuration>
+            <path>$.ProfileCartItems[?(@.RewardCode=='${#[ActivityOrder#AddVariablePointCert]#rewardCode}')].RewardId</path>
+            <content>[${#[ActivityOrder#AddVariablePointCert#RewardId]#result}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="e58e18af-580f-46e4-9289-c63e7f80e00b" name="Validate quantity">
+          <con:configuration>
+            <path>$.ProfileCartItems[?(@.RewardCode=='${#[ActivityOrder#AddVariablePointCert]#rewardCode}')].RewardQuantity</path>
+            <content>[${UpdateProfileCartItem#Response#$['RewardQuantity']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[ActivityOrder#AddProfileCartVarPoint#AddProfile]#Response#$['ProfileId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:properties/>

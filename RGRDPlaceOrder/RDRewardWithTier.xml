@@ -136,10 +136,10 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Run AddFixedPointCertNest" id="ebaaaa6d-e406-40eb-a7ec-6ffd702e2c06">
+  <con:testStep type="calltestcase" name="Run AddFixedPointCertNest" id="7d2af864-5a6e-4673-b7d1-0fec0b59b467">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>a8c7e06e-6c25-4b79-bdfd-d704af943567</con:targetTestCase>
+      <con:targetTestCase>770d0550-106d-4c43-9f87-e02c2e1f1a07</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>rewardCode</con:name>
@@ -152,10 +152,10 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Run AddFixedPointCertBarn" id="b03641d5-1d6b-4336-91ae-b638e87b0185">
+  <con:testStep type="calltestcase" name="Run AddFixedPointCertBarn" id="32c4ce70-3cd9-4e9a-b703-61e6bf27e462">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>4fb69c21-2db9-4cf5-85ac-897318a982fe</con:targetTestCase>
+      <con:targetTestCase>28cac8e7-01b4-43b5-a2cb-f0967b383ea8</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>rewardCode</con:name>
@@ -295,7 +295,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="OrderProfileRewardCertificateBarn" id="2d5e853a-14b8-44f4-a0ef-93cd2c043672">
+  <con:testStep type="restrequest" name="OrderProfileRewardCertificateBarn" id="3c5872fd-017b-42b3-a7c1-c57adf9bd184">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/certificates" methodName="OrderProfileRewardCertificate" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="OrderProfileRewardCertificateBarn" id="e354648b-37e1-4496-a132-c435c1467f5b" mediaType="application/json" postQueryString="false">
@@ -304,7 +304,7 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-"RewardCode": "${Run AddFixedPointCertBarn#rewardCode}"
+"RewardCode": "${#[ActivityCertificate#AddFixedPointCertBarn]#rewardCode}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/certificates</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="79494a8e-b073-4b17-8b1b-1266f7a21262" name="Valid HTTP Status Codes">
@@ -313,7 +313,7 @@
             <codes>400</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="61c85096-1fc3-4a9f-b813-2d237131b848" name="JSONPath Match">
+        <con:assertion type="JsonPath Match" id="c0878f50-3c7e-4030-b48b-673c394108c6" name="Error validation for invalid tier">
           <con:configuration>
             <path>ErrorCode</path>
             <content>${RewardErrors#ErrorCodeInvalidRDTier}</content>
@@ -344,7 +344,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="OrderProfileRewardCertificateNest" id="0dee9f35-4084-4a0e-8556-8adf2fadc8f9">
+  <con:testStep type="restrequest" name="OrderProfileRewardCertificateNest" id="edfb7a56-123d-4c9b-a4f1-f4aab8007b27">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/certificates" methodName="OrderProfileRewardCertificate" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="OrderProfileRewardCertificateNest" id="e354648b-37e1-4496-a132-c435c1467f5b" mediaType="application/json" postQueryString="false">
@@ -353,13 +353,13 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-"RewardCode": "${Run AddFixedPointCertNest#rewardCode}"
+"RewardCode": "${#[ActivityCertificate#AddFixedPointCertNest]#rewardCode}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/certificates</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="79494a8e-b073-4b17-8b1b-1266f7a21262" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200,201</codes>
+            <codes>201</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -400,15 +400,6 @@
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="56b156b3-500f-44c0-947c-2be265de88a7" name="ProfileId Validation">
-          <con:configuration>
-            <path>$..ProfileId</path>
-            <content>[${AddProfile#Response#$['ProfileId']}]</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
         <con:assertion type="JsonPath Match" id="0f7d0561-4a46-4f31-9072-e77496e2d3fd" name="CertificateNumber Validation">
           <con:configuration>
             <path>$..CertificateNumber</path>
@@ -418,7 +409,16 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="db45938d-e434-4c91-89a4-33f35fc98be0" name="RewardCode Validation">
+        <con:assertion type="JsonPath Match" id="e2458dba-1b64-4756-a3a7-c1c15ce3decb" name="Profile Id Validation">
+          <con:configuration>
+            <path>$..ProfileId</path>
+            <content>[${AddProfile#Response#$['ProfileId']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="9fcc5f30-d3e0-4d9a-82c4-2e28c538d98d" name="Reward Code Validation">
           <con:configuration>
             <path>$..RewardCode</path>
             <content>[${Run AddFixedPointCertNest#rewardCode}]</content>
@@ -458,12 +458,22 @@
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>2d5e853a-14b8-44f4-a0ef-93cd2c043672</con:testStepId>
+    <con:testStepId>4cef685c-41e9-4e95-846b-8e5b1a36fd3f</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>4cef685c-41e9-4e95-846b-8e5b1a36fd3f</con:testStepId>
+    <con:testStepId>7d2af864-5a6e-4673-b7d1-0fec0b59b467</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>32c4ce70-3cd9-4e9a-b703-61e6bf27e462</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>3626c24d-afcf-45c2-a28f-82cdb6827d8c</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

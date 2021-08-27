@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="4fb69c21-2db9-4cf5-85ac-897318a982fe" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="AddFixedPointCertBarn" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="28cac8e7-01b4-43b5-a2cb-f0967b383ea8" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="AddFixedPointCertBarn" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="4fb69c21-2db9-4cf5-85ac-897318a982fefileName">AddFixedPointCertBarn</con:setting>
+    <con:setting id="28cac8e7-01b4-43b5-a2cb-f0967b383ea8fileName">AddFixedPointCertBarn</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="RDFreshCert" id="e9ffb6ee-7767-4c75-9393-26a29e7d49be">
+  <con:testStep type="datasource" name="RDFreshCert" id="36598250-e6b0-4d7c-ab9c-13537e2b01eb">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
         <con:configuration>
-          <fileName>${#Project#ProjectPath}/References/RDFreshCert.csv</fileName>
+          <fileName>WebAutomationReadyAPI/References/RDFreshCert.csv</fileName>
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
@@ -74,7 +74,7 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetRewardByCode" id="fc9a3262-a770-40f6-8f82-a2089e9d731a">
+  <con:testStep type="restrequest" name="GetRewardByCode" id="d648caf3-7ec1-4a0e-adf7-c63632260e02">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="GetRewardByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetRewardByCode" id="2cac3c06-239f-407b-b046-7e23810f6fb0" mediaType="application/json">
@@ -115,7 +115,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="UpsertRewardId" id="84fc3195-2df4-4bd8-b7f9-a8aaf385a9a2">
+  <con:testStep type="groovy" name="UpsertRewardId" id="191f6cc3-fdf1-46b7-90f4-8319f6c925ad">
     <con:settings/>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
@@ -129,7 +129,7 @@ if (status == 404 )  testRunner.gotoStepByName("AddReward")
 else if (status == 200)   testRunner.gotoStepByName("UpdateReward")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateReward" id="0fa23451-8539-40ce-a7ca-6274876add55">
+  <con:testStep type="restrequest" name="UpdateReward" id="a61fcc31-4265-45be-8b4c-fe1eba8a6ca8">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="UpdateReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="UpdateReward" id="48f5a14a-f9a2-4d56-9aee-3f1662d2eb7f" mediaType="application/json" postQueryString="false">
@@ -150,13 +150,13 @@ else if (status == 200)   testRunner.gotoStepByName("UpdateReward")</script>
 	"CategoryCode": "${RDFreshCert#CategoryCode}",
 	"ShippingInfoRequired":"${RDFreshCert#ShippingInfoRequired}",
 	"DisplayInCatalog":"${RDFreshCert#DisplayInCatalogTrue}",
-	"CertificateInd":"${RDFreshCert#CertificateInd}",	
+	"CertificateInd":"${RDFreshCert#CertificateInd}",
+	"Tiers": [
+{
+"TierCode": "${RDFreshCert#TierCode2}"
+}
+],
 	"Status":"A",
-	  "Tiers": [
-                  {
-                      "TierCode": "${RDFreshCert#TierCode2}",
-                   }
-  ],
      "FixedPoints": "${RDFreshCert#FixedPoints}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewards/RDFIXEDPOINT1000</con:originalUri>
@@ -188,7 +188,7 @@ else if (status == 200)   testRunner.gotoStepByName("UpdateReward")</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="UpdateRewardCond" id="4d316751-675e-4a9b-aafd-425c3f20c8b7">
+  <con:testStep type="groovy" name="UpdateRewardCond" id="0a8bc4a1-41cf-4ec3-9479-1dab53684082">
     <con:settings/>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
@@ -198,7 +198,7 @@ def status = context.expand( '${UpdateReward#HarResponse#$[\'status\']}' ).toInt
 if (status == 200)  testRunner.gotoStepByName("RewardId")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddReward" id="1593c1bd-6e84-46d1-843e-fe280455322e">
+  <con:testStep type="restrequest" name="AddReward" id="0e29b550-ba79-4525-890e-4babc88d101d">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards" methodName="AddReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="AddReward" id="e1eeb6c0-074c-4d78-893d-adb7c364e104" mediaType="application/json" postQueryString="false">
@@ -218,13 +218,13 @@ if (status == 200)  testRunner.gotoStepByName("RewardId")</script>
 	"CategoryCode": "${RDFreshCert#CategoryCode}",
 	"ShippingInfoRequired":"${RDFreshCert#ShippingInfoRequired}",
 	"DisplayInCatalog":"${RDFreshCert#DisplayInCatalogTrue}",
-	"CertificateInd":"${RDFreshCert#CertificateInd}",	
+	"CertificateInd":"${RDFreshCert#CertificateInd}",
+	"Tiers": [
+{
+"TierCode": "${RDFreshCert#TierCode2}"
+}
+],
 	"Status":"A",
-	  "Tiers": [
-                  {
-                      "TierCode": "${RDFreshCert#TierCode2}",
-                   }
-  ],
      "FixedPoints": "${RDFreshCert#FixedPoints}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewards</con:originalUri>
@@ -254,7 +254,7 @@ if (status == 200)  testRunner.gotoStepByName("RewardId")</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="RewardId" id="f107f750-6138-4529-9b12-3ee9e5f9c5c6">
+  <con:testStep type="groovy" name="RewardId" id="48da3881-d85b-472f-9b16-92d741b3f130">
     <con:settings/>
     <con:config>
       <script>def rewardId = context.expand('${GetRewardByCode#Response#$[\'RewardId\']}')
@@ -318,7 +318,7 @@ if(responseAddReward==null || responseAddReward=="")
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>e9ffb6ee-7767-4c75-9393-26a29e7d49be</con:testStepId>
+    <con:testStepId>36598250-e6b0-4d7c-ab9c-13537e2b01eb</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

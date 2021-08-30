@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="58a85117-5558-4be0-b68f-214c9fbde4c3" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="CreateMoment" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="58a85117-5558-4be0-b68f-214c9fbde4c3fileName">CreateMoment</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep id="b3b7fd85-7c2a-483d-b36a-1ceda53f0144" name="GetMomentByMomentCode" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="GetMomentByCode" resourcePath="/api/v1/momentmgmt/moment/{momentCode}" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="dd52f0c5-0006-459f-bcbd-9cf595dabc6c" mediaType="application/json" name="GetMomentByMomentCode">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt/moment/%24%28%23MomentWithMessage%23RGRMOMENTNAME%7D</con:originalUri>
+        <con:assertion id="9438d3d9-511c-428e-8de9-ba4480810d72" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="momentCode" value="${#TestCase#MomentName}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>momentCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="b0fb897a-8fde-4710-be01-72e79d133204" name="UpsertMessageMomentCond" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script><![CDATA[import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${GetMomentByMomentCode#HarResponse#$[\'status\']}' ).toInteger()
+def momentId = context.expand('${GetMomentByMomentCode#Response#$[\'MomentId\']}')
+def momentStatus = context.expand('${GetMomentByMomentCode#Response#$[\'Status\']}')
+
+
+if (status == 404 && momentId == "")  testRunner.gotoStepByName("CreateMoment")
+else if (status == 200 && momentId != "" && momentStatus == "I")   testRunner.gotoStepByName("UpdateMoment")
+else
+testRunner.gotoStepByName("MomentId")]]></script>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="e31e0d3f-4bca-43f7-86cf-3c6146bce314" name="UpdateMoment" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="UpdateMoment" resourcePath="/api/v1/momentmgmt/{momentId}" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="e4359f26-93ff-4eab-a884-4195a8f77ae6" mediaType="application/json" name="UpdateMoment" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>${#TestCase#Body}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt/</con:originalUri>
+        <con:assertion id="f367b875-3980-4258-81dd-f183eff0d89a" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="momentId" value="${GetMomentByMomentCode#Response#$['MomentId']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>momentId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="7744b4f9-11b4-496b-b3ad-eeaf11a14a73" name="UpdateMomentCond" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${UpdateMoment#HarResponse#$[\'status\']}' ).toInteger()
+
+if (status == 200)  testRunner.gotoStepByName("MomentId")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="87437e6f-80c6-4b9d-85a8-c5865f4dd9b4" name="CreateMoment" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="AddMoment" resourcePath="/api/v1/momentmgmt" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="a1688ce7-78e7-40b0-a3d3-fdae0cd31567" mediaType="application/json" name="CreateMoment" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>${#TestCase#Body}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt</con:originalUri>
+        <con:assertion id="e66fe6ad-3090-4fbd-b8e1-8027ca200e73" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="contant-type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>contant-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="45ccab26-c2ea-465a-a5f4-cc211c822cf2" name="MomentId" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script>def momentid = context.expand( '${GetMomentByMomentCode#Response#$[\'MomentId\']}' )
+def responseCreateMoment = context.expand( '${CreateMoment#Response}' )
+def responseUpdateMoment = context.expand('${UpdateMoment#Response}')
+
+if(responseCreateMoment==null || responseCreateMoment =="")
+ {
+ 	if(responseUpdateMoment==null || responseUpdateMoment =="")
+ 	{
+ 		return momentid
+ 	}
+ 	else
+ 	{
+ 		momentid = context.expand( '${UpdateMoment#Response#$[\'MomentId\']}' )
+   		 return momentid;
+ 	}
+ }
+ else
+ {
+    momentid = context.expand( '${CreateMoment#Response#$[\'MomentId\']}' )
+    return momentid;
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="114b8f52-354f-49ef-b94d-cda182301f9e" name="ActivateMoment" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="ActivateMoment" resourcePath="/api/v1/momentmgmt/{momentId}/activate" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="83e08a66-8efd-4474-b1a8-ffeea07c82d6" mediaType="application/json" name="ActivateMoment" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt/activate</con:originalUri>
+        <con:assertion id="4b8327be-e8c5-42f7-8e94-88ef80a45263" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="momentId" value="${MomentId#result}"/>
+        </con:parameters>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="8e896e8b-ec8f-44b2-a5f5-c4f21d8631c6" name="MomentEngineReload" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="RefreshEngine" resourcePath="/api/v1/operations/engine/refresh" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="57c47b89-fe65-498e-93ba-cc0119906e4b" mediaType="application/json" name="MomentEngineReload" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/operations/engine/refresh</con:originalUri>
+        <con:assertion id="918cf777-639c-4ba9-a4b8-3b2f3492ed9c" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="isSyncProcess" value="True"/>
+          <con:entry key="refreshAllEngines" value="True"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>refreshAllEngines</con:entry>
+          <con:entry>isSyncProcess</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>MomentName</con:name>
+      <con:value>TIER_PROGRESSION_POINT_AGGREGATE</con:value>
+    </con:property>
+    <con:property>
+      <con:name>Body</con:name>
+      <con:value><![CDATA[{ 	"MomentCode": "${#TestCase#MomentName}", 	"StartDate": "2021-01-01T00:00:00.000000Z", 	"EndDate": "2030-12-31T23:59:59.000000Z", 	"Description": "${#TestCase#MomentName}", 	"MomentType": "TIER_UPGRADES", 	"MomentEvent": { 		"MomentCode": "${#TestCase#MomentName}", 		"EventType": "Tier_Upgrade_Evaluate", 		"MomentQualifyingDateAttribute": "CurrentDateTime", 		"MomentQualifyingDateAttributeDrools": "$Tier_Upgrade_Evaluate:Tier_Upgrade_EvaluateC(isItBetween( new Date() ,\"06/01/2021 12:00:00 AM\",\"08/31/2021 11:59:59 PM\"))", 		"MomentOffers": [ 			{ 				 				"MomentCode": "${#TestCase#MomentName}", 				"EventType": "Tier_Upgrade_Evaluate", 				"OfferName": "${#TestCase#MomentName}", 				"MomentOutcome": { 					"MomentCode": "${#TestCase#MomentName}", 					"EventType": "Tier_Upgrade_Evaluate", 					"OfferName": "${#TestCase#MomentName}", 					"OutcomeEquationUi": "TIER=\"COOP\";TIER_CHANGE_REASON=\"CSR_UPGR\";TIER_EXPIRATION_DATE= \"12/31/\" + substring( \"A\" + sum(getYear(addDays(CurrentDateTime, 0) ), 1) + \"B\",1, 5);", 					"CalculationTemplate": "TIER=<TierCode,[String]>;TIER_CHANGE_REASON=<TierReasonCode,[String]>;TIER_EXPIRATION_DATE= <x,[String]> + substring( <DummyPlaceHolder1,[String]> + sum(getYear(addDays(<TierExpireDate,[DateTime]>, <days,[Number]>) ), <mutiplier,[Number]>) + <DummyPlaceHolder2,[String]>,<start,[Number]>, <end,[Number]>);", 					"OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22TIER%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22rtn%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%3D%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22cmp%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22TierCode%22%2C%22type%22%3A%22String%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22%5C%22COOP%5C%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%227c44d9b4-e7a2-ac1b-e053-0f5b9e0afd4a%22%7D%2C%7B%22name%22%3A%22%3B%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22cmp%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22TIER_CHANGE_REASON%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22rtn%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%3D%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22cmp%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22TierReasonCode%22%2C%22type%22%3A%22String%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_1%22%2C%22value%22%3A%22%5C%22CSR_UPGR%5C%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%2216836bb4-ff52-231d-e053-0f5b9e0af571%22%7D%2C%7B%22name%22%3A%22%3B%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22cmp%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22TIER_EXPIRATION_DATE%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22rtn%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%3D%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22cmp%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22x%22%2C%22type%22%3A%22String%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_2%22%2C%22value%22%3A%22%5C%2212%2F31%2F%5C%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%2B%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22substring%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22func%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22StringFunctions.substring%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22(%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22DummyPlaceHolder1%22%2C%22type%22%3A%22String%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_3%22%2C%22value%22%3A%22%5C%22A%5C%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%2B%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22sum%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22func%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22MathFunctions.sum%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22sum%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22(%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22sum%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22getYear%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22func%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22DateFunctions.getYear%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22getYear%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22(%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22getYear%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22addDays%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22func%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22DateFunctions.addDays%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22addDays%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22(%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22addDays%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22TierExpireDate%22%2C%22type%22%3A%22DateTime%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_4%22%2C%22value%22%3A%22CurrentDateTime%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22addDays%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22new%20Date()%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%2C%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22addDays%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22addDays%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22days%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_5%22%2C%22value%22%3A%220%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22addDays%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22)%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22addDays%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22getYear%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22)%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22getYear%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%2C%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22sum%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22sum%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22mutiplier%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_6%22%2C%22value%22%3A%221%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22sum%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22)%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22sum%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%2B%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22DummyPlaceHolder2%22%2C%22type%22%3A%22String%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_7%22%2C%22value%22%3A%22%5C%22B%5C%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%2C%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22start%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_8%22%2C%22value%22%3A%221%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%2C%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%20%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22end%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_9%22%2C%22value%22%3A%225%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22)%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22substring%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%3B%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22cmp%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22TIER%3DString.valueOf(%5C%22COOP%5C%22)%3BTIER_CHANGE_REASON%3DString.valueOf(%5C%22CSR_UPGR%5C%22)%3BTIER_EXPIRATION_DATE%3D%20String.valueOf(%5C%2212%2F31%2F%5C%22%20%2B%20StringFunctions.substring(%20%5C%22A%5C%22%20%2B%20new%20Double(MathFunctions.sum(new%20Double(DateFunctions.getYear(DateFunctions.addDays(new%20Date()%2C%200)%20))%2C%201))%20%2B%20%5C%22B%5C%22%2C1%2C%205))%3B%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D", 					"OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"${#TestCase#MomentName}\"),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\nMomentParam[] outcomeValues = new MomentParam[] {new MomentParam(\"TIER\",String.valueOf(\"COOP\")),new MomentParam(\"TIER_CHANGE_REASON\",String.valueOf(\"CSR_UPGR\")),new MomentParam(\"TIER_EXPIRATION_DATE\", String.valueOf(\"12/31/\" + StringFunctions.substring( \"A\" + new Double(MathFunctions.sum(new Double(DateFunctions.getYear(DateFunctions.addDays(new Date(), 0) )), 1)) + \"B\",1, 5)))};\nmo.add(new MomentOutcome(\"${#TestCase#MomentName}\",null,params, outcomeValues));\n", 					"FormulaName": "TIER_CHANGE", 					"CreateUser": "AUTO_USER", 					"CreateDate": "2021-08-10T07:30:02.101046Z", 					"UpdateUser": "AUTO_USER", 					"UpdateDate": "2021-08-10T11:01:48.022721Z" 				}, 				"MomentQualifyingRule": { 					"MomentCode": "${#TestCase#MomentName}", 					"EventType": "Tier_Upgrade_Evaluate", 					"OfferName": "${#TestCase#MomentName}", 					 					"RuleEquationUI": "Tier_Upgrade_Evaluate.CurrentTier != \"COOP\" &&\n  Tier_Upgrade_Evaluate.PointAggregates.AggregateFrequency==\"YTD\" &&\n  Tier_Upgrade_Evaluate.PointAggregates.PointType==\"EGGS\" && Tier_Upgrade_Evaluate.PointAggregates.AggregateEntityCode  in (\"BASE\",\"ADJUSTMENT\") \n ", 					"RuleEquationDrools": "Tier_Upgrade_EvaluateC(CurrentTier != \"COOP\") &&  ($Tier_Upgrade_EvaluatePointAggregates : Tier_Upgrade_Evaluate.PointAggregatesC(AggregateFrequency == \"YTD\" && PointType == \"EGGS\" && AggregateEntityCode in (\"BASE\",\"ADJUSTMENT\")) from $Tier_Upgrade_Evaluate.PointAggregates)\n accumulate($item : Tier_Upgrade_Evaluate.PointAggregatesC(AggregateFrequency == \"YTD\" && PointType == \"EGGS\" && AggregateEntityCode in (\"BASE\",\"ADJUSTMENT\")) from $Tier_Upgrade_Evaluate.PointAggregates, $minimumAmount : sum($item.getFrequencyValue()))\n eval($minimumAmount.doubleValue() >= 500.00)", 					"MinimumAmountAttribute": "Tier_Upgrade_Evaluate.PointAggregates.FrequencyValue", 					"MinimumAmountValue": 500, 					 				}, 				"Rank": "2", 				"Status": "A" 				 			} 		] 	}, 	"Status": "A", 	"BestOfferIndicator": false, 	"AdvancedModeIndicator": false, 	"ReleaseState": "P" }]]></con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

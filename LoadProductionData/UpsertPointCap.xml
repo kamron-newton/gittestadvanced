@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="d6176ae6-f528-47f7-95d9-21e2f89a13f8" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertPointCap" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="d6176ae6-f528-47f7-95d9-21e2f89a13f8fileName">UpsertPointCap</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="PointCaps" id="991dd054-518e-4001-845e-3e3baec3565b">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/PointCaps.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>AdjustmentReasonCode</con:property>
+      <con:property>RoleCode</con:property>
+      <con:property>PointCap</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>10</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPointCaps" id="200d9db2-0458-4300-811b-54b721ceb727">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/roles/pointcaps" methodName="GetPointCaps" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPointCaps" id="73d57050-48d2-4df9-b30a-bc85b23e0953" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/roles/pointcaps</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="36d0f95b-38a4-4cb5-a89c-db959634ed81" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Authorization   " value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="roleCode" value="${PointCaps#RoleCode}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>roleCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="PointCapCond" id="408b298e-943c-42c6-95a1-1c2ab8d86505">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetPointCaps#Response}'))
+
+//datasource
+def pointCapsDatasource =context.expand( '${PointCaps#AdjustmentReasonCode}')
+
+//PointCapByRoleId
+def getPointCapByRoleIdByAdjReasonCode = { code ->  json.find {it?.AdjustmentReasonCode == pointCapsDatasource}?.PointCapByRoleId }
+
+def PointCapByRoleId= (getPointCapByRoleIdByAdjReasonCode('pointCapsDatasource'))
+
+if ( PointCapByRoleId == "" || PointCapByRoleId== null ) 
+    testRunner.gotoStepByName("AddPointCap")
+else{
+	testRunner.gotoStepByName("PointCapByRoleId")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddPointCap" id="271d8e8a-4b92-4e17-8443-cbe7765e9e68">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/roles/{rolecode}/pointcaps" methodName="AddPointCap" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddPointCap" id="d7c17651-ed3f-46ad-b101-00d212585c8d" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "PointCap": "${PointCaps#PointCap}",
+  "AdjustmentReasonCode": "${PointCaps#AdjustmentReasonCode}",
+  "Status":"A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/roles/rolecode/pointcaps</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="34974964-20a7-4bbb-8072-79e8e22a3fd2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="rolecode" value="${PointCaps#RoleCode}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>rolecode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="PointCapByRoleId" id="565a6557-60e8-4fba-8e6b-e66ba5d338b7">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetPointCaps#Response}'))
+
+//datasource
+def pointCapsDatasource =context.expand( '${PointCaps#AdjustmentReasonCode}')
+
+//PointCapByRoleId
+def getPointCapByRoleIdByAdjReasonCode = { code ->  json.find {it?.AdjustmentReasonCode == pointCapsDatasource}?.PointCapByRoleId }
+
+def pointCapByRoleId= (getPointCapByRoleIdByAdjReasonCode('pointCapsDatasource'))
+
+def response = context.expand( '${AddPointCap#Response}' )
+
+if(response==null || response =="")
+  	return pointCapByRoleId;
+
+ else
+ {
+    pointCapByRoleId = context.expand( '${AddPointCap#Response#$[\'PointCapByRoleId\']}' )
+    return pointCapByRoleId;
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdatePointCap" id="49e4340d-fe82-4c5b-8a5c-6fa7aa4323c6">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/roles/{rolecode}/pointcaps/{pointCapId}" methodName="UpdatePointCap" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdatePointCap" id="7ceeda51-7aee-4ede-a0b8-cd850861302d" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "PointCap": "${PointCaps#PointCap}",
+  "AdjustmentReasonCode": "${PointCaps#AdjustmentReasonCode}",
+  "Status":"A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/roles/rolecode/pointcaps/pointCapId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="2b7f1dbe-b8a8-4c64-8042-25596594e15c" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="rolecode" value="${PointCaps#RoleCode}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="pointCapId" value="${PointCapByRoleId#result}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>rolecode</con:entry>
+          <con:entry>pointCapId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="Data Source Loop" id="abd4a6e1-65b6-49a8-8e9d-a72fc8308bcd">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>PointCaps</dataSourceStep>
+      <targetStep>GetPointCaps</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>991dd054-518e-4001-845e-3e3baec3565b</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>408b298e-943c-42c6-95a1-1c2ab8d86505</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>271d8e8a-4b92-4e17-8443-cbe7765e9e68</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

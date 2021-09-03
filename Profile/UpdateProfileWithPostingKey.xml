@@ -39,6 +39,70 @@
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
+        <con:assertion type="JsonPath Match" id="aaff4383-4fac-476a-ad84-2dcbae2e6a72" name="PostingKeyId">
+          <con:configuration>
+            <path>$['PostingKeys'][0]['PostingKeyId']</path>
+            <content>${UpdateProfileWithPostingKey#Response#$['PostingKeys'][0]['PostingKeyId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateProfileWithPostingKeyAfter2Mins" id="2fac5127-40bb-4d64-819d-e2be0c5220ff">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/profiles/postingkeys" methodName="UpdateProfilePostingKeys" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateProfileWithPostingKeyAfter2Mins" id="7b2cef42-b455-46da-9b6a-b61097fd1dc1" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "PostingKeys": [
+    {
+      "PostingKeyCode": "${#[Profile#AddProfileWithPostingKey#AddProfileWithPostingKey]#Response#$['PostingKeys'][0]['PostingKeyCode']}",
+      "PostingKeyValue": "${=java.util.UUID.randomUUID()}",
+      "StartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
+      "EndDate":  "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date(System.currentTimeMillis()+(2*60*1000)))}",     
+    }
+  ],
+  "ProfileId": "${#[Profile#AddProfileWithPostingKey#AddProfileWithPostingKey]#Response#$['ProfileId']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profiles/postingkeys</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="bf7e1de0-d477-4de8-9eb0-e5183bfcc434" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="3b91e743-d7c9-4bef-a297-9d7923f70608" name="JSONPath Match">
+          <con:configuration>
+            <path>$['PostingKeys'][0]['PostingKeyId']</path>
+            <content>${UpdateProfileWithPostingKeyAfter2Mins#Response#$['PostingKeys'][0]['PostingKeyId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>

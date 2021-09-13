@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="84ddbfc1-6ec5-4f7d-9c30-886013de98cf" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertAdjustmentReason" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="84ddbfc1-6ec5-4f7d-9c30-886013de98cffileName">UpsertAdjustmentReason</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="AdjustmentReasons" id="823d59dd-a3a7-4ea6-a7c3-fef28a4ca3c3">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/AdjustmentReasons.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>PointSubTypeCode</con:property>
+      <con:property>AdjustmentReasonCode</con:property>
+      <con:property>AdjustmentReasonDescription</con:property>
+      <con:property>StartDate</con:property>
+      <con:property>EndDate</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>10</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetAdjustmentReasons" id="2a7711d4-fd05-472a-8d39-4a0b5895c35b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/adjustmentreasons" methodName="GetAdjustmentReasons" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAdjustmentReasons" id="201e8fa6-0566-4816-9671-6d2a63aef243" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/adjustmentreasons</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5164c920-7c41-4af4-8ee5-f358cb0d1da2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="AdjustmentReasonIDCond" id="b21270f5-248d-47ff-b335-093ff0c3c581">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetAdjustmentReasons#Response}'))
+
+//datasource
+def adjReasonsDatasource =context.expand( '${AdjustmentReasons#AdjustmentReasonCode}')
+
+//AdjustmentReasonId for a given AdjustmentReasonCode of the json
+def getAdjReasonIdByAdjCode = { code ->  json.find {it?.AdjustmentReasonCode == adjReasonsDatasource}?.AdjustmentReasonId}
+
+def adjustmentReasonId= (getAdjReasonIdByAdjCode( 'adjReasonsDatasource'))
+ 
+if ( adjustmentReasonId == "" || adjustmentReasonId== null ) 
+    testRunner.gotoStepByName("AddAdjustmentReason")
+else{
+	testRunner.gotoStepByName("AdjustmentReasonId")
+  }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddAdjustmentReason" id="800528f8-f145-4d98-86bf-514fd2a9da47">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/adjustmentreasons" methodName="AddAdjustmentReason" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddAdjustmentReason" id="5f5101c6-238d-4a48-9858-c508f008458e" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "AdjustmentReasonCode": "${AdjustmentReasons#AdjustmentReasonCode}",
+  "PointSubtypeCode": "${AdjustmentReasons#PointSubTypeCode}",
+  "DisplayOrder": 1,
+  "StartDate": "${AdjustmentReasons#StartDate}",
+  "EndDate": "${AdjustmentReasons#EndDate}",
+  "Description": "${AdjustmentReasons#AdjustmentReasonDescription}",
+  "Status":"A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/adjustmentreasons</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="1afae1c7-37df-4aca-a11b-0f4f6c27e263" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${AdjustmentReasons#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="AdjustmentReasonId" id="14a728b2-73d1-4378-bdd5-dd44544fcd5c">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetAdjustmentReasons#Response}'))
+
+//datasource
+def adjReasonsDatasource =context.expand( '${AdjustmentReasons#AdjustmentReasonCode}')
+
+//AdjustmentReasonId for a given AdjustmentReasonCode of the json
+def getAdjReasonIdByAdjCode = { code ->  json.find {it?.AdjustmentReasonCode == adjReasonsDatasource}?.AdjustmentReasonId }
+
+def adjustmentReasonId= (getAdjReasonIdByAdjCode( 'adjReasonsCodeDatasource'))
+ 
+def response = context.expand( '${AddAdjustmentReason#Response}' )
+
+if(response==null || response =="")
+  	return adjustmentReasonId;
+ 
+ else
+ {
+    adjustmentReasonId = context.expand( '${AddAdjustmentReason#Response#$[\'AdjustmentReasonId\']}' )
+    	return adjustmentReasonId;
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateAdjustmentReason" id="5a1b6a15-d6b8-45e3-ad2b-da392e292916">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/adjustmentreasons/{adjustmentReasonId}" methodName="UpdateAdjustmentReason" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateAdjustmentReason" id="45aa024e-1a88-43ce-8e33-f89ed9825736" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "AdjustmentReasonCode": "${AdjustmentReasons#AdjustmentReasonCode}",
+  "PointSubtypeCode": "${AdjustmentReasons#PointSubTypeCode}",
+  "DisplayOrder": 1,
+  "StartDate": "${AdjustmentReasons#StartDate}",
+  "EndDate": "${AdjustmentReasons#EndDate}",
+  "Description": "${AdjustmentReasons#AdjustmentReasonDescription}",
+  "Status":"A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/adjustmentreasons/adjustmentReasonId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="c7cf9f01-4221-4450-87c4-4caa3828ccab" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${AdjustmentReasons#ProgramCode}"/>
+          <con:entry key="adjustmentReasonId" value="${AdjustmentReasonId#result}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>adjustmentReasonId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="AdjustmentReasonsLoop" id="e9f8a970-a7a0-4b68-80d8-a333431bb336">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>AdjustmentReasons</dataSourceStep>
+      <targetStep>GetAdjustmentReasons</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>823d59dd-a3a7-4ea6-a7c3-fef28a4ca3c3</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

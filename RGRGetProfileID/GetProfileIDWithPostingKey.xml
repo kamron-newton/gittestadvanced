@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="e6154c1f-fe7b-4d58-9fdf-14a1bea22480" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="GetProfileIDWithPostingKey" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="e6154c1f-fe7b-4d58-9fdf-14a1bea22480fileName">GetProfileIDWithPostingKey</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="calltestcase" name="RunAddProfileWithPostingKey" id="2241c33b-b9a6-448a-bd52-f9fdda124083">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>baad9bb0-ef1d-40cc-ad6c-120db1b5f415</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunUpdateProfileWithPostingKeyIn5Mins" id="0f5c9e75-6a6a-465c-ab13-1ecf1b9a7eef">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>98c33b52-a6d3-4933-a7f0-84d22acf2861</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="VerifyPostingKeyIn2mins" id="bf5515f0-cf61-4673-8f02-3db35208bf7c">
+    <con:settings/>
+    <con:config>
+      <script>use (groovy.time.TimeCategory)
+{
+def today = new Date()
+todayNew = today+2.minutes
+def formattedDate = todayNew.format("yyyy-MM-dd'T'HH:mm:ssZ")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="VerifyPostingKeyIn10Mins" id="199cc54c-ef8a-47fc-be1b-cfaad9e2c0f6">
+    <con:settings/>
+    <con:config>
+      <script>use (groovy.time.TimeCategory)
+{
+def today = new Date()
+todayNew = today+ 10.minutes
+def formattedDate = todayNew.format("yyyy-MM-dd'T'HH:mm:ssZ")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="VerifyPostingKeyBefore1Min" id="48a54039-18a8-4e07-bf78-298e60fe482b">
+    <con:settings/>
+    <con:config>
+      <script>use (groovy.time.TimeCategory)
+{
+def today = new Date()
+todayNew = today-1.minutes
+def formattedDate = todayNew.format("yyyy-MM-dd'T'HH:mm:ssZ")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileIDWithPostingKey" id="03ce2353-3124-4c02-9a60-ec5bab45c13a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/summary" methodName="GetProfileID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileIDWithPostingKey" id="853f2cd2-3de9-4f93-8185-86237dca3e3f" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/summary</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="3109f89d-76da-4d45-b8bf-a0f5f4b89b75" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="65afbb02-66f2-426b-afed-2cdde581da66" name="ProfileId">
+          <con:configuration>
+            <path>$['ProfileId']</path>
+            <content>${#[Profile#AddProfileWithPostingKey#AddProfileWithPostingKey]#Response#$['ProfileId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="postingKeyCode" value="${#[Profile#AddProfileWithPostingKey#AddProfileWithPostingKey]#Response#$['PostingKeys'][0]['PostingKeyCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="postingKeyValue" value="${#[Profile#AddProfileWithPostingKey#AddProfileWithPostingKey]#Response#$['PostingKeys'][0]['PostingKeyValue']}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Account-Source</con:entry>
+          <con:entry>Brand-Org-Code</con:entry>
+          <con:entry>Source-Account-Number</con:entry>
+          <con:entry>cardNumber</con:entry>
+          <con:entry>profileId</con:entry>
+          <con:entry>postingKeyValue</con:entry>
+          <con:entry>postingKeyCode</con:entry>
+          <con:entry>postingKeyTime</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileIDWithUpdatePostingKeysIn5Mins" id="5a28057f-d950-4a1b-becd-db152c45af63">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/summary" methodName="GetProfileID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileIDWithUpdatePostingKeysIn5Mins" id="853f2cd2-3de9-4f93-8185-86237dca3e3f" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/summary</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="4af02051-d521-4990-b05f-35e826300d37" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="13af2e56-588f-4e36-987d-e5f981c0d11f" name="JSONPath Match">
+          <con:configuration>
+            <path>$['ProfileId']</path>
+            <content>${#[Profile#UpdateProfileWithPostingKey#UpdateProfileWithPostingKeyIn5Mins]#Response#$['ProfileId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="postingKeyCode" value="${#[Profile#UpdateProfileWithPostingKey#UpdateProfileWithPostingKeyIn5Mins]#Response#$['PostingKeys'][0]['PostingKeyCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="postingKeyValue" value="${#[Profile#UpdateProfileWithPostingKey#UpdateProfileWithPostingKeyIn5Mins]#Response#$['PostingKeys'][0]['PostingKeyValue']}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Account-Source</con:entry>
+          <con:entry>Brand-Org-Code</con:entry>
+          <con:entry>Source-Account-Number</con:entry>
+          <con:entry>cardNumber</con:entry>
+          <con:entry>profileId</con:entry>
+          <con:entry>postingKeyValue</con:entry>
+          <con:entry>postingKeyCode</con:entry>
+          <con:entry>postingKeyTime</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileIDWithUpdatePostingKeyAfter2Mins" id="caac9516-1203-4312-9e2c-a8819a9c7d59">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetProfileID" resourcePath="/api/v1/profiles/summary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileIDWithUpdatePostingKeyAfter2Mins" id="c85367dc-bfcc-4d81-ab82-c1a3aee50a0f" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/summary</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="db4579fe-69ce-4c44-8c2e-1a71d5c11112" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="postingKeyCode" value="${#[Profile#UpdateProfileWithPostingKey#UpdateProfileWithPostingKeyIn5Mins]#Response#$['PostingKeys'][0]['PostingKeyCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="postingKeyValue" value="${#[Profile#UpdateProfileWithPostingKey#UpdateProfileWithPostingKeyIn5Mins]#Response#$['PostingKeys'][0]['PostingKeyValue']}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="postingKeyTime" value="${VerifyPostingKeyIn2mins#result}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileIDWithUpdatePostingKeyAfter10Mins" id="0a5c8dc8-ba10-429b-b8ea-459c1f21fa62">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetProfileID" resourcePath="/api/v1/profiles/summary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileIDWithUpdatePostingKeyAfter10Mins" id="b63a41ad-a83b-4c37-98a2-b8d4a20fdc80" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/summary</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a819f47b-110f-4076-9b72-d17e636867c2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="postingKeyCode" value="${#[Profile#UpdateProfileWithPostingKey#UpdateProfileWithPostingKeyIn5Mins]#Response#$['PostingKeys'][0]['PostingKeyCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="postingKeyValue" value="${#[Profile#UpdateProfileWithPostingKey#UpdateProfileWithPostingKeyIn5Mins]#Response#$['PostingKeys'][0]['PostingKeyValue']}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="postingKeyTime" value="${VerifyPostingKeyIn10Mins#result}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileIDWithUpdatePostingKeyBefore1Min" id="340a8bc1-f771-442b-8710-7ce68b5b7d0c">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetProfileID" resourcePath="/api/v1/profiles/summary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileIDWithUpdatePostingKeyBefore1Min" id="2739f0ab-8cfc-4df2-bdf5-cf60c6269a48" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/summary</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="baf49fb0-5df7-4481-8ff2-57499f369073" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="postingKeyCode" value="${#[Profile#UpdateProfileWithPostingKey#UpdateProfileWithPostingKeyIn5Mins]#Response#$['PostingKeys'][0]['PostingKeyCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="postingKeyValue" value="${#[Profile#UpdateProfileWithPostingKey#UpdateProfileWithPostingKeyIn5Mins]#Response#$['PostingKeys'][0]['PostingKeyValue']}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="postingKeyTime" value="${VerifyPostingKeyBefore1Min#result}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>03ce2353-3124-4c02-9a60-ec5bab45c13a</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2241c33b-b9a6-448a-bd52-f9fdda124083</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0f5c9e75-6a6a-465c-ab13-1ecf1b9a7eef</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>bf5515f0-cf61-4673-8f02-3db35208bf7c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>199cc54c-ef8a-47fc-be1b-cfaad9e2c0f6</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>48a54039-18a8-4e07-bf78-298e60fe482b</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

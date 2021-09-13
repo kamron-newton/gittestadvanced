@@ -14,39 +14,6 @@
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/catalogs/orders/</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="745506e4-6e95-4275-a362-23ded5436bfa" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="87310187-9d8a-461c-bb6f-0cf6ad7a3765" name="Validate Order Id">
-          <con:configuration>
-            <path>$.OrderId</path>
-            <content>${#[ActivityOrder#PlaceOrderWithQtyOne#PlaceOrder]#Response#$['OrderId']}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="df0050c4-3c8d-4302-ae97-4f9356a93ad3" name="Validate Profile Id">
-          <con:configuration>
-            <path>$.OrderDetails[?(@.OrderId=='${OrderId}')].ProfileId</path>
-            <content>[${#[ActivityOrder#AddProfileCart#AddProfile]#Response#$['ProfileId']}]</content>
-            <allowWildcards>true</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="29f757e6-ca6b-4202-89a3-773b4960b564" name="Validation RewardId">
-          <con:configuration>
-            <path>$.OrderDetails[?(@.OrderId=='${OrderId}')].RewardId</path>
-            <content>[${#[ActivityOrder#AddFixedPointRew#RewardId]#result}]</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>
@@ -55,7 +22,7 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="orderId" value="${#[ActivityOrder#PlaceOrderWithQtyOne#PlaceOrder]#Response#$['OrderId']}"/>
-          <con:entry key="profileId" value="${#[ActivityOrder#PlaceOrderWithQtyOne#PlaceOrder]#Response#$['ProfileId']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>

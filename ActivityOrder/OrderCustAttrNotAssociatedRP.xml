@@ -33,45 +33,6 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="OrderDtlCustAttrNotAssociatedRP" id="4121a68a-3769-40dd-8304-d814c37fbd58">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata" methodName="GetCustomDataElements" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="OrderDtlCustAttrNotAssociatedRP" id="a8672019-9e6b-4c35-b6cf-176d08f23f5a" mediaType="application/json">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/customdata</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="f6ab247a-dbad-4a63-8c9c-a1b077d36d62" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="entityName" value="${RewardProviderCustomAttributes#EntityNameOD}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="excludeRewardProviderCustAttributes" value="${RewardProviderCustomAttributes#excludeRewardProviderCustAttributes}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>status</con:entry>
-          <con:entry>entityName</con:entry>
-          <con:entry>excludeRewardProviderCustAttributes</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-        </con:parameterOrder>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
   <con:testStep type="datasource" name="CustomAttributes" id="c031d52a-e6bd-443e-8c06-dda91eebb5da">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -110,34 +71,102 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddCustomDataElement" id="9a62b55b-cb16-431e-9381-01ada5acc443">
+  <con:testStep type="restrequest" name="GetCustomDataElements" id="114f54c7-c6d5-47b9-8752-284312735dec">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata" methodName="GetCustomDataElements" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetCustomDataElements" id="a8672019-9e6b-4c35-b6cf-176d08f23f5a" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/customdata</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="c4562c69-048d-4793-ae70-30b7c36a5e10" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="entityName" value="${#[ActivityOrder#UpsertCustomDataElement#RewardProviderCustomAttributes]#EntityName}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="excludeRewardProviderCustAttributes" value="${#[ActivityOrder#OrderDtlCustAttrNotAssociatedRP#RewardProviderCustomAttributes]#excludeRewardProviderCustAttributes}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>status</con:entry>
+          <con:entry>entityName</con:entry>
+          <con:entry>excludeRewardProviderCustAttributes</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="UpsertCustomDataRP" id="5a8d46d1-5ecd-41c2-b3b2-5e18c58241be">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetCustomDataElements#Response}'))
+
+//datasource
+def CustomDataNameDatasource =context.expand( '${RewardProviderCustomAttributes#CustomAttributeRP}')
+log.info(CustomDataNameDatasource)
+//CustomDataId, CustomDataName, EntityName
+def getCustomDataIdByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
+log.info(getCustomDataIdByCustomAttribute)
+//def getCustomDataNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataName }
+//def getCustomDataEntityNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataEntityName}
+def CustomDataId = (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+log.info(CustomDataId)
+//def CustomDataName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+//def CustomDataEntityName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+
+
+if (( CustomDataId == "" || CustomDataId== null ) ) 
+   testRunner.gotoStepByName("AddCustomData")
+
+else
+   testRunner.gotoStepByName("CustomDataIdRP")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddCustomData" id="b94f7a51-483c-4943-a0db-5b6f2512ddb3">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata" methodName="AddCustomDataElement" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="AddCustomDataElement" id="3926e3fc-0d12-43eb-a80f-ee3da1c8fdd7" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="AddCustomData" id="3926e3fc-0d12-43eb-a80f-ee3da1c8fdd7" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-"CustomDataName":"${RewardProviderCustomAttributes#CustomAttributeRP}",
+"CustomDataName":"${#[ActivityOrder#UpsertCustomDataElement#RewardProviderCustomAttributes]#CustomAttributeRP}",
 "IsRequired": ${CustomAttributes#IsRequired},
 "IsSearchable": ${CustomAttributes#IsSearchable},
 "PiiInd": ${CustomAttributes#PiiInd},
 "DataTypeCode":"${CustomAttributes#DataTypeCode}",
-"MaxLength": ${CustomAttributes#MaxLength},
+"MaxLength": "${CustomAttributes#MaxLength}",
 "MinValue":${CustomAttributes#MinValue},
 "MaxValue":${CustomAttributes#MaxValue},
 "Description":"RGR Custom Data for System",
-"EntityName":"${CustomAttributes#EntityName}",
+"EntityName":"${RewardProviderCustomAttributes#EntityName}",
 "LinkTableName": "${CustomAttributes#LinkTableName}",
 "LinkColumnName": "${CustomAttributes#LinkColumnName}",
 "Status": "${CustomAttributes#Status}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/customdata</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="b08dfe6b-d3b8-4c4a-bb26-349aa6f44823" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="0e04ce83-37fb-49ff-b8d9-54a64212b778" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>201</codes>
+            <codes>200</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -158,23 +187,58 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateCustomDataElement" id="b6dc1f46-017f-4462-bd52-dda2aa5a6a21">
+  <con:testStep type="groovy" name="CustomDataIdRP" id="2b362d33-8a15-4a75-9c49-7d1e10dd13cd">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata" methodName="UpdateCustomDataElement" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateCustomDataElement" id="6418b194-9279-44ef-847d-5b6360eba0bf" mediaType="application/json" postQueryString="false">
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetCustomDataElements#Response}'))
+
+//datasource
+def CustomDataNameDatasource =context.expand( '${RewardProviderCustomAttributes#CustomAttributeRP}')
+//CustomDataId
+def getCustomDataIdByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
+def getCustomDataNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
+def getCustomDataEntityNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
+
+def CustomDataId= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+def CustomDataName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+def CustomDataEntityName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+
+
+def response = context.expand( '${AddCustomData#Response}' )
+if(response==null || response =="")
+  return CustomDataId;
+  //return CustomDataName;
+  //	return CustomDataEntityName;
+  	
+  	
+
+//else
+// {
+  // CustomDataId = context.expand( '${AddCustomData#Response#$[\'CustomDataId']}' )
+   //return CustomDataId;
+//}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateCustomDataElement" id="347245ca-37cf-4d76-851b-07e0d300a905">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata/{customDataId}" methodName="UpdateCustomDataElement" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateCustomDataElement" id="dcc699a0-9658-4e7a-99e1-c6e242749056" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-"CustomDataId": "", 
+"CustomDataId": "${CustomDataIdRP#result}", 
 "CustomDataName":"${RewardProviderCustomAttributes#CustomAttributeRP}",
 "IsRequired": ${CustomAttributes#IsRequired},
 "Description":"Custom Data RP",
 "Status": "A"
 }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/customdata</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="e011f72a-5ddc-48b0-94aa-ccc7cc878ac1" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/customdata/1fcb203d-8f54-4e63-9069-349895fb454a</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5892ad87-fba4-4ae0-8b43-5b2ba78d3375" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -188,7 +252,8 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en.-us"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="customDataId" value="${CustomDataIdRP#result}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>customDataId</con:entry>
@@ -208,16 +273,17 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/customdata/</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="6ebce2a4-2886-4ac2-b239-ec8867a35b1c" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="692ff825-e9c4-49be-9f0d-483f4896b70c" name="CustomDataName Validation">
+        <con:assertion type="JsonPath Match" id="692ff825-e9c4-49be-9f0d-483f4896b70c" name="CustomDataNameRP Validation" disabled="true">
           <con:configuration>
-            <path>CustomDataName</path>
-            <content>${UpdateCustomDataElement#Response}</content>
+            <path>$['CustomDataName']</path>
+            <content>${UpdateCustomDataElement#Response#$['CustomDataName']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -245,4 +311,34 @@
   </con:testStep>
   <con:properties/>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>c031d52a-e6bd-443e-8c06-dda91eebb5da</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>114f54c7-c6d5-47b9-8752-284312735dec</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>5a8d46d1-5ecd-41c2-b3b2-5e18c58241be</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>b94f7a51-483c-4943-a0db-5b6f2512ddb3</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2b362d33-8a15-4a75-9c49-7d1e10dd13cd</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>347245ca-37cf-4d76-851b-07e0d300a905</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
 </con:testCase>

@@ -33,6 +33,44 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
+  <con:testStep type="datasource" name="CustomAttributes" id="af3e1edf-a74b-4d37-8eb9-91a6a899a9eb">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/CustomAttributes.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>CustomDataName</con:property>
+      <con:property>IsRequired</con:property>
+      <con:property>IsSearchable</con:property>
+      <con:property>PiiInd</con:property>
+      <con:property>DataTypeCode</con:property>
+      <con:property>MaxLength</con:property>
+      <con:property>MinValue</con:property>
+      <con:property>MaxValue</con:property>
+      <con:property>Description</con:property>
+      <con:property>EntityName</con:property>
+      <con:property>LinkTableName</con:property>
+      <con:property>LinkColumnName</con:property>
+      <con:property>Status</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetCustomDataElements" id="f5df6b7c-eac4-4509-8c03-7884721cb6f2">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata" methodName="GetCustomDataElements" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -72,71 +110,31 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="datasource" name="CustomAttributes" id="af3e1edf-a74b-4d37-8eb9-91a6a899a9eb">
-    <con:settings/>
-    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:dataSource type="File">
-        <con:configuration>
-          <fileName>${#Project#ProjectPath}/References/CustomAttributes.csv</fileName>
-          <separator>,</separator>
-          <trim>true</trim>
-          <charset>Cp1252</charset>
-          <quotedValues>false</quotedValues>
-        </con:configuration>
-      </con:dataSource>
-      <con:shared>true</con:shared>
-      <con:restartShared>true</con:restartShared>
-      <con:property>ProgramCode</con:property>
-      <con:property>CustomDataName</con:property>
-      <con:property>IsRequired</con:property>
-      <con:property>IsSearchable</con:property>
-      <con:property>PiiInd</con:property>
-      <con:property>DataTypeCode</con:property>
-      <con:property>MaxLength</con:property>
-      <con:property>MinValue</con:property>
-      <con:property>MaxValue</con:property>
-      <con:property>Description</con:property>
-      <con:property>EntityName</con:property>
-      <con:property>LinkTableName</con:property>
-      <con:property>LinkColumnName</con:property>
-      <con:property>Status</con:property>
-      <con:startRow>1</con:startRow>
-      <con:endRow/>
-      <con:recordsPerIteration>1</con:recordsPerIteration>
-      <con:completeLastOperation>true</con:completeLastOperation>
-      <con:trimValues>false</con:trimValues>
-      <con:entitizeValues>false</con:entitizeValues>
-      <con:restartOnRun>true</con:restartOnRun>
-      <con:expandProperties>false</con:expandProperties>
-    </con:config>
-  </con:testStep>
   <con:testStep type="groovy" name="UpsertCustomData" id="08b61966-868e-44e8-a367-3a8002f36ea2">
     <con:settings/>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
 
 //Get the parsed json of GetSources test step response
-def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetCustomDataElements#Response}'));
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetCustomDataElements#Response}'))
 
 //datasource
-def CustomDataNameDatasource =context.expand( '${RewardProviderCustomAttributes#CustomAttribute}');
+def CustomDataNameDatasource =context.expand( '${RewardProviderCustomAttributes#CustomAttribute}')
 
 //CustomDataId, CustomDataName, EntityName
-def getCustomDataIdByCustomAttribute = { code ->  json.find {it?.CustomAttribute == CustomDataNameDatasource}?.CustomDataId }
-def getCustomDataNameByCustomAttribute = { code ->  json.find {it?.CustomAttribute == CustomDataNameDatasource}?.CustomDataName }
-def getCustomDataEntityNameByCustomAttribute = { code ->  json.find {it?.CustomAttribute == CustomDataNameDatasource}?.EntityName }
+def getCustomDataIdByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
+def getCustomDataNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataName }
+def getCustomDataEntityNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataEntityName}
 def CustomDataId= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
-def CustomDataName= (getCustomDataNameByCustomAttribute('CustomDataNameDatasource'))
-def EntityName= (getCustomDataEntityNameByCustomAttribute('CustomDataNameDatasource'))
+def CustomDataName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+def CustomDataEntityName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
 
 
-if (( CustomDataId == "" || CustomDataId== null ) &amp;&amp; (CustomDataName == "" || CustomDataName== null ) &amp;&amp; (EntityName == "" || EntityName== null ))
-    testRunner.gotoStepByName("AddCustomData")
-else{
-	testRunner.gotoStepByName("CustomDataId")
-	testRunner.gotoStepByName("CustomDataName")
-	testRunner.gotoStepByName("EntityName")
-}</script>
+if (( CustomDataId == "" || CustomDataId== null ) ) 
+   testRunner.gotoStepByName("AddCustomData")
+
+else
+   testRunner.gotoStepByName("CustomDataId")</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="AddCustomData" id="edaaf8d7-09aa-4bc0-8753-b0d6a35ab05a">
@@ -148,14 +146,14 @@ else{
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-"CustomDataName":"${UpsertCustomData#result}",
+"CustomDataName":"${RewardProviderCustomAttributes#CustomAttribute}",
 "IsRequired": ${CustomAttributes#IsRequired},
 "IsSearchable": ${CustomAttributes#IsSearchable},
 "PiiInd": ${CustomAttributes#PiiInd},
 "DataTypeCode":"${CustomAttributes#DataTypeCode}",
 "MaxLength": "${CustomAttributes#MaxLength}",
-"MinValue":"${CustomAttributes#MinValue}",
-"MaxValue":"${CustomAttributes#MaxValue}",
+"MinValue":${CustomAttributes#MinValue},
+"MaxValue":${CustomAttributes#MaxValue},
 "Description":"RGR Custom Data for System",
 "EntityName":"${RewardProviderCustomAttributes#EntityNameOD}",
 "LinkTableName": "${CustomAttributes#LinkTableName}",
@@ -193,39 +191,36 @@ else{
       <script>import static com.jayway.jsonpath.JsonPath.parse
 
 //Get the parsed json of GetSources test step response
-def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetCustomDataElements#Response}'));
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetCustomDataElements#Response}'))
 
 //datasource
-def CustomDataNameDatasource =context.expand( '${RewardProviderCustomAttributes#CustomAttribute}');
-
-//PointCapByRoleId
-def getCustomDataIdByCustomAttribute = { code ->  json.find {it?.CustomAttribute == CustomDataNameDatasource}?.CustomDataId }
-def getCustomDataNameByCustomAttribute = { code ->  json.find {it?.CustomAttribute == CustomDataNameDatasource}?.CustomDataName }
-def getCustomDataEntityNameByCustomAttribute = { code ->  json.find {it?.CustomAttribute == CustomDataNameDatasource}?.EntityName }
+def CustomDataNameDatasource =context.expand( '${RewardProviderCustomAttributes#CustomAttribute}')
+//CustomDataId
+def getCustomDataIdByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
+def getCustomDataNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
+def getCustomDataEntityNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
 
 def CustomDataId= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
-def CustomDataName= (getCustomDataNameByCustomAttribute('CustomDataNameDatasource'))
-def EntityName= (getCustomDataEntityNameByCustomAttribute('CustomDataNameDatasource'))
+def CustomDataName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+def CustomDataEntityName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+
 
 def response = context.expand( '${AddCustomData#Response}' )
-
 if(response==null || response =="")
-  	return CustomDataId;
-	return CustomDataName;
-	return EntityName;
+  return CustomDataId;
+  //return CustomDataName;
+  //	return CustomDataEntityName;
+  	
+  	
 
- else
- {
-    CustomDataId = context.expand( '${AddCustomData#Response#$[\'CustomDataId']}' )
-    return CustomDataId;
-	CustomDataId = context.expand( '${AddCustomData#Response#$[\'CustomDataName']}' )
-	return CustomDataName;
-	CustomDataId = context.expand( '${AddCustomData#Response#$[\'EntityName']}' )
-	return EntityName;
- }</script>
+//else
+// {
+  // CustomDataId = context.expand( '${AddCustomData#Response#$[\'CustomDataId']}' )
+   //return CustomDataId;
+//}</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateCustomData" id="c612ddd3-715b-47d3-8f88-8cd64bcdb535">
+  <con:testStep type="restrequest" name="UpdateCustomData" id="df7c4de7-77f5-44c8-a2ff-05c4141710c2">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata" methodName="UpdateCustomDataElement" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="UpdateCustomData" id="6418b194-9279-44ef-847d-5b6360eba0bf" mediaType="application/json" postQueryString="false">
@@ -234,14 +229,14 @@ if(response==null || response =="")
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-"CustomDataId": "${UpsertCustomData#result}", 
+"CustomDataId": "${CustomDataId#result}", 
 "CustomDataName":"${RewardProviderCustomAttributes#CustomAttribute}",
 "IsRequired": ${CustomAttributes#IsRequired},
 "Description":"Custom Data RP",
 "Status": "A"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/customdata</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="e011f72a-5ddc-48b0-94aa-ccc7cc878ac1" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="86552ac3-a627-4a77-b357-2cca6fb75f8a" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -255,8 +250,52 @@ if(response==null || response =="")
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en.-us"/>
-          <con:entry key="customDataId" value="${UpsertCustomData#result}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="customDataId" value="${CustomDataId#result}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>customDataId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetCustomDataElementById" id="aceb5934-3458-4761-a5a0-f6033f2e1cfe">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata/{customDataId}" methodName="GetCustomDataElementById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetCustomDataElementById" id="c9005462-abd3-4def-94e1-849d1cdcee41" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:assertion type="Valid HTTP Status Codes" id="6ebce2a4-2886-4ac2-b239-ec8867a35b1c" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="692ff825-e9c4-49be-9f0d-483f4896b70c" name="CustomDataName Validation">
+          <con:configuration>
+            <path>CustomDataName</path>
+            <content>${UpdateCustomDataElement#Response}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="customDataId" value="${CustomDataId#result}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>customDataId</con:entry>
@@ -286,6 +325,11 @@ if(response==null || response =="")
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>1aa436be-49af-4528-8998-0d0264bf9794</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>df7c4de7-77f5-44c8-a2ff-05c4141710c2</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

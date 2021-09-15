@@ -22,6 +22,21 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
+  <con:testStep type="calltestcase" name="Run AddFixedRewardFraud" id="6ba98513-b297-4b8b-98bc-e341946aae66">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>8bf5ee42-5590-4394-a74b-52da24ef4882</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>rewardCode</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>rewardCode</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="Run AddProfileRGR" id="e2ce89c4-ba8b-4cc9-8336-a61479649536">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -111,21 +126,21 @@
       "RewardId": "${#[ActivityOrder#AddFlexibleDateRew#RewardId]#result}",
       "Quantity": 1,
 	  "ProfileOrderDetailsCustomDataGroup": {
-			"EntityName": "PROFILE_ORDER_DETAIL",
+			"EntityName": "${#[ActivityOrder#UpsertCustomDataElement]#entityName}",
 			"CustomData": [{
-				"CustomDataName": "{{CustomDataOrderDetail}}",
-				"CustomDataDescription": "Auto Data {{CustomDataDescription}}",
-				"CustomDataValue": "{{FraudOrderCustAttributeValue}}"
+				"CustomDataName": "${RewardProviderCustomAttributes#CustomAttribute}",
+				"CustomDataDescription": "Custom Data",
+				"CustomDataValue": "${#TestCase#CustomDataValue}"
 			}]
 		}
     }
   ],"ProfileOrderCustomDataGroup": {
-"EntityName": "PROFILE_ORDER",
+"EntityName": "${RewardProviderCustomAttributes#EntityName}",
 "CustomData": [
       {
-        "CustomDataName": "{{CustomDataNameRP}}",
-        "CustomDataDescription": "Auto Data {{CustomDataDescription}}",
-        "CustomDataValue": "{{FraudOrderCustAttributeValue}}"
+        "CustomDataName": "${RewardProviderCustomAttributes#CustomAttributeRP}",
+        "CustomDataDescription": "Custom Data RP",
+        "CustomDataValue": "${#TestCase#CustomDataValue}"
       }
    ]
 }
@@ -193,7 +208,16 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties/>
+  <con:properties>
+    <con:property>
+      <con:name>CustomDataValue</con:name>
+      <con:value>RGRAUTOREWARD</con:value>
+    </con:property>
+    <con:property>
+      <con:name>FraudOrderEntityName</con:name>
+      <con:value>PROFILE_ORDER_DETAIL</con:value>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>4463a1b9-5fa3-457d-aba2-fdc04a578934</con:testStepId>
@@ -207,6 +231,11 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>1c779f80-58bf-4c64-bb40-d22fab077e99</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>6ba98513-b297-4b8b-98bc-e341946aae66</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

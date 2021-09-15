@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="420b936f-45ce-437d-89df-ce681177a9dd" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertProductLevel" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="420b936f-45ce-437d-89df-ce681177a9ddfileName">UpsertProductLevel</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="ProductLevels" id="ce21b055-69d9-4e01-abaf-09dc0919c4cd">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/ProductLevels.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ChainName</con:property>
+      <con:property>ProductLevelNumber1</con:property>
+      <con:property>ProductLevelDescription1</con:property>
+      <con:property>ProductLevelNumber2</con:property>
+      <con:property>ProductLevelDescription2</con:property>
+      <con:property>HierarchyLevels</con:property>
+      <con:property>CategoryScheme</con:property>
+      <con:property>CategorySchemeDesc</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>4</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddProductLevelWithCategoryScheme" id="51f61373-71ab-44f0-93e1-9cb0f4445d6e">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/products/crmproducthierarchy" methodName="AddCategoryScheme" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddProductLevelWithCategoryScheme" id="1c47b087-97ef-4744-83f4-606d6f6abad3" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+    "ChainName":"${ProductLevels#ChainName}",
+    "CategoryScheme":"${ProductLevels#CategoryScheme}",
+     "CategorySchemeDescription":"${ProductLevels#CategorySchemeDesc}",
+     "HierarchyLevels":"${ProductLevels#HierarchyLevels}",
+     "Level1Label":"${ProductLevels#ProductLevelDescription1}",
+     "Level2Label":"${ProductLevels#ProductLevelDescription2}",
+     "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/products/products/crmproducthierarchy</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="25bce077-ade3-4cf8-872e-3ea48a007dd5" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="ProductLevelsLoop" id="d6ec6c96-7e0b-4e61-b967-0a0925bb3ae7">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>ProductLevels</dataSourceStep>
+      <targetStep>AddProductLevelWithCategoryScheme</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>ce21b055-69d9-4e01-abaf-09dc0919c4cd</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

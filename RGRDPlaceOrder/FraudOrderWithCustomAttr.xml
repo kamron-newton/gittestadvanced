@@ -80,7 +80,7 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-"RewardId": "${#[ActivityOrder#AddFlexibleDateRew#RewardId]#result}",
+"RewardId": "${#[ActivityOrder#AddFixedRewardFraud#RewardId]#result}",
 "RewardQuantity": 1
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/catalogs/cartitems</con:originalUri>
@@ -124,22 +124,22 @@
   "EmailAddress": "test@dx2mail.com",
   "OrderDetails": [
     {
-      "RewardId": "${#[ActivityOrder#AddFlexibleDateRew#RewardId]#result}",
+      "RewardId": "${#[ActivityOrder#AddFixedRewardFraud#RewardId]#result}",
       "Quantity": 1,
 	  "ProfileOrderDetailsCustomDataGroup": {
 			"EntityName": "${#[ActivityOrder#UpsertCustomDataElement]#entityName}",
 			"CustomData": [{
-				"CustomDataName": "${RewardProviderCustomAttributes#CustomAttribute}",
+				"CustomDataName": "${#[ActivityOrder#UpsertCustomDataElement#UpdateCustomDataElement]#Response#$['CustomDataName']}",
 				"CustomDataDescription": "Custom Data",
 				"CustomDataValue": "${#TestCase#CustomDataValue}"
 			}]
 		}
     }
   ],"ProfileOrderCustomDataGroup": {
-"EntityName": "${RewardProviderCustomAttributes#EntityName}",
+"EntityName": "PROFILE_ORDER",
 "CustomData": [
       {
-        "CustomDataName": "${RewardProviderCustomAttributes#CustomAttributeRP}",
+        "CustomDataName": "${#[ActivityOrder#OrderCustAttrNotAssociatedRP#UpdateCustomDataElement]#Response#$['CustomDataName']}",
         "CustomDataDescription": "Custom Data RP",
         "CustomDataValue": "${#TestCase#CustomDataValue}"
       }
@@ -175,16 +175,16 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetOrderDetail" id="1c779f80-58bf-4c64-bb40-d22fab077e99">
+  <con:testStep type="restrequest" name="GetOrderDetail" id="76be233f-8aa1-46b3-8a53-1bfc3f43e627">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/api/v1/fraud/orders/{orderId}/orderDetails" methodName="GetOrderDetail" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:config service="RestAPIs" resourcePath="/api/v1/fraud/orders/{orderId}/orderDetails" methodName="GetOrderDetail" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetOrderDetail" id="c97bf192-5f31-4660-b342-8771dfeeef6c" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:assertion type="Valid HTTP Status Codes" id="c720c414-eb9e-4758-aa05-58f1b31ae38c" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="9a07afd0-d074-44da-b326-4d2ee4c2ffdc" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -197,6 +197,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="orderId" value="${PlaceOrder#Response#$['OrderId']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
@@ -231,12 +232,17 @@
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>1c779f80-58bf-4c64-bb40-d22fab077e99</con:testStepId>
+    <con:testStepId>6ba98513-b297-4b8b-98bc-e341946aae66</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>6ba98513-b297-4b8b-98bc-e341946aae66</con:testStepId>
+    <con:testStepId>e2039876-2768-448d-8290-c73613978320</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>3496e508-efdc-4176-ab01-74f0709e02fa</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

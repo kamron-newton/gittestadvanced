@@ -121,15 +121,12 @@ def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetCustomDa
 //datasource
 def CustomDataNameDatasource =context.expand( '${RewardProviderCustomAttributes#CustomAttributeRP}')
 log.info(CustomDataNameDatasource)
-//CustomDataId, CustomDataName, EntityName
+
 def getCustomDataIdByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
 log.info(getCustomDataIdByCustomAttribute)
-//def getCustomDataNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataName }
-//def getCustomDataEntityNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataEntityName}
+
 def CustomDataId = (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
 log.info(CustomDataId)
-//def CustomDataName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
-//def CustomDataEntityName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
 
 
 if (( CustomDataId == "" || CustomDataId== null ) ) 
@@ -199,27 +196,20 @@ def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetCustomDa
 def CustomDataNameDatasource =context.expand( '${RewardProviderCustomAttributes#CustomAttributeRP}')
 //CustomDataId
 def getCustomDataIdByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
-def getCustomDataNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
-def getCustomDataEntityNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
 
 def CustomDataId= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
-def CustomDataName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
-def CustomDataEntityName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
 
 
 def response = context.expand( '${AddCustomData#Response}' )
 if(response==null || response =="")
   return CustomDataId;
-  //return CustomDataName;
-  //	return CustomDataEntityName;
+  
   	
-  	
-
-//else
-// {
-  // CustomDataId = context.expand( '${AddCustomData#Response#$[\'CustomDataId']}' )
-   //return CustomDataId;
-//}</script>
+else
+{
+  CustomDataId = context.expand( '${AddCustomData#Response#$[\'CustomDataId\']}')  
+  return CustomDataId;
+   }</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="UpdateCustomDataElement" id="347245ca-37cf-4d76-851b-07e0d300a905">
@@ -282,11 +272,18 @@ if(response==null || response =="")
         </con:assertion>
         <con:assertion type="JsonPath Match" id="692ff825-e9c4-49be-9f0d-483f4896b70c" name="CustomDataNameRP Validation">
           <con:configuration>
-            <path>[?(@.CustomDataName=='{{${RewardProviderCustomAttributes#CustomAttributeRP}}')].CustomDataName</path>
-            <content>${UpdateCustomDataElement#Response#$['CustomDataName']}</content>
+            <path>CustomDataName</path>
+            <content>${RewardProviderCustomAttributes#CustomAttributeRP}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple NotContains" id="786cf321-d8b2-4cda-8f9e-e441fd456b03" name="Findtext - ProgramCode">
+          <con:configuration>
+            <token>ProgramCode</token>
+            <ignoreCase>true</ignoreCase>
+            <useRegEx>false</useRegEx>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -298,7 +295,7 @@ if(response==null || response =="")
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="customDataId" value="${OrderDtlCustAttrNotAssociatedRP#Response#$[0]['CustomDataId']}"/>
+          <con:entry key="customDataId" value="${CustomDataIdRP#result}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>customDataId</con:entry>

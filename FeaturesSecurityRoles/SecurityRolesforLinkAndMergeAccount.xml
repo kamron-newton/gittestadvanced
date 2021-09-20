@@ -4,6 +4,289 @@
     <con:setting id="69f11683-f7ee-45d0-b4ec-34eb4d361f71fileName">SecurityRolesforLinkAndMergeAccount</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="restrequest" name="GetSystemRoles" id="72fb150a-f64c-4a79-b66d-039085224797">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/roles" methodName="GetSystemRoles" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="38bd61e6-682d-47f2-8c91-81a9956a7cda" mediaType="application/json" name="GetSystemRoles">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/roles</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="30c5f606-3e56-47b9-9ed5-10efaf6ea302" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>status</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="RolesParameter" id="a8c3000d-be7b-49cb-a66e-496238de44ae">
+    <con:settings/>
+    <con:config>
+      <script>def LinkOnlyRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_ONLY\')].RoleId[0]}') 
+
+
+if (LinkOnlyRole == "") {
+	(testRunner.gotoStepByName("AddSystemRoleToCreateLinkOnlyRole")) 
+}
+else {
+	(testRunner.gotoStepByName("ReturnRoleIdLinkOnly"))
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddSystemRoleToCreateLinkOnlyRole" id="4deac27f-8d0b-4877-8e7b-652b0725e6e2">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/roles" methodName="AddSystemRole" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddSystemRoleToCreateLinkOnlyRole" id="4770bebc-30a2-46eb-8267-db276c886e5f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "RoleCode": "TEST_LNK_ONLY",
+  "Description": "Link Access only",
+  "RolePrivileges": [
+    {      
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",
+      "SubModuleCode": "MGT",
+      "Status": "A"
+    },
+    {
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",     
+      "SubModuleCode": "CAT",
+      "Status": "A"
+    },
+    {      
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF", 
+      "SubModuleCode": "LNK",
+      "Status": "A"
+    },
+    {      
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",  
+      "SubModuleCode": "SEG",
+      "Status": "A"
+    },
+    {
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",   
+      "SubModuleCode": "PNT",
+      "Status": "A"
+    },
+    {
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",   
+      "SubModuleCode": "SVY",
+      "Status": "A"
+    },
+    {      
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",  
+      "SubModuleCode": "SUB"
+    },
+    {
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",    
+      "SubModuleCode": "ENR",
+      "Status": "A"
+    },
+    {      
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",
+      "SubModuleCode": "AGR",
+      "Status": "A"
+    }
+  ],
+      "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/roles</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b5430dec-5641-46de-9952-2afa721bd9d4" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ReturnRoleIdLinkOnly" id="f75e933c-0f6d-449b-8773-6687331f3bf7">
+    <con:settings/>
+    <con:config>
+      <script>def ReturnRoleIdLinkOnly = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_ONLY\')].RoleId[0]}') 
+
+if(ReturnRoleIdLinkOnly==null || ReturnRoleIdLinkOnly =="")
+{
+ReturnRoleIdLinkOnly==context.expand( '${AddSystemRoleToCreateLinkOnlyRole#Response#$[\'RoleId\']}')
+return RoleId;
+}
+ else
+ {
+     return ReturnRoleIdLinkOnly;
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateSystemRoleforLinkOnlyRole" id="1fe90bd5-4f39-45e9-ac08-f8fa0d9c250f">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateSystemRole" resourcePath="/api/v1/security/roles/{roleId}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateSystemRoleforLinkOnlyRole" id="10e088d7-c644-49a0-b3ef-7900336e597e" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "RoleCode": "TEST_LNK_ONLY",
+  "Description": "Link Access only",
+  "RolePrivileges": [
+    {      
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",
+      "SubModuleCode": "MGT",
+      "Status": "A"
+    },
+    {
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",     
+      "SubModuleCode": "CAT",
+      "Status": "A"
+    },
+    {      
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF", 
+      "SubModuleCode": "LNK",
+      "Status": "A"
+    },
+    {      
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",  
+      "SubModuleCode": "SEG",
+      "Status": "A"
+    },
+    {
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",   
+      "SubModuleCode": "PNT",
+      "Status": "A"
+    },
+    {
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",   
+      "SubModuleCode": "SVY",
+      "Status": "A"
+    },
+    {      
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",  
+      "SubModuleCode": "SUB"
+    },
+    {
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",    
+      "SubModuleCode": "ENR",
+      "Status": "A"
+    },
+    {      
+      "SecurityLevel": "FULLACCESS",
+      "ModuleCode": "PRF",
+      "SubModuleCode": "AGR",
+      "Status": "A"
+    }
+  ],
+      "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/roles/roleId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a93d7b88-70b5-4dd9-b20e-1ad5d08929fb" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="e5cc24b6-78dd-4afd-97db-f5ed2f00df80" name="JSONPath Match">
+          <con:configuration>
+            <path>$['RoleCode']</path>
+            <content>${UpdateSystemRoleforLinkOnlyRole#Response#$['RoleCode']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="roleId" value="${ReturnRoleIdLinkOnly#result}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>72fb150a-f64c-4a79-b66d-039085224797</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>a8c3000d-be7b-49cb-a66e-496238de44ae</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>4deac27f-8d0b-4877-8e7b-652b0725e6e2</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f75e933c-0f6d-449b-8773-6687331f3bf7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
 </con:testCase>

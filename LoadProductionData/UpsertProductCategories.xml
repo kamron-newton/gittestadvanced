@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="52273d98-8b1d-4136-8875-b103d45f5369" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertProductCategories" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="52273d98-8b1d-4136-8875-b103d45f5369fileName">UpsertProductCategories</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="Products" id="24fa9221-33d8-4f35-88eb-a9fe07fcd15c">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Products.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>true</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ï»¿NotUsed</con:property>
+      <con:property>Level1Description</con:property>
+      <con:property>Level1Code</con:property>
+      <con:property>Level2Code</con:property>
+      <con:property>Level2Description</con:property>
+      <con:property>SKU</con:property>
+      <con:property>UPC</con:property>
+      <con:property>CustomProductCode</con:property>
+      <con:property>ProductDescription</con:property>
+      <con:property>ExcludeFromBaseInd</con:property>
+      <con:property>BrandCode</con:property>
+      <con:property>BrandDescription</con:property>
+      <con:property>ChainName</con:property>
+      <con:property>Level1Image</con:property>
+      <con:property>Level2Image</con:property>
+      <con:property>ProductImage</con:property>
+      <con:property>Level1ImageSmall</con:property>
+      <con:property>Level2ImageSmall</con:property>
+      <con:property>ProductImageSmall</con:property>
+      <con:property>Level1ImageLarge</con:property>
+      <con:property>Level2ImageLarge</con:property>
+      <con:property>ProductImageLarge</con:property>
+      <con:property>ProductLongDescription</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>155</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProductCategories" id="bd219dc1-0c4c-490f-a2ae-f87356c2687d">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/products/search" methodName="GetProductCategories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProductCategories" id="61bc1157-65c9-4305-8bb7-3b2f482c3221" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[
+    {
+      "ProductLevelNumber": "1",
+      "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level1Description}",
+          "ProductLevelValueCode": "${Products#Level1Code}",
+"ImageSmall": "${Products#Level1ImageSmall}",
+"ImageMedium": "${Products#Level1Image}",
+"ImageLarge": "${Products#Level1ImageLarge}",
+        }
+      ]
+    },
+    {
+      "ProductLevelNumber": "2",
+          "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level2Description}",
+          "ProductLevelValueCode": "${Products#Level2Code}",
+"ImageSmall": "${Products#Level2ImageSmall}",
+"ImageMedium": "${Products#Level2Image}",
+"ImageLarge": "${Products#Level2ImageLarge}"
+        }
+      ]
+    }
+  ]</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/products/products/search</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="2d4bb54d-297d-431e-b822-f56ba4d6c8c9" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="chainName" value="${Products#ChainName}"/>
+          <con:entry key="productCode" value="${Products#SKU}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>chainName</con:entry>
+          <con:entry>productCode</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ProductId" id="8f1f23ae-c01a-474e-b02c-13044ff766e7">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the productId
+def productId = context.expand( '${GetProductCategories#Response#$[0][\'ProductId\']}' )
+ 
+if ( productId == "" || productId== null ) 
+    testRunner.gotoStepByName("AddProductCategories")
+else{
+	testRunner.gotoStepByName("UpdateProductCategories")
+  }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddProductCategories" id="82035c59-0680-4c0b-b714-adccbeff259e">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/products" methodName="AddProductCategories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddProductCategories" id="f0641689-19d1-49a0-8455-15edfea4e143" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"Status": "A",
+	"BrandCode":  "${Products#BrandCode}",
+     "BrandDescription":  "${Products#BrandDescription}",
+	"SKU": "${Products#SKU}",
+	"UPC": "${Products#UPC}",
+	"CustomProductCode": "${Products#CustomProductCode}",
+	"ChainName": "${Products#ChainName}",
+	"Description": "${Products#ProductDescription}",
+      "LongDescription": ${Products#ProductLongDescription}",
+	"ExcludeFromBaseInd": "${Products#ExcludeFromBaseInd}",
+                   "ImageSmall": "${Products#Level1ImageSmall}",
+                   "ImageMedium": "${Products#Level1Image}",
+                  "ImageLarge": "${Products#Level2Image}",
+	"ProductLevels": [
+    {
+      "ProductLevelNumber": "1",
+      "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level1Description}",
+          "ProductLevelValueCode": "${Products#Level1Code}",
+"ImageSmall": "${Products#Level1ImageSmall}",
+"ImageMedium": "${Products#Level1Image}",
+"ImageLarge": "${Products#Level1ImageLarge}",
+        }
+      ]
+    },
+    {
+      "ProductLevelNumber": "2",
+          "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level2Description}",
+          "ProductLevelValueCode": "${Products#Level2Code}",
+"ImageSmall": "${Products#Level2ImageSmall}",
+"ImageMedium": "${Products#Level2Image}",
+"ImageLarge": "${Products#Level2ImageLarge}",
+        }
+      ]
+    }
+  ] 
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/products/products</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="d71d0efe-2d36-469c-bc47-a3825f09f4c5" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateProductCategories" id="f1dc550e-5a8b-4a18-885c-9d9dc1163986">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/products/{productId}" methodName="UpdateProductCategories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateProductCategories" id="dd918164-f7ff-4ece-987d-9b1b7315ad57" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"Status": "A",
+	"BrandCode":  "${Products#BrandCode}",
+     "BrandDescription":  "${Products#BrandDescription}",
+	"SKU": "${Products#SKU}",
+	"UPC": "${Products#UPC}",
+	"CustomProductCode": "${Products#CustomProductCode}",
+	"ChainName": "${Products#ChainName}",
+	"Description": "${Products#ProductDescription}",
+      "LongDescription": "${Products#ProductLongDescription}",
+	"ExcludeFromBaseInd": "${Products#ExcludeFromBaseInd}",
+                   "ImageSmall": "${Products#Level1ImageSmall}",
+                   "ImageMedium": "${Products#Level1Image}",
+                  "ImageLarge": "${Products#Level2Image}",
+	"ProductLevels": [
+    {
+      "ProductLevelNumber": "1",
+      "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level1Description}",
+          "ProductLevelValueCode": "${Products#Level1Code}",
+"ImageSmall": "${Products#Level1ImageSmall}",
+"ImageMedium": "${Products#Level1Image}",
+"ImageLarge": "${Products#Level1ImageLarge}",
+        }
+      ]
+    },
+    {
+      "ProductLevelNumber": "2",
+          "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level2Description}",
+          "ProductLevelValueCode": "${Products#Level2Code}",
+"ImageSmall": "${Products#Level2ImageSmall}",
+"ImageMedium": "${Products#Level2Image}",
+"ImageLarge": "${Products#Level2ImageLarge}",
+        }
+      ]
+    }
+  ] 
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/products/products/productId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="6c13d355-1300-4593-95a6-7682fc874581" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="productId" value="${GetProductCategories#Response#$[0]['ProductId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>productId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="ProductsLoop" id="6156f37d-e965-4161-a2fe-6fa597d2a43c">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>Products</dataSourceStep>
+      <targetStep>GetProductCategories</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>24fa9221-33d8-4f35-88eb-a9fe07fcd15c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>6156f37d-e965-4161-a2fe-6fa597d2a43c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f1dc550e-5a8b-4a18-885c-9d9dc1163986</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>8f1f23ae-c01a-474e-b02c-13044ff766e7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

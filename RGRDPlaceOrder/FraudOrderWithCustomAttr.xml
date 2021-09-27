@@ -22,6 +22,22 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
+  <con:testStep type="calltestcase" name="Run AddFixedRewardFraud" id="6ba98513-b297-4b8b-98bc-e341946aae66">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>8bf5ee42-5590-4394-a74b-52da24ef4882</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>rewardCode</con:name>
+          <con:value>PPFRAUDREW</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>rewardCode</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="Run AddProfileRGR" id="e2ce89c4-ba8b-4cc9-8336-a61479649536">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -46,24 +62,12 @@
         </con:property>
         <con:property>
           <con:name>AdjustmentReason</con:name>
+          <con:value>PPGOODW</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
         <con:entry>AdjustmentReason</con:entry>
       </con:returnProperties>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="Run AddFlexibleDateRew" id="1c8ff8da-5a00-4077-b487-6e740f6c2e39">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>0e0d967b-f1f8-4be8-96cb-b0a0f31a6bcb</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>rewardCode</con:name>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
@@ -76,7 +80,7 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-"RewardId": "${#[ActivityOrder#AddFlexibleDateRew#RewardId]#result}",
+"RewardId": "${#[ActivityOrder#AddFixedRewardFraud#RewardId]#result}",
 "RewardQuantity": 1
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/catalogs/cartitems</con:originalUri>
@@ -120,14 +124,14 @@
   "EmailAddress": "test@dx2mail.com",
   "OrderDetails": [
     {
-      "RewardId": "${#[ActivityOrder#AddFlexibleDateRew#RewardId]#result}",
+      "RewardId": "${#[ActivityOrder#AddFixedRewardFraud#RewardId]#result}",
       "Quantity": 1,
 	  "ProfileOrderDetailsCustomDataGroup": {
-			"EntityName": "PROFILE_ORDER_DETAIL",
+			"EntityName": "${#[ActivityOrder#UpsertCustomDataElement]#entityName}",
 			"CustomData": [{
-				"CustomDataName": "{{CustomDataOrderDetail}}",
-				"CustomDataDescription": "Auto Data {{CustomDataDescription}}",
-				"CustomDataValue": "{{FraudOrderCustAttributeValue}}"
+				"CustomDataName": "${#[ActivityOrder#UpsertCustomDataElement#UpdateCustomDataElement]#Response#$['CustomDataName']}",
+				"CustomDataDescription": "Custom Data",
+				"CustomDataValue": "${#TestCase#CustomDataValue}"
 			}]
 		}
     }
@@ -135,9 +139,9 @@
 "EntityName": "PROFILE_ORDER",
 "CustomData": [
       {
-        "CustomDataName": "{{CustomDataNameRP}}",
-        "CustomDataDescription": "Auto Data {{CustomDataDescription}}",
-        "CustomDataValue": "{{FraudOrderCustAttributeValue}}"
+        "CustomDataName": "${#[ActivityOrder#OrderCustAttrNotAssociatedRP#UpdateCustomDataElement]#Response#$['CustomDataName']}",
+        "CustomDataDescription": "Custom Data RP",
+        "CustomDataValue": "${#TestCase#CustomDataValue}"
       }
    ]
 }
@@ -171,19 +175,29 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetOrderDetail" id="1c779f80-58bf-4c64-bb40-d22fab077e99">
+  <con:testStep type="restrequest" name="GetOrderDetail" id="76be233f-8aa1-46b3-8a53-1bfc3f43e627">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/api/v1/fraud/orders/{orderId}/orderDetails" methodName="GetOrderDetail" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:config service="RestAPIs" resourcePath="/api/v1/fraud/orders/{orderId}/orderDetails" methodName="GetOrderDetail" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetOrderDetail" id="c97bf192-5f31-4660-b342-8771dfeeef6c" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:assertion type="Valid HTTP Status Codes" id="c720c414-eb9e-4758-aa05-58f1b31ae38c" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/fraud/orders/bcbc3fbe-8d51-4893-92b5-b737d1342f39/orderDetails</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9a07afd0-d074-44da-b326-4d2ee4c2ffdc" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="89fe925e-d24d-4cb0-95e5-ac5d2c0b693a" name="Entity Name Validation">
+          <con:configuration>
+            <path>$..OrderDetails[0].ProfileOrderDetailsCustomDataGroup.EntityName</path>
+            <content>${#[ActivityOrder#UpsertCustomDataElement#RewardProviderCustomAttributes]#EntityNameOD}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -193,6 +207,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="orderId" value="${PlaceOrder#Response#$['OrderId']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
@@ -205,7 +220,16 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties/>
+  <con:properties>
+    <con:property>
+      <con:name>CustomDataValue</con:name>
+      <con:value>RGRAUTOREWARD</con:value>
+    </con:property>
+    <con:property>
+      <con:name>FraudOrderEntityName</con:name>
+      <con:value>PROFILE_ORDER_DETAIL</con:value>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>4463a1b9-5fa3-457d-aba2-fdc04a578934</con:testStepId>
@@ -218,12 +242,17 @@
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>1c8ff8da-5a00-4077-b487-6e740f6c2e39</con:testStepId>
+    <con:testStepId>6ba98513-b297-4b8b-98bc-e341946aae66</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>1c779f80-58bf-4c64-bb40-d22fab077e99</con:testStepId>
+    <con:testStepId>e2039876-2768-448d-8290-c73613978320</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>3496e508-efdc-4176-ab01-74f0709e02fa</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

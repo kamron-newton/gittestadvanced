@@ -1791,6 +1791,7 @@
                   <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
                   <con:request/>
                   <con:credentials>
+                    <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
                     <con:authType>No Authorization</con:authType>
                   </con:credentials>
                   <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
@@ -2261,7 +2262,25 @@
                 <con:style>HEADER</con:style>
                 <con:default/>
               </con:parameter>
+              <con:parameter required="true">
+                <con:name>Program-Code</con:name>
+                <con:value/>
+                <con:style>QUERY</con:style>
+                <con:default/>
+              </con:parameter>
             </con:parameters>
+            <con:representation type="RESPONSE">
+              <con:mediaType>application/json; charset=utf-8</con:mediaType>
+              <con:status>200</con:status>
+              <con:params/>
+              <con:element>Response</con:element>
+            </con:representation>
+            <con:representation type="FAULT">
+              <con:mediaType xsi:nil="true"/>
+              <con:status>401</con:status>
+              <con:params/>
+              <con:element>data</con:element>
+            </con:representation>
             <con:request name="GetLinkedProfilesByID" id="3eb5d30a-22f0-4a99-8583-1c3854f4823d" mediaType="application/json">
               <con:settings>
                 <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
@@ -2277,12 +2296,14 @@
                 <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
                 <con:entry key="content-type" value="application/json"/>
                 <con:entry key="Accept-Language" value="en-US"/>
+                <con:entry key="Program-Code" value="programCode"/>
               </con:parameters>
               <con:parameterOrder>
                 <con:entry>profileId</con:entry>
                 <con:entry>Authorization</con:entry>
                 <con:entry>Accept-Language</con:entry>
                 <con:entry>content-type</con:entry>
+                <con:entry>Program-Code</con:entry>
               </con:parameterOrder>
             </con:request>
           </con:method>
@@ -2311,7 +2332,25 @@
                 <con:style>HEADER</con:style>
                 <con:default/>
               </con:parameter>
+              <con:parameter required="true">
+                <con:name>Program-Code</con:name>
+                <con:value/>
+                <con:style>QUERY</con:style>
+                <con:default/>
+              </con:parameter>
             </con:parameters>
+            <con:representation type="FAULT">
+              <con:mediaType xsi:nil="true"/>
+              <con:status>404 401</con:status>
+              <con:params/>
+              <con:element>data</con:element>
+            </con:representation>
+            <con:representation type="RESPONSE">
+              <con:mediaType>application/json; charset=utf-8</con:mediaType>
+              <con:status>200</con:status>
+              <con:params/>
+              <con:element>Response</con:element>
+            </con:representation>
             <con:request name="GetMergedProfilesByID" id="c3b36ebf-fea3-4133-aaa8-725cbcda3b3c" mediaType="application/json">
               <con:settings>
                 <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
@@ -2327,12 +2366,14 @@
                 <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
                 <con:entry key="content-type" value="application/json"/>
                 <con:entry key="Accept-Language" value="en-US"/>
+                <con:entry key="Program-Code" value="programCode"/>
               </con:parameters>
               <con:parameterOrder>
                 <con:entry>profileId</con:entry>
                 <con:entry>Accept-Language</con:entry>
                 <con:entry>Authorization</con:entry>
                 <con:entry>content-type</con:entry>
+                <con:entry>Program-Code</con:entry>
               </con:parameterOrder>
             </con:request>
           </con:method>
@@ -7962,6 +8003,12 @@
           <con:params/>
           <con:element xmlns:rol="https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/roles">rol:Fault</con:element>
         </con:representation>
+        <con:representation type="RESPONSE">
+          <con:mediaType>application/json; charset=utf-8</con:mediaType>
+          <con:status>201</con:status>
+          <con:params/>
+          <con:element xmlns:rol="https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/roles">rol:Response</con:element>
+        </con:representation>
         <con:request name="AddSystemRole" id="4770bebc-30a2-46eb-8267-db276c886e5f" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
@@ -8012,6 +8059,22 @@
             <con:default/>
           </con:parameter>
         </con:parameters>
+        <con:representation type="FAULT">
+          <con:mediaType>application/json</con:mediaType>
+          <con:status>400</con:status>
+          <con:params/>
+          <con:element xmlns:user="https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/users">user:Fault</con:element>
+        </con:representation>
+        <con:representation type="REQUEST">
+          <con:mediaType>application/json</con:mediaType>
+          <con:params/>
+        </con:representation>
+        <con:representation type="RESPONSE">
+          <con:mediaType>application/json; charset=utf-8</con:mediaType>
+          <con:status>201</con:status>
+          <con:params/>
+          <con:element xmlns:user="https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/users">user:Response</con:element>
+        </con:representation>
         <con:request name="AddSystemUser" id="d701cbeb-ef78-472e-bc14-d3e89903aad3" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
@@ -8074,6 +8137,12 @@
           <con:status>503</con:status>
           <con:params/>
           <con:element>html</con:element>
+        </con:representation>
+        <con:representation type="RESPONSE">
+          <con:mediaType>application/json; charset=utf-8</con:mediaType>
+          <con:status>200</con:status>
+          <con:params/>
+          <con:element>Response</con:element>
         </con:representation>
         <con:request name="GetSystemUsers" id="8a09460d-65f0-4f23-92ee-34cbaa9391f7" mediaType="application/json">
           <con:settings>

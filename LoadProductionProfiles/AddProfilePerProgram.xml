@@ -4,14 +4,14 @@
     <con:setting id="556b3231-95f3-4851-b5ea-ccd5c0c47e7bfileName">AddProfilePerProgram</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="Profile" id="79d6c7b4-831b-4989-910b-5ef32c8c5cc4">
+  <con:testStep type="datasource" name="Profile" id="7f354565-18c5-4c9b-8524-65cbbf41aa8d">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
         <con:configuration>
           <fileName>${#Project#ProjectPath}/References/Profile.csv</fileName>
           <separator>,</separator>
-          <trim>true</trim>
+          <trim>false</trim>
           <charset>Cp1252</charset>
           <quotedValues>false</quotedValues>
         </con:configuration>
@@ -24,6 +24,7 @@
       <con:property>FirstName</con:property>
       <con:property>MiddleInit</con:property>
       <con:property>LastName</con:property>
+      <con:property>MiddleName</con:property>
       <con:property>Suffix</con:property>
       <con:property>CardNumber</con:property>
       <con:property>GlobalOptOut</con:property>
@@ -35,14 +36,43 @@
       <con:property>BirthDate</con:property>
       <con:property>CompanyName</con:property>
       <con:property>Country</con:property>
+      <con:property>GamingAvatar</con:property>
+      <con:property>Title</con:property>
+      <con:property>MaturitySuffix</con:property>
+      <con:property>ProfessionalSuffix</con:property>
+      <con:property>SrcFirmName</con:property>
+      <con:property>SrcUnparsedName</con:property>
+      <con:property>TitleCode</con:property>
+      <con:property>StdFirstName</con:property>
+      <con:property>StdMiddleName</con:property>
+      <con:property>StdLastName</con:property>
+      <con:property>SalutationId</con:property>
+      <con:property>SrcPhone3</con:property>
+      <con:property>SrcPhone2</con:property>
+      <con:property>SrcPhone1</con:property>
+      <con:property>SrcEmail3</con:property>
+      <con:property>SrcEmail2</con:property>
+      <con:property>SrcEmail1</con:property>
+      <con:property>SrcHardkey10</con:property>
+      <con:property>SrcHardkey9</con:property>
+      <con:property>SrcHardkey8</con:property>
+      <con:property>SrcHardkey7</con:property>
+      <con:property>SrcHardkey6</con:property>
+      <con:property>SrcHardkey5</con:property>
+      <con:property>SrcHardkey4</con:property>
+      <con:property>SrcHardkey3</con:property>
+      <con:property>SrcHardkey1</con:property>
       <con:property>UpdatedCountry</con:property>
       <con:property>AddressLine1</con:property>
       <con:property>AddressLine2</con:property>
       <con:property>AddressLine3</con:property>
+      <con:property>AddressLine4</con:property>
       <con:property>City</con:property>
       <con:property>StateCode</con:property>
       <con:property>CountryCode</con:property>
       <con:property>PostalCode</con:property>
+      <con:property>Zip4</con:property>
+      <con:property>Urbanization</con:property>
       <con:property>AddressChannelCode</con:property>
       <con:property>AddressLocationCode</con:property>
       <con:property>AddressIsPreferred</con:property>
@@ -55,6 +85,7 @@
       <con:property>EmailDeliveryStatus</con:property>
       <con:property>PhoneNumber</con:property>
       <con:property>PhoneCountryCode</con:property>
+      <con:property>Extension</con:property>
       <con:property>AcceptsText</con:property>
       <con:property>Frequency</con:property>
       <con:property>PhoneChannelCode</con:property>
@@ -73,6 +104,13 @@
       <con:property>CreateRecordNumber</con:property>
       <con:property>UpdateFileId</con:property>
       <con:property>UpdateRecordNumber</con:property>
+      <con:property>SocialAccountEmail</con:property>
+      <con:property>SocialAccountType</con:property>
+      <con:property>SocialAccountId</con:property>
+      <con:property>SocialToken</con:property>
+      <con:property>SocialTokenSecret</con:property>
+      <con:property>SocialNetworkUserName</con:property>
+      <con:property>SocialNetworkCode</con:property>
       <con:property>AutoRewardOptInInd</con:property>
       <con:property>GamerAlias</con:property>
       <con:property>GamerAvatar</con:property>
@@ -80,14 +118,9 @@
       <con:property>PostingKeyValue</con:property>
       <con:property>EnrollmentStoreCode</con:property>
       <con:property>InvalidSourceCode</con:property>
-      <con:startRow>1</con:startRow>
-      <con:endRow/>
-      <con:recordsPerIteration>1</con:recordsPerIteration>
-      <con:completeLastOperation>true</con:completeLastOperation>
-      <con:trimValues>false</con:trimValues>
-      <con:entitizeValues>false</con:entitizeValues>
+      <con:property>InVdProductlevelCode</con:property>
+      <con:property>InVdVulGarInd</con:property>
       <con:restartOnRun>true</con:restartOnRun>
-      <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
   <con:testStep id="295aa1d0-34e4-4414-bf73-91548bc7b2e8" name="RandomProfile" type="datasource">
@@ -612,7 +645,7 @@ def fileProgramCode =  context.expand('${Profile#ProgramCode}')
 if(basicProgramCode == fileProgramCode)
   testRunner.gotoStepByName("GetPostingKeys")
   else 
-   testRunner.gotoStepByName("GetProgramCode")</script>
+    testRunner.gotoStepByName("AddProfileLoop")</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="GetPostingKeys" id="d2a6154e-0f7c-41c7-b96e-9b0293bba091">
@@ -860,7 +893,7 @@ if (postingKeyCode == "" )
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="datasourceloop" name="Add Profile Loop" id="075fdffb-db36-4d35-a26b-70d55069d702">
+  <con:testStep type="datasourceloop" name="AddProfileLoop" id="075fdffb-db36-4d35-a26b-70d55069d702">
     <con:settings/>
     <con:config>
       <dataSourceStep>Profile</dataSourceStep>
@@ -870,11 +903,6 @@ if (postingKeyCode == "" )
   </con:testStep>
   <con:properties/>
   <con:reportParameters/>
-  <con:breakPoints>
-    <con:testStepId>79d6c7b4-831b-4989-910b-5ef32c8c5cc4</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>efebc707-d3a2-48b1-baff-9ef11b7a1e98</con:testStepId>
     <con:status>NONE</con:status>

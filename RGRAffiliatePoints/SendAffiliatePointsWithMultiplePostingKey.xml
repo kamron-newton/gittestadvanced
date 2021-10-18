@@ -4,6 +4,38 @@
     <con:setting id="29803222-4c62-406c-b626-b757011d5f77fileName">SendAffiliatePointsWithMultiplePostingKey</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="RandomAffiliationAccountId" id="d4923273-5746-4792-96e3-90242f273a45">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>10</generatedDataCount>
+          <generatorsTotalNumber>1</generatorsTotalNumber>
+          <lastSelectedProperty>0</lastSelectedProperty>
+          <GeneratorType0>INT</GeneratorType0>
+          <PropertyName0>RandomNumber</PropertyName0>
+          <repetitionCountRandomNumber>0</repetitionCountRandomNumber>
+          <repeatValuesRandomNumber>false</repeatValuesRandomNumber>
+          <IntegerDataGeneratorMinValueRandomNumber>1</IntegerDataGeneratorMinValueRandomNumber>
+          <IntegerDataGeneratorMaxValueRandomNumber>100000</IntegerDataGeneratorMaxValueRandomNumber>
+          <IntegerDataGeneratorStepValueRandomNumber>1</IntegerDataGeneratorStepValueRandomNumber>
+          <IntegerDataGeneratorConsequentValuesRandomNumber>false</IntegerDataGeneratorConsequentValuesRandomNumber>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>RandomNumber</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="RunAddProfileWithTwoPostingKeys" id="dd765947-82f3-42a6-8acb-6915c49a19bb">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -28,7 +60,7 @@
         </con:property>
         <con:property>
           <con:name>AdjustmentReason</con:name>
-          <con:value>PPGOODW</con:value>
+          <con:value>PPPOINTS</con:value>
         </con:property>
         <con:property>
           <con:name>postingKeyCode</con:name>
@@ -58,7 +90,7 @@
         </con:property>
         <con:property>
           <con:name>AdjustmentReason</con:name>
-          <con:value>PPGOODW</con:value>
+          <con:value>PPPOINTS</con:value>
         </con:property>
         <con:property>
           <con:name>postingKeyCode</con:name>
@@ -73,10 +105,186 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="AddAffiliationMemberIdToProfile" id="05914018-3917-44c7-88ec-4da691444cfd">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/profiles/{profileId}/processprofileaffiliation" methodName="ProcessProfileAffiliation" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddAffiliationMemberIdToProfile" id="33dff596-eeb7-4191-a948-b9b4b31d63c8" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "AffiliationCode": "AFFWITHPOINTEXCHANGE",
+  "StartDate": "2010-09-25T00:00:00",
+  "EndDate": "2099-09-25T23:59:59Z",
+  "AffiliationAccountId": "${RandomAffiliationAccountId#RandomNumber}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles/profileId/processprofileaffiliation</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f554ea43-e89e-49e5-ac63-8b03e9f2fe55" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileWithTwoPostingKeys#AddProfileWithTwoPostingKeys]#Response#$['ProfileId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="SendAffiliatePointsFirstPostingKey" id="e75aa0c9-9ea9-4bcc-bb05-5ae1c0574cdf">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profile/affiliate/points/send" methodName="SendAffiliatePoints" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="SendAffiliatePointsFirstPostingKey" id="2cc4b5dc-25dc-4b52-8d92-ca693872dee8" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ProfileId": "${#[Profile#AddProfileWithTwoPostingKeys#AddProfileWithTwoPostingKeys]#Response#$['ProfileId']}",
+  "PostingKeyCode":"PK1239",
+  "PostingKeyValue":"${#[Profile#AddProfileWithTwoPostingKeys#AddProfileWithTwoPostingKeys]#Response#$['PostingKeys'][0]['PostingKeyValue']}",
+  "AffiliateCode": "AFFWITHPOINTEXCHANGE",
+  "PointTypeCode": "POINTS",
+  "ProgramPoints": 10,
+  "AffiliateMemberId": "${AddAffiliationMemberIdToProfile#Response#$['AffiliationAccountId']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profile/affiliate/points/send</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b97f4b5c-67af-48eb-a72c-2c8a9510604d" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="SendAffiliatePointsSecondPostingKey" id="94402fec-a864-4138-8c4d-718ab510a1e4">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profile/affiliate/points/send" methodName="SendAffiliatePoints" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="SendAffiliatePointsSecondPostingKey" id="2cc4b5dc-25dc-4b52-8d92-ca693872dee8" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ProfileId": "${#[Profile#AddProfileWithTwoPostingKeys#AddProfileWithTwoPostingKeys]#Response#$['ProfileId']}",
+  "PostingKeyCode":"PK1239",
+  "PostingKeyValue":"${#[Profile#AddProfileWithTwoPostingKeys#AddProfileWithTwoPostingKeys]#Response#$['PostingKeys'][1]['PostingKeyValue']}",
+  "AffiliateCode": "AFFWITHPOINTEXCHANGE",
+  "PointTypeCode": "POINTS",
+  "ProgramPoints": 10,
+  "AffiliateMemberId": "${AddAffiliationMemberIdToProfile#Response#$['AffiliationAccountId']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profile/affiliate/points/send</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b97f4b5c-67af-48eb-a72c-2c8a9510604d" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="VerifyPointsBalancePerPostingKey" id="24b2870f-8573-4523-b7a7-8949945568c1">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/postingkey/balance" methodName="GetPointBalancePerPostingKey" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="VerifyPointsBalancePerPostingKey" id="253a5ba3-3ee3-4b36-95c8-0aea74145003" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/points/postingkey/balance</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9694eaca-7ee5-4874-aff3-625b7db03397" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileWithTwoPostingKeys#AddProfileWithTwoPostingKeys]#Response#$['ProfileId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="status" value="A"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>dd765947-82f3-42a6-8acb-6915c49a19bb</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>d4923273-5746-4792-96e3-90242f273a45</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

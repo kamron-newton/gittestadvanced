@@ -4,6 +4,33 @@
     <con:setting id="69f11683-f7ee-45d0-b4ec-34eb4d361f71fileName">SecurityRolesforLinkAndMergeAccount</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="properties" name="RolesIDs" id="c7a69846-7c2d-478b-a78f-c5d78c2a7684">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:properties>
+        <con:property>
+          <con:name>LINK_ONLY_ROLE</con:name>
+          <con:value>d53a2604-a086-4a10-a809-2097a50138b5</con:value>
+        </con:property>
+        <con:property>
+          <con:name>MERGE_ONLY_ROLE</con:name>
+          <con:value>b50929d5-038a-4dfa-80e2-ba0bbe732df2</con:value>
+        </con:property>
+        <con:property>
+          <con:name>LINK_MERGE_ROLE</con:name>
+          <con:value>b05a814b-3366-4ccd-b660-9cf47c81c797</con:value>
+        </con:property>
+        <con:property>
+          <con:name>NO_LINK_MERGE_ROLE</con:name>
+          <con:value>2a55e1d4-8c7f-4184-8ba5-c3fdb1ead1bf</con:value>
+        </con:property>
+        <con:property>
+          <con:name>READONLY_LINK_MERGE_ROLE</con:name>
+          <con:value>2924e344-62d4-41fc-8bf3-a41b8aace40e</con:value>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetSystemRoles" id="72fb150a-f64c-4a79-b66d-039085224797">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/security/roles" methodName="GetSystemRoles" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -67,7 +94,7 @@ else {
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-  "RoleCode": "TEST_LNK_ONLY",
+  "RoleCode": "TEST_LNK_ONLY_TEMP1",
   "Description": "Link Access only",
   "RolePrivileges": [
     {      
@@ -149,6 +176,22 @@ else {
           <con:entry>content-type</con:entry>
         </con:parameterOrder>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferLinkOnlyUserAdd" id="712c7903-ee34-4d61-8eaa-e5619ddd768b">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>RoleID</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>AddSystemRoleToCreateLinkOnlyRole</con:sourceStep>
+        <con:sourcePath>$['RoleId']</con:sourcePath>
+        <con:targetType>LINK_ONLY_ROLE</con:targetType>
+        <con:targetStep>RolesIDs</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
     </con:config>
   </con:testStep>
   <con:testStep type="groovy" name="RoleIdLinkOnly" id="f75e933c-0f6d-449b-8773-6687331f3bf7">
@@ -266,6 +309,22 @@ return RoleIdLinkOnly;
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="transfer" name="TransferLinkOnlyUserUpdate" id="2025b10a-b00c-43ef-b868-75366f671b53">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>RoleId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>UpdateSystemRoleForLinkOnlyRole</con:sourceStep>
+        <con:sourcePath>$['RoleId']</con:sourcePath>
+        <con:targetType>LINK_ONLY_ROLE</con:targetType>
+        <con:targetStep>RolesIDs</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
   <con:testStep type="groovy" name="MergeOnlyRoleParameter" id="8d4a9aef-d928-438d-a5e5-5f7e754dfb20">
     <con:settings/>
     <con:config>
@@ -352,7 +411,7 @@ else {
         <con:assertion type="Valid HTTP Status Codes" id="19970e1b-9bc2-4875-8849-6b968cc721b2" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200</codes>
+            <codes>201</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -371,6 +430,22 @@ else {
           <con:entry>content-type</con:entry>
         </con:parameterOrder>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferMergeOnlyRoleAdd" id="a5e5ee42-f0bc-43da-ae5f-cff5c138e364">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>RoleId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>AddSystemRoleToCreateMergeOnlyRole</con:sourceStep>
+        <con:sourcePath>$['RoleId']</con:sourcePath>
+        <con:targetType>MERGE_ONLY_ROLE</con:targetType>
+        <con:targetStep>RolesIDs</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
     </con:config>
   </con:testStep>
   <con:testStep type="groovy" name="RoleIdMergeOnly" id="f1708251-0e2e-4de5-a8fa-6e6e474760ad">
@@ -485,6 +560,22 @@ return RoleIdMergeOnly;
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="transfer" name="TransferMergeOnlyRoleUpdate" id="1ae5ad85-afe6-4e19-8426-39af3190c90c">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>RoleId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>UpdateSystemRoleForMergeOnlyRole</con:sourceStep>
+        <con:sourcePath>$['RoleId']</con:sourcePath>
+        <con:targetType>MERGE_ONLY_ROLE</con:targetType>
+        <con:targetStep>RolesIDs</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
   <con:testStep type="groovy" name="LinkMergeRoleParameter" id="bf2addb5-21b4-463d-ba32-d317b6a343ae">
     <con:settings/>
     <con:config>
@@ -498,10 +589,10 @@ else {
 }</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddsystemRoleToCreateLinkMergeRole" id="99c9c957-9cff-4fdb-a809-bc59faf7b63d">
+  <con:testStep type="restrequest" name="AddSystemRoleToCreateLinkMergeRole" id="99c9c957-9cff-4fdb-a809-bc59faf7b63d">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/security/roles" methodName="AddSystemRole" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="AddsystemRoleToCreateLinkMergeRole" id="4770bebc-30a2-46eb-8267-db276c886e5f" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="AddSystemRoleToCreateLinkMergeRole" id="4770bebc-30a2-46eb-8267-db276c886e5f" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -577,7 +668,7 @@ else {
         <con:assertion type="Valid HTTP Status Codes" id="7d0883b9-9f07-4ca7-8748-bb18345f39f5" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200</codes>
+            <codes>201</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -596,6 +687,22 @@ else {
           <con:entry>content-type</con:entry>
         </con:parameterOrder>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferLinkMergeRoleAdd" id="d96879b3-5365-440b-a310-7b7be4e33d57">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>RoleId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>AddSystemRoleToCreateLinkMergeRole</con:sourceStep>
+        <con:sourcePath>$['RoleId']</con:sourcePath>
+        <con:targetType>LINK_MERGE_ROLE</con:targetType>
+        <con:targetStep>RolesIDs</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
     </con:config>
   </con:testStep>
   <con:testStep type="groovy" name="RoleIdLinkMerge" id="b3ac539d-55d2-489d-b880-8bb94087948c">
@@ -716,6 +823,22 @@ return RoleIdLinkMerge;
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="transfer" name="TransferLinkMergeRoleUpdate" id="bd9bcf36-28db-4abd-94ea-1db8d69ebfd9">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>RoleId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>UpdateSystemRoleForLinkMergeRole</con:sourceStep>
+        <con:sourcePath>$['RoleId']</con:sourcePath>
+        <con:targetType>LINK_MERGE_ROLE</con:targetType>
+        <con:targetStep>RolesIDs</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
   <con:testStep type="groovy" name="NoLinkMergeRoleParameter" id="07652eb5-df0d-404f-94bf-262d7debd7b4">
     <con:settings/>
     <con:config>
@@ -796,7 +919,7 @@ else {
         <con:assertion type="Valid HTTP Status Codes" id="29ea8ae4-e071-45f6-8485-6bbd05e84e93" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200</codes>
+            <codes>201</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -815,6 +938,22 @@ else {
           <con:entry>content-type</con:entry>
         </con:parameterOrder>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferNoLinkMergeRoleAdd" id="1e33ed92-b7c5-4b58-9c19-25d317c361f6">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>RoleId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>AddSystemRoleToCreateNoLinkMergeRole</con:sourceStep>
+        <con:sourcePath>$['RoleId']</con:sourcePath>
+        <con:targetType>NO_LINK_MERGE_ROLE</con:targetType>
+        <con:targetStep>RolesIDs</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
     </con:config>
   </con:testStep>
   <con:testStep type="groovy" name="RoleIdNoLinkMerge" id="61845a69-3710-4b0a-a6dd-85d2ca4cf7f6">
@@ -923,6 +1062,22 @@ return RoleIdNoLinkMerge;
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="transfer" name="TransferNoLinkMergeRoleUpdate" id="c6b79593-6064-4b6f-b3b6-db47ddd454ea">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>RoleId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>UpdateSystemRoleForNoLinkMergeRole</con:sourceStep>
+        <con:sourcePath>$['RoleId']</con:sourcePath>
+        <con:targetType>NO_LINK_MERGE_ROLE</con:targetType>
+        <con:targetStep>RolesIDs</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
   <con:testStep type="groovy" name="ReadOnlyLinkMergeRoleParameter" id="a5834b7a-b1d8-4feb-a14f-6db6c85ca5e8">
     <con:settings/>
     <con:config>
@@ -1015,7 +1170,7 @@ else {
         <con:assertion type="Valid HTTP Status Codes" id="29f4069b-cb3d-4d5a-ae8a-44606b870fe7" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200</codes>
+            <codes>201</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -1034,6 +1189,22 @@ else {
           <con:entry>content-type</con:entry>
         </con:parameterOrder>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferReadonlyLinkMergeAdd" id="eb4ac0c4-384d-4ef8-9993-8497122b2428">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>RoleId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>AddSystemRoleToCreateReadOnlyLinkMergeRole</con:sourceStep>
+        <con:sourcePath>$['RoleId']</con:sourcePath>
+        <con:targetType>READONLY_LINK_MERGE_ROLE</con:targetType>
+        <con:targetStep>RolesIDs</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
     </con:config>
   </con:testStep>
   <con:testStep type="groovy" name="RoleIdReadOnlyLinkMerge" id="22c940ad-c3c4-4dc3-a014-ea8eff998b17">
@@ -1154,6 +1325,22 @@ return RoleIdReadOnlyLinkMerge;
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="transfer" name="TransferReadonlyLinkMergeUpdate" id="754a1e89-aa1d-451b-81be-c70375b72adc">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>RoleId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>UpdateSystemRoleForReadOnlyLinkMergeRole</con:sourceStep>
+        <con:sourcePath>$['RoleId']</con:sourcePath>
+        <con:targetType>READONLY_LINK_MERGE_ROLE</con:targetType>
+        <con:targetStep>RolesIDs</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="RunAddProfileRGR" id="1b39131d-a9f6-444d-ba8f-e1c8bc39ff62">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1161,6 +1348,986 @@ return RoleIdReadOnlyLinkMerge;
       <con:properties/>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSystemUser" id="0f206529-0425-449c-89b0-4ee241f8ff1b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/users" methodName="GetSystemUsers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSystemUser" id="8a09460d-65f0-4f23-92ee-34cbaa9391f7" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/users</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="d3c2b67a-6983-419e-85f5-fb2fb0389423" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="isTestUser" value="{isTestUser}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>status</con:entry>
+          <con:entry>isTestUser</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="VerifySystemUserExists" id="0dd5dda8-67b1-4713-9c37-858838b43b21">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>SystemUserExists</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>//Response[1]/e/Username='SEC_LNK_MRG_USER'</con:expression>
+        <con:targetStep>CreateTokenWithSecLinkMergeUserWithLinkRole</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddSecLinkMergeUser" id="bf738bb9-3560-40c3-bc26-d06675245c33">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/users" methodName="AddSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddSecLinkMergeUser" id="d701cbeb-ef78-472e-bc14-d3e89903aad3" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "Username" : "SEC_LNK_MRG_USER",\r
+   "Password" : "Admin.123",\r
+   "DaysExpire" : 9999,\r
+   "FirstName" : "TestLNKMRGFirstNameUser",\r
+   "LastName" : "TestLNKMRGLastNameUser",\r
+   "EmailAddress" : "TestLNKMRGLastNameUser@dx2mail.co",\r
+   "RoleId" : "${RolesIDs#LINK_ONLY_ROLE}",\r
+   "IsTestUser" : "false"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/users</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9d51cf2e-9c32-4545-84fb-ff7d3d7eaad1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CreateTokenWithSecLinkMergeUserAfterAdd" id="8e10a46d-6ca8-4f98-9709-55886ffcf48b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/tokens" methodName="CreateToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="0b4986b5-d003-423e-9396-2c33353c2a39" mediaType="application/json" name="CreateTokenWithSecLinkMergeUserAfterAdd" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="content-type" value="application/x-www-form-urlencoded" xmlns="http://eviware.com/soapui/config"/></con:setting>
+          <con:setting id="RecordRequestRepresentations">true</con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>grant_type=password&amp;username=SEC_LNK_MRG_USER&amp;password=Admin.123&amp;response_type=token</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/authorization/tokens</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="866d3cb6-60ed-40d8-bb3c-d7975dff497b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Basic ${#Project#BasicAuthorization}"/>
+          <con:entry key="content-type" value="application/x-www-form-urlencoded"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ChangePasswordSecLinkMergeUser" id="242cd128-b438-4267-b51e-8ca5a7ea6de9">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/authorization/tokens/password" methodName="ChangeUserPassword" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ChangePasswordSecLinkMergeUser" id="b165edf6-1072-4841-9879-facad6dced33" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "Username" : "SEC_LNK_MRG_USER",\r
+   "CurrentPassword" : "Admin.123",\r
+   "NewPassword" : "Admin.1234"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/authorization/tokens/password</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9829964f-9afe-41bd-ae9a-b13e601ac291" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserAfterAdd#Response#$['AccessToken']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CreateTokenWithSecLinkMergeUserWithLinkRole" id="ebb9d7dd-0159-4145-804a-8f841e24558a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/tokens" methodName="CreateToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="0b4986b5-d003-423e-9396-2c33353c2a39" mediaType="application/json" name="CreateTokenWithSecLinkMergeUserWithLinkRole" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="content-type" value="application/x-www-form-urlencoded" xmlns="http://eviware.com/soapui/config"/></con:setting>
+          <con:setting id="RecordRequestRepresentations">true</con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>grant_type=password&amp;username=SEC_LNK_MRG_USER&amp;password=Admin.1234&amp;response_type=token</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/authorization/tokens</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="866d3cb6-60ed-40d8-bb3c-d7975dff497b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Basic ${#Project#BasicAuthorization}"/>
+          <con:entry key="content-type" value="application/x-www-form-urlencoded"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateSecLinkMergeUserWithLinkOnlyRole" id="520a2c2c-bfe8-44f4-ba9a-ec6a18eb2266">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/security/users/user" methodName="UpdateSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="82490ea2-63a3-4b2c-8b6e-c8f6f9ea17a8" mediaType="application/json" name="UpdateSecLinkMergeUserWithLinkOnlyRole" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "Username" : "SEC_LNK_MRG_USER",\r
+   "FirstName" : "TestLNKMRGFirstNameUser",\r
+   "LastName" : "TestLNKMRGLastNameUser",\r
+   "EmailAddress" : "TestLNKMRGLastNameUser@dx2mail.co",\r
+   "RoleId" : "${RolesIDs#LINK_ONLY_ROLE}",\r
+   "DaysExpire" : 9999,\r
+   "IsTestUser" : "false",\r
+   "Status" : "A"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/security/users/user</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5c68ee52-317b-4463-9d0e-511144056e4c" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileLinkWithLinkOnlyRoleUser" id="540a73d4-36d7-42f6-b1bb-49d4ccaecfd4">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/pool" methodName="GetLinkedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileLinkWithLinkOnlyRoleUser" id="3eb5d30a-22f0-4a99-8583-1c3854f4823d" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/6d8add71-16ac-4ecf-a3b1-d2a62dbab127/link/pool</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="eb1ba4eb-2995-46ac-bd0f-511488da09d1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserWithLinkRole#Response#$['AccessToken']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileMergeWithLinkOnlyRoleUser" id="46adc123-0315-4473-8835-72d5affb00db">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/merge" methodName="GetMergedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileMergeWithLinkOnlyRoleUser" id="c3b36ebf-fea3-4133-aaa8-725cbcda3b3c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/link/merge</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="572a8846-97bf-4bfc-aebb-4dd3284851db" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>401</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserWithLinkRole#Response#$['AccessToken']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateSecLinkMergeUserWithMergeOnlyRole" id="bfd88208-0028-4829-b6e1-c55ebb2cf03f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/security/users/user" methodName="UpdateSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="82490ea2-63a3-4b2c-8b6e-c8f6f9ea17a8" mediaType="application/json" name="UpdateSecLinkMergeUserWithMergeOnlyRole" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "Username" : "SEC_LNK_MRG_USER",\r
+   "FirstName" : "TestLNKMRGFirstNameUser",\r
+   "LastName" : "TestLNKMRGLastNameUser",\r
+   "EmailAddress" : "TestLNKMRGLastNameUser@dx2mail.co",\r
+   "RoleId" : "${RolesIDs#MERGE_ONLY_ROLE}",\r
+   "DaysExpire" : 9999,\r
+   "IsTestUser" : "false",\r
+   "Status" : "A"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/security/users/user</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="626c2d4a-eea0-4c5e-97c1-2aaea4201a36" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CreateTokenWithSecLinkMergeUserWithMergeRole" id="1b587d29-e5cf-4085-a20b-4d9a9b22a651">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/tokens" methodName="CreateToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="0b4986b5-d003-423e-9396-2c33353c2a39" mediaType="application/json" name="CreateTokenWithSecLinkMergeUserWithMergeRole" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="content-type" value="application/x-www-form-urlencoded" xmlns="http://eviware.com/soapui/config"/></con:setting>
+          <con:setting id="RecordRequestRepresentations">true</con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>grant_type=password&amp;username=SEC_LNK_MRG_USER&amp;password=Admin.1234&amp;response_type=token</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/authorization/tokens</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="866d3cb6-60ed-40d8-bb3c-d7975dff497b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Basic ${#Project#BasicAuthorization}"/>
+          <con:entry key="content-type" value="application/x-www-form-urlencoded"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileLinkWithMergeOnlyRoleUser" id="35c732ac-985a-4c63-8b47-08f470648cbf">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/pool" methodName="GetLinkedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileLinkWithMergeOnlyRoleUser" id="3eb5d30a-22f0-4a99-8583-1c3854f4823d" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/6d8add71-16ac-4ecf-a3b1-d2a62dbab127/link/pool</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="eb1ba4eb-2995-46ac-bd0f-511488da09d1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>401</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserWithMergeRole#Response#$['AccessToken']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileMergeWithMergeOnlyRoleUser" id="eb445c27-8089-4c82-a9c1-20af90dacd6f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/merge" methodName="GetMergedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileMergeWithMergeOnlyRoleUser" id="c3b36ebf-fea3-4133-aaa8-725cbcda3b3c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/link/merge</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="572a8846-97bf-4bfc-aebb-4dd3284851db" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserWithMergeRole#Response#$['AccessToken']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateSecLinkMergeUserWithROLinkMergeRole" id="5a6d9006-4006-4fc9-929d-4bb077a7c89f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/security/users/user" methodName="UpdateSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="82490ea2-63a3-4b2c-8b6e-c8f6f9ea17a8" mediaType="application/json" name="UpdateSecLinkMergeUserWithROLinkMergeRole" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "Username" : "SEC_LNK_MRG_USER",\r
+   "FirstName" : "TestLNKMRGFirstNameUser",\r
+   "LastName" : "TestLNKMRGLastNameUser",\r
+   "EmailAddress" : "TestLNKMRGLastNameUser@dx2mail.co",\r
+   "RoleId" : "${RolesIDs#READONLY_LINK_MERGE_ROLE}",\r
+   "DaysExpire" : 9999,\r
+   "IsTestUser" : "false",\r
+   "Status" : "A"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/security/users/user</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="626c2d4a-eea0-4c5e-97c1-2aaea4201a36" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CreateTokenWithSecLinkMergeUserWithRORole" id="4b0df0e0-b96f-4a7a-866a-d999d3a4372c">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/tokens" methodName="CreateToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="0b4986b5-d003-423e-9396-2c33353c2a39" mediaType="application/json" name="CreateTokenWithSecLinkMergeUserWithRORole" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="content-type" value="application/x-www-form-urlencoded" xmlns="http://eviware.com/soapui/config"/></con:setting>
+          <con:setting id="RecordRequestRepresentations">true</con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>grant_type=password&amp;username=SEC_LNK_MRG_USER&amp;password=Admin.1234&amp;response_type=token</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/authorization/tokens</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="866d3cb6-60ed-40d8-bb3c-d7975dff497b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Basic ${#Project#BasicAuthorization}"/>
+          <con:entry key="content-type" value="application/x-www-form-urlencoded"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileLinkWithReadOnlyRoleUser" id="e7446eed-8f4f-4795-aece-b347ee9c7239">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/pool" methodName="GetLinkedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileLinkWithReadOnlyRoleUser" id="3eb5d30a-22f0-4a99-8583-1c3854f4823d" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/6d8add71-16ac-4ecf-a3b1-d2a62dbab127/link/pool</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="eb1ba4eb-2995-46ac-bd0f-511488da09d1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserWithRORole#Response#$['AccessToken']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileMergeWithReadOnlyRoleUser" id="136d5d06-b62a-4f0f-a2bc-e29bf9e82380">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/merge" methodName="GetMergedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileMergeWithReadOnlyRoleUser" id="c3b36ebf-fea3-4133-aaa8-725cbcda3b3c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/link/merge</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="572a8846-97bf-4bfc-aebb-4dd3284851db" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserWithRORole#Response#$['AccessToken']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateSecLinkMergeUserWithNOLinkMergeRole" id="fe1e343d-ab42-45ab-b6d9-747d42889a73">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/security/users/user" methodName="UpdateSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="82490ea2-63a3-4b2c-8b6e-c8f6f9ea17a8" mediaType="application/json" name="UpdateSecLinkMergeUserWithNOLinkMergeRole" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "Username" : "SEC_LNK_MRG_USER",\r
+   "FirstName" : "TestLNKMRGFirstNameUser",\r
+   "LastName" : "TestLNKMRGLastNameUser",\r
+   "EmailAddress" : "TestLNKMRGLastNameUser@dx2mail.co",\r
+   "RoleId" : "${RolesIDs#NO_LINK_MERGE_ROLE}",\r
+   "DaysExpire" : 9999,\r
+   "IsTestUser" : "false",\r
+   "Status" : "A"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/security/users/user</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="626c2d4a-eea0-4c5e-97c1-2aaea4201a36" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CreateTokenWithSecLinkMergeUserWithNOLinkMergeRole" id="be63c15f-07ab-4a47-b12a-81c962ba4eac">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/tokens" methodName="CreateToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="0b4986b5-d003-423e-9396-2c33353c2a39" mediaType="application/json" name="CreateTokenWithSecLinkMergeUserWithNOLinkMergeRole" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="content-type" value="application/x-www-form-urlencoded" xmlns="http://eviware.com/soapui/config"/></con:setting>
+          <con:setting id="RecordRequestRepresentations">true</con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>grant_type=password&amp;username=SEC_LNK_MRG_USER&amp;password=Admin.1234&amp;response_type=token</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/authorization/tokens</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="866d3cb6-60ed-40d8-bb3c-d7975dff497b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Basic ${#Project#BasicAuthorization}"/>
+          <con:entry key="content-type" value="application/x-www-form-urlencoded"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileLinkWithNoLinkMergeAccessRoleUser" id="759b9a1e-3657-4908-96d3-4982a190f0cc">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/pool" methodName="GetLinkedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileLinkWithNoLinkMergeAccessRoleUser" id="3eb5d30a-22f0-4a99-8583-1c3854f4823d" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/6d8add71-16ac-4ecf-a3b1-d2a62dbab127/link/pool</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="eb1ba4eb-2995-46ac-bd0f-511488da09d1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>401</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserWithNOLinkMergeRole#Response#$['AccessToken']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileMergeWithNoLinkMergeRoleUser" id="476a9dc3-7b6c-402c-96c5-0079528f992b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/merge" methodName="GetMergedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileMergeWithNoLinkMergeRoleUser" id="c3b36ebf-fea3-4133-aaa8-725cbcda3b3c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/link/merge</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="572a8846-97bf-4bfc-aebb-4dd3284851db" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>401</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserWithNOLinkMergeRole#Response#$['AccessToken']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateSecLinkMergeUserWithBothLinkMergeRole" id="173b8a5e-b65b-4cb4-bf35-ca1c7d9190ec">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/security/users/user" methodName="UpdateSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="82490ea2-63a3-4b2c-8b6e-c8f6f9ea17a8" mediaType="application/json" name="UpdateSecLinkMergeUserWithBothLinkMergeRole" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "Username" : "SEC_LNK_MRG_USER",\r
+   "FirstName" : "TestLNKMRGFirstNameUser",\r
+   "LastName" : "TestLNKMRGLastNameUser",\r
+   "EmailAddress" : "TestLNKMRGLastNameUser@dx2mail.co",\r
+   "RoleId" : "${RolesIDs#LINK_MERGE_ROLE}",\r
+   "DaysExpire" : 9999,\r
+   "IsTestUser" : "false",\r
+   "Status" : "A"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/security/users/user</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="626c2d4a-eea0-4c5e-97c1-2aaea4201a36" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CreateTokenWithSecLinkMergeUserWithBothLinkMergeRole" id="09e8e6fe-dcb2-4193-870f-bca9af13ace4">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/authorization/tokens" methodName="CreateToken" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="0b4986b5-d003-423e-9396-2c33353c2a39" mediaType="application/json" name="CreateTokenWithSecLinkMergeUserWithBothLinkMergeRole" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="content-type" value="application/x-www-form-urlencoded" xmlns="http://eviware.com/soapui/config"/></con:setting>
+          <con:setting id="RecordRequestRepresentations">true</con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>grant_type=password&amp;username=SEC_LNK_MRG_USER&amp;password=Admin.1234&amp;response_type=token</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/authorization/tokens</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="866d3cb6-60ed-40d8-bb3c-d7975dff497b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Basic ${#Project#BasicAuthorization}"/>
+          <con:entry key="content-type" value="application/x-www-form-urlencoded"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileLinkWithBothLinkMergeAccessRoleUser" id="05a4e711-cfdb-4a6c-87ef-faa89e86cfc8">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/pool" methodName="GetLinkedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileLinkWithBothLinkMergeAccessRoleUser" id="3eb5d30a-22f0-4a99-8583-1c3854f4823d" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/6d8add71-16ac-4ecf-a3b1-d2a62dbab127/link/pool</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="eb1ba4eb-2995-46ac-bd0f-511488da09d1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserWithBothLinkMergeRole#Response#$['AccessToken']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileMergeWithBothLinkMergeRoleUser" id="2d09edbe-d614-41d1-aa4f-6a75a2be9c0f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/merge" methodName="GetMergedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileMergeWithBothLinkMergeRoleUser" id="c3b36ebf-fea3-4133-aaa8-725cbcda3b3c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/link/merge</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="572a8846-97bf-4bfc-aebb-4dd3284851db" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${CreateTokenWithSecLinkMergeUserWithBothLinkMergeRole#Response#$['AccessToken']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:properties/>
@@ -1222,6 +2389,26 @@ return RoleIdReadOnlyLinkMerge;
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>8d4a9aef-d928-438d-a5e5-5f7e754dfb20</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0f206529-0425-449c-89b0-4ee241f8ff1b</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>c7a69846-7c2d-478b-a78f-c5d78c2a7684</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>8e10a46d-6ca8-4f98-9709-55886ffcf48b</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>520a2c2c-bfe8-44f4-ba9a-ec6a18eb2266</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

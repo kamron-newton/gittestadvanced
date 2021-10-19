@@ -29,50 +29,22 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="PlaceOrder" id="f74f573d-7234-48f6-9385-3aef9f62b248">
+  <con:testStep type="calltestcase" name="PlaceOrder" id="c05bac08-cdd7-4227-814e-402d901d3bf0">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/catalogs/orders" methodName="PlaceOrder" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="PlaceOrder" id="8d02832b-3c04-477f-9d8e-53363a8ed3b0" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "EmailAddress": "test@dx2mail.co",
-  "OrderDetails": [
-    {
-      "RewardId": "${#[ActivityOrder#AddZeroPointRew#RewardId]#result}",
-      "Quantity": 1
-    }
-  ]
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/catalogs/orders</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="6d15da34-5783-4ed7-b72e-2080c36994fa" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>201</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>profileId</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>Program-Code</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Accept-Language</con:entry>
-        </con:parameterOrder>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>d50486a6-8a0c-480c-975e-03563f000b54</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>RewardId</con:name>
+          <con:value>${#[ActivityOrder#AddZeroPointRew#RewardId]#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>Quantity</con:name>
+          <con:value>1</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="GetProfileOrderById" id="68328133-7c64-4796-9c9b-55fdc2abf81b">
@@ -94,7 +66,7 @@
         <con:assertion type="JsonPath Match" id="87310187-9d8a-461c-bb6f-0cf6ad7a3765" name="Validate Order Id">
           <con:configuration>
             <path>$.OrderId</path>
-            <content>${PlaceOrder#Response#$['OrderId']}</content>
+            <content>${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['OrderId']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -103,7 +75,7 @@
         <con:assertion type="JsonPath Match" id="df0050c4-3c8d-4302-ae97-4f9356a93ad3" name="Validate Profile Id">
           <con:configuration>
             <path>$.OrderDetails[?(@.OrderId=='${OrderId}')].ProfileId</path>
-            <content>[${PlaceOrder#Response#$['ProfileId']}]</content>
+            <content>[${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['ProfileId']}]</content>
             <allowWildcards>true</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -125,8 +97,8 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="orderId" value="${PlaceOrder#Response#$['OrderId']}"/>
-          <con:entry key="profileId" value="${PlaceOrder#Response#$['ProfileId']}"/>
+          <con:entry key="orderId" value="${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['OrderId']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -145,4 +117,9 @@
   </con:testStep>
   <con:properties/>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>c05bac08-cdd7-4227-814e-402d901d3bf0</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
 </con:testCase>

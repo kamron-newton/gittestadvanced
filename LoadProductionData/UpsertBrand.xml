@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="28c3054f-e3a7-48f9-b0fe-620ad4887d6e" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertBrand" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="28c3054f-e3a7-48f9-b0fe-620ad4887d6efileName">UpsertBrand</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="Brands" id="81793a56-2924-47dc-8ccc-83855f79b4a3">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Brands.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>BrandCode</con:property>
+      <con:property>BrandDescription</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>10</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetBrandByCode" id="f3d5aaba-9e59-4a96-aad0-c2e60c8e2ee6">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/brands/{brandCode}" methodName="GetBrandbyCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetBrandByCode" id="fb8272fe-52d1-44f2-9dfa-2f62c9acb7a9" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/products/brands/brandCode</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a54d6cc5-4f58-4ef4-b3ca-edb46361ea08" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+          <con:entry key="brandCode" value="${Brands#BrandCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>brandCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="BrandCondition" id="5888f521-d0fe-47ff-bd09-63a6b9895abf">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+def status = context.expand( '${GetBrandByCode#HarResponse#$[\'status\']}' ).toInteger()
+if (status != 200) 
+	testRunner.gotoStepByName("AddBrand") 
+else  	
+	testRunner.gotoStepByName("UpdateBrand")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddBrand" id="cfbca134-252f-4581-a84a-3340acc693fc">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/brands" methodName="AddBrand" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddBrand" id="a2ce5002-15da-4abc-b6fd-e256bb58717b" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+"BrandCode":  "${Brands#BrandCode}",
+"BrandDescription": "${Brands#BrandDescription}",
+"Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/products/brands</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="6a2a78bc-5bf1-4224-a960-af74c41df9a6" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateBrand" id="d241957f-14b8-4865-bc9d-8ea07fa4b1d2">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/brands/{brandCode}" methodName="UpdateBrand" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateBrand" id="fd4ba648-daa0-4224-b0a9-ee85c6d925fa" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+"BrandCode":  "${Brands#BrandCode}",
+"BrandDescription":"${Brands#BrandDescription}",	
+"Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/products/brands/brandCode</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="dc692643-b583-4c34-a9a9-f8327fb94344" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+          <con:entry key="brandCode" value="${Brands#BrandCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>brandCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="BrandsLoop" id="bb4c8890-f3aa-4b0e-99f0-28708d163fcf">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>Brands</dataSourceStep>
+      <targetStep>GetBrandByCode</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>81793a56-2924-47dc-8ccc-83855f79b4a3</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>cfbca134-252f-4581-a84a-3340acc693fc</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>d241957f-14b8-4865-bc9d-8ea07fa4b1d2</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>5888f521-d0fe-47ff-bd09-63a6b9895abf</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

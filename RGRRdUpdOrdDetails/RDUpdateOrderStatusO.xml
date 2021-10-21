@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="b63060d0-4541-42ef-b31b-f9ca84417089" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RDUpdateOrderStatusO" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="b63060d0-4541-42ef-b31b-f9ca84417089fileName">RDUpdateOrderStatusO</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="calltestcase" name="AddFixedpointRew" id="c11c5f57-0caa-4b78-a3e3-65535a41034a">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4560d597-ecde-4816-b07a-3e9fae76adf3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>rewardCode</con:name>
+          <con:value>RDFIXEDPOINT1000</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="800f245e-91ce-49f2-aa7e-54944e30cd09">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddAdjustment" id="0490bf66-731a-45b4-9467-5bfe7f642095">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>d3339fb2-45d2-479b-9947-1ea66f3877fa</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Points</con:name>
+          <con:value>5000</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AdjustmentReason</con:name>
+          <con:value>PPGOODW</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfileMulCart" id="c52f17d2-47b8-4525-b520-c50690364bed">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>9ebbff1b-7202-4274-8a3f-0c718860cfc0</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>RewardId</con:name>
+          <con:value>${#[ActivityOrder#AddFixedPointRew#RewardId]#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>RewardQuantity</con:name>
+          <con:value>1</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="PlaceOrder" id="c68cd497-ab25-46cb-a295-f0430aae5d2f">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>d50486a6-8a0c-480c-975e-03563f000b54</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>RewardId</con:name>
+          <con:value>${#[ActivityOrder#AddFixedPointRew#RewardId]#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>Quantity</con:name>
+          <con:value>1</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="UpdateOrderStatus" id="efc1c504-8856-4f71-9030-fa0ac184bd77">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>591f2548-c151-4417-a96e-e758f0701610</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>OrderStatus</con:name>
+          <con:value>O</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileOrderById" id="100c2111-79e8-4c5b-ada0-99a3ffc8edc0">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/catalogs/orders/{orderId}" methodName="GetProfileOrderById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileOrderById" id="c4fc2b6f-d2b4-42ba-8710-9de3f39089cc" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/rewards/catalogs/orders/orderId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="46e2aa15-beba-44d2-b464-9414868fc1a4" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="fd50064b-f4f2-40a0-8c35-0fd7121db172" name="OrderId Validation">
+          <con:configuration>
+            <path>$.OrderId</path>
+            <content>${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['OrderId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="0353160c-d878-46af-aa32-20d4a058cd1d" name="RewardId Validation">
+          <con:configuration>
+            <path>$.OrderDetails[?(@.OrderId=='${OrderId}')].RewardId[0]</path>
+            <content>${#[ActivityOrder#AddFixedPointRew#RewardId]#result}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="b61b1278-d8e2-43a5-9834-f5fb84d14dcd" name="ProfileId Validation">
+          <con:configuration>
+            <path>$.OrderDetails[?(@.OrderId=='${OrderId}')].ProfileId[0]</path>
+            <content>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="a1bc056a-1eb7-4109-9ba1-129e04a6f51f" name="OrderStatus Validation">
+          <con:configuration>
+            <path>$.OrderStatus</path>
+            <content>${#[ActivityOrder#UpdateOrderStatus#UpdateOrderStatus]#Response#$['OrderStatus']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="7f4d5564-3c77-42ce-bc9f-ce38401b3c0c" name="ProgramCode Validation">
+          <con:configuration>
+            <path>$.OrderDetails[?(@.OrderId=='${OrderId}')].ProgramCode[0]</path>
+            <content>${GetProfileOrderById#Response#$['ProgramCode']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="orderId" value="${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['OrderId']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>orderId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>c11c5f57-0caa-4b78-a3e3-65535a41034a</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>efc1c504-8856-4f71-9030-fa0ac184bd77</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

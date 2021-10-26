@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="0bf78bbb-19af-497b-931a-4eeba6a2df70" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="NegPurchaseTransaction" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="676fcae3-99fe-447d-af5c-71dc4bdc14a2" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="PurchaseTransactionWithCoupon" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="0bf78bbb-19af-497b-931a-4eeba6a2df70fileName">NegPurchaseTransaction</con:setting>
+    <con:setting id="676fcae3-99fe-447d-af5c-71dc4bdc14a2fileName">PurchaseTransactionWithCoupon</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep id="47cd1d4f-28b7-454e-9010-10e19d6cd250" name="NegPurchaseTransaction" type="restrequest">
+  <con:testStep id="007e8743-1401-474e-b407-b3c41a81e7be" name="PurchaseTransactionWithCoupon" type="restrequest">
     <con:settings/>
     <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="NegPurchaseTransaction" postQueryString="false">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="PurchaseTransactionWithCoupon" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -24,7 +24,7 @@
    "DiscountAmount":3.00,
    "TransactionNumber":"${#TestCase#TransactionNumber}_PR",
    "TransactionDateTime":"${#TestCase#TransactionDate}",
-   "StoreCode":"PP1501",
+   "StoreCode":"${#TestCase#StoreCode}",
    "CurrencyCode":"USD",
    "TransactionDescription":"PR Transaction",
    "TransactionDetails":[  
@@ -50,22 +50,19 @@
          "ItemNumberTypeCode":"S",
          "LineNumber":2         
       }
+   ],
+   "Coupons":[  
+     { 
+       "CouponNumber":"${#TestCase#CouponNumber}",
+       "CouponAmount":"${#TestCase#CouponAmount}"
+     }
    ]
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
-        <con:assertion type="JsonPath Match" id="eea83939-19bb-4fc2-88dd-42efaf4e39df" name="JSONPath Match">
-          <con:configuration>
-            <path>ErrorCode</path>
-            <content>${#TestCase#ExpectedErrorCode}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="Valid HTTP Status Codes" id="24f8ec0e-515d-487a-b958-7ca90c588355" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="349766fc-a876-4537-9617-76046a566a4b" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>400</codes>
+            <codes>200</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -77,7 +74,7 @@
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Program-Code" value="${#TestCase#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>
@@ -96,25 +93,67 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="transfer" name="Extract Response" id="b397657d-71e8-4090-9014-48f54cc5dcec">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>RawTransactionId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>PurchaseTransactionWithCoupon</con:sourceStep>
+        <con:sourcePath>RawTransactionId</con:sourcePath>
+        <con:targetType>RawTransactionId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
   <con:properties>
     <con:property>
       <con:name>TransactionNumber</con:name>
-      <con:value>5a25f581-0801-4bd8-9385-cffab64f164e</con:value>
+      <con:value>819ac609-a9f9-4a90-8430-a08a16662c28</con:value>
     </con:property>
     <con:property>
       <con:name>ProfileId</con:name>
-      <con:value>2b8701f5-135c-4c13-b811-08942b5f56df</con:value>
+      <con:value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
     </con:property>
     <con:property>
       <con:name>TransactionDate</con:name>
-      <con:value>2021-10-22T15:46:04-0500</con:value>
+      <con:value>2021-10-26T10:08:33-0500</con:value>
     </con:property>
     <con:property>
-      <con:name>ExpectedErrorCode</con:name>
-      <con:value>VictimOfVictimTransaction</con:value>
+      <con:name>CouponNumber</con:name>
+      <con:value>ed9ada19-ae46-4c8d-98a2-6d7429b6a708</con:value>
+    </con:property>
+    <con:property>
+      <con:name>CouponAmount</con:name>
+      <con:value>1</con:value>
+    </con:property>
+    <con:property>
+      <con:name>ProgramCode</con:name>
+      <con:value>CRM</con:value>
+    </con:property>
+    <con:property>
+      <con:name>StoreCode</con:name>
+      <con:value>CRM_1</con:value>
+    </con:property>
+    <con:property>
+      <con:name>RawTransactionId</con:name>
+      <con:value>2e6c23c9-7e32-42cd-ba20-2560d8ea3498</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>007e8743-1401-474e-b407-b3c41a81e7be</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>b397657d-71e8-4090-9014-48f54cc5dcec</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
   <con:environmentSpec>
     <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
       <con:authProfile>Inherit From Parent</con:authProfile>

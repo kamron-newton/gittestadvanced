@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="1525e308-cfae-4277-af49-4908cfbd9e1d" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Wait for Batch Job" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="1525e308-cfae-4277-af49-4908cfbd9e1dfileName">Wait-for-Batch-Job</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="delay" name="Wait For Job Complete" id="6544f74c-0e86-4d94-b4c9-f79b23098015">
+    <con:settings/>
+    <con:config>
+      <delay>1000</delay>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Batch Job By Id" id="6bbc1042-d316-4289-a605-76fde63a58b1">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/batch/jobs/{sysJobId}" methodName="Get Batch Job By Id" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Batch Job By Id" id="91e91577-b61c-4556-a894-d9c3a806c11e" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/batch/jobs/bb357bb9-d459-4023-91a2-b108a9cc8fde</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a77753d8-2471-4728-bb9d-2bf17d8167a5" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="sysJobId" value="${#TestCase#JobId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#CrmProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>sysJobId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Check Batch Completion Status" id="0af4e74b-7230-40ab-96da-283e76271d55">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def response = context.expand( '${Get Batch Job By Id#Response}' )
+
+log.info response
+
+if(response!=null &amp;&amp; response!="null") {
+	def status = parse(response).read('JobStatus')
+	if(status!="C"&amp;&amp;status!="E") testRunner.gotoStepByName("Wait For Job Complete")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>JobId</con:name>
+      <con:value>b45a3e60-c656-42c2-ad65-0e921c5dcf0a</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

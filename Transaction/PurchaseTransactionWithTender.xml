@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="e01cd65e-ae81-40a3-950d-69a08af65af5" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="PurchaseTransactionWithTender" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="e01cd65e-ae81-40a3-950d-69a08af65af5fileName">PurchaseTransactionWithTender</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep id="15c588bc-33df-4c40-ac0f-783c2cf66f87" name="PurchaseTransactionWithTender" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="PurchaseTransactionWithTender" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{  
+   "TransactionTypeCode":"PR",
+   "ProfileId":"${#TestCase#ProfileId}",
+   "GrossAmount":66.00,
+   "TransactionTotalTax":6.00,
+   "ShippingAndHandling":0.0,
+   "Gratuity":0.0,
+   "PostSalesAdjustment":0.0,
+   "TransactionNetTotal":60.00,
+   "TransactionEligible":null,
+   "DiscountAmount":3.00,
+   "TransactionNumber":"${#TestCase#TransactionNumber}_PR",
+   "TransactionDateTime":"${#TestCase#TransactionDate}",
+   "StoreCode":"${#TestCase#StoreCode}",
+   "CurrencyCode":"USD",
+   "TransactionDescription":"PR Transaction",
+   "TransactionDetails":[  
+      {  
+         "DollarValueGross":44.0,
+         "TaxAmount":4.0,
+         "DollarValueNet":40.0,
+         "EligibleRevenue":null,
+         "DiscountAmount":2.0,
+         "Quantity":1,
+         "ItemNumber":"100100",
+         "ItemNumberTypeCode":"S",
+         "LineNumber":1         
+      },
+      {  
+         "DollarValueGross":22.0,
+         "TaxAmount":2.0,
+         "DollarValueNet":20.0,
+         "EligibleRevenue":null,
+         "DiscountAmount":1.0,
+         "Quantity":1,
+         "ItemNumber":"100200",
+         "ItemNumberTypeCode":"S",
+         "LineNumber":2         
+      }
+   ],
+   "Tenders":[  
+     { 
+       "TenderCode": "${#TestCase#TenderCode}", 
+       "TenderAmount": ${#TestCase#TenderAmount}, 
+       "SurrogateSwipeFirstName": "${#TestCase#SurrFirstName}", 
+       "SurrogateSwipeLastName": "${#TestCase#SurrLastName}", 
+       "SurrogateSwipeZip": "${#TestCase#SurrZip}", 
+       "SurrogateNumber": "${#TestCase#SurrNum}" 
+     }
+   ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="349766fc-a876-4537-9617-76046a566a4b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#TestCase#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="Extract Response" id="4c779e9d-2ab1-4bce-b93d-ed3866470227">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>RawTransactionId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>PurchaseTransactionWithTender</con:sourceStep>
+        <con:sourcePath>RawTransactionId</con:sourcePath>
+        <con:targetType>RawTransactionId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property userSpecific="true">
+      <con:name>TransactionNumber</con:name>
+      <con:value>31bfae0d-e5cf-466a-ba42-44457ad04aa8</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>ProfileId</con:name>
+      <con:value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>TransactionDate</con:name>
+      <con:value>2021-10-22T15:32:34-0500</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>ProgramCode</con:name>
+      <con:value>CRM</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>StoreCode</con:name>
+      <con:value>CRM_1</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>RawTransactionId</con:name>
+      <con:value>32f432b9-8073-47fa-b09f-9f09f3aad340</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>TenderCode</con:name>
+      <con:value>839a5b3e-3edf-4caf-9b90-0d239b7a3886</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>TenderAmount</con:name>
+      <con:value>1</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>SurrFirstName</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>SurrLastName</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>SurrZip</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>SurrNum</con:name>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>007e8743-1401-474e-b407-b3c41a81e7be</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>b397657d-71e8-4090-9014-48f54cc5dcec</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:environmentSpec>
+    <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+  </con:environmentSpec>
+</con:testCase>

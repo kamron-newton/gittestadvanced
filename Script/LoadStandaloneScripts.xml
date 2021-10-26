@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="f9e4fe64-8d39-49bd-b92c-950e70d5d669" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="LoadStandaloneScripts" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="f9e4fe64-8d39-49bd-b92c-950e70d5d669fileName">LoadStandaloneScripts</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="StandaloneScripts" id="bec98592-3556-40f8-89ca-e272c80d5e64">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Directory">
+        <con:configuration>
+          <directory>${=context.testCase.testSuite.project.path}/References/StandaloneScripts</directory>
+          <filter>*.cs</filter>
+          <encoding/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>data</con:property>
+      <con:property>fileName</con:property>
+      <con:startRow/>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Trim Filename" id="e854de6d-b3dd-4fa8-abe3-008925b5e950">
+    <con:settings/>
+    <con:config>
+      <script>context.expand('${StandaloneScripts#fileName}').split("\\.")[0]</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Upsert Script" id="6f39ccdb-608e-4171-984a-6cc9e19f4513">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>f8268479-fc3a-45ec-8b2b-d6126a5601c9</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ScriptName</con:name>
+          <con:value>${Trim Filename#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ScriptContent</con:name>
+          <con:value>${StandaloneScripts#data}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ScriptId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="Data Source Loop" id="bdf69716-4d2f-46d9-878e-29a6afaf9360">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>Scripts</dataSourceStep>
+      <targetStep>Trim Filename</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Reload Scripts" id="bd506cb5-74a6-40b9-9636-40cc5d080f4a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/reload" methodName="Reload Scripts" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Reload Scripts" id="20103559-4d5a-49a1-bb29-ef55cb6e2ddf" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/reload</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="eaad631d-1df0-410e-8159-5a40604fe5cc" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reloadAllServers" value="true"/>
+          <con:entry key="compile" value="true"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>compile</con:entry>
+          <con:entry>reloadAllServers</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

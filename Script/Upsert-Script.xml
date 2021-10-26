@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="f8268479-fc3a-45ec-8b2b-d6126a5601c9" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Upsert Script" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="f8268479-fc3a-45ec-8b2b-d6126a5601c9fileName">Upsert-Script</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="restrequest" name="Get Script" id="af8c1b90-54e1-4990-b7d9-63b86f2caf65">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/defaultcontent" methodName="Get Default Content" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Script" id="56c8e44c-c91e-4648-b535-a4187cbec73a" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/defaultcontent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="4ea1ba69-ee3f-44b8-b850-cb69eeb32394" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="prePostEvent" value=""/>
+          <con:entry key="scriptName" value="${#TestCase#ScriptName}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="fusionWebApiId" value=""/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>fusionWebApiId</con:entry>
+          <con:entry>scriptName</con:entry>
+          <con:entry>prePostEvent</con:entry>
+          <con:entry>version</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Encode Script Content" id="d76cbadf-a9ed-4630-81ff-bc4bf5360153">
+    <con:settings/>
+    <con:config>
+      <script>def script  = context.expand('${#TestCase#ScriptContent}');
+def encodedScript = URLEncoder.encode(script,"UTF-8");
+encodedScript.replace("+","%20");</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Update if Exists" id="567e9fd9-4419-47d0-ad68-d39651acd26f">
+    <con:settings/>
+    <con:config>
+      <script>def response = context.expand( '${Get Script#Response#$.ScriptId}' )
+
+if(response!="") {
+	context.testCase.setPropertyValue('ScriptId',response)
+	testRunner.gotoStepByName("Update Script")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Add Script" id="41f9439e-9334-42e6-8e69-f30eb91cbde6">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts" methodName="Add Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Add Script" id="fb7ff48c-d0bf-4b4e-b695-4721c097882f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ScriptName": "${#TestCase#ScriptName}",
+  "ScriptType": "Standalone",
+  "IsStandalone": true,
+  "IsPlaceholder": false,
+  "Content": "${Encode Script Content#result}",
+}</con:request>
+        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="08f6371c-e510-4fd4-b341-1449ddf08cd5" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="Extract Script Id" id="175f0ceb-86ac-4b41-8942-0c7f52d532a1">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="false" ignoreEmpty="true" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>ScriptId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>Add Script</con:sourceStep>
+        <con:sourcePath>ScriptId</con:sourcePath>
+        <con:targetType>ScriptId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:targetTransferType>JSONPATH</con:targetTransferType>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Update Script" id="ca57747f-41ea-4a40-88d9-b409996f14a9">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptId}" methodName="Update Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Update Script" id="9e8e04e4-a1f1-43f0-bdfe-9bdabc1de796" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "Content": "${Encode Script Content#result}",
+}</con:request>
+        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/4a6646d4-d6a5-4faa-9f70-1db648a464f6</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="1d54366d-35c4-450c-86e7-4f5c59824373" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptId" value="${#TestCase#ScriptId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>scriptId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Deploy Script" id="7081e84c-19a2-4c0a-96a1-3855714e333f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptId}/deploy" methodName="Deploy Script by Script Id" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Deploy Script" id="601ddb8f-c563-453f-a034-55f59a364a6d" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/4a6646d4-d6a5-4faa-9f70-1db648a464f6/deploy</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="fbb3baf2-8842-4067-aa0f-da3a878b0e42" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptId" value="${Update Script#Response#$.ScriptId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>scriptId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>ScriptName</con:name>
+      <con:value>PrepareTradeAreaAppend</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>ScriptContent</con:name>
+      <con:value>var sql = "UPDATE T_RETAIL_MATCHBACK_QUEUE SET CURRENT_STATUS = 'R' WHERE ANON_TRANSACTION_ID = :transactionId"; var parameters = new DbParameterCollection();  parameters.Add(new DbParameter("transactionId", input.TransactionId, DbType.String)); verb.ModifyDatabase(sql, parameters);var blah = 1+2;</con:value>
+    </con:property>
+    <con:property>
+      <con:name>ScriptId</con:name>
+      <con:value>7879c1c0-2208-43f2-af7b-76f2e82fea9a</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>af8c1b90-54e1-4990-b7d9-63b86f2caf65</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>175f0ceb-86ac-4b41-8942-0c7f52d532a1</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

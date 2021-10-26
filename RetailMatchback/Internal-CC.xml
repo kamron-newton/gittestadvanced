@@ -4,10 +4,58 @@
     <con:setting id="7e9161e5-97d4-4868-815f-d32d6ff953cafileName">Internal-CC</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="groovy" name="Set Surrogate Number" id="a7827a54-134b-4f2d-ad5c-c4fbf141173b">
+  <con:testStep type="restrequest" name="Enable Retail Matchback" id="fc9b7832-da1a-47ff-a9da-0da73f00a3e9">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programsettings" methodName="UpdateProgramSettings" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="d3640b0f-5085-4ed6-8b0e-f59fb4fdaab6" mediaType="application/json" name="Enable Retail Matchback" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          <con:setting id="RecordRequestRepresentations">true</con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[{
+  "ParameterName":  "RETAIL_MATCHBACK_ENABLED",
+  "ParameterValue":  "Y" 
+}]</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programsettings</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="34324ec9-3db2-4b60-b62b-bcad32f3e796" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#CrmProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Generate Guid" id="a7827a54-134b-4f2d-ad5c-c4fbf141173b">
     <con:settings/>
     <con:config>
-      <script>testRunner.testCase.setPropertyValue( "SurrNum", java.util.UUID.randomUUID().toString() )</script>
+      <script>java.util.UUID.randomUUID()</script>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="AddProfileRGRCRM" id="4bf26c79-14ec-4f00-a1fe-a97ee266e025">
@@ -17,7 +65,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>d70dd8fa-e758-4663-a886-0405435c90a4</con:value>
+          <con:value>9b9334c4-2ddb-4e7e-835e-68a097fd9077</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -53,7 +101,7 @@
         </con:property>
         <con:property>
           <con:name>RawTransactionId</con:name>
-          <con:value>fcacd017-f5e2-4845-97c8-dc2d9f8b904a</con:value>
+          <con:value>bafe4f72-59b5-4b4b-9682-53901cd3ebdc</con:value>
         </con:property>
         <con:property>
           <con:name>TenderCode</con:name>
@@ -77,7 +125,7 @@
         </con:property>
         <con:property>
           <con:name>SurrNum</con:name>
-          <con:value>${#TestCase#SurrNum}</con:value>
+          <con:value>${Generate Guid#Result}</con:value>
         </con:property>
         <con:property>
           <con:name>TransactionId</con:name>
@@ -116,7 +164,7 @@
         </con:property>
         <con:property>
           <con:name>RawTransactionId</con:name>
-          <con:value>2f10b8c8-8fa0-4dcf-b4aa-032405e03923</con:value>
+          <con:value>76d93cd7-c649-4484-a5b9-9082057a3754</con:value>
         </con:property>
         <con:property>
           <con:name>TenderCode</con:name>
@@ -140,7 +188,7 @@
         </con:property>
         <con:property>
           <con:name>SurrNum</con:name>
-          <con:value>${#TestCase#SurrNum}</con:value>
+          <con:value>${Generate Guid#Result}</con:value>
         </con:property>
         <con:property>
           <con:name>TransactionId</con:name>
@@ -171,7 +219,7 @@
         </con:property>
         <con:property>
           <con:name>JobId</con:name>
-          <con:value>64e4b129-27be-47ce-9e69-59f9d8309cde</con:value>
+          <con:value>f87f4792-b04f-4b36-8398-09844cef032e</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -251,12 +299,55 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties>
-    <con:property>
-      <con:name>SurrNum</con:name>
-      <con:value>74aeea8d-231f-4a99-90b5-d4a11fb07769</con:value>
-    </con:property>
-  </con:properties>
+  <con:testStep type="restrequest" name="Disable Retail Matchback" id="a45c85af-b40b-4ce0-a26c-df8da746fd42">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programsettings" methodName="UpdateProgramSettings" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="d3640b0f-5085-4ed6-8b0e-f59fb4fdaab6" mediaType="application/json" name="Disable Retail Matchback" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          <con:setting id="RecordRequestRepresentations">true</con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[{
+  "ParameterName":  "RETAIL_MATCHBACK_ENABLED",
+  "ParameterValue":  "N" 
+}]</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programsettings</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="34324ec9-3db2-4b60-b62b-bcad32f3e796" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#CrmProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>fa229020-78a1-4d45-9d07-15b270567f3e</con:testStepId>
@@ -270,6 +361,11 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>a7827a54-134b-4f2d-ad5c-c4fbf141173b</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>fc9b7832-da1a-47ff-a9da-0da73f00a3e9</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

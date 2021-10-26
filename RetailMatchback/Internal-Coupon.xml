@@ -112,15 +112,11 @@
   <con:testStep type="groovy" name="Goto Activate If Exists" id="a4a42a78-0bbc-4ed9-a118-c4c59554e1b2">
     <con:settings/>
     <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse
+      <script>def response = context.expand( '${Get RMB Offer#Response#$.[0].SysOfferId}' )
 
-def response = context.expand( '${Get RMB Offer#Response}' )
-
-if(response!=null &amp;&amp; response!="null") {
-	def id = parse(response).read('$.[0].SysOfferId')
-	context.testCase.setPropertyValue('SysOfferId',id)
-
-	if (id!=null) testRunner.gotoStepByName("Activate Offer")
+if(response!="") {
+	context.testCase.setPropertyValue('OfferId',response)
+	testRunner.gotoStepByName("Activate Offer")
 }</script>
     </con:config>
   </con:testStep>
@@ -135,7 +131,7 @@ if(response!=null &amp;&amp; response!="null") {
         <con:request>{
   "OfferCode": "${#TestCase#OfferCode}",
   "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
-  "OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}	",
+  "OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
   "OfferShortDescription": "Rmb Coupon",
   "OptInRequired": false,
   "OfferName": "Retailmatchback Coupon",
@@ -311,7 +307,7 @@ if(response!=null &amp;&amp; response!="null") {
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>7ea76a36-0771-4c5a-9610-8ca96316d3b0</con:value>
+          <con:value>d87dc95d-815a-4d98-889c-0f89a7942f31</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -391,7 +387,7 @@ if(response!=null &amp;&amp; response!="null") {
         </con:property>
         <con:property>
           <con:name>RawTransactionId</con:name>
-          <con:value>2e6c23c9-7e32-42cd-ba20-2560d8ea3498</con:value>
+          <con:value>b419b560-7952-48d0-9b36-963b4f03ff6e</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -419,7 +415,7 @@ if(response!=null &amp;&amp; response!="null") {
         </con:property>
         <con:property>
           <con:name>JobId</con:name>
-          <con:value>b45a3e60-c656-42c2-ad65-0e921c5dcf0a</con:value>
+          <con:value>8ee68e91-7f80-4d4d-a026-c427b7e5ff30</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -558,6 +554,54 @@ if(response!=null &amp;&amp; response!="null") {
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="Disable Retail Matchback" id="74a5e497-c7fc-4f7b-9e1d-7c87d01d2c67">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programsettings" methodName="UpdateProgramSettings" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="d3640b0f-5085-4ed6-8b0e-f59fb4fdaab6" mediaType="application/json" name="Disable Retail Matchback" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          <con:setting id="RecordRequestRepresentations">true</con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[{
+  "ParameterName":  "RETAIL_MATCHBACK_ENABLED",
+  "ParameterValue":  "N" 
+}]</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programsettings</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="34324ec9-3db2-4b60-b62b-bcad32f3e796" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#CrmProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties>
     <con:property>
       <con:name>OfferCode</con:name>
@@ -565,10 +609,6 @@ if(response!=null &amp;&amp; response!="null") {
     </con:property>
     <con:property userSpecific="true">
       <con:name>OfferId</con:name>
-      <con:value>dac9f88d-5d82-4ae5-89d0-600ab9dd63d0</con:value>
-    </con:property>
-    <con:property>
-      <con:name>SysOfferId</con:name>
       <con:value>dac9f88d-5d82-4ae5-89d0-600ab9dd63d0</con:value>
     </con:property>
   </con:properties>

@@ -4,8 +4,229 @@
     <con:setting id="a1d0d36c-0010-41cf-b28a-b81696656a51fileName">External-TradeAreaAppend</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:properties/>
+  <con:testStep type="groovy" name="Generate Guid" id="182cfbd1-cdd4-42ed-bffa-b7a2893ba7b0">
+    <con:settings/>
+    <con:config>
+      <script>java.util.UUID.randomUUID()</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Anon Transaction with Tender" id="4d73d8dc-a9d3-43d0-ab5c-0d7be5550aef">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>e01cd65e-ae81-40a3-950d-69a08af65af5</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value>${=java.util.UUID.randomUUID()}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDate</con:name>
+          <con:value>${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>${#Project#CrmProgramCode}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>StoreCode</con:name>
+          <con:value>CRM_1</con:value>
+        </con:property>
+        <con:property>
+          <con:name>RawTransactionId</con:name>
+          <con:value>2f10b8c8-8fa0-4dcf-b4aa-032405e03923</con:value>
+        </con:property>
+        <con:property>
+          <con:name>TenderCode</con:name>
+          <con:value>VISA</con:value>
+        </con:property>
+        <con:property>
+          <con:name>TenderAmount</con:name>
+          <con:value>1</con:value>
+        </con:property>
+        <con:property>
+          <con:name>SurrFirstName</con:name>
+          <con:value>FirstName</con:value>
+        </con:property>
+        <con:property>
+          <con:name>SurrLastName</con:name>
+          <con:value>LastName</con:value>
+        </con:property>
+        <con:property>
+          <con:name>SurrZip</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SurrNum</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionId</con:name>
+          <con:value>ffc53b93-472e-48ab-af8d-04fef9bafb4f</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>TransactionId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Invoke PrepareTradeAreaAppend script" id="b8b6f194-2bac-4e40-92f4-e96de373f397">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptName}/invoke" methodName="Invoke Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Invoke PrepareTradeAreaAppend script" id="c9cc014c-70fc-4dd9-91c8-7ca14405093f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"TransactionId":"${Add Anon Transaction with Tender#TransactionId}"
+}</con:request>
+        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/PrepareTradeAreaAppend/invoke</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="41146a3d-f0d5-4de5-aba1-e5ecfa2a5b8b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptName" value="PrepareTradeAreaAppend"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>scriptName</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Execute Trade Area Append Extract" id="d1414f71-019c-4d6e-aea6-a426cd44bb5a">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>90bdc76e-0051-4256-bc07-81b40e5a7069</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>CRM</con:value>
+        </con:property>
+        <con:property>
+          <con:name>JobName</con:name>
+          <con:value>ExternalMatchback_TradeArea</con:value>
+        </con:property>
+        <con:property>
+          <con:name>JobTypeId</con:name>
+          <con:value>4b4a48a0-dd7a-d04d-95c9-fe2ef82170c0</con:value>
+        </con:property>
+        <con:property>
+          <con:name>JobId</con:name>
+          <con:value>b47004d3-0dba-4e39-8937-0ee41217b6ab</con:value>
+        </con:property>
+        <con:property>
+          <con:name>FileName</con:name>
+          <con:value>${Generate Guid#result}_TradeAreaAppendExtract.csv</con:value>
+        </con:property>
+        <con:property>
+          <con:name>OutputLocation</con:name>
+          <con:value>s3://q7intg-al-files/output/RetailMatchback</con:value>
+        </con:property>
+        <con:property>
+          <con:name>OutputType</con:name>
+          <con:value>FULL</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>JobId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Wait For Job" id="ea67eb44-ba88-47ae-bc87-d26a2644b7a5">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>JobId</con:name>
+          <con:value>${Execute Trade Area Append Extract#JobId}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Invoke VerifyTradeAreaAppend script" id="473daa64-9c2a-4944-b60b-76114d2ddb39">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptName}/invoke" methodName="Invoke Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Invoke VerifyTradeAreaAppend script" id="c9cc014c-70fc-4dd9-91c8-7ca14405093f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"JobId":"${Execute Trade Area Append Extract#JobId}",
+	"TransactionId":"${Add Anon Transaction with Tender#TransactionId}",
+	"FirstName":"${Add Anon Transaction with Tender#SurrFirstName}",
+	"LastName":"${Add Anon Transaction with Tender#SurrLastName}",
+	"StoreCode":"${Add Anon Transaction with Tender#StoreCode}",
+	"FilePath":"${Execute Trade Area Append Extract#OutputLocation}",
+	"FileName":"${Execute Trade Area Append Extract#FileName}",
+}</con:request>
+        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/PrepareTradeAreaAppend/invoke</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="41146a3d-f0d5-4de5-aba1-e5ecfa2a5b8b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="7875e6fc-fe91-46a8-8bb9-61ea1e085b44" name="JSONPath Match">
+          <con:configuration>
+            <path>Result</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptName" value="VerifyTradeAreaAppend"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>scriptName</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>UniqueFilename</con:name>
+      <con:value/>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>4d73d8dc-a9d3-43d0-ab5c-0d7be5550aef</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
   <con:environmentSpec>
     <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
       <con:authProfile>Inherit From Parent</con:authProfile>

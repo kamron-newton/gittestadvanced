@@ -4,12 +4,12 @@
     <con:setting id="5dbb68eb-3d12-49cc-ac4c-33eb7f664c9afileName">AddFixedPntImportCertRew</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="RewardRedemptionDataTypes" id="988dfe74-b476-4ba0-85f6-c5f48e60a080">
+  <con:testStep type="datasource" name="RewardRedemptionDateTypes" id="6d81c99b-180a-4270-91de-359465040679">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
         <con:configuration>
-          <fileName>${#Project#ProjectPath}/References/RewardRedemptionDateTypes.csv</fileName>
+          <fileName>ReadyAPI/References/RewardRedemptionDateTypes.csv</fileName>
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
@@ -35,6 +35,7 @@
       <con:property>FixedPoints</con:property>
       <con:property>ShippingInfoRequired</con:property>
       <con:property>DisplayInCatalog</con:property>
+      <con:property>RetailPricePerPoint</con:property>
       <con:property>CertificateInd</con:property>
       <con:property>IssueDateBasedRTC</con:property>
       <con:property>DaysValid</con:property>
@@ -50,7 +51,6 @@
       <con:property>MaxValue</con:property>
       <con:property>BurnRatioCurrencyValue</con:property>
       <con:property>BurnRatioPointValue</con:property>
-      <con:property>RetailPricePerPoint</con:property>
       <con:startRow>1</con:startRow>
       <con:endRow/>
       <con:recordsPerIteration>1</con:recordsPerIteration>
@@ -119,7 +119,7 @@ if (status == 404 )  testRunner.gotoStepByName("AddReward")
 else if (status == 200)   testRunner.gotoStepByName("UpdateReward")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateReward" id="3e9be575-a8ad-4793-882f-b4a4d91dbc3b">
+  <con:testStep type="restrequest" name="UpdateReward" id="49825eed-98a3-45a4-8e46-cac58d319414">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="UpdateReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="UpdateReward" id="48f5a14a-f9a2-4d56-9aee-3f1662d2eb7f" mediaType="application/json" postQueryString="false">
@@ -143,9 +143,10 @@ else if (status == 200)   testRunner.gotoStepByName("UpdateReward")</script>
 "FixedPoints": "${RewardRedemptionDateTypes#FixedPoints}",
 "ShippingInfoRequired": "${RewardRedemptionDateTypes#ShippingInfoRequired}",
 "DisplayInCatalog": "${RewardRedemptionDateTypes#DisplayInCatalog}",
-"CertificateInd": "True",
+"CertificateInd": "${RewardRedemptionDateTypes#CertificateInd}",
 "CertificateType" : "IMPORTED",
 "RedemptionTypeCode": "${RewardRedemptionDateTypes#FlexibleDateRangeRTC}",
+"DaysUntilRedemptionStarts":"${RewardRedemptionDateTypes#DaysFlexibleDaysRedemptionStarts}",
 "DaysValid":"${RewardRedemptionDateTypes#DaysFlexibleDaysValid}",
 "Status":"A"  
 }</con:request>
@@ -193,7 +194,7 @@ def status = context.expand( '${UpdateReward#HarResponse#$[\'status\']}' ).toInt
 if (status == 200)  testRunner.gotoStepByName("RewardId")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddReward" id="a3789cb5-b506-4ef1-a6b5-9a07aecbffed">
+  <con:testStep type="restrequest" name="AddReward" id="d60f721e-ef54-461d-b57c-5364ff097e30">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards" methodName="AddReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="AddReward" id="e1eeb6c0-074c-4d78-893d-adb7c364e104" mediaType="application/json" postQueryString="false">
@@ -217,6 +218,7 @@ if (status == 200)  testRunner.gotoStepByName("RewardId")</script>
 "ShippingInfoRequired": "${RewardRedemptionDateTypes#ShippingInfoRequired}",
 "DisplayInCatalog": "${RewardRedemptionDateTypes#DisplayInCatalog}",
 "CertificateInd": "${RewardRedemptionDateTypes#CertificateInd}",
+"CertificateType" : "IMPORTED",
 "RedemptionTypeCode": "${RewardRedemptionDateTypes#FlexibleDateRangeRTC}",
 "DaysUntilRedemptionStarts":"${RewardRedemptionDateTypes#DaysFlexibleDaysRedemptionStarts}",
 "DaysValid":"${RewardRedemptionDateTypes#DaysFlexibleDaysValid}",
@@ -283,12 +285,22 @@ if(responseAddReward==null || responseAddReward=="")
   <con:properties>
     <con:property>
       <con:name>rewardCode</con:name>
-      <con:value>RDFIXEDIMPCERT</con:value>
+      <con:value>RDFIXEDPNTIMPCERT</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>
   <con:breakPoints>
-    <con:testStepId>988dfe74-b476-4ba0-85f6-c5f48e60a080</con:testStepId>
+    <con:testStepId>49825eed-98a3-45a4-8e46-cac58d319414</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>d60f721e-ef54-461d-b57c-5364ff097e30</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>6d81c99b-180a-4270-91de-359465040679</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

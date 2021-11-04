@@ -3,6 +3,33 @@
   <con:settings>
     <con:setting id="0f13cc87-d24f-4830-83d8-6f5191bb6289fileName">RewardUpdateOrderStatusToC</con:setting>
   </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="GenerateGuid" id="088119ce-af3a-474d-8a6a-a3cfb82e773e">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>10</generatedDataCount>
+          <generatorsTotalNumber>2</generatorsTotalNumber>
+          <lastSelectedProperty>1</lastSelectedProperty>
+          <GeneratorType0>GUID</GeneratorType0>
+          <PropertyName0>CertificateNumber</PropertyName0>
+          <repetitionCountCertificateNumber>0</repetitionCountCertificateNumber>
+          <repeatValuesCertificateNumber>false</repeatValuesCertificateNumber>
+          <GeneratorType1>GUID</GeneratorType1>
+          <PropertyName1>BatchJobId</PropertyName1>
+          <repetitionCountBatchJobId>0</repetitionCountBatchJobId>
+          <repeatValuesBatchJobId>false</repeatValuesBatchJobId>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>CertificateNumber</con:property>
+      <con:property>BatchJobId</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="AddFixedPntImportCertRew" id="ab3fe6b7-058d-406a-83af-bf6b98998b41">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -10,6 +37,7 @@
       <con:properties>
         <con:property>
           <con:name>rewardCode</con:name>
+          <con:value>RDFIXEDPNTIMPCERT</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -24,7 +52,12 @@
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
+        <con:request>{
+  "CertificateNumber": "${GenerateGuid#CertificateNumber}",
+  "RewardCode": "${#[ActivityOrder#AddFixedPntImportCertRew]#rewardCode}",
+  "BatchJobId": "${GenerateGuid#BatchJobId}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/certificates</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="75453cfe-f7a9-464a-bed8-93d743946253" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
@@ -220,4 +253,9 @@
   </con:testStep>
   <con:properties/>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>088119ce-af3a-474d-8a6a-a3cfb82e773e</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
 </con:testCase>

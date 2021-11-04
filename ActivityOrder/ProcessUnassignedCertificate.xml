@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="a838b25c-744a-4638-9da9-379afc2e51e3" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ProcessUnassignedCertificate" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="a838b25c-744a-4638-9da9-379afc2e51e3fileName">ProcessUnassignedCertificate</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="GenerateGuid" id="c0c989f0-5e73-45d0-a7b1-c2f96f13d707">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>10</generatedDataCount>
+          <generatorsTotalNumber>2</generatorsTotalNumber>
+          <lastSelectedProperty>1</lastSelectedProperty>
+          <GeneratorType0>GUID</GeneratorType0>
+          <PropertyName0>CertificateNumber</PropertyName0>
+          <repetitionCountCertificateNumber>0</repetitionCountCertificateNumber>
+          <repeatValuesCertificateNumber>false</repeatValuesCertificateNumber>
+          <GeneratorType1>GUID</GeneratorType1>
+          <PropertyName1>BatchJobId</PropertyName1>
+          <repetitionCountBatchJobId>0</repetitionCountBatchJobId>
+          <repeatValuesBatchJobId>false</repeatValuesBatchJobId>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>CertificateNumber</con:property>
+      <con:property>BatchJobId</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessUnassignedCertificate" id="1369e814-e6bf-43dd-86bb-683ba064dd73">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/certificates" methodName="ProcessUnassignedCertificate" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessUnassignedCertificate" id="190876dd-0ccb-40f0-885d-4c5f51e6442d" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "CertificateNumber": "${GenerateGuid#CertificateNumber}",
+  "RewardCode": "${#[ActivityOrder#AddFixedPntImportCertRew]#rewardCode}",
+  "BatchJobId": "${GenerateGuid#BatchJobId}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/certificates</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="75453cfe-f7a9-464a-bed8-93d743946253" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201,200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>c0c989f0-5e73-45d0-a7b1-c2f96f13d707</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

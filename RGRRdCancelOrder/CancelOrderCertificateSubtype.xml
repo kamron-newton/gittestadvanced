@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="118c5872-dbb0-4adf-a1c6-c206988551f1" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="CancelOrderCertificateSubtype" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="118c5872-dbb0-4adf-a1c6-c206988551f1fileName">CancelOrderCertificateSubtype</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="OrderProfileCertificate" id="498a1f66-b8b3-4743-969f-4c0715b50424">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/OrderProfileCertificate.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>RewardCode1</con:property>
+      <con:property>RewardCode2</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="Generate CardNumber" id="7086fa3a-a452-49ca-9b56-8b319425f34d">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>10</generatedDataCount>
+          <generatorsTotalNumber>2</generatorsTotalNumber>
+          <lastSelectedProperty>1</lastSelectedProperty>
+          <GeneratorType0>TIME</GeneratorType0>
+          <PropertyName0>CardNumber</PropertyName0>
+          <repetitionCountCardNumber>0</repetitionCountCardNumber>
+          <repeatValuesCardNumber>false</repeatValuesCardNumber>
+          <DateTimeDataGeneratorCustomFormatCardNumber/>
+          <DateTimeDataGeneratorFormatCardNumber>M/D/YYYY HH:MM:SS (24-hour)</DateTimeDataGeneratorFormatCardNumber>
+          <DateTimeDataGeneratorIsSequentCardNumber>false</DateTimeDataGeneratorIsSequentCardNumber>
+          <DateTimeDataGeneratorStepDaysCardNumber>1</DateTimeDataGeneratorStepDaysCardNumber>
+          <DateTimeDataGeneratorStepHoursCardNumber>1</DateTimeDataGeneratorStepHoursCardNumber>
+          <DateTimeDataGeneratorStepMinsCardNumber>1</DateTimeDataGeneratorStepMinsCardNumber>
+          <DateTimeDataGeneratorStepSecondsCardNumber>1</DateTimeDataGeneratorStepSecondsCardNumber>
+          <DateTimeDataGeneratorMinDateCardNumber>442747974276</DateTimeDataGeneratorMinDateCardNumber>
+          <DateTimeDataGeneratorMaxDateCardNumber>92178898374276</DateTimeDataGeneratorMaxDateCardNumber>
+          <GeneratorType1>BOOL</GeneratorType1>
+          <PropertyName1>ActivityDate</PropertyName1>
+          <repetitionCountActivityDate>0</repetitionCountActivityDate>
+          <repeatValuesActivityDate>false</repeatValuesActivityDate>
+          <boolViewActivityDate>Classic</boolViewActivityDate>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>CardNumber</con:property>
+      <con:property>ActivityDate</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPointTypes" id="e112b94b-c010-46f7-98bc-16f346f98744">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetPointTypes" resourcePath="/api/v1/referencedata/transactions/pointtypes" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPointTypes" id="f0a1826c-16f2-4b98-9b1b-5c9c9bfe3a60" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="d0622b1b-87bd-404e-8a55-e18f352dd1e6" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="ede15756-c5e9-4834-ac09-fe9e09b51d56" name="RefPointTypeId">
+          <con:configuration>
+            <path>[?(@.PointTypeCode=='EGGS')].RefPointTypeId</path>
+            <content>[${GetPointTypes#Response#$[0]['RefPointTypeId']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="pointTypeCode" value="${#TestCase#pointTypeCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="EnableOrDisableProgramSetting" id="2cf5be4a-e04b-4337-b465-b140d29d85a0">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>9c07e406-f8b6-457b-b76b-82dadabac59a</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="13e3bae0-708e-4548-b1ec-fcd0577f524d">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddAdjustment" id="11784d07-7fa5-4178-a26d-858242d08e6c">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>d3339fb2-45d2-479b-9947-1ea66f3877fa</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Points</con:name>
+          <con:value>10000</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AdjustmentReason</con:name>
+          <con:value>PPGOODW</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="OrderProfileRewardCertificate" id="802be010-894d-4a6c-8b73-94e8ea2d5364">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/certificates" methodName="OrderProfileRewardCertificate" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="OrderProfileRewardCertificate" id="e354648b-37e1-4496-a132-c435c1467f5b" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "RewardCode": "${OrderProfileCertificate#RewardCode1}",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/c3d832ab-064a-4553-86eb-492a999c7fa2/rewards/certificates</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="8cb16270-16c3-4906-a86e-a0aa394d4da2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddAdjusment" id="5847de12-8384-4ef2-9709-db94767ff071">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>d3339fb2-45d2-479b-9947-1ea66f3877fa</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Points</con:name>
+          <con:value>10000</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AdjustmentReason</con:name>
+          <con:value>PPGOODW</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CancelRewardCertificate" id="f068a402-8f7d-41cf-8b9b-cf58df1f46e1">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/rewards/certificates/{certificateNumber}" methodName="CancelRewardCertificate" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="CancelRewardCertificate" id="6393eebe-672f-42c2-9885-69b885d673ef" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:assertion type="Valid HTTP Status Codes" id="69e64649-4e01-4e35-87a9-e12f2edf93be" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="certificateNumber" value="${Generate CardNumber#CardNumber}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>certificateNumber</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPointsSummary" id="db882141-5e1c-4d73-8fae-014e70dc9ba7">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPointsSummary" id="09b62cb5-30c9-45fc-bfb5-0209a7f2ad8c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:assertion type="Valid HTTP Status Codes" id="86f3c6be-35a6-42c0-9190-c974e20acfd8" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="pointTypeId" value=""/>
+          <con:entry key="endDate" value=""/>
+          <con:entry key="returnAllPoints" value=""/>
+          <con:entry key="pointType" value=""/>
+          <con:entry key="postingKeyValue" value=""/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="postingKeyCode" value=""/>
+          <con:entry key="returnRecentPoints" value=""/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="activityType" value=""/>
+          <con:entry key="startDate" value=""/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>activityType</con:entry>
+          <con:entry>pointType</con:entry>
+          <con:entry>pointTypeId</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>returnRecentPoints</con:entry>
+          <con:entry>postingKeyCode</con:entry>
+          <con:entry>postingKeyValue</con:entry>
+          <con:entry>returnAllPoints</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CancelRewardCertificate" id="9a4230ab-2f94-4cdc-9d8f-b3ffd4b3ebb6">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/rewards/certificates/{certificateNumber}" methodName="CancelRewardCertificate" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="CancelRewardCertificate" id="fcb20a7b-df09-4109-8075-26272031cc86" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/certificates/1%2F29%2F4221%2017%3A44%3A55</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="42ca0c69-92b4-4d5d-a80f-216033e485e7" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="certificateNumber" value="${OrderProfileRewardCertificate#Response#$['CertificateNumber']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>certificateNumber</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPointsSummary" id="a0c6d9a4-5cf5-4c87-ad50-bdf0bd0d8a79">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPointsSummary" id="90aa5f43-a530-41eb-9446-2dde6c33780e" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/c1522f14-29f4-4cb0-badc-273b3fd2211d/points/summary</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9d033b59-c2e1-4770-9e7d-70485530b793" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="7b4d03c5-2b81-42b1-8341-87403a547ff6" name="JSONPath Match">
+          <con:configuration>
+            <path>$.[?(@.PointSubTypeId=='{{PointSubtypeIdHatch}}'&amp;&amp;@.ActivityType=='ADJUSTMENT')].BalancePoints</path>
+            <content>${OrderProfileRewardCertificate#Response#$['RewardPointTypeBalance']['RemainingPointBalance']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>pointTypeCode</con:name>
+      <con:value>EGGS</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>498a1f66-b8b3-4743-969f-4c0715b50424</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

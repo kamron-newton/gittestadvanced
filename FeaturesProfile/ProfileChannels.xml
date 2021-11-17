@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="7641a89f-1631-44e8-8448-9719e4ad7595" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ProfileChannels" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="7641a89f-1631-44e8-8448-9719e4ad7595fileName">ProfileChannels</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="calltestcase" name="AddProfile" id="003c94ff-fb92-4d75-941f-72518d1c803e">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="ProfileChannelOpts" id="99be3a9e-65c9-48c8-9118-2c116d1ea345">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>FusionWebApiAutomationV2/References/ProfileChannelOpts.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ChannelAddress</con:property>
+      <con:property>ChannelCode</con:property>
+      <con:property>LocationCode</con:property>
+      <con:property>IsPreferred</con:property>
+      <con:property>DeliveryStatus</con:property>
+      <con:property>OptRsnCode</con:property>
+      <con:property>OptValue</con:property>
+      <con:property>Status</con:property>
+      <con:property>IncludeOpts</con:property>
+      <con:property>AcceptTexts</con:property>
+      <con:property>OptType</con:property>
+      <con:property>EmailAddress</con:property>
+      <con:property>AddressLine1</con:property>
+      <con:property>AddressLine2</con:property>
+      <con:property>AddressLine3</con:property>
+      <con:property>City</con:property>
+      <con:property>StateCode</con:property>
+      <con:property>CountryCode</con:property>
+      <con:property>PostalCode</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetOptByOptType" id="f97187f3-98aa-4a29-b6e3-99fd3770ee13">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/opts" methodName="GetAllOpts" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetOptByOptType" id="ee47a515-646c-453e-99de-87a0bbc967ae" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/opts</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="2f112642-42dc-43bd-86aa-b48c0f0b3486" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="optType" value="${ProfileChannelOpts#OptType}"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="channelCode" value="${ProfileChannelOpts#ChannelCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>optType</con:entry>
+          <con:entry>channelCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ProgramCodeCondition" id="d252aadb-6587-4317-86bb-27dd9b9bb112">
+    <con:settings/>
+    <con:config>
+      <script>//checking if BasicSettings ProgramCode is equal to ProgramCode in the csv
+def basicProgramCode = context.expand('${#Project#ProgramCode}')
+def fileProgramCode = context.expand( '${#[Profile#AddProfileRGR#RandomProfile]#ProgramCode}' )
+if(basicProgramCode == fileProgramCode)
+  testRunner.gotoStepByName("SetRandomNumber")
+  else 
+    testRunner.gotoStepByName("EMCondition")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="SetRandomNumber" id="7064cac9-b182-4499-8180-a92e0566812d">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>10</generatedDataCount>
+          <generatorsTotalNumber>2</generatorsTotalNumber>
+          <lastSelectedProperty>1</lastSelectedProperty>
+          <GeneratorType0>INT</GeneratorType0>
+          <PropertyName0>randomNumber</PropertyName0>
+          <repetitionCountrandomNumber>0</repetitionCountrandomNumber>
+          <repeatValuesrandomNumber>false</repeatValuesrandomNumber>
+          <IntegerDataGeneratorMinValuerandomNumber>1</IntegerDataGeneratorMinValuerandomNumber>
+          <IntegerDataGeneratorMaxValuerandomNumber>9999999</IntegerDataGeneratorMaxValuerandomNumber>
+          <IntegerDataGeneratorStepValuerandomNumber>1</IntegerDataGeneratorStepValuerandomNumber>
+          <IntegerDataGeneratorConsequentValuesrandomNumber>false</IntegerDataGeneratorConsequentValuesrandomNumber>
+          <GeneratorType1>INT</GeneratorType1>
+          <PropertyName1>netTotal</PropertyName1>
+          <repetitionCountnetTotal>0</repetitionCountnetTotal>
+          <repeatValuesnetTotal>false</repeatValuesnetTotal>
+          <IntegerDataGeneratorMinValuenetTotal>1</IntegerDataGeneratorMinValuenetTotal>
+          <IntegerDataGeneratorMaxValuenetTotal>999999999</IntegerDataGeneratorMaxValuenetTotal>
+          <IntegerDataGeneratorStepValuenetTotal>1</IntegerDataGeneratorStepValuenetTotal>
+          <IntegerDataGeneratorConsequentValuesnetTotal>false</IntegerDataGeneratorConsequentValuesnetTotal>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>randomNumber</con:property>
+      <con:property>netTotal</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetActiveOptReason" id="65cf0f3f-ba02-4a2c-8a85-ae4672c97e85">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/optreason" methodName="GetOptReasons" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetActiveOptReason" id="38886fcc-0591-4c09-97d4-84ee72d93e5b" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/optreason</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="ef247d56-36fc-4d32-80d3-8cc94e4b4206" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="${ProfileChannelOpts#Status}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>status</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="EMCondition" id="1e660e74-bd87-49d0-b5b7-01ce3f77ac58">
+    <con:settings/>
+    <con:config>
+      <script>//Checking if ChannCode is EM
+def channelCode = context.expand( '${GetOptByOptType#channelCode}' )
+if(channelCode == 'EM')
+  testRunner.gotoStepByName("EMProgramCode")
+  else 
+    testRunner.gotoStepByName("SMCondition")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="EMProgramCode" id="9b101dd1-01b3-4b25-b2d3-0281cf2d429d">
+    <con:settings/>
+    <con:config>
+      <script>//Checking if OptByProgramCode is equal to ProgramCode of the profile added
+def optByProgramCode = context.expand( '${GetOptByOptType#Response#$[0][\'ProgramCode\'][1][\'ProgramCode\']}' )
+def fileProgramCode = context.expand( '${#[Profile#AddProfileRGR#RandomProfile]#ProgramCode}' )
+if(optByProgramCode == fileProgramCode)
+  testRunner.gotoStepByName("UpdateProfileEmailAddressWithOpts")
+  else 
+    testRunner.gotoStepByName("SMCondition")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateProfileEmailAddressWithOpts" id="2dee40f3-71ca-473c-90a1-b7344847e082">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/channels/emails" methodName="UpdateProfileEmailAddress" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateProfileEmailAddressWithOpts" id="609c64b3-c7c3-45f5-80e4-71602cde352e" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "IncludeOpts": "${ProfileChannelOpts#IncludeOpts}",
+  "Emails": [
+    {
+      "EmailAddress": "${ProfileChannelOpts#EmailAddress}",
+      "ChannelCode": "${ProfileChannelOpts#ChannelCode}",
+      "LocationCode": "${ProfileChannelOpts#LocationCode}",
+      "IsPreferred": ${ProfileChannelOpts#IsPreferred},
+      "DeliveryStatus": "${ProfileChannelOpts#DeliveryStatus}",
+      "ProfileOpt": [
+        {
+          "OptRsnCode": "${GetActiveOptReason#Response#$[0]['OptReasonCode']}",
+          "OptType": "${GetOptByOptType#Response#$[0]['OptType']}",
+          "OptValue": "${ProfileChannelOpts#OptValue}"
+        }
+      ],
+      "Status": "${ProfileChannelOpts#Status}"
+    }
+  ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/channels/emails</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5908d9d5-508a-4551-9605-3ad7a976c6f3" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileEmailChannel" id="e9ef6b37-48fe-475b-9e50-372b508dbdd2">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/channels" methodName="GetProfileChannels" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileEmailChannel" id="84eeb9f2-f276-4eaf-88e5-ce3c0688df4f" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/channels</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="4b5e9fb5-a93c-4830-adba-51b0db38a1b7" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="communicationMediumId" value="${UpdateProfileEmailAddressWithOpts#Response#$['Emails'][0]['ProfileOpt'][0]['CommunicationMediumId']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="phoneId" value=""/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="emailId" value="${UpdateProfileEmailAddressWithOpts#Response#$['Emails'][0]['EmailId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="includeOpts" value="${ProfileChannelOpts#IncludeOpts}"/>
+          <con:entry key="Program-Code" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Program-Code}"/>
+          <con:entry key="channelCode" value="${ProfileChannelOpts#ChannelCode}"/>
+          <con:entry key="addressId" value=""/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>channelCode</con:entry>
+          <con:entry>includeOpts</con:entry>
+          <con:entry>communicationMediumId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>emailId</con:entry>
+          <con:entry>phoneId</con:entry>
+          <con:entry>addressId</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="SMCondition" id="42ea5431-f456-4b2d-ba49-252590435370">
+    <con:settings/>
+    <con:config>
+      <script>//Checking if ChannCode is SM
+def channelCode = context.expand( '${GetOptByOptType#channelCode}' )
+if(channelCode == 'SM')
+  testRunner.gotoStepByName("SMProgramCode")
+  else 
+    testRunner.gotoStepByName("PHCondition")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="SMProgramCode" id="e581f5c1-d6b2-4d76-8d53-902aaa9c4bd9">
+    <con:settings/>
+    <con:config>
+      <script>//Checking if OptByProgramCode is equal to ProgramCode of the profile added
+def optByProgramCode = context.expand( '${GetOptByOptType#Response#$[0][\'ProgramCode\'][1][\'ProgramCode\']}' )
+def fileProgramCode = context.expand( '${#[Profile#AddProfileRGR#RandomProfile]#ProgramCode}' )
+if(optByProgramCode == fileProgramCode)
+  testRunner.gotoStepByName("UpdateProfilePhoneNumber")
+  else 
+    testRunner.gotoStepByName("PHCondition")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="ProfileChannelOptsLoop" id="9b133802-6d99-41e6-9371-368d2c8acd2b">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>ProfileChannelOpts</dataSourceStep>
+      <targetStep>GetOptByOptType</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>99be3a9e-65c9-48c8-9118-2c116d1ea345</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>d252aadb-6587-4317-86bb-27dd9b9bb112</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>7064cac9-b182-4499-8180-a92e0566812d</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>65cf0f3f-ba02-4a2c-8a85-ae4672c97e85</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>1e660e74-bd87-49d0-b5b7-01ce3f77ac58</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>9b101dd1-01b3-4b25-b2d3-0281cf2d429d</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2dee40f3-71ca-473c-90a1-b7344847e082</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e9ef6b37-48fe-475b-9e50-372b508dbdd2</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>42ea5431-f456-4b2d-ba49-252590435370</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e581f5c1-d6b2-4d76-8d53-902aaa9c4bd9</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

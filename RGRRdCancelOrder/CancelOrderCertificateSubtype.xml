@@ -105,6 +105,66 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="GetPointTypeById" id="a790c23b-1566-4464-bccc-823b58495060">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes/{pointTypeId}" methodName="GetPointTypeById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="cc3cb9aa-fc57-4d56-992d-1bb607297dc8" mediaType="application/json" name="GetPointTypeById">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes/e7aeed86-7da0-4bc3-9d7d-85a6fe1178eb</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="045c8d2d-1ca0-4262-8636-93dc2d27feed" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="87227236-964c-4eea-ab87-91d4aa1923cc" name="PointSubtypeIdHatch">
+          <con:configuration>
+            <path>PointSubTypes.[?(@.PointSubTypeCode=='HATCHED')].PointSubTypeId</path>
+            <content>[${GetPointTypeById#Response#$['PointSubTypes'][0]['PointSubTypeId']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="85825023-7d5d-4481-a5cb-e0fefee481ff" name="PointSubtypeIdUnhatch">
+          <con:configuration>
+            <path>PointSubTypes.[?(@.PointSubTypeCode=='UNHATCHED')].PointSubTypeId</path>
+            <content>[${GetPointTypeById#Response#$['PointSubTypes'][1]['PointSubTypeId']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="pointTypeId" value="${GetPointTypes#Response#$[0]['RefPointTypeId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>pointTypeId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="EnableOrDisableProgramSetting" id="2cf5be4a-e04b-4337-b465-b140d29d85a0">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -201,7 +261,7 @@
       <con:properties>
         <con:property>
           <con:name>Points</con:name>
-          <con:value>10000</con:value>
+          <con:value>-10000</con:value>
         </con:property>
         <con:property>
           <con:name>ProfileId</con:name>
@@ -209,7 +269,7 @@
         </con:property>
         <con:property>
           <con:name>AdjustmentReason</con:name>
-          <con:value>PPGOODW</con:value>
+          <con:value>PPGOODWU</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -261,10 +321,47 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/498e7ca8-2ab7-4aa5-91ce-a5ee6e12dd79/points/summary</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="86f3c6be-35a6-42c0-9190-c974e20acfd8" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="b6820f38-77ac-4462-ae9a-a6a892f117d9" name="BalPoint for ActType Adj[Hatched]">
+          <con:configuration>
+            <path>$.[?(@.PointSubTypeId=='${GetPointTypeById#Response#$['PointSubTypes'][0]['PointSubTypeId']}'&amp;&amp;@.ActivityType=='ADJUSTMENT')].BalancePoints</path>
+            <content>[${GetPointsSummary#Response#$[3]['BalancePoints']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="4d2713c7-ebc2-4b68-9eac-7055a9457ef0" name="BalPoint for ActType Certificate[Hatched]">
+          <con:configuration>
+            <path>$.[?(@.PointSubTypeId=='${GetPointTypeById#Response#$['PointSubTypes'][0]['PointSubTypeId']}'&amp;&amp;@.ActivityType=='CERTIFICATE')].BalancePoints</path>
+            <content>[${GetPointsSummary#Response#$[2]['BalancePoints']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="4463a68c-24bf-421a-be63-f72992dda214" name="BalPoint for ActType CertCancel[Hatched]">
+          <con:configuration>
+            <path>$.[?(@.PointSubTypeId=='${GetPointTypeById#Response#$['PointSubTypes'][0]['PointSubTypeId']}'&amp;&amp;@.ActivityType=='CERTCANCEL')].BalancePoints</path>
+            <content>[${GetPointsSummary#Response#$[0]['BalancePoints']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="e4c32d4c-5672-4b92-a4de-f53d6070df43" name="BalPoint for ActType Adj[Unhatched]">
+          <con:configuration>
+            <path>$.[?(@.PointSubTypeId=='${GetPointTypeById#Response#$['PointSubTypes'][1]['PointSubTypeId']}'&amp;&amp;@.ActivityType=='ADJUSTMENT')].BalancePoints</path>
+            <content>[${GetPointsSummary#Response#$[1]['BalancePoints']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -316,6 +413,11 @@
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>498a1f66-b8b3-4743-969f-4c0715b50424</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>a790c23b-1566-4464-bccc-823b58495060</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

@@ -176,6 +176,43 @@ def postingKeyCode = context.expand( '${SearchProfileWithCardNumber#Response#$[\
 def postingKeyValue = context.expand( '${SearchProfileWithCardNumber#Response#$[\'PostingKeys\'][0][\'PostingKeyValue\']}' )</script>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="If Condition" id="24e839ee-e57e-427a-8d2e-e0229ba266bb">
+    <con:settings/>
+    <con:config>
+      <script>def status = context.expand( '${#[RGRSearchProfile#SearchProfileWithCardNumber#REST Request]#HarResponse#$[\'status\']}' )
+
+if (status == 200) 
+	testRunner.gotoStepByName("UpdateProfile") 
+else  	
+	testRunner.gotoStepByName("AddProfileWithPostingKey")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Run AddProfileWithPostingKey" id="a68a9e07-ffbb-412b-8662-bb242ada3ac7">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>cb57f4cd-4801-4979-8139-6f162741955f</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ProfilExtractions" id="0b6f2c27-9389-4e61-bdc9-300f01b79709">
+    <con:settings/>
+    <con:config>
+      <script>def profileId = context.expand( '${SearchProfileWithCardNumber#Response#$[\'ProfileId\']}' )
+def firstName = context.expand( '${SearchProfileWithCardNumber#Response#$[\'FirstName\']}' )
+def lastName = context.expand( '${SearchProfileWithCardNumber#Response#$[\'LastName\']}' )
+def stateCode = context.expand( '${SearchProfileWithCardNumber#Response#$[\'Addresses\'][0][\'StateCode\']}' )
+def countryCode = context.expand( '${SearchProfileWithCardNumber#Response#$[\'Addresses\'][0][\'CountryCode\']}' )
+def postalCode = context.expand( '${SearchProfileWithCardNumber#Response#$[\'Addresses\'][0][\'PostalCode\']}' )
+def status = context.expand( '${SearchProfileWithCardNumber#Response#$[\'Addresses\'][0][\'Status\']}' )
+def channelCode = context.expand( '${SearchProfileWithCardNumber#Response#$[\'Emails\'][0][\'ChannelCode\']}' )
+def emailAddress = context.expand( '${SearchProfileWithCardNumber#Response#$[\'Emails\'][0][\'EmailAddress\']}' )
+def enrollmentStatus = context.expand( '${SearchProfileWithCardNumber#Response#$[\'EnrollmentStatus\']}' )
+def postingKeyCode = context.expand( '${SearchProfileWithCardNumber#Response#$[\'PostingKeys\'][0][\'PostingKeyCode\']}' )
+def postingKeyValue = context.expand( '${SearchProfileWithCardNumber#Response#$[\'PostingKeys\'][0][\'PostingKeyValue\']}' )</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="UpdateProfile" id="4f8ba11a-16a5-421d-a4df-9b2cd7bc1064">
     <con:settings/>
     <con:config service="RestAPIs" methodName="ProcessProfile" resourcePath="/api/v2/profiles" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -297,6 +334,21 @@ def postingKeyValue = context.expand( '${UpdateProfile#Response#$[\'PostingKeys\
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>80b98760-59ac-4845-acb7-076b9b6edc89</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>24e839ee-e57e-427a-8d2e-e0229ba266bb</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>a68a9e07-ffbb-412b-8662-bb242ada3ac7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0b6f2c27-9389-4e61-bdc9-300f01b79709</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

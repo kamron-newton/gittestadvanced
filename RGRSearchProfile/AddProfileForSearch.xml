@@ -148,20 +148,21 @@
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-  "ProfileId":"",
-  "FirstName":"{{SearchProfile.SearchProfile#csv.FirstName}}",
-  "LastName":"{{SearchProfile.SearchProfile#csv.LastName}}",
+  "ProfileId":"${SearchProfileWithCardNumber#Response#$['ProfileId']}",
+  "FirstName":"${SearchProfile#FirstName}",
+  "LastName":"${SearchProfile#LastName}",
   "Emails": [
     {
-      "EmailAddress": "{{RandomStringParam}}@d2xmail.co",
-      "ChannelCode":  "{{SearchProfile.SearchProfile#csv.EmailChannelCode}}",
-      "LocationCode": "{{SearchProfile.SearchProfile#csv.EmailLocationCode}}",
-      "IsPreferred":  "{{SearchProfile.SearchProfile#csv.EmailIsPreferred}}",
-      "DeliveryStatus": "{{SearchProfile.SearchProfile#csv.EmailDeliveryStatus}}"
+      "EmailAddress": "${SearchProfile#EmailAddress}",
+      "ChannelCode":  "${SearchProfileWithCardNumber#Response#$['Emails'][0]['ChannelCode']}",
+      "LocationCode": "${SearchProfileWithCardNumber#Response#$['Emails'][0]['LocationCode']}",
+      "IsPreferred":  "${SearchProfileWithCardNumber#Response#$['Emails'][0]['IsPreferred']}",
+      "DeliveryStatus": "${SearchProfile#EmailDeliveryStatus}"
     }
   ],
   "Status": "A"
 }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="a76c0438-44c2-44d9-b785-0d97135d6a74" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
@@ -173,7 +174,12 @@
           <con:authType>No Authorization</con:authType>
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
       </con:restRequest>
     </con:config>
   </con:testStep>

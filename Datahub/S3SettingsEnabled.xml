@@ -3,6 +3,7 @@
   <con:settings>
     <con:setting id="691913d9-d56f-409d-bc92-80cc04799067fileName">S3SettingsEnabled</con:setting>
   </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
   <con:testStep type="restrequest" name="GetS3BucketNameSetting" id="6d534ada-bf13-4d23-ac65-c65bace1796c">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/defaultsettings" methodName="GetDefaultSettings" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -81,25 +82,25 @@
       <con:condition>
         <con:name>BatchS3Value</con:name>
         <con:type>XPATH</con:type>
-        <con:expression>//Response[1]/e/ParameterValue[1]='N'</con:expression>
+        <con:expression>//Response[1]/e/ParameterValue='N'</con:expression>
         <con:targetStep>UpdateS3SettingEnabled</con:targetStep>
       </con:condition>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateS3SettingEnabled" id="3265557f-a003-41cc-a8f5-ff2d0a614d7c">
+  <con:testStep type="restrequest" name="UpdateS3SettingEnabled" id="e8befdf7-02a5-40b9-916e-c8512ecc65fa">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/defaultsettings" methodName="UpdateDefaultSetting" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateS3SettingEnabled" id="ab365367-9d4e-4f4a-86f2-43f4fee37a21" mediaType="application/json" postQueryString="false">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/defaultsettings/{defaultSettingId}" methodName="UpdateDefaultSetting" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateS3SettingEnabled" id="e70d197f-6146-4370-a3fe-e6b5f7e7bd0e" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-    "ParameterName":  "{{BatchS3Name}}",
+    "ParameterName":  "BATCH_S3_ENABLED",
     "ParameterValue":  "Y"
   }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/defaultsettings</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="34ad59d1-9f3f-420e-abec-34d4bcfbabbd" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/defaultsettings/712a1b34-9c52-db49-8034-6010ab6fe88e</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9c413e30-1450-404b-abd9-177cb3c7d0e7" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -111,8 +112,17 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="defaultSettingsId" value="${GetS3SettingEnabled#Response#$[0]['DefaultSettingId']}"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="defaultSettingId" value="${GetS3SettingEnabled#Response#$[0]['DefaultSettingId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="content" value="application/json"/>
         </con:parameters>
+        <con:parameterOrder>
+          <con:entry>defaultSettingId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content</con:entry>
+        </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>

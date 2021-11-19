@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="493c35b3-7a9e-4c79-a0c4-3423fbf93331" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ExecuteBatchWorkflowMain" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="493c35b3-7a9e-4c79-a0c4-3423fbf93331fileName">ExecuteBatchWorkflowMain</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="properties" name="ProcessDefinitionKey" id="9a64acfa-d7e7-4b83-b3b7-04eb675e4f03">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:properties>
+        <con:property>
+          <con:name>ProcessDefinitionKey</con:name>
+          <con:value>Automation_Profile_Extract</con:value>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetDatathubSettings" id="4111f3dc-248b-4262-9dbe-e5e631a8eeb8">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/defaultsettings" methodName="GetDefaultSettings" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetDatathubSettings" id="ec493b39-d6ca-453b-9e51-8b882c300aea" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/defaultsettings</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="8f389f50-e640-4b67-ba90-2e7aa6d7fe2f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="category" value="Data Hub"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>category</con:entry>
+          <con:entry>parameterName</con:entry>
+          <con:entry>parameterDescription</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="CreateDatahubOrchestrationToken" id="1566120c-cda6-41a6-ad8a-438232ada1b1">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>802bf79a-cd3a-46a5-952d-ea1d7e6172b1</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="CreateDatahubTenantToken" id="76ebecff-c6de-41a8-88a3-cb30965c1208">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>15de597e-f415-4e1d-90b7-3abb93431827</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetTenantId" id="2556a4bc-3639-4964-b960-3becbf6fa3cc">
+    <con:settings/>
+    <con:config service="DatahubAPIs" resourcePath="/tenants-api/v1/tenants/byTenantCode/{tenantCode}" methodName="GetTenantByTenantCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetTenantId" id="4fb99df6-18d3-4f5c-9bba-f6eaf64a2d7b" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://u-stgapi.datahub.epsilon.com</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://u-acpapi.datahub.epsilon.com/orchestration/api/v1/tenants/byTenantCode/Q3ALIN</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="71b3a98e-7bcd-4ed7-ade8-2e201032f915" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Bearer ${#Project#TenantToken}"/>
+          <con:entry key="tenantCode" value="${#Project#Tenant}"/>
+          <con:entry key="accept" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>tenantCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>accept</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="StartProcess" id="14522e4c-d171-4575-b232-eca88ea552a6">
+    <con:settings/>
+    <con:config service="DatahubAPIs" resourcePath="/orchestration/v1/process-definition/key/{DataHubProcessDefinitionKey}/start" methodName="StartProcess" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="StartProcess" id="b4180f31-bb0b-4a75-b82d-a80d297d00e0" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://u-stgapi.datahub.epsilon.com</con:endpoint>
+        <con:request>{
+    "businessKey": "string",
+    "variables": {
+        "additionalProp1": {
+            "type": "string",
+            "value": "string"
+        },
+        "additionalProp2": {
+            "type": "string",
+            "value": "string"
+        },
+        "additionalProp3": {
+            "type": "string",
+            "value": "string"
+        },
+"FileNameExt":{
+"type":"string",
+"value":"string"
+}
+    },
+    "withVariablesInReturn": true
+}</con:request>
+        <con:originalUri>https://stgapi-public.cls.epsilon.com/orchestration/v1/process-definition/key/start</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="cfd3282e-554b-42e0-9193-113604fc0936" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Bearer ${#Project#DatahubOrchestrationToken}"/>
+          <con:entry key="X-ADH-Tenant-Code" value="${#Project#Tenant}"/>
+          <con:entry key="Accept" value="application/json"/>
+          <con:entry key="DataHubProcessDefinitionKey" value="Automation_Profile_Extract"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>DataHubProcessDefinitionKey</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>X-ADH-Tenant-Code</con:entry>
+          <con:entry>Accept</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>4111f3dc-248b-4262-9dbe-e5e631a8eeb8</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>1566120c-cda6-41a6-ad8a-438232ada1b1</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>76ebecff-c6de-41a8-88a3-cb30965c1208</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2556a4bc-3639-4964-b960-3becbf6fa3cc</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>14522e4c-d171-4575-b232-eca88ea552a6</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>9a64acfa-d7e7-4b83-b3b7-04eb675e4f03</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

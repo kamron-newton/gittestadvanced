@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <con:soapui-project activeEnvironment="Default" compositeProjectFormat="1.3" created="3.0.0" encryptionMode="Not encrypted" id="773a8e19-3994-4684-a623-de3d4ab6269c" name="Features" resourceRoot="${projectDir}" updated="3.8.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.ProTestRunnerUIAction@values-local"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+    <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.ProTestRunnerUIAction@values-local">
+      <![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
   <con:entry key="Report Format(s)" value="XML"/>
   <con:entry key="Host:Port" value=""/>
   <con:entry key="Export JUnit Results" value="true"/>
@@ -37,14 +38,16 @@
   <con:entry key="Domain" value=""/>
   <con:entry key="Tool Args" value=""/>
   <con:entry key="Save Project" value="false"/>
-</xml-fragment>]]></con:setting>
+</xml-fragment>]]>
+    </con:setting>
     <con:setting id="IncludeOverview">true</con:setting>
     <con:setting id="IncludeResults">true</con:setting>
     <con:setting id="FlowLayout">false</con:setting>
     <con:setting id="ErrorDetails">true</con:setting>
     <con:setting id="IncludeCoverage">true</con:setting>
     <con:setting id="773a8e19-3994-4684-a623-de3d4ab6269cfileName">Features_Module_Profile</con:setting>
-    <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.ProTestRunnerAction@values-local"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+    <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.ProTestRunnerAction@values-local">
+      <![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
   <con:entry key="Report Format(s)" value="XML"/>
   <con:entry key="Host:Port" value=""/>
   <con:entry key="Export JUnit Results" value="true"/>
@@ -80,7 +83,8 @@
   <con:entry key="Domain" value=""/>
   <con:entry key="Tool Args" value=""/>
   <con:entry key="Save Project" value="false"/>
-</xml-fragment>]]></con:setting>
+</xml-fragment>]]>
+    </con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
   <con:requirements>
@@ -149,18 +153,6 @@
     <con:property>
       <con:name>TenantToken</con:name>
     </con:property>
-    <con:property>
-      <con:name>BasicAuthorizationTenant</con:name>
-    </con:property>
-    <con:property>
-      <con:name>SystemUserTenant</con:name>
-    </con:property>
-    <con:property>
-      <con:name>SystemUserPasswordTenant</con:name>
-    </con:property>
-    <con:property>
-      <con:name>Tenant</con:name>
-    </con:property>
   </con:properties>
   <con:wssContainer/>
   <con:databaseConnectionContainer/>
@@ -168,76 +160,86 @@
   <con:oAuth2ProfileContainer/>
   <con:oAuth1ProfileContainer/>
   <con:eventHandlers name="RequestFilter.filterRequest" type="RequestFilter.filterRequest">
-    <con:script>// Sample event script to add custom HTTP header to all outgoing REST, SOAP and HTTP(S) calls
-// This code is often used for adding custom authentication to SoapUI Pro tests
+    <con:script>
+      // Sample event script to add custom HTTP header to all outgoing REST, SOAP and HTTP(S) calls
+      // This code is often used for adding custom authentication to SoapUI Pro tests
 
-// If hardcoding the token, uncomment and change line 5
-// def token = '4567'
+      // If hardcoding the token, uncomment and change line 5
+      // def token = '4567'
 
-// If your token is parameterized in Project level custom property, uncomment line 8
-// def token = request.parent.testCase.testSuite.project.getProperty('auth_token').getValue()
+      // If your token is parameterized in Project level custom property, uncomment line 8
+      // def token = request.parent.testCase.testSuite.project.getProperty('auth_token').getValue()
 
-// To modify all outgoing calls, remove comments from lines 11 to 16
-// def headers = request.requestHeaders
-// if (headers.containsKey('auth_token2') == false) {
-//   headers.put('auth_token2', token)
-//   request.requestHeaders = headers
-// }</con:script>
+      // To modify all outgoing calls, remove comments from lines 11 to 16
+      // def headers = request.requestHeaders
+      // if (headers.containsKey('auth_token2') == false) {
+      //   headers.put('auth_token2', token)
+      //   request.requestHeaders = headers
+      // }
+    </con:script>
   </con:eventHandlers>
   <con:eventHandlers name="TestRunListener.afterStep" type="TestRunListener.afterStep">
-    <con:script>// Save all test step results into files
-// Change the directory path in line 5 to a location where you want to store details
-// then uncomment lines 5 to 10
+    <con:script>
+      // Save all test step results into files
+      // Change the directory path in line 5 to a location where you want to store details
+      // then uncomment lines 5 to 10
 
-// filePath = 'C:\\tempOutputDirectory\\'
-// fos = new FileOutputStream(filePath + testStepResult.testStep.label + '.txt', true)
-// pw = new PrintWriter(fos)
-// testStepResult.writeTo(pw)
-// pw.close()
-// fos.close()</con:script>
+      // filePath = 'C:\\tempOutputDirectory\\'
+      // fos = new FileOutputStream(filePath + testStepResult.testStep.label + '.txt', true)
+      // pw = new PrintWriter(fos)
+      // testStepResult.writeTo(pw)
+      // pw.close()
+      // fos.close()
+    </con:script>
   </con:eventHandlers>
   <con:eventHandlers name="TestRunListener.beforeRun" type="TestRunListener.beforeRun">
-    <con:script>def authToken = null
-def accessTokenExpiration = null
-def testCaseName = 'CreateToken'
-def testStepName = 'CreateToken'
-def prj = testRunner.testCase.testSuite.project
-tCase = prj.testSuites['LoadToken'].testCases[testCaseName]
-def expirationDate = null	
-def tokenExpired = true
+    <con:script>
+      def authToken = null
+      def accessTokenExpiration = null
+      def testCaseName = 'CreateToken'
+      def testStepName = 'CreateToken'
+      def prj = testRunner.testCase.testSuite.project
+      tCase = prj.testSuites['LoadToken'].testCases[testCaseName]
+      def expirationDate = null
+      def tokenExpired = true
 
-try {
-	authToken = testRunner.testCase.testSuite.project.getPropertyValue( "AuthToken" )
-	accessTokenExpiration = testRunner.testCase.testSuite.project.getPropertyValue( "AccessTokenExpiration" )
-	try {
-		expirationDate = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'").parse(accessTokenExpiration)
-		tokenExpired =  (new Date()  >= expirationDate)
-	}
-	catch (Exception e) {
-		tokenExpired = true
-	}
+      try {
+      authToken = testRunner.testCase.testSuite.project.getPropertyValue( "AuthToken" )
+      accessTokenExpiration = testRunner.testCase.testSuite.project.getPropertyValue( "AccessTokenExpiration" )
+      try {
+      expirationDate = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'").parse(accessTokenExpiration)
+      tokenExpired =  (new Date()  >= expirationDate)
+      }
+      catch (Exception e) {
+      tokenExpired = true
+      }
 
-	if (authToken == null || authToken == '' || tokenExpired) {
-		tStep = tCase.getTestStepByName(testStepName)
-		tStep.run(testRunner, context)
-		def response = tStep.testRequest.testStep.testRequest.response.responseContent
-		def parsedResponse = new groovy.json.JsonSlurper().parseText(response.toString())
-		def newAccessToken = parsedResponse.AccessToken
-		testRunner.testCase.testSuite.project.setPropertyValue( "AuthToken", newAccessToken )
-		testRunner.testCase.testSuite.project.setPropertyValue( "AccessTokenExpiration", parsedResponse.AccessTokenExpiration )
- 	}
+      if (authToken == null || authToken == '' || tokenExpired) {
+      tStep = tCase.getTestStepByName(testStepName)
+      tStep.run(testRunner, context)
+      def response = tStep.testRequest.testStep.testRequest.response.responseContent
+      def parsedResponse = new groovy.json.JsonSlurper().parseText(response.toString())
+      def newAccessToken = parsedResponse.AccessToken
+      testRunner.testCase.testSuite.project.setPropertyValue( "AuthToken", newAccessToken )
+      testRunner.testCase.testSuite.project.setPropertyValue( "AccessTokenExpiration", parsedResponse.AccessTokenExpiration )
+      }
 
-} catch (Exception e) {
-	log.info e.Message()
-}</con:script>
+      } catch (Exception e) {
+      log.info e.Message()
+      }
+    </con:script>
   </con:eventHandlers>
   <con:eventHandlers name="TestSuiteRunListener.beforeRun" type="TestSuiteRunListener.beforeRun">
-    <con:script>// "Clearing stored AuthToken before running the Test Suite"
-testRunner.testSuite.project.setPropertyValue( "AuthToken", null)</con:script>
+    <con:script>
+      // "Clearing stored AuthToken before running the Test Suite"
+      testRunner.testSuite.project.setPropertyValue( "AuthToken", null)
+    </con:script>
   </con:eventHandlers>
   <con:eventHandlers name="ProjectRunListener.beforeRun" type="ProjectRunListener.beforeRun">
-    <con:script>//  "Clearing stored AuthToken before running the project..."
-testRunner.testCase.testSuite.project.setPropertyValue( "AuthToken", null)</con:script>
+    <con:script>
+      //  "Clearing stored AuthToken before running the project..."
+      testRunner.testCase.testSuite.project.setPropertyValue( "AuthToken", null)
+    </con:script>
   </con:eventHandlers>
   <con:sensitiveInformation/>
   <con:environment id="e460ab9c-c6df-4159-a900-cca111c2e400" name="Default" index="0">
@@ -262,15 +264,15 @@ testRunner.testCase.testSuite.project.setPropertyValue( "AuthToken", null)</con:
     </con:property>
     <con:property>
       <con:name>AuthToken</con:name>
-      <con:value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">936f97fe-ed74-438f-885d-427d904b8dbe</con:value>
+      <con:value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">df946c33-9957-46e2-b38c-75f463f0a12e</con:value>
     </con:property>
     <con:property>
       <con:name>AccessTokenExpiration</con:name>
-      <con:value>2021-11-23T17:09:03.9507981Z</con:value>
+      <con:value>2021-11-19T08:27:27.4943243Z</con:value>
     </con:property>
     <con:property>
       <con:name>ProjectPath</con:name>
-      <con:value>C:\EpsilonFusion\ReadyAPI</con:value>
+      <con:value>C:\Git\FusionWebApiAutomationV2</con:value>
     </con:property>
     <con:property>
       <con:name>NextYearDate</con:name>
@@ -295,22 +297,6 @@ testRunner.testCase.testSuite.project.setPropertyValue( "AuthToken", null)</con:
     <con:property>
       <con:name>TenantToken</con:name>
       <con:value/>
-    </con:property>
-    <con:property>
-      <con:name>BasicAuthorizationTenant</con:name>
-      <con:value>Basic ZGF0YWh1Yl9wY2xfcTNhbGluOjVnQnMlQUlL</con:value>
-    </con:property>
-    <con:property>
-      <con:name>SystemUserTenant</con:name>
-      <con:value>svc_pcl_q3alin</con:value>
-    </con:property>
-    <con:property>
-      <con:name>SystemUserPasswordTenant</con:name>
-      <con:value>sBoI_Ba9</con:value>
-    </con:property>
-    <con:property>
-      <con:name>Tenant</con:name>
-      <con:value>Q3ALIN</con:value>
     </con:property>
     <con:databaseConnectionContainer/>
     <con:jmsConnectionContainer/>
@@ -371,22 +357,6 @@ testRunner.testCase.testSuite.project.setPropertyValue( "AuthToken", null)</con:
       <con:name>TenantToken</con:name>
       <con:value/>
     </con:property>
-    <con:property>
-      <con:name>BasicAuthorizationTenant</con:name>
-      <con:value/>
-    </con:property>
-    <con:property>
-      <con:name>SystemUserTenant</con:name>
-      <con:value/>
-    </con:property>
-    <con:property>
-      <con:name>SystemUserPasswordTenant</con:name>
-      <con:value/>
-    </con:property>
-    <con:property>
-      <con:name>Tenant</con:name>
-      <con:value/>
-    </con:property>
     <con:databaseConnectionContainer/>
     <con:jmsConnectionContainer/>
   </con:environment>
@@ -444,22 +414,6 @@ testRunner.testCase.testSuite.project.setPropertyValue( "AuthToken", null)</con:
     </con:property>
     <con:property>
       <con:name>TenantToken</con:name>
-      <con:value/>
-    </con:property>
-    <con:property>
-      <con:name>BasicAuthorizationTenant</con:name>
-      <con:value/>
-    </con:property>
-    <con:property>
-      <con:name>SystemUserTenant</con:name>
-      <con:value/>
-    </con:property>
-    <con:property>
-      <con:name>SystemUserPasswordTenant</con:name>
-      <con:value/>
-    </con:property>
-    <con:property>
-      <con:name>Tenant</con:name>
       <con:value/>
     </con:property>
     <con:databaseConnectionContainer/>

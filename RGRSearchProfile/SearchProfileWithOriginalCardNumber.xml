@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="474ef7fc-e5c0-4113-aae3-0870d8289897" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="SearchProfileWithPendingEnrollmentStatus" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="ecf21d20-87ed-4ac9-b11c-f5f9de528ec1" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="SearchProfileWithOriginalCardNumber" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="474ef7fc-e5c0-4113-aae3-0870d8289897fileName">SearchProfileWithPendingEnrollmentStatus</con:setting>
+    <con:setting id="ecf21d20-87ed-4ac9-b11c-f5f9de528ec1fileName">SearchProfileWithOriginalCardNumber</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="SearchProfile" id="9462fe3c-1239-48c4-b275-9ad449d67060">
+  <con:testStep type="datasource" name="RandomProfile" id="ca0267fc-8489-4c1a-92fb-d94d2afbc6cc">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -84,29 +84,83 @@
       <con:property>ProfileCardNumberForPurTxn</con:property>
       <con:property>ProfileCardNumberForVdTxn</con:property>
       <con:property>ProfileCardNumberForSupndTxn</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
       <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Run EnableDisableProgramSettings" id="425b3535-7928-40e2-9c4c-b295fd9a46b5">
+  <con:testStep type="restrequest" name="ProcessProfile" id="b80f8ee8-5650-4c6e-9770-1429dc35c6d0">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>58358ab6-63cb-4437-8821-6fda8375ad78</con:targetTestCase>
-      <con:properties/>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="REST Request" id="500c408c-6c0a-4272-9a9f-3758bc5901dc">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/cards/{cardNumber}" methodName="GetProfileByCardNumber" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="REST Request" id="f24dc077-c7fc-435c-b7f7-e5bd112b19c5" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v2/profiles" methodName="ProcessProfile" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" name="ProcessProfile" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/cards/8701389090RGRPEN</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="03b3f72b-0be0-4176-925f-203b079f17b7" name="Valid HTTP Status Codes">
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "Prefix":"${SearchProfile#Prefix}",
+  "FirstName": "${SearchProfile#FirstName}",
+  "MiddleInit":"",
+  "LastName":"${RandomProfile#LastName}",
+  "CardNumber":"${=java.util.UUID.randomUUID()}",
+  "Suffix": "",
+  "GlobalOptOut": "${RandomProfile#GlobalOptOut}",
+  "GlobalOptDate":  "${RandomProfile#GlobalOptDate}",
+  "GlobalOptSource": "${RandomProfile#GlobalOptSource}",
+  "LanguageCode":  "${RandomProfile#LanguageCode}",
+  "MaritalStatus": "${RandomProfile#MaritalStatus}",
+  "Gender": "${RandomProfile#Gender}",
+  "BirthDate": "${RandomProfile#BirthDate}",
+  "CompanyName": "${RandomProfile#CompanyName}",
+  "Addresses": [
+    {
+      "AddressLine1":"${RandomProfile#AddressLine1}",
+      "AddressLine2": "${RandomProfile#AddressLine2}",
+      "AddressLine3": "",
+      "City": "${RandomProfile#City}",
+      "StateCode": "${RandomProfile#StateCode}",
+      "CountryCode":  "${RandomProfile#CountryCode}",
+      "PostalCode": "${RandomProfile#PostalCode}",
+      "ChannelCode": "${RandomProfile#AddressChannelCode}",
+      "LocationCode": "${RandomProfile#AddressLocationCode}",
+      "IsPreferred": "${RandomProfile#AddressIsPreferred}",
+      "DeliveryStatus": "${RandomProfile#AddressDeliveryStatus}",
+      "DoNotStandardize":  "${RandomProfile#DoNotStandardize}"
+    }
+  ],
+  "Emails": [
+    {
+      "EmailAddress": "${RandomProfile#EmailAddress}",
+      "ChannelCode":  "${RandomProfile#EmailChannelCode}",
+      "LocationCode": "${RandomProfile#EmailLocationCode}",
+      "IsPreferred":  "${RandomProfile#EmailIsPreferred}",
+      "DeliveryStatus": "${RandomProfile#EmailDeliveryStatus}"
+    }
+  ],
+  "Phones": [
+    {
+      "PhoneNumber":  "${RandomProfile#PhoneNumber}",
+      "PhoneCountryCode": "${RandomProfile#PhoneCountryCode}",
+      "AcceptsText":"${RandomProfile#AcceptsText}",
+      "Frequency": "${RandomProfile#Frequency}",
+      "ChannelCode":"${RandomProfile#PhoneChannelCode}",
+      "LocationCode":"${RandomProfile#PhoneLocationCode}",
+      "IsPreferred": "${RandomProfile#PhoneIsPreferred}",
+      "DeliveryStatus":"${RandomProfile#PhoneDeliveryStatus}"
+    }
+  ],
+  "SourceCode": "${RandomProfile#SourceCode}",
+  "EnrollChannelCode": "${RandomProfile#EnrollChannelCode}",
+  "AutoRewardOptInInd":  "${RandomProfile#AutoRewardOptInInd}",
+  "TermsConditionsAcceptedInd": "${RandomProfile#TermsConditionsAcceptedInd}"
+ }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="c09065cd-eda5-4131-8b8a-6bdb40c160e4" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -118,59 +172,39 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="cardNumber" value="${#[RGRSearchProfile#AddProfileForSearch#SearchProfile]#PendingProfileCardNumber}"/>
+          <con:entry key="Authorization" value="${RandomProfile#Authorization}"/>
+          <con:entry key="content-type" value="${RandomProfile#content-type}"/>
+          <con:entry key="Accept-Language" value="${RandomProfile#Accept-Language}"/>
+          <con:entry key="Program-Code" value="${RandomProfile#Program-Code}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>
           <con:entry>Program-Code</con:entry>
-          <con:entry>content-type</con:entry>
           <con:entry>Accept-Language</con:entry>
-          <con:entry>cardNumber</con:entry>
+          <con:entry>content-type</con:entry>
         </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="If StatusIs404" id="07284687-0db3-4d43-b855-9004cad7b6ff">
+  <con:testStep type="restrequest" name="REST Request" id="0e221e28-7f83-43da-b38a-8b585b292855">
     <con:settings/>
-    <con:config>
-      <script>def status = context.expand( '${REST Request#HarResponse#$[\'status\']}' )
-
-if(status=404)
-  testRunner.gotoStepByName("CreateProfile")
-
-def profileId = context.expand( '${REST Request#Response#$[\'ProfileId\']}' )
-def programCode = context.expand( '${REST Request#Response#$[\'ProgramCode\']}' )
-def enrollmentStatus = context.expand( '${REST Request#Response#$[\'EnrollmentStatus\']}' )</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="Run ProcessProfile" id="f9df4c0a-4752-4f58-8feb-52d608c52894">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>ProfileId</con:name>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="SearchProfileWithEnrollmentStatus" id="fd7fcb28-3b01-4732-abd6-6bfab94ec8a8">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles" methodName="GetProfiles" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="SearchProfileWithEnrollmentStatus" id="07594454-22fa-4ace-8166-da8f5eab8b96" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/enrollments/cards/{cardnumber}/replace?newCardNumber={newCardNumber}" methodName="Method 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="REST Request" id="715b3213-7d92-456e-9acb-8495e5745c06" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="ba9c6e71-15d6-4d50-bf4a-987925b46b70" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/enrollments/cards/cardNumber/replace</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="32ed43d5-e703-40cf-a0a0-79d053a72ae7" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -182,30 +216,22 @@ def enrollmentStatus = context.expand( '${REST Request#Response#$[\'EnrollmentSt
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="enrollmentStatus" value="P"/>
+          <con:entry key="newCardNumber" value="${=java.util.UUID.randomUUID()}"/>
+          <con:entry key="profileId" value="${Run AddProfile#ProfileId}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="cardNumber" value="${SearchProfile#PendingProfileCardNumber}"/>
+          <con:entry key="cardnumber" value="${Run AddProfile#CardNumber}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>newCardNumber</con:entry>
+          <con:entry>cardnumber</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Program-Code</con:entry>
           <con:entry>content-type</con:entry>
           <con:entry>Accept-Language</con:entry>
-          <con:entry>lastName</con:entry>
-          <con:entry>emailAddress</con:entry>
-          <con:entry>firstName</con:entry>
-          <con:entry>countryCode</con:entry>
-          <con:entry>stateCode</con:entry>
-          <con:entry>postalCode</con:entry>
-          <con:entry>phoneNumber</con:entry>
-          <con:entry>cardNumber</con:entry>
-          <con:entry>enrollmentStatus</con:entry>
-          <con:entry>city</con:entry>
-          <con:entry>customDataName</con:entry>
-          <con:entry>customDataValue</con:entry>
         </con:parameterOrder>
       </con:restRequest>
     </con:config>
@@ -213,7 +239,12 @@ def enrollmentStatus = context.expand( '${REST Request#Response#$[\'EnrollmentSt
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
-    <con:testStepId>9462fe3c-1239-48c4-b275-9ad449d67060</con:testStepId>
+    <con:testStepId>b80f8ee8-5650-4c6e-9770-1429dc35c6d0</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>ca0267fc-8489-4c1a-92fb-d94d2afbc6cc</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

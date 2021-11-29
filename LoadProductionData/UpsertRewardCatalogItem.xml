@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="94f47915-1f89-48a0-a3c0-7713625a4528" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertRewardCatalogItem" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="94f47915-1f89-48a0-a3c0-7713625a4528fileName">UpsertRewardCatalogItem</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="RewardCatalog" id="b75a1d33-f63b-4e5f-8672-c6ba41138bb5">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/RewardCatalog.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>true</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>PointTypeCode</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>RewardCode</con:property>
+      <con:property>CategoryCode</con:property>
+      <con:property>StartDate</con:property>
+      <con:property>EndDate</con:property>
+      <con:property>RewardType</con:property>
+      <con:property>MinValue</con:property>
+      <con:property>MaxValue</con:property>
+      <con:property>RewardUsageTypeId</con:property>
+      <con:property>CurrencyCode</con:property>
+      <con:property>Title</con:property>
+      <con:property>Manufacturer</con:property>
+      <con:property>ImageName</con:property>
+      <con:property>ProgramCost</con:property>
+      <con:property>RetailPrice</con:property>
+      <con:property>FixedPoints</con:property>
+      <con:property>ShippingInfoRequired</con:property>
+      <con:property>DisplayInCatalog</con:property>
+      <con:property>ProgramCostPerPoint</con:property>
+      <con:property>RetailPricePerPoint</con:property>
+      <con:property>DaysValid</con:property>
+      <con:property>CertificateInd</con:property>
+      <con:property>Description</con:property>
+      <con:property>BurnRatioDollarValue</con:property>
+      <con:property>BurnRatioPointValue</con:property>
+      <con:property>ImageNameAltText</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetRewardByCode" id="64e63552-3326-4e0d-8646-3671b99a80f8">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="GetRewardByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetRewardByCode" id="2cac3c06-239f-407b-b046-7e23810f6fb0" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="09143df4-203b-49d8-8e38-bec51be223b6" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="rewardCode" value="${RewardCatalog#RewardCode}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>rewardCode</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="RewCatlogCondition" id="a93031b1-47a1-4469-9346-2401cf1665a8">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+def status = context.expand( '${GetRewardByCode#HarResponse#$[\'status\']}' ).toInteger()
+if (status != 200) 
+	testRunner.gotoStepByName("AddRewardCatalogItem") 
+else  	
+	testRunner.gotoStepByName("UpdateRewardCatalogItem")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddRewardCatalogItem" id="b50ff823-e54a-467c-8489-201463340301">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards" methodName="AddReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddRewardCatalogItem" id="e1eeb6c0-074c-4d78-893d-adb7c364e104" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"RewardCode":"${RewardCatalog#RewardCode}",
+	"StartDate": "${RewardCatalog#StartDate}",
+	"EndDate": "${RewardCatalog#EndDate}",
+	"RewardType": "${RewardCatalog#RewardType}",
+	"PointTypeCode": "${RewardCatalog#PointTypeCode}",
+	"RewardUsageTypeId": "${RewardCatalog#RewardUsageTypeId}",
+	"Description": "${RewardCatalog#Description}",
+	"Title": "${RewardCatalog#Title}",
+	"Manufacturer": "${RewardCatalog#Manufacturer}",
+	"ImageName": "${RewardCatalog#ImageName}",
+     "ImageNameAltText": "${RewardCatalog#ImageNameAltText}",
+	"RetailPrice": ${RewardCatalog#RetailPrice},
+	"ProgramCost": ${RewardCatalog#ProgramCost},
+	"CurrencyCode": "${RewardCatalog#CurrencyCode}",
+	"CategoryCode": "${RewardCatalog#CategoryCode}",
+	"FixedPoints": "${RewardCatalog#FixedPoints}",
+	"ShippingInfoRequired": "${RewardCatalog#ShippingInfoRequired}",
+	"DisplayInCatalog": "${RewardCatalog#DisplayInCatalog}",
+	"CertificateInd": "${RewardCatalog#CertificateInd}",
+	"DaysValid": ${RewardCatalog#DaysValid},
+	"Status": "A",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewards</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9fa47ee4-dec6-4970-ab0e-7423d5fe157f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${RewardCatalog#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateRewardCatalogItem" id="d2f71c09-ddf9-444f-b7d4-4434fd6fe45d">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="UpdateReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateRewardCatalogItem" id="48f5a14a-f9a2-4d56-9aee-3f1662d2eb7f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"RewardCode":"${RewardCatalog#RewardCode}",
+	"StartDate": "${RewardCatalog#StartDate}",
+	"EndDate": "${RewardCatalog#EndDate}",
+	"RewardType": "${RewardCatalog#RewardType}",
+	"PointTypeCode": "${RewardCatalog#PointTypeCode}",
+	"RewardUsageTypeId": "${RewardCatalog#RewardUsageTypeId}",
+	"Description": "${RewardCatalog#Description}",
+	"Title": "${RewardCatalog#Title}",
+	"Manufacturer": "${RewardCatalog#Manufacturer}",
+	"ImageName": "${RewardCatalog#ImageName}",
+     "ImageNameAltText": "${RewardCatalog#ImageNameAltText}",
+	"RetailPrice": ${RewardCatalog#RetailPrice},
+	"ProgramCost": ${RewardCatalog#ProgramCost},
+	"CurrencyCode": "${RewardCatalog#CurrencyCode}",
+	"CategoryCode": "${RewardCatalog#CategoryCode}",
+	"FixedPoints": "${RewardCatalog#FixedPoints}",
+	"ShippingInfoRequired": "${RewardCatalog#ShippingInfoRequired}",
+	"DisplayInCatalog": "${RewardCatalog#DisplayInCatalog}",
+	"CertificateInd": "${RewardCatalog#CertificateInd}",
+	"DaysValid": ${RewardCatalog#DaysValid},
+	"Status": "A",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewards/PPCHICKENRUN</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b444d202-96cf-427d-9a8e-3402b745fca0" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="rewardCode" value="${RewardCatalog#RewardCode}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${RewardCatalog#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>rewardCode</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="RewardCatalogLoop" id="48633de9-292d-4e43-82db-335df2de7ad4">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>RewardCatalog</dataSourceStep>
+      <targetStep>GetRewardByCode</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>b75a1d33-f63b-4e5f-8672-c6ba41138bb5</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>a93031b1-47a1-4469-9346-2401cf1665a8</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="94f47915-1f89-48a0-a3c0-7713625a4528" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertRewardCatalogItem" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="738d7c9b-b397-4211-8d6a-90b410aca870" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertRewardAuction" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="94f47915-1f89-48a0-a3c0-7713625a4528fileName">UpsertRewardCatalogItem</con:setting>
+    <con:setting id="738d7c9b-b397-4211-8d6a-90b410aca870fileName">UpsertRewardAuction</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="RewardCatalog" id="b75a1d33-f63b-4e5f-8672-c6ba41138bb5">
+  <con:testStep type="datasource" name="RewardAuctions" id="8aced610-5f31-4e56-8ad1-2afcb93da293">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
         <con:configuration>
-          <fileName>${#Project#ProjectPath}/References/RewardCatalog.csv</fileName>
+          <fileName>${#Project#ProjectPath}/References/RewardAuctions.csv</fileName>
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
@@ -44,9 +44,8 @@
       <con:property>Description</con:property>
       <con:property>BurnRatioDollarValue</con:property>
       <con:property>BurnRatioPointValue</con:property>
-      <con:property>ImageNameAltText</con:property>
       <con:startRow>1</con:startRow>
-      <con:endRow/>
+      <con:endRow>20</con:endRow>
       <con:recordsPerIteration>1</con:recordsPerIteration>
       <con:completeLastOperation>true</con:completeLastOperation>
       <con:trimValues>false</con:trimValues>
@@ -55,7 +54,7 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetRewardByCode" id="64e63552-3326-4e0d-8646-3671b99a80f8">
+  <con:testStep type="restrequest" name="GetRewardByCode" id="d556af46-2fd7-4573-98f5-d30851d50fe1">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="GetRewardByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetRewardByCode" id="2cac3c06-239f-407b-b046-7e23810f6fb0" mediaType="application/json">
@@ -78,7 +77,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="rewardCode" value="${RewardCatalog#RewardCode}"/>
+          <con:entry key="rewardCode" value="${RewardAuctions#RewardCode}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -101,50 +100,47 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="RewCatlogCondition" id="a93031b1-47a1-4469-9346-2401cf1665a8">
+  <con:testStep type="groovy" name="RewAuctionCondition" id="eeeed836-64a0-40cd-aa65-197f133cf713">
     <con:settings/>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
 def status = context.expand( '${GetRewardByCode#HarResponse#$[\'status\']}' ).toInteger()
 if (status != 200) 
-	testRunner.gotoStepByName("AddRewardCatalogItem") 
+	testRunner.gotoStepByName("AddRewardAuction") 
 else  	
-	testRunner.gotoStepByName("UpdateRewardCatalogItem")</script>
+	testRunner.gotoStepByName("UpdateRewardAuction")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddRewardCatalogItem" id="b50ff823-e54a-467c-8489-201463340301">
+  <con:testStep type="restrequest" name="AddRewardAuction" id="fdc1fd20-dbaf-4e38-8ef9-4eb75f838334">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards" methodName="AddReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="AddRewardCatalogItem" id="e1eeb6c0-074c-4d78-893d-adb7c364e104" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="AddRewardAuction" id="e1eeb6c0-074c-4d78-893d-adb7c364e104" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-	"RewardCode":"${RewardCatalog#RewardCode}",
-	"StartDate": "${RewardCatalog#StartDate}",
-	"EndDate": "${RewardCatalog#EndDate}",
-	"RewardType": "${RewardCatalog#RewardType}",
-	"PointTypeCode": "${RewardCatalog#PointTypeCode}",
-	"RewardUsageTypeId": "${RewardCatalog#RewardUsageTypeId}",
-	"Description": "${RewardCatalog#Description}",
-	"Title": "${RewardCatalog#Title}",
-	"Manufacturer": "${RewardCatalog#Manufacturer}",
-	"ImageName": "${RewardCatalog#ImageName}",
-     "ImageNameAltText": "${RewardCatalog#ImageNameAltText}",
-	"RetailPrice": ${RewardCatalog#RetailPrice},
-	"ProgramCost": ${RewardCatalog#ProgramCost},
-	"CurrencyCode": "${RewardCatalog#CurrencyCode}",
-	"CategoryCode": "${RewardCatalog#CategoryCode}",
-	"FixedPoints": "${RewardCatalog#FixedPoints}",
-	"ShippingInfoRequired": "${RewardCatalog#ShippingInfoRequired}",
-	"DisplayInCatalog": "${RewardCatalog#DisplayInCatalog}",
-	"CertificateInd": "${RewardCatalog#CertificateInd}",
-	"DaysValid": ${RewardCatalog#DaysValid},
+	"RewardCode":"${RewardAuctions#RewardCode}",
+	"RewardType": "${RewardAuctions#RewardType}",
+	"PointTypeCode": "${RewardAuctions#PointTypeCode}",
+	"RewardUsageTypeId": "${RewardAuctions#RewardUsageTypeId}",
+	"Description": "${RewardAuctions#Description}",
+	"Title": "${RewardAuctions#Title}",
+	"Manufacturer": "${RewardAuctions#Manufacturer}",
+	"ImageName": "${RewardAuctions#ImageName}",
+	"RetailPrice": ${RewardAuctions#RetailPrice},
+	"ProgramCost": ${RewardAuctions#ProgramCost},
+	"CurrencyCode": "${RewardAuctions#CurrencyCode}",
+	"CategoryCode": "${RewardAuctions#CategoryCode}",
+	"FixedPoints": ${RewardAuctions#FixedPoints},
+	"ShippingInfoRequired": ${RewardAuctions#ShippingInfoRequired},
+	"DisplayInCatalog": ${RewardAuctions#DisplayInCatalog},
+	"CertificateInd": ${RewardAuctions#CertificateInd},
+	"DaysValid": ${RewardAuctions#DaysValid},
 	"Status": "A",
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewards</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="9fa47ee4-dec6-4970-ab0e-7423d5fe157f" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="aec125d0-3e62-489c-93e0-a171bc5e862b" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>201</codes>
@@ -159,7 +155,7 @@ else
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${RewardCatalog#ProgramCode}"/>
+          <con:entry key="Program-Code" value="${RewardAuctions#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>
@@ -178,40 +174,36 @@ else
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateRewardCatalogItem" id="d2f71c09-ddf9-444f-b7d4-4434fd6fe45d">
+  <con:testStep type="restrequest" name="UpdateRewardAuction" id="50c6970a-f386-4d6f-b800-e5d3f96d03fd">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="UpdateReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateRewardCatalogItem" id="48f5a14a-f9a2-4d56-9aee-3f1662d2eb7f" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="UpdateRewardAuction" id="48f5a14a-f9a2-4d56-9aee-3f1662d2eb7f" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-	"RewardCode":"${RewardCatalog#RewardCode}",
-	"StartDate": "${RewardCatalog#StartDate}",
-	"EndDate": "${RewardCatalog#EndDate}",
-	"RewardType": "${RewardCatalog#RewardType}",
-	"PointTypeCode": "${RewardCatalog#PointTypeCode}",
-	"RewardUsageTypeId": "${RewardCatalog#RewardUsageTypeId}",
-	"Description": "${RewardCatalog#Description}",
-	"Title": "${RewardCatalog#Title}",
-	"Manufacturer": "${RewardCatalog#Manufacturer}",
-	"ImageName": "${RewardCatalog#ImageName}",
-     "ImageNameAltText": "${RewardCatalog#ImageNameAltText}",
-	"RetailPrice": ${RewardCatalog#RetailPrice},
-	"ProgramCost": ${RewardCatalog#ProgramCost},
-	"CurrencyCode": "${RewardCatalog#CurrencyCode}",
-	"CategoryCode": "${RewardCatalog#CategoryCode}",
-	"FixedPoints": "${RewardCatalog#FixedPoints}",
-	"ShippingInfoRequired": "${RewardCatalog#ShippingInfoRequired}",
-	"DisplayInCatalog": "${RewardCatalog#DisplayInCatalog}",
-	"CertificateInd": "${RewardCatalog#CertificateInd}",
-	"DaysValid": ${RewardCatalog#DaysValid},
+	"RewardCode":"${RewardAuctions#RewardCode}",
+	"RewardType": "${RewardAuctions#RewardType}",
+	"PointTypeCode": "${RewardAuctions#PointTypeCode}",
+	"RewardUsageTypeId": "${RewardAuctions#RewardUsageTypeId}",
+	"Description": "${RewardAuctions#Description}",
+	"Title": "${RewardAuctions#Title}",
+	"Manufacturer": "${RewardAuctions#Manufacturer}",
+	"ImageName": "${RewardAuctions#ImageName}",
+	"RetailPrice": ${RewardAuctions#RetailPrice},
+	"ProgramCost": ${RewardAuctions#ProgramCost},
+	"CurrencyCode": "${RewardAuctions#CurrencyCode}",
+	"CategoryCode": "${RewardAuctions#CategoryCode}",
+	"FixedPoints": ${RewardAuctions#FixedPoints},
+	"ShippingInfoRequired": ${RewardAuctions#ShippingInfoRequired},
+	"DisplayInCatalog": ${RewardAuctions#DisplayInCatalog},
+	"CertificateInd": ${RewardAuctions#CertificateInd},
+	"DaysValid": ${RewardAuctions#DaysValid},
 	"Status": "A",
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewards/PPCHICKENRUN</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="b444d202-96cf-427d-9a8e-3402b745fca0" name="Valid HTTP Status Codes">
+	}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewards/PPJEFFDRESS</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="d9511c46-57c7-4c8c-9264-ecc2727fd8a2" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -225,9 +217,9 @@ else
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
-          <con:entry key="rewardCode" value="${RewardCatalog#RewardCode}"/>
+          <con:entry key="rewardCode" value="${RewardAuctions#RewardCode}"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${RewardCatalog#ProgramCode}"/>
+          <con:entry key="Program-Code" value="${RewardAuctions#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>
@@ -247,10 +239,10 @@ else
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="datasourceloop" name="RewardCatalogLoop" id="48633de9-292d-4e43-82db-335df2de7ad4">
+  <con:testStep type="datasourceloop" name="RewardAuctionLoop" id="927e04a4-db55-4661-a54a-2ce087035773">
     <con:settings/>
     <con:config>
-      <dataSourceStep>RewardCatalog</dataSourceStep>
+      <dataSourceStep>RewardAuctions</dataSourceStep>
       <targetStep>GetRewardByCode</targetStep>
       <discardResults>true</discardResults>
     </con:config>
@@ -258,12 +250,12 @@ else
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
-    <con:testStepId>b75a1d33-f63b-4e5f-8672-c6ba41138bb5</con:testStepId>
+    <con:testStepId>8aced610-5f31-4e56-8ad1-2afcb93da293</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>a93031b1-47a1-4469-9346-2401cf1665a8</con:testStepId>
+    <con:testStepId>eeeed836-64a0-40cd-aa65-197f133cf713</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

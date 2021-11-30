@@ -4,6 +4,69 @@
     <con:setting id="7a92a3bc-6145-4d4e-9667-7a82cac4b61ffileName">EarnPointsOnATransaction</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="ProcessMarketingEvent" id="fdf7af78-4047-439c-8812-07c3694b924c">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/ProcessMarketingEvent.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>PackagedOfferParamIdCustAct</con:property>
+      <con:property>PackagedOfferIdCustAct</con:property>
+      <con:property>ParamNameCustAct</con:property>
+      <con:property>ParamCodeCustAct</con:property>
+      <con:property>ValueCustAct</con:property>
+      <con:property>PanelIdCustAct</con:property>
+      <con:property>PanelCodeCustAct</con:property>
+      <con:property>PackagedOfferParamIdCustRew</con:property>
+      <con:property>PackagedOfferIdCustRew</con:property>
+      <con:property>ParamNameCustRew</con:property>
+      <con:property>ParamCodeCustRew</con:property>
+      <con:property>ValueCustRew</con:property>
+      <con:property>PanelIdCustRew</con:property>
+      <con:property>PanelCodeCustRew</con:property>
+      <con:property>PackagedOfferParamIdOfferLim</con:property>
+      <con:property>PackagedOfferIdOfferLim</con:property>
+      <con:property>ParamNameOfferLim</con:property>
+      <con:property>ParamCodeOfferLim</con:property>
+      <con:property>ValueOfferLim</con:property>
+      <con:property>PanelIdOfferLim</con:property>
+      <con:property>PanelCodeOfferLim</con:property>
+      <con:startRow>2</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RandonNumberGenerator" id="c7195fb9-91e4-43f7-acef-1259bfe7f04e">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>e941415c-c47a-4193-99e4-37cbf0b51d0a</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="GetMarketingOfferCategories" id="e9dba099-85fe-4340-ab39-f7d5daf0ed40">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>2f4e517f-c934-43a0-ac27-57a235895491</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="GetPackagedOffers" id="24dbc375-383c-46c2-ad90-80cb1fd95c97">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -31,19 +94,17 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="ProcessMarketingEvent" id="5a39d947-ff48-48e7-bde4-7f5a3ad6d0dc">
+  <con:testStep type="calltestcase" name="ProcessMarketingEventErnPtTrxn" id="dae7d03a-0a38-4c97-a8f7-5acb1a570ad4">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>452fb9a9-7e90-4531-b1a5-d354277589d0</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>ProcessMarketingEventBody</con:name>
-          <con:value>{ 	 	"MarketingEventChannels": [ 		{ 			"MarketingEventChannelId": "${#[OffersPrerequisite#GetPromotionChannels#GetPromotionChannels]#Response#$[2]['PromotionChannelId']}", 			"ChannelName": "${#[OffersPrerequisite#GetPromotionChannels#GetPromotionChannels]#Response#$[2]['ChannelName']}" 		} 	], 	"EventName": "PROMO_NAME${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventName}", 	"EventCode": "PROMO_CODE${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventCode}", 	"PackagedAudience": {  		"PackagedAudienceId": "${#[OffersPrerequisite#GetPackagedAudiences#GetPackagedAudiences]#Response#$[0]['PackagedAudienceId']}" 	}, 	"AudienceSource": "PACKAGED_AUDIENCE", 	"PackagedOffer": { 		"PackagedOfferId": "${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[4]['PackagedOfferId']}", 		 		"PackagedOfferCode": "${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[4]['PackagedOfferCode']}", 		 		"PackagedOfferName": "${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[4]['PackagedOfferName']}", 	 		"PackagedOfferParams": [ 			{ 				 				"PackagedOfferParamId": "${ProcessMarketingEvent#PackagedOfferParamIdCustAct}", 			     "PackagedOfferId": "${ProcessMarketingEvent#PackagedOfferIdCustAct}", 				"ParamName": "${ProcessMarketingEvent#ParamNameCustAct}", 				"ParamCode": "${ProcessMarketingEvent#ParamCodeCustAct}", 				"Value": ${ProcessMarketingEvent#ValueCustAct}, 				"PanelId": "${ProcessMarketingEvent#PanelIdCustAct}", 				"PanelCode": "${ProcessMarketingEvent#PanelCodeCustAct}" 			}, 			{ 				 				"PackagedOfferParamId": "${ProcessMarketingEvent#PackagedOfferParamIdCustRew}", 				"PackagedOfferId": "${ProcessMarketingEvent#PackagedOfferIdCustRew}", 				"ParamName": "${ProcessMarketingEvent#ParamNameCustRew}", 				"ParamCode": "${ProcessMarketingEvent#ParamCodeCustRew}", 				"Value": ${ProcessMarketingEvent#ValueCustRew}, 				"PanelId": "${ProcessMarketingEvent#PanelIdCustRew}", 				"PanelCode": "${ProcessMarketingEvent#PanelCodeCustRew}" 			}, 			{ 				"PackagedOfferParamId": "${ProcessMarketingEvent#PackagedOfferParamIdOfferLim}", 				"PackagedOfferId": "${ProcessMarketingEvent#PackagedOfferIdOfferLim}", 				"ParamName": "${ProcessMarketingEvent#ParamNameOfferLim}", 				"ParamCode": "${ProcessMarketingEvent#ParamCodeOfferLim}", 				"Value": ${ProcessMarketingEvent#ValueOfferLim}, 				"PanelId": "${ProcessMarketingEvent#PanelIdOfferLim}", 				"PanelCode": "${ProcessMarketingEvent#PanelCodeOfferLim}" 			} 		], 		"PackagedOfferCategoryId": "${#[OffersPrerequisite#GetMarketingOfferCategories#GetMarketingOfferCategories]#Response#$[3]['MarketingOfferCategoryId']}", 		"PackagedOfferCategoryCode": "${#[OffersPrerequisite#GetMarketingOfferCategories#GetMarketingOfferCategories]#Response#$[3]['CategoryCode']}" 	},   "OfferStartDate": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferStartDate}", "OfferEndDate": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferEndDate}", 	"Status": "A", }</con:value>
+          <con:value>{ 	 	"MarketingEventChannels": [ 		{ 			"MarketingEventChannelId": "${#[OffersPrerequisite#GetPromotionChannels#GetPromotionChannels]#Response#$[2]['PromotionChannelId']}", 			"ChannelName": "${#[OffersPrerequisite#GetPromotionChannels#GetPromotionChannels]#Response#$[2]['ChannelName']}" 		} 	], 	"EventName": "PROMO_NAME${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventName}", 	"EventCode": "PROMO_CODE${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventCode}", 	"PackagedAudience": {  		"PackagedAudienceId": "${#[OffersPrerequisite#GetPackagedAudiences#GetPackagedAudiences]#Response#$[0]['PackagedAudienceId']}" 	}, 	"AudienceSource": "PACKAGED_AUDIENCE", 	"PackagedOffer": { 		"PackagedOfferId": "${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[3]['PackagedOfferId']}", 		 		"PackagedOfferCode": "${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[3]['PackagedOfferCode']}", 		 		"PackagedOfferName": "${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[2]['PackagedOfferName']}", 	 		"PackagedOfferParams": [ 			{ 				 				"PackagedOfferParamId": "${ProcessMarketingEvent#PackagedOfferParamIdCustAct}", 			     "PackagedOfferId": "${ProcessMarketingEvent#PackagedOfferIdCustAct}", 				"ParamName": "${ProcessMarketingEvent#ParamNameCustAct}", 				"ParamCode": "${ProcessMarketingEvent#ParamCodeCustAct}", 				"Value": ${ProcessMarketingEvent#ValueCustAct}, 				"PanelId": "${ProcessMarketingEvent#PanelIdCustAct}", 				"PanelCode": "${ProcessMarketingEvent#PanelCodeCustAct}" 			}, 			{ 				 				"PackagedOfferParamId": "${ProcessMarketingEvent#PackagedOfferParamIdCustRew}", 				"PackagedOfferId": "${ProcessMarketingEvent#PackagedOfferIdCustRew}", 				"ParamName": "${ProcessMarketingEvent#ParamNameCustRew}", 				"ParamCode": "${ProcessMarketingEvent#ParamCodeCustRew}", 				"Value": ${ProcessMarketingEvent#ValueCustRew}, 				"PanelId": "${ProcessMarketingEvent#PanelIdCustRew}", 				"PanelCode": "${ProcessMarketingEvent#PanelCodeCustRew}" 			}, 			{ 				"PackagedOfferParamId": "${ProcessMarketingEvent#PackagedOfferParamIdOfferLim}", 				"PackagedOfferId": "${ProcessMarketingEvent#PackagedOfferIdOfferLim}", 				"ParamName": "${ProcessMarketingEvent#ParamNameOfferLim}", 				"ParamCode": "${ProcessMarketingEvent#ParamCodeOfferLim}", 				"Value": ${ProcessMarketingEvent#ValueOfferLim}, 				"PanelId": "${ProcessMarketingEvent#PanelIdOfferLim}", 				"PanelCode": "${ProcessMarketingEvent#PanelCodeOfferLim}" 			} 		], 		"PackagedOfferCategoryId": "${#[OffersPrerequisite#GetMarketingOfferCategories#GetMarketingOfferCategories]#Response#$[3]['MarketingOfferCategoryId']}", 		"PackagedOfferCategoryCode": "${#[OffersPrerequisite#GetMarketingOfferCategories#GetMarketingOfferCategories]#Response#$[3]['CategoryCode']}" 	},   "OfferStartDate": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferStartDate}", "OfferEndDate": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferEndDate}", 	"Status": "A", }</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties>
-        <con:entry>ProcessMarketingEventBody</con:entry>
-      </con:returnProperties>
+      <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
@@ -54,6 +115,21 @@
     </con:property>
   </con:properties>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>c7195fb9-91e4-43f7-acef-1259bfe7f04e</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e9dba099-85fe-4340-ab39-f7d5daf0ed40</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>fdf7af78-4047-439c-8812-07c3694b924c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
   <con:environmentSpec>
     <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
       <con:authProfile>Inherit From Parent</con:authProfile>

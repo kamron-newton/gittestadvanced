@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="81ac86d9-4636-4d8d-8ddd-cc1db1be88a4" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertAuction" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="81ac86d9-4636-4d8d-8ddd-cc1db1be88a4fileName">UpsertAuction</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="Auctions" id="5b559ec4-bedc-4301-87f7-4862a946ec6b">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Auctions.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>PointTypeCode</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>Quantity</con:property>
+      <con:property>AuctionCode</con:property>
+      <con:property>RewardCode</con:property>
+      <con:property>AuctionName</con:property>
+      <con:property>StartDate</con:property>
+      <con:property>EndDate</con:property>
+      <con:property>BidMinPoint</con:property>
+      <con:property>BidIncrementThreshold</con:property>
+      <con:property>ImageNameSmall</con:property>
+      <con:property>ImageNameMedium</con:property>
+      <con:property>ImageNameLarge</con:property>
+      <con:property>Description</con:property>
+      <con:property>TermsAndCondition</con:property>
+      <con:property>Rules</con:property>
+      <con:property>ImageNameSmallAltText</con:property>
+      <con:property>ImageNameMediumAltText</con:property>
+      <con:property>ImageNameLargeAltText</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>20</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetAuctions" id="c6b59df9-e3df-45f9-b0b8-cb90f4c3a41d">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/auctions" methodName="GetAuctions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAuctions" id="e32bc68c-1510-48ce-9749-157bfe97edfc" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/auctions</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a5b0b0e6-bb79-425d-830d-61c4d5a4aba6" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,400</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="auctionCode" value="${Auctions#AuctionCode}"/>
+          <con:entry key="Program-Code" value="${Auctions#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>auctionCode</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>pointTypeId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="AuctionLoop" id="0a0ae8e8-0fc0-4145-ad24-2e86c79ffe92">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>Auctions</dataSourceStep>
+      <targetStep>GetAuctions</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>5b559ec4-bedc-4301-87f7-4862a946ec6b</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

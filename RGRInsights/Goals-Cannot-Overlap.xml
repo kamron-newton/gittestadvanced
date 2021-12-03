@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="410465a5-a2f3-47b5-b10a-a5b55f149634" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Goals Cannot Overlap" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="410465a5-a2f3-47b5-b10a-a5b55f149634fileName">Goals-Cannot-Overlap</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="restrequest" name="Create Goal" id="73180070-277c-4219-9767-7872adc5d8c6">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals" methodName="Create Goal" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Create Goal" id="c174f9d3-44f3-4cbc-8d02-bde2d71079fd" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MetricType" : "MEMBERSALES",
+	"GoalObjective" : "Increase By",
+	"ValueType" : "Percentage",
+	"GoalAmount" : 10,
+	"CalendarType" : "Calendar",
+	"GoalPeriodUnit" : "W",
+	"GoalPeriod" : "Week 05 of 2017",
+	"ComparisonPeriod" : "Week 05 of 2016",
+	"Status" : "A"
+}</con:request>
+        <con:originalUri>https://d3aldv-pveapi.skynetlowerenv.com/api/v1/insights/goals</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="c9ac9dec-b920-42c5-b40c-34907de07f82" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Create Duplicate Goal" id="c2e82289-0373-4dae-9927-069dc8425973">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals" methodName="Create Goal" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Create Duplicate Goal" id="c174f9d3-44f3-4cbc-8d02-bde2d71079fd" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MetricType" : "MEMBERSALES",
+	"GoalObjective" : "Increase By",
+	"ValueType" : "Percentage",
+	"GoalAmount" : 10,
+	"CalendarType" : "Calendar",
+	"GoalPeriodUnit" : "W",
+	"GoalPeriod" : "Week 05 of 2017",
+	"ComparisonPeriod" : "Week 05 of 2016",
+	"Status" : "A"
+}</con:request>
+        <con:originalUri>https://d3aldv-pveapi.skynetlowerenv.com/api/v1/insights/goals</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="c9ac9dec-b920-42c5-b40c-34907de07f82" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>400</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="29d486a4-264f-4512-9f74-d5182211e805" name="JSONPath Match">
+          <con:configuration>
+            <path>$.ErrorCode</path>
+            <content>OverlappingGoals</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Create Overlapping Monthly Goal" id="15526881-0411-44fc-89d6-8865fa379097">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals" methodName="Create Goal" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Create Overlapping Monthly Goal" id="c174f9d3-44f3-4cbc-8d02-bde2d71079fd" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MetricType" : "MEMBERSALES",
+	"GoalObjective" : "Increase By",
+	"ValueType" : "Percentage",
+	"GoalAmount" : 10,
+	"CalendarType" : "Calendar",
+	"GoalPeriodUnit" : "M",
+	"GoalPeriod" : "2017-02",
+	"ComparisonPeriod" : "2016-02",
+	"Status" : "A"
+}</con:request>
+        <con:originalUri>https://d3aldv-pveapi.skynetlowerenv.com/api/v1/insights/goals</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="c9ac9dec-b920-42c5-b40c-34907de07f82" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>400</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="29d486a4-264f-4512-9f74-d5182211e805" name="JSONPath Match">
+          <con:configuration>
+            <path>$.ErrorCode</path>
+            <content>OverlappingGoals</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Create Adjacent Weekly Goal" id="559a8e28-b4ef-4011-b5bc-1fb5c3b1ed74">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals" methodName="Create Goal" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Create Adjacent Weekly Goal" id="c174f9d3-44f3-4cbc-8d02-bde2d71079fd" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MetricType" : "MEMBERSALES",
+	"GoalObjective" : "Increase By",
+	"ValueType" : "Percentage",
+	"GoalAmount" : 10,
+	"CalendarType" : "Calendar",
+	"GoalPeriodUnit" : "W",
+	"GoalPeriod" : "Week 06 of 2017",
+	"ComparisonPeriod" : "Week 06 of 2016",
+	"Status" : "A"
+}</con:request>
+        <con:originalUri>https://d3aldv-pveapi.skynetlowerenv.com/api/v1/insights/goals</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="c9ac9dec-b920-42c5-b40c-34907de07f82" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Goals by Date - 1st goal" id="886c052d-9a41-450b-80af-69a6f097938a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals" methodName="Get Goals" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Goals by Date - 1st goal" id="c8b44ef0-7848-455f-b269-9f75df6e1b05" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://localhost/api/v1/insights/goals</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9cb7f6ed-74dc-4f38-921a-6ed12e26f228" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="6cc95685-026c-4549-9592-a9d4e59766c9" name="JSONPath Match">
+          <con:configuration>
+            <path>$[0].GoalId</path>
+            <content>${Create Goal#Response#$.GoalId}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="metricType" value="MEMBERSALES"/>
+          <con:entry key="activeDate" value="2017-01-29"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>metricType</con:entry>
+          <con:entry>activeDate</con:entry>
+          <con:entry>status</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Goals by Date - 2nd goal" id="a6b8d9ab-9019-4208-86ff-f7e7d4e6178c">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals" methodName="Get Goals" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Goals by Date - 2nd goal" id="c8b44ef0-7848-455f-b269-9f75df6e1b05" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://localhost/api/v1/insights/goals</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9cb7f6ed-74dc-4f38-921a-6ed12e26f228" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="6cc95685-026c-4549-9592-a9d4e59766c9" name="JSONPath Match">
+          <con:configuration>
+            <path>$[0].GoalId</path>
+            <content>${Create Adjacent Weekly Goal#Response#$.GoalId}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="metricType" value="MEMBERSALES"/>
+          <con:entry key="activeDate" value="2017-02-05"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>metricType</con:entry>
+          <con:entry>activeDate</con:entry>
+          <con:entry>status</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Deactivate 1st Goal" id="2df295e0-c0d2-4b1e-8a53-52a7c94640f1">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals/{goalId}" methodName="Update Goal" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Deactivate 1st Goal" id="66220ac9-027f-461a-8358-7080bb3c5442" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MetricType" : "MEMBERSALES",
+	"GoalObjective" : "Increase By",
+	"ValueType" : "Percentage",
+	"GoalAmount" : 10,
+	"CalendarType" : "Calendar",
+	"GoalPeriodUnit" : "W",
+	"GoalPeriod" : "Week 05 of 2017",
+	"ComparisonPeriod" : "Week 05 of 2016",
+	"Status" : "I"
+}</con:request>
+        <con:originalUri>https://localhost/api/v1/insights/goals/c932ae20-db5c-4953-a368-93de7824d6b1</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="441cd13b-7247-4b7c-a2c8-502582b1bc62" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="goalId" value="${Create Goal#Response#$['GoalId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>goalId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Deactivate 2nd Goal" id="0738e2e9-1b42-4f48-a4d9-149afcd93367">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals/{goalId}" methodName="Update Goal" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Deactivate 2nd Goal" id="66220ac9-027f-461a-8358-7080bb3c5442" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MetricType" : "MEMBERSALES",
+	"GoalObjective" : "Increase By",
+	"ValueType" : "Percentage",
+	"GoalAmount" : 10,
+	"CalendarType" : "Calendar",
+	"GoalPeriodUnit" : "W",
+	"GoalPeriod" : "Week 06 of 2017",
+	"ComparisonPeriod" : "Week 06 of 2016",
+	"Status" : "I"
+}</con:request>
+        <con:originalUri>https://localhost/api/v1/insights/goals/c932ae20-db5c-4953-a368-93de7824d6b1</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="441cd13b-7247-4b7c-a2c8-502582b1bc62" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="goalId" value="${Create Adjacent Weekly Goal#Response#$['GoalId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>goalId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>559a8e28-b4ef-4011-b5bc-1fb5c3b1ed74</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>886c052d-9a41-450b-80af-69a6f097938a</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>a6b8d9ab-9019-4208-86ff-f7e7d4e6178c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

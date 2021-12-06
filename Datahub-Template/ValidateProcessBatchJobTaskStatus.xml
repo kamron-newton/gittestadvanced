@@ -37,7 +37,7 @@
           <con:entry key="Authorization" value="Bearer ${#Project#Datahub Orchestration Token}"/>
           <con:entry key="X-ADH-Tenant-Code" value="${#Project#Tenant}"/>
           <con:entry key="Accept" value="application/json"/>
-          <con:entry key="DataHubProcessId" value="${#TestSuite#DataHubProcessId}}"/>
+          <con:entry key="DataHubProcessId" value="${#TestSuite#DataHubProcessId}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>DataHubProcessId</con:entry>
@@ -132,33 +132,34 @@ while (elapsedTime &lt; maxTime){
       <script>Integer maxTime = 180
 Integer elapsedTime = 0
 Integer delay = 5
-def  batchjobretrieved = testRunner.testCase.getPropertyValue('BatchJobRetrieved')
+def batchjobretrieved = testRunner.testCase.getPropertyValue('BatchJobRetrieved')
 log.info batchjobretrieved
+
+
 
 //Loop until the job status is success
 //Check the status every 5 seconds
-while(elapsedTime&lt;maxTime){
-	if (batchjobretrieved != "True"){  
-		def  batchJobResponseStatus = testRunner.testCase.testSteps['GetBatchJobByExternalProcessId'].testRequest.response.statusCode
-				log.info batchJobResponseStatus
-				if(batchJobResponseStatus == 404) {
-					testRunner.gotoStepByName("GetDataHubProcessBatchJobTask Status")
-				}
-				else if(batchJobResponseStatus == 200) {
-					testRunner.testCase.setPropertyValue('BatchJobRetrieved', 'True')
-					break
-				}
-	}
-	else{
-		testRunner.testCase.setPropertyValue('BatchJobRetrieved', 'True')
-		break
-	}
-}else{
-	testRunner.gotoStepByName("GetDataHubProcessBatchJobTask Status") 
+while (elapsedTime &lt; maxTime){
+if (batchjobretrieved != "True"){
+def batchJobResponseStatus = testRunner.testCase.testSteps['GetBatchJobByExternalProcessId'].testRequest.response.statusCode
+log.info batchJobResponseStatus
+if(batchJobResponseStatus == 404) {
+testRunner.gotoStepByName("GetDataHubProcessBatchJobTask Status")
 }
-}else{break}
+else if(batchJobResponseStatus == 200) {
+testRunner.testCase.setPropertyValue('BatchJobRetrieved', 'True')
+break
+}
+}
 
-Thread.sleep(delay*1000)elapsedTime+=delay}</script>
+
+else{
+break
+}
+
+Thread.sleep(delay * 1000)
+elapsedTime += delay
+}</script>
     </con:config>
   </con:testStep>
   <con:properties>

@@ -37,7 +37,7 @@
           <con:entry key="Authorization" value="Bearer ${#Project#Datahub Orchestration Token}"/>
           <con:entry key="X-ADH-Tenant-Code" value="${#Project#Tenant}"/>
           <con:entry key="Accept" value="application/json"/>
-          <con:entry key="DataHubProcessId" value="f3393932-4c9e-11ec-932f-1235580c8ebb"/>
+          <con:entry key="DataHubProcessId" value="${#TestSuite#DataHubProcessId}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>DataHubProcessId</con:entry>
@@ -48,10 +48,139 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties/>
+  <con:testStep type="transfer" name="Property Transfer" id="7724e1a4-5b67-403a-bdcd-00b91839c1e0">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>ProcessBatchJobStatus</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetDataHubProcessBatchJobTask Status</con:sourceStep>
+        <con:sourcePath>$[?(@.activityId =~ /ProcessBatchJob.*/)].status[0]</con:sourcePath>
+        <con:targetType>ProcessBatchJobStatus</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:targetTransferType>JSONPATH</con:targetTransferType>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="CheckWorkfowStatusUntilSucess" id="bc69581e-694e-4239-8643-6220785486e7">
+    <con:settings/>
+    <con:config>
+      <script>Integer maxTime = 180
+Integer elapsedTime = 0
+Integer delay = 5
+def  processbatchjobstatus = testRunner.testCase.getPropertyValue('ProcessBatchJobStatus')
+log.info processbatchjobstatus
+
+//Loop until the job status is success
+//Check the status every 5 seconds
+while (elapsedTime &lt; maxTime){
+     if (processbatchjobstatus != "SUCCESS"){
+      testRunner.gotoStepByName("GetDataHubProcessBatchJobTask Status")      
+     }
+     else{
+     	testRunner.testCase.setPropertyValue('BatchJobRetrieved', 'False')
+     	break
+     	}
+  
+ Thread.sleep(delay * 1000)
+ elapsedTime += delay
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetBatchJobByExternalProcessId" id="f7572c21-09f6-4c06-ba7a-8a590f338f8d">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/batch/jobs/process/{DataHubProcessId}" methodName="GetProcessBatchJobbyExternalProcessID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetBatchJobByExternalProcessId" id="f0fb79bd-000f-41ac-a4bb-e6cc08ae80fc" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/batch/jobs/process/f3393932-4c9e-11ec-932f-1235580c8ebb</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a6caa6c7-5637-4107-9a14-07c47f7bd13e" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="DataHubProcessId" value="${#TestSuite#DataHubProcessId}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>DataHubProcessId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="CheckBatchJobStatus" id="f4ae49c5-142c-4c2f-9c89-f70343d990b4">
+    <con:settings/>
+    <con:config>
+      <script>Integer maxTime = 180
+Integer elapsedTime = 0
+Integer delay = 5
+def  batchjobretrieved = testRunner.testCase.getPropertyValue('BatchJobRetrieved')
+log.info batchjobretrieved
+
+//Loop until the job status is success
+//Check the status every 5 seconds
+while (elapsedTime &lt; maxTime){
+     if (batchjobretrieved != "True"){  
+      def  batchJobResponseStatus = testRunner.testCase.testSteps['GetBatchJobByExternalProcessId'].testRequest.response.statusCode
+	 log.info batchJobResponseStatus   
+	 if(batchJobResponseStatus != 404) {
+	 	testRunner.testCase.setPropertyValue('BatchJobRetrieved', 'True')
+	 	break
+	 }
+	 else{
+	 	 testRunner.gotoStepByName("GetDataHubProcessBatchJobTask Status") 
+	 }
+     }
+     else{
+     	break
+     	}
+  
+ Thread.sleep(delay * 1000)
+ elapsedTime += delay
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>ProcessBatchJobStatus</con:name>
+      <con:value>SUCCESS</con:value>
+    </con:property>
+    <con:property>
+      <con:name>BatchJobRetrieved</con:name>
+      <con:value>True</con:value>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>5a27b149-7c8f-4a7b-8eee-d315aa3a7111</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>7724e1a4-5b67-403a-bdcd-00b91839c1e0</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f7572c21-09f6-4c06-ba7a-8a590f338f8d</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

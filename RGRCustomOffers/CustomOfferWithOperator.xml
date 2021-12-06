@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="7c7cbb5c-da76-4db1-9f94-b1d65792baf6" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="CustomOfferWithOperator" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="7c7cbb5c-da76-4db1-9f94-b1d65792baf6fileName">CustomOfferWithOperator</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="ProcessMarketingEvent" id="d2735be7-30aa-4ef5-b01c-ece3e1ada9d6">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/ProcessMarketingEvent.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>PackagedOfferParamIdCustAct</con:property>
+      <con:property>PackagedOfferIdCustAct</con:property>
+      <con:property>ParamNameCustAct</con:property>
+      <con:property>ParamCodeCustAct</con:property>
+      <con:property>ValueCustAct</con:property>
+      <con:property>PanelIdCustAct</con:property>
+      <con:property>PanelCodeCustAct</con:property>
+      <con:property>PackagedOfferParamIdCustRew</con:property>
+      <con:property>PackagedOfferIdCustRew</con:property>
+      <con:property>ParamNameCustRew</con:property>
+      <con:property>ParamCodeCustRew</con:property>
+      <con:property>ValueCustRew</con:property>
+      <con:property>PanelIdCustRew</con:property>
+      <con:property>PanelCodeCustRew</con:property>
+      <con:property>PackagedOfferParamIdOfferLim</con:property>
+      <con:property>PackagedOfferIdOfferLim</con:property>
+      <con:property>ParamNameOfferLim</con:property>
+      <con:property>ParamCodeOfferLim</con:property>
+      <con:property>ValueOfferLim</con:property>
+      <con:property>PanelIdOfferLim</con:property>
+      <con:property>PanelCodeOfferLim</con:property>
+      <con:property>PackagedOfferId</con:property>
+      <con:property>PackagedOfferCode</con:property>
+      <con:property>PackagedOfferName</con:property>
+      <con:property>PackagedOfferCategoryId</con:property>
+      <con:property>PackagedOfferCategoryCode</con:property>
+      <con:property>ParamOperatorId</con:property>
+      <con:property>OperatorName</con:property>
+      <con:property>OperatorCode</con:property>
+      <con:property>OperatorSign</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceCode</con:property>
+      <con:property>MarketingEventChannelId</con:property>
+      <con:property>ChannelName</con:property>
+      <con:startRow>3</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RandonNumberGenerator" id="d6a3aa18-11f0-4adf-909a-0f498a63bf00">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>e941415c-c47a-4193-99e4-37cbf0b51d0a</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessMarketingEventWithOperator" id="a16faea6-1526-490b-971b-cd60e5ac194b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessMarketingEventWithOperator" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	
+	"MarketingEventChannels": [
+		{
+			
+			"MarketingEventChannelId": "${ProcessMarketingEvent#MarketingEventChannelId}",
+			"ChannelName": "${ProcessMarketingEvent#ChannelName}"
+		}
+	],
+	"EventName": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventName}",
+	"EventCode": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventCode}",
+	
+	"PackagedAudience": {  		
+			"PackagedAudienceId": "${ProcessMarketingEvent#PackagedAudienceId}"
+			}, 
+			"AudienceSource": "PACKAGED_AUDIENCE",
+	"PackagedOffer": {
+		"PackagedOfferId": "${ProcessMarketingEvent#PackagedOfferId}",
+		"PackagedOfferCode": "${ProcessMarketingEvent#PackagedOfferCode}",
+		"PackagedOfferName": "${ProcessMarketingEvent#PackagedOfferCode}",	
+		"PackagedOfferParams": [
+			{
+				
+				"PackagedOfferParamId": "${ProcessMarketingEvent#PackagedOfferParamIdCustAct}",
+				"PackagedOfferId": "${ProcessMarketingEvent#PackagedOfferId}",
+				"ParamName": "${ProcessMarketingEvent#ParamNameCustAct}",
+				"ParamCode": "${ProcessMarketingEvent#ParamCodeCustAct}",
+				"ParamControl": "decimal",
+				"Value": "${ProcessMarketingEvent#ValueCustAct}",
+				"PanelId": "${ProcessMarketingEvent#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEvent#ParamCodeCustAct}",
+				"ParamOperatorId": "${ProcessMarketingEvent#ParamOperatorId}",
+			},
+			{
+				"PackagedOfferParamId": "${ProcessMarketingEvent#PackagedOfferParamIdCustRew}",
+				"PackagedOfferId": "${ProcessMarketingEvent#PackagedOfferId}",
+				"ParamName": "${ProcessMarketingEvent#ParamNameCustRew}",
+				"ParamCode": "${ProcessMarketingEvent#ParamCodeCustRew}",
+				"Value": "${ProcessMarketingEvent#ValueCustRew}",
+				"PanelId": "${ProcessMarketingEvent#PanelIdCustRew}",
+				"PanelCode": "${ProcessMarketingEvent#PanelCodeCustRew}",
+			}
+
+		],
+		"PackagedOfferCategoryId": "${ProcessMarketingEvent#PackagedOfferCategoryId}",
+		"PackagedOfferCategoryCode": "${ProcessMarketingEvent#PackagedOfferCategoryCode}",
+		"CustomOfferActivityValue": {
+			"Type": "ATTRIBUTE",
+			"PackagedOfferParamId": "${ProcessMarketingEvent#PackagedOfferParamIdCustAct}",
+			"Value": "${ProcessMarketingEvent#ValueCustAct}"
+		}
+	},
+	"OfferStartDate": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferStartDate}",
+	"OfferEndDate": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferEndDate}",
+	"Status": "A",
+	
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="05efed05-6654-481f-8b3b-5d35dc1037f1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="validateOffer" value="false"/>
+          <con:entry key="validateAudience" value="false"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>validateAudience</con:entry>
+          <con:entry>validateOffer</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>d2735be7-30aa-4ef5-b01c-ece3e1ada9d6</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

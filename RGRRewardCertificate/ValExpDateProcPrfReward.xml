@@ -193,7 +193,8 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         </con:assertion>
         <con:assertion type="GroovyScriptAssertion" id="451bfd97-0b10-4f9b-b561-50637fe71955" name="Script Assertion" disabled="true">
           <con:configuration>
-            <scriptText>//def RedemptionEndDate = context.expand( '${#[ActivityOrder#AddFixedDateRangeRew#AddReward]#Response#$[\'RedemptionEndDate\']}' )
+            <scriptText>//use (groovy.time.TimeCategory)
+//def RedemptionEndDate = context.expand( '${#[ActivityOrder#AddFixedDateRangeRew#AddReward]#Response#$[\'RedemptionEndDate\']}' )
 
 //def ExpirationDate = context.expand( '${GetProfileRewardCertificates#Response#$[0][\'ExpirationDate\']}')
 
@@ -202,12 +203,13 @@ use (groovy.time.TimeCategory)
 {
 def today = new Date()
 def EndDate = today + 2
-def formattedDate = EndDate.format("yyyy-MM-dd'T'23:59:59.999+0530")
+def formattedDate = EndDate.format("yyyy-MM-dd")
+log.info(formattedDate)
 String RedemptionEndDate = formattedDate
 String ExpirationDate= context.expand( '${GetProfileRewardCertificates#Response#$[0][\'ExpirationDate\']}')
-log.info(ExpirationDate)
-
-assert RedemptionEndDate == ExpirationDate
+def ExpireFormat = ExpirationDate.format("yyyy-MM-dd")
+log.info(ExpireFormat)
+assert RedemptionEndDate == ExpireFormat
 }</scriptText>
           </con:configuration>
         </con:assertion>
@@ -269,7 +271,7 @@ assert RedemptionEndDate == ExpirationDate
               <con:type xsi:nil="true"/>
               <con:operator>=</con:operator>
               <con:enabled>true</con:enabled>
-              <con:expectedValue>2021-12-08T23:59:59.999Z</con:expectedValue>
+              <con:expectedValue>${#[ActivityOrder#AddFixedDateRangeRew#AddReward]#Response#$['RedemptionEndDate']}</con:expectedValue>
               <con:hasValue>false</con:hasValue>
               <con:numberType>false</con:numberType>
             </con:elements>
@@ -605,7 +607,12 @@ assert RedemptionEndDate == ExpirationDate
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties/>
+  <con:properties>
+    <con:property>
+      <con:name>ExpirationDate</con:name>
+      <con:value>( '${GetProfileRewardCertificates#Response#$[0][\'ExpirationDate\']}')</con:value>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>7eb1172f-9391-4254-94ad-1f01f6e6b9b2</con:testStepId>

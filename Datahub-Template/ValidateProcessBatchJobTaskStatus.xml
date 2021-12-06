@@ -4,10 +4,10 @@
     <con:setting id="8fd7dfe4-72dc-4998-9c89-ef0226afac2cfileName">ValidateProcessBatchJobTaskStatus</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="restrequest" name="GetDataHubProcessBatchJobTask Status" id="5a27b149-7c8f-4a7b-8eee-d315aa3a7111">
+  <con:testStep type="restrequest" name="GetDataHubProcessBatchJobTaskStatus" id="5a27b149-7c8f-4a7b-8eee-d315aa3a7111">
     <con:settings/>
     <con:config service="DatahubAPIs" resourcePath="/orchestration/v1/process-instance/{DataHubProcessId}/tasks" methodName="GetDataHubProcessBatchJobTaskStatus" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetDataHubProcessBatchJobTask Status" id="4d06dfe9-f65c-4597-bf85-ec9856729333" mediaType="application/json">
+      <con:restRequest name="GetDataHubProcessBatchJobTaskStatus" id="4d06dfe9-f65c-4597-bf85-ec9856729333" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -37,7 +37,7 @@
           <con:entry key="Authorization" value="Bearer ${#Project#Datahub Orchestration Token}"/>
           <con:entry key="X-ADH-Tenant-Code" value="${#Project#Tenant}"/>
           <con:entry key="Accept" value="application/json"/>
-          <con:entry key="DataHubProcessId" value="${#TestSuite#DataHubProcessId}"/>
+          <con:entry key="DataHubProcessId" value="${#TestSuite#DataHubProcessId}}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>DataHubProcessId</con:entry>
@@ -54,7 +54,7 @@
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
         <con:name>ProcessBatchJobStatus</con:name>
         <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetDataHubProcessBatchJobTask Status</con:sourceStep>
+        <con:sourceStep>GetDataHubProcessBatchJobTaskStatus</con:sourceStep>
         <con:sourcePath>$[?(@.activityId =~ /ProcessBatchJob.*/)].status[0]</con:sourcePath>
         <con:targetType>ProcessBatchJobStatus</con:targetType>
         <con:targetStep>#TestCase#</con:targetStep>
@@ -65,7 +65,7 @@
       </con:transfers>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="CheckWorkfowStatusUntilSucess" id="bc69581e-694e-4239-8643-6220785486e7">
+  <con:testStep type="groovy" name="CheckWorkflowStatusUntilSuccess" id="bc69581e-694e-4239-8643-6220785486e7">
     <con:settings/>
     <con:config>
       <script>Integer maxTime = 180
@@ -115,7 +115,7 @@ while (elapsedTime &lt; maxTime){
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="DataHubProcessId" value="${#TestSuite#DataHubProcessId}"/>
+          <con:entry key="DataHubProcessId" value="${#TestSuite#DataHubProcessId}}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>DataHubProcessId</con:entry>
@@ -137,25 +137,28 @@ log.info batchjobretrieved
 
 //Loop until the job status is success
 //Check the status every 5 seconds
-while (elapsedTime &lt; maxTime){
-     if (batchjobretrieved != "True"){  
-      def  batchJobResponseStatus = testRunner.testCase.testSteps['GetBatchJobByExternalProcessId'].testRequest.response.statusCode
-	 log.info batchJobResponseStatus   
-	 if(batchJobResponseStatus != 404) {
-	 	testRunner.testCase.setPropertyValue('BatchJobRetrieved', 'True')
-	 	break
-	 }
-	 else{
-	 	 testRunner.gotoStepByName("GetDataHubProcessBatchJobTask Status") 
-	 }
-     }
-     else{
-     	break
-     	}
-  
- Thread.sleep(delay * 1000)
- elapsedTime += delay
-}</script>
+while(elapsedTime&lt;maxTime){
+	if (batchjobretrieved != "True"){  
+		def  batchJobResponseStatus = testRunner.testCase.testSteps['GetBatchJobByExternalProcessId'].testRequest.response.statusCode
+				log.info batchJobResponseStatus
+				if(batchJobResponseStatus == 404) {
+					testRunner.gotoStepByName("GetDataHubProcessBatchJobTask Status")
+				}
+				else if(batchJobResponseStatus == 200) {
+					testRunner.testCase.setPropertyValue('BatchJobRetrieved', 'True')
+					break
+				}
+	}
+	else{
+		testRunner.testCase.setPropertyValue('BatchJobRetrieved', 'True')
+		break
+	}
+}else{
+	testRunner.gotoStepByName("GetDataHubProcessBatchJobTask Status") 
+}
+}else{break}
+
+Thread.sleep(delay*1000)elapsedTime+=delay}</script>
     </con:config>
   </con:testStep>
   <con:properties>

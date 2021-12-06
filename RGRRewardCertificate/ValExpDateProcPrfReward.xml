@@ -4,6 +4,73 @@
     <con:setting id="b9031077-17e0-450c-bc83-e08377de17c6fileName">ValExpDateProcPrfReward</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="RewardRedemptionDateTypes" id="e3949c91-f26f-4476-ae4c-0deb2458074e">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/RewardRedemptionDateTypes.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ï»¿Attributes</con:property>
+      <con:property>PointTypeCode</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>RewardCode</con:property>
+      <con:property>CategoryCode</con:property>
+      <con:property>StartDate</con:property>
+      <con:property>EndDate</con:property>
+      <con:property>RewardType</con:property>
+      <con:property>RewardUsage</con:property>
+      <con:property>Title</con:property>
+      <con:property>Description</con:property>
+      <con:property>Manufacturer</con:property>
+      <con:property>ProgramCost</con:property>
+      <con:property>RetailPrice</con:property>
+      <con:property>FixedPoints</con:property>
+      <con:property>ShippingInfoRequired</con:property>
+      <con:property>DisplayInCatalog</con:property>
+      <con:property>RetailPricePerPoint</con:property>
+      <con:property>CertificateInd</con:property>
+      <con:property>IssueDateBasedRTC</con:property>
+      <con:property>DaysValid</con:property>
+      <con:property>FixedDateRangeRTC</con:property>
+      <con:property>RedemptionStartDate</con:property>
+      <con:property>RedemptionEndDate</con:property>
+      <con:property>FlexibleDateRangeRTC</con:property>
+      <con:property>DaysFlexibleDaysValid</con:property>
+      <con:property>DaysFlexibleDaysRedemptionStarts</con:property>
+      <con:property>RewardUsageTypeId</con:property>
+      <con:property>RewardUsageTypeIdVarpoint</con:property>
+      <con:property>MinValue</con:property>
+      <con:property>MaxValue</con:property>
+      <con:property>BurnRatioCurrencyValue</con:property>
+      <con:property>BurnRatioPointValue</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="CurrentDate" id="924d7e5b-77ab-4b5c-b175-523dd5e520d9">
+    <con:settings/>
+    <con:config>
+      <script>use (groovy.time.TimeCategory)
+{
+def today = new Date()
+def formattedDate = today.format("mmddyyyyhhmmssmmm")
+}</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="AddFixedDateRangeRew" id="7eb1172f-9391-4254-94ad-1f01f6e6b9b2">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -124,7 +191,7 @@
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="GroovyScriptAssertion" id="451bfd97-0b10-4f9b-b561-50637fe71955" name="Script Assertion">
+        <con:assertion type="GroovyScriptAssertion" id="451bfd97-0b10-4f9b-b561-50637fe71955" name="Script Assertion" disabled="true">
           <con:configuration>
             <scriptText>//def RedemptionEndDate = context.expand( '${#[ActivityOrder#AddFixedDateRangeRew#AddReward]#Response#$[\'RedemptionEndDate\']}' )
 
@@ -135,18 +202,307 @@ use (groovy.time.TimeCategory)
 {
 def today = new Date()
 def EndDate = today + 2
-def formattedDate = EndDate.format("yyyy-MM-dd'T'23:59:59.999Z")
+def formattedDate = EndDate.format("yyyy-MM-dd'T'23:59:59.999+0530")
 String RedemptionEndDate = formattedDate
 String ExpirationDate= context.expand( '${GetProfileRewardCertificates#Response#$[0][\'ExpirationDate\']}')
-String formatedDateTime         =  dateTime.atZone(ZoneId.of("UTC")).format(targetFormat);
-assert RedemptionEndDate == ExpirationDate
-}
-//Date date = Date.parse("yyyy/MM/dd HH:mm:ss",RedemptionEndDate)
+log.info(ExpirationDate)
 
-//String olddate='2014/01/21 00:00:00'
-//Date date = Date.parse("yyyy/MM/dd HH:mm:ss",olddate)
-//String newDate = date.format( 'MM/dd/yyyy' )
-//log.info newDate</scriptText>
+assert RedemptionEndDate == ExpirationDate
+}</scriptText>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="MessageContentAssertion" id="376227d6-a8ab-49f7-a3f0-ffe4aad0d7bd" name="Message Content Assertion">
+          <con:configuration xsi:type="con:MessageContentAssertion">
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/CertificateNumber[1]</con:xpath>
+              <con:element>CertificateNumber</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1b0fd874-38d1-426b-939b-458556f0b27c</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/ProfileId[1]</con:xpath>
+              <con:element>ProfileId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2ed48446-1388-4c5b-b52e-d4c767cfe05f</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/PriceInPoints[1]</con:xpath>
+              <con:element>PriceInPoints</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>15</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/OrderId[1]</con:xpath>
+              <con:element>OrderId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>3343c6e0-e04e-49c0-a03a-f80feeb4898e</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/RetailValue[1]</con:xpath>
+              <con:element>RetailValue</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1.0</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/ExpirationDate[1]</con:xpath>
+              <con:element>ExpirationDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>2021-12-08T23:59:59.999Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/ProgramCode[1]</con:xpath>
+              <con:element>ProgramCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PP</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/RewardCode[1]</con:xpath>
+              <con:element>RewardCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>R58062021115821058</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/Title[1]</con:xpath>
+              <con:element>Title</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Test Movie  PP</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/StartDate[1]</con:xpath>
+              <con:element>StartDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2019-01-01T00:00:00Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/EndDate[1]</con:xpath>
+              <con:element>EndDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2025-01-01T00:00:00Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/ProgramCost[1]</con:xpath>
+              <con:element>ProgramCost</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1.0</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/Status[1]</con:xpath>
+              <con:element>Status</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>A</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/AccountSourceCode[1]</con:xpath>
+              <con:element>AccountSourceCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ALMACCT</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/SourceAccountNumber[1]</con:xpath>
+              <con:element>SourceAccountNumber</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2ed48446-1388-4c5b-b52e-d4c767cfe05f</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/BrandOrgCode[1]</con:xpath>
+              <con:element>BrandOrgCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ALM_BRAND</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/ActivityDate[1]</con:xpath>
+              <con:element>ActivityDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2021-12-06T06:28:24Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/PointTypeShortDescription[1]</con:xpath>
+              <con:element>PointTypeShortDescription</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Eggs</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/EffectiveDate[1]</con:xpath>
+              <con:element>EffectiveDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2021-12-06T06:28:24.580462Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/CertificateStatusDesc[1]</con:xpath>
+              <con:element>CertificateStatusDesc</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Active</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/RewardId[1]</con:xpath>
+              <con:element>RewardId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>44004fd6-2559-46c5-a3b5-c1b4b06bac65</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/RewardType[1]</con:xpath>
+              <con:element>RewardType</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>O</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/CreateUser[1]</con:xpath>
+              <con:element>CreateUser</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AUTO_USER</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/CreateDate[1]</con:xpath>
+              <con:element>CreateDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2021-12-06T06:28:24.519522Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/UpdateUser[1]</con:xpath>
+              <con:element>UpdateUser</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AUTO_USER</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>//Response[1]/e[1]/UpdateDate[1]</con:xpath>
+              <con:element>UpdateDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2021-12-06T06:28:24.519522Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:originalMessage><![CDATA[<Response>
+   <e>
+      <CertificateNumber>1b0fd874-38d1-426b-939b-458556f0b27c</CertificateNumber>
+      <ProfileId>2ed48446-1388-4c5b-b52e-d4c767cfe05f</ProfileId>
+      <PriceInPoints>15</PriceInPoints>
+      <OrderId>3343c6e0-e04e-49c0-a03a-f80feeb4898e</OrderId>
+      <RetailValue>1.0</RetailValue>
+      <ExpirationDate>2021-12-08T23:59:59.999Z</ExpirationDate>
+      <ProgramCode>PP</ProgramCode>
+      <RewardCode>R58062021115821058</RewardCode>
+      <Title>Test Movie  PP</Title>
+      <StartDate>2019-01-01T00:00:00Z</StartDate>
+      <EndDate>2025-01-01T00:00:00Z</EndDate>
+      <ProgramCost>1.0</ProgramCost>
+      <Status>A</Status>
+      <AccountSourceCode>ALMACCT</AccountSourceCode>
+      <SourceAccountNumber>2ed48446-1388-4c5b-b52e-d4c767cfe05f</SourceAccountNumber>
+      <BrandOrgCode>ALM_BRAND</BrandOrgCode>
+      <ActivityDate>2021-12-06T06:28:24Z</ActivityDate>
+      <PointTypeShortDescription>Eggs</PointTypeShortDescription>
+      <EffectiveDate>2021-12-06T06:28:24.580462Z</EffectiveDate>
+      <CertificateStatusDesc>Active</CertificateStatusDesc>
+      <RewardId>44004fd6-2559-46c5-a3b5-c1b4b06bac65</RewardId>
+      <RewardType>O</RewardType>
+      <CreateUser>AUTO_USER</CreateUser>
+      <CreateDate>2021-12-06T06:28:24.519522Z</CreateDate>
+      <UpdateUser>AUTO_USER</UpdateUser>
+      <UpdateDate>2021-12-06T06:28:24.519522Z</UpdateDate>
+   </e>
+</Response>]]></con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -182,7 +538,7 @@ assert RedemptionEndDate == ExpirationDate
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateReward" id="1cdfa39f-7b89-4379-ac1c-d258fcaef3c8" disabled="true">
+  <con:testStep type="restrequest" name="UpdateReward" id="1cdfa39f-7b89-4379-ac1c-d258fcaef3c8">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="UpdateReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="UpdateReward" id="48f5a14a-f9a2-4d56-9aee-3f1662d2eb7f" mediaType="application/json" postQueryString="false">
@@ -253,6 +609,16 @@ assert RedemptionEndDate == ExpirationDate
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>7eb1172f-9391-4254-94ad-1f01f6e6b9b2</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e3949c91-f26f-4476-ae4c-0deb2458074e</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>924d7e5b-77ab-4b5c-b175-523dd5e520d9</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

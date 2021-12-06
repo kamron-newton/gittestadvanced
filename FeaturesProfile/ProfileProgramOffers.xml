@@ -582,28 +582,6 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="StartDate" id="6985106c-d0f0-41ff-994e-8de92159aea3">
-    <con:settings/>
-    <con:config>
-      <script>use (groovy.time.TimeCategory)
-{
-def today = new Date()
-def StartDate = today -1
-def formattedDate = StartDate.format("MM/dd/yyyy")
-}</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="EndDate" id="a5fcfb71-3186-4b63-976f-6ccaaf57cd1b">
-    <con:settings/>
-    <con:config>
-      <script>use (groovy.time.TimeCategory)
-{
-def today = new Date()
-def EndDate = today + 500
-def formattedDate = EndDate.format("MM/dd/yyyy")
-}</script>
-    </con:config>
-  </con:testStep>
   <con:testStep type="groovy" name="CheckProgramCode" id="e6b46973-bcf1-418e-ba48-65e227da4427">
     <con:settings/>
     <con:config>
@@ -796,9 +774,9 @@ if(basicProgramCode == fileProgramCode)
         <con:request>{
   "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
   "SysOfferId": "${GetOffers#Response#$[0]['SysOfferId']}",
-  "StartDate": "${StartDate#result}",
-  "EndDate": "${EndDate#result}",
-  "OptInDate": "${StartDate#result}",
+  "StartDate" : "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-1)}",
+  "EndDate" : "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+415)}",
+  "OptInDate" : "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
   "RedemptionCodeReqInPurchase": ${ProfileOffer#RedemptionCodeReqInPurchase},
  
 }</con:request>
@@ -849,10 +827,10 @@ if(basicProgramCode == fileProgramCode)
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-  "OfferCode": "${OfferCodeLocal#OfferCodeLocal}${CurrentDate#result}",
+  "OfferCode": "${OfferCodeLocal#OfferCodeLocal}${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}",
   "OfferDescription": "${ProgramOffers#OfferDescription}",
-  "OfferStartDate": "${StartDate#result}",
-  "OfferEndDate": "${EndDate#result}",
+  "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-1)}",
+  "OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+500)}",
   "OfferShortDescription": "${ProgramOffers#OfferShortDescription}",
   "OptInRequired": "${ProgramOffers#OptInRequired}",
   "DaysValid": ${ProgramOffers#DaysValid},
@@ -1716,16 +1694,6 @@ if(basicProgramCode == fileProgramCode)
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>8d4b366a-e71a-4e12-bff9-8cb7ddcb3c29</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>a5fcfb71-3186-4b63-976f-6ccaaf57cd1b</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>6985106c-d0f0-41ff-994e-8de92159aea3</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

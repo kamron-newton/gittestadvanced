@@ -72,7 +72,7 @@
 Integer elapsedTime = 0
 Integer delay = 5
 def  processbatchjobstatus = testRunner.testCase.getPropertyValue('ProcessBatchJobStatus')
-log.info processbatchjobstatus
+//log.info processbatchjobstatus
 
 //Loop until the job status is success
 //Check the status every 5 seconds
@@ -100,6 +100,12 @@ while (elapsedTime &lt; maxTime){
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/batch/jobs/process/f3393932-4c9e-11ec-932f-1235580c8ebb</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="96cd0bc3-bcd7-4ab5-bdad-c660cbff892a" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>
@@ -129,27 +135,23 @@ Integer delay = 5
 def batchjobretrieved = testRunner.testCase.getPropertyValue('BatchJobRetrieved')
 log.info batchjobretrieved
 
-
-
 //Loop until the job status is success
 //Check the status every 5 seconds
 while (elapsedTime &lt; maxTime){
 if (batchjobretrieved != "True"){
 def batchJobResponseStatus = testRunner.testCase.testSteps['GetBatchJobByExternalProcessId'].testRequest.response.statusCode
-log.info batchJobResponseStatus
-if(batchJobResponseStatus == 404) {
-testRunner.gotoStepByName("GetDataHubProcessBatchJobTask Status")
+//log.info batchJobResponseStatus
+if(batchJobResponseStatus == 200) {
+testRunner.testCase.setPropertyValue('BatchJobRetrieved', 'True')
+break
 }
-else if(batchJobResponseStatus == 200) {
+else if(batchJobResponseStatus != 404) {
 testRunner.testCase.setPropertyValue('BatchJobRetrieved', 'True')
 break
 }
 }
 
 
-else{
-break
-}
 
 Thread.sleep(delay * 1000)
 elapsedTime += delay
@@ -157,11 +159,11 @@ elapsedTime += delay
     </con:config>
   </con:testStep>
   <con:properties>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>ProcessBatchJobStatus</con:name>
       <con:value>SUCCESS</con:value>
     </con:property>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>BatchJobRetrieved</con:name>
       <con:value>False</con:value>
     </con:property>
@@ -179,6 +181,16 @@ elapsedTime += delay
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>f7572c21-09f6-4c06-ba7a-8a590f338f8d</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>bc69581e-694e-4239-8643-6220785486e7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f4ae49c5-142c-4c2f-9c89-f70343d990b4</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

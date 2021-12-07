@@ -111,13 +111,19 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>d8882106-c2d4-4a63-9832-666c775eff3a</con:value>
+          <con:value>f885bfdb-6a8e-48c2-ab2f-0f8616304552</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
         <con:entry>ProfileId</con:entry>
       </con:returnProperties>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="delay" name="Delay" id="bc4405c8-dc9e-4007-b61d-b129c8ae1f24">
+    <con:settings/>
+    <con:config>
+      <delay>12000</delay>
     </con:config>
   </con:testStep>
   <con:testStep id="7af3748f-6a8d-4b9e-ab33-5b8584924bc7" name="PurchaseTransaction" type="restrequest">
@@ -131,42 +137,19 @@
    "TransactionTypeCode":"PR",
    "ProfileId":"${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
    "GrossAmount":100.00,
-   "TransactionTotalTax":6.00,
+   "TransactionTotalTax":0.00,
    "ShippingAndHandling":0.0,
    "Gratuity":0.0,
    "PostSalesAdjustment":0.0,
    "TransactionNetTotal":100.00,
    "TransactionEligible":100,
-   "DiscountAmount":3.00,
+   "DiscountAmount":0.00,
    "TransactionNumber":"${=java.util.UUID.randomUUID()}",
-   "TransactionDateTime":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
+   "TransactionDateTime":"12/14/2021, 01:21 PM",
    "StoreCode":"PP1501",
    "CurrencyCode":"USD",
    "TransactionDescription":"PR Transaction",
-   "TransactionDetails":[  
-      {  
-         "DollarValueGross":44.0,
-         "TaxAmount":4.0,
-         "DollarValueNet":40.0,
-         "EligibleRevenue":null,
-         "DiscountAmount":2.0,
-         "Quantity":1,
-         "ItemNumber":"100100",
-         "ItemNumberTypeCode":"S",
-         "LineNumber":1         
-      },
-      {  
-         "DollarValueGross":22.0,
-         "TaxAmount":2.0,
-         "DollarValueNet":20.0,
-         "EligibleRevenue":null,
-         "DiscountAmount":1.0,
-         "Quantity":1,
-         "ItemNumber":"100200",
-         "ItemNumberTypeCode":"S",
-         "LineNumber":2         
-      }
-   ]
+   
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="1a8e63d8-5393-464d-b0d5-5c56f76f1c3f" name="Valid HTTP Status Codes">
@@ -271,8 +254,8 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="d718b76f-6e63-422d-9479-043918f3d753" name="JSONPath Match">
           <con:configuration>
-            <path>$.[?(@.ActTransactionId == '${TransactionId}' &amp;&amp; @.MomentId == '${momentId}')].PointsAmount</path>
-            <content>5</content>
+            <path>$.[?(@.ActTransactionId == '${PurchaseTransaction#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${GetMomentByCode#Response#$['MomentId']}')].PointsAmount</path>
+            <content>[5.0]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -360,6 +343,11 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>3ca63a72-4158-473e-9788-9cb1c8884d50</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>bc4405c8-dc9e-4007-b61d-b129c8ae1f24</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

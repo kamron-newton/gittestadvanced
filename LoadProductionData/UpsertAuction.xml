@@ -13,7 +13,7 @@
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
-          <quotedValues>false</quotedValues>
+          <quotedValues>true</quotedValues>
         </con:configuration>
       </con:dataSource>
       <con:shared>true</con:shared>
@@ -38,7 +38,7 @@
       <con:property>ImageNameMediumAltText</con:property>
       <con:property>ImageNameLargeAltText</con:property>
       <con:startRow>1</con:startRow>
-      <con:endRow>20</con:endRow>
+      <con:endRow>22</con:endRow>
       <con:recordsPerIteration>1</con:recordsPerIteration>
       <con:completeLastOperation>true</con:completeLastOperation>
       <con:trimValues>false</con:trimValues>
@@ -89,6 +89,134 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="AuctionIDCond" id="f93eb4bb-4f5f-4098-b3b1-b1bfb0ac3e29">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+def auctionId = context.expand( '${GetAuctions#Response#$[0][\'AuctionId\']}' )
+if (auctionId == "") {
+	testRunner.gotoStepByName("AddAuction") 
+}
+def status = context.expand( '${GetAuctions#Response#$[0][\'Status\']}' )
+if  (status !="" &amp;&amp; status != 'C')	
+   testRunner.gotoStepByName("UpdateAuction")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Add Auction" id="b7691f27-d474-4f9a-98b0-4f9ae1c1f701">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/auctions" methodName="AddAuction" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Add Auction" id="81e2c5a5-d694-4e9d-865b-c68cf229476b" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{  
+   "AuctionCode":"${Auctions#AuctionCode}",
+   "AuctionName":"${Auctions#AuctionName}",
+   "Description":"${Auctions#Description}",
+   "StartDate":"${Auctions#StartDate}",
+   "EndDate": "${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+ 15)}",
+   "PointTypeCode":"${Auctions#PointTypeCode}",
+   "Rules":"${Auctions#Rules}",
+   "TermsAndCondition":"${Auctions#TermsAndCondition}",
+   "ImageNameSmall":"${Auctions#ImageNameSmall}",
+   "ImageNameMedium":"${Auctions#ImageNameMedium}",
+   "ImageNameLarge":"${Auctions#ImageNameLarge}",
+ "ImageNameSmallAltText": "${Auctions#ImageNameSmallAltText}",
+   "ImageNameMediumAltText": "${Auctions#ImageNameMediumAltText}",
+    "ImageNameLargeAltText": "${Auctions#ImageNameLargeAltText}",
+   "BidIncrementThreshold": ${Auctions#BidIncrementThreshold}, 
+   "BidMinPoint": ${Auctions#BidMinPoint},
+    "Quantity": ${Auctions#Quantity},
+    "RewardCode":"${Auctions#RewardCode}",
+    "Status": "A",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/auctions</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9b1810aa-e48d-432b-adfa-637523e9501b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${Auctions#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateAuction" id="62a69606-c1f6-456b-91d1-7c0ad171fb0f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/auctions" methodName="UpdateAuction" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateAuction" id="15795a90-5d9c-475f-917c-3e9a9849af6f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>utf-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{  
+   "AuctionCode":"${Auctions#AuctionCode}",
+   "AuctionName":"${Auctions#AuctionName}",
+   "Description":"${Auctions#Description}",
+   "StartDate":"${Auctions#StartDate}",
+   "EndDate": "${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+ 15)}",
+   "PointTypeCode":"${Auctions#PointTypeCode}",
+   "Rules":"${Auctions#Rules}",
+   "TermsAndCondition":"${Auctions#TermsAndCondition}",
+   "ImageNameSmall":"${Auctions#ImageNameSmall}",
+   "ImageNameMedium":"${Auctions#ImageNameMedium}",
+   "ImageNameLarge":"${Auctions#ImageNameLarge}",
+ "ImageNameSmallAltText": "${Auctions#ImageNameSmallAltText}",
+   "ImageNameMediumAltText": "${Auctions#ImageNameMediumAltText}",
+    "ImageNameLargeAltText": "${Auctions#ImageNameLargeAltText}",
+   "BidIncrementThreshold": ${Auctions#BidIncrementThreshold}, 
+   "BidMinPoint": ${Auctions#BidMinPoint},
+    "Quantity": ${Auctions#Quantity},
+    "RewardCode":"${Auctions#RewardCode}",
+    "Status": "A",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/auctions</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="500286d7-fc1e-4402-bac7-1e330542430b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="auctionId" value="${GetAuctions#Response#$[0]['AuctionId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${Auctions#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>auctionId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:testStep type="datasourceloop" name="AuctionLoop" id="0a0ae8e8-0fc0-4145-ad24-2e86c79ffe92">
     <con:settings/>
     <con:config>
@@ -101,6 +229,21 @@
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>5b559ec4-bedc-4301-87f7-4862a946ec6b</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f93eb4bb-4f5f-4098-b3b1-b1bfb0ac3e29</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>b7691f27-d474-4f9a-98b0-4f9ae1c1f701</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>62a69606-c1f6-456b-91d1-7c0ad171fb0f</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

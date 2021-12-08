@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="c81dbea5-5f6c-4cdd-82d2-282851f1a7f2" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpdRewardFixedDateRan" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="c81dbea5-5f6c-4cdd-82d2-282851f1a7f2fileName">UpdRewardFixedDateRan</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="RewardRedemptionDateTypes" id="23b012f4-93e0-4e16-94f3-35fba33cd50f">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/RewardRedemptionDateTypes.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ï»¿Attributes</con:property>
+      <con:property>PointTypeCode</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>RewardCode</con:property>
+      <con:property>CategoryCode</con:property>
+      <con:property>StartDate</con:property>
+      <con:property>EndDate</con:property>
+      <con:property>RewardType</con:property>
+      <con:property>RewardUsage</con:property>
+      <con:property>Title</con:property>
+      <con:property>Description</con:property>
+      <con:property>Manufacturer</con:property>
+      <con:property>ProgramCost</con:property>
+      <con:property>RetailPrice</con:property>
+      <con:property>FixedPoints</con:property>
+      <con:property>ShippingInfoRequired</con:property>
+      <con:property>DisplayInCatalog</con:property>
+      <con:property>RetailPricePerPoint</con:property>
+      <con:property>CertificateInd</con:property>
+      <con:property>IssueDateBasedRTC</con:property>
+      <con:property>DaysValid</con:property>
+      <con:property>FixedDateRangeRTC</con:property>
+      <con:property>RedemptionStartDate</con:property>
+      <con:property>RedemptionEndDate</con:property>
+      <con:property>FlexibleDateRangeRTC</con:property>
+      <con:property>DaysFlexibleDaysValid</con:property>
+      <con:property>DaysFlexibleDaysRedemptionStarts</con:property>
+      <con:property>RewardUsageTypeId</con:property>
+      <con:property>RewardUsageTypeIdVarpoint</con:property>
+      <con:property>MinValue</con:property>
+      <con:property>MaxValue</con:property>
+      <con:property>BurnRatioCurrencyValue</con:property>
+      <con:property>BurnRatioPointValue</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateReward" id="57f8f389-807e-4063-bad6-a78be7b89792">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="UpdateReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateReward" id="48f5a14a-f9a2-4d56-9aee-3f1662d2eb7f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "RewardCode": "${#[ActivityCertificate#AddFixedDateRangeRew#AddReward]#Response#$['RewardCode']}",
+  "StartDate": "${RewardRedemptionDateTypes#StartDate}",
+  "EndDate": "${RewardRedemptionDateTypes#EndDate}",
+  "RedemptionStartDate":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
+  "RedemptionEndDate":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+  "RewardType": "${RewardRedemptionDateTypes#RewardType}",
+  "PointTypeCode": "${RewardRedemptionDateTypes#PointTypeCode}",
+  "RewardUsageTypeId":"${RewardRedemptionDateTypes#RewardUsageTypeId}",
+  "Description": "${RewardRedemptionDateTypes#Description}",
+  "Title": "${RewardRedemptionDateTypes#Title}",
+"Manufacturer": "${RewardRedemptionDateTypes#Manufacturer}",
+"RetailPrice": "${RewardRedemptionDateTypes#RetailPrice}" ,
+"ProgramCost": "${RewardRedemptionDateTypes#ProgramCost}",
+"CategoryCode": "${RewardRedemptionDateTypes#CategoryCode}",
+"FixedPoints": "${RewardRedemptionDateTypes#FixedPoints}",
+ "ShippingInfoRequired": "${RewardRedemptionDateTypes#ShippingInfoRequired}",
+"DisplayInCatalog": "${RewardRedemptionDateTypes#DisplayInCatalog}",
+"CertificateInd": "${RewardRedemptionDateTypes#CertificateInd}",
+  "RedemptionTypeCode": "FIXED_DATE_RANGE",
+  "Status": "I"
+ }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewards/RDFIXEDPOINT1000</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="999948ba-e0ef-4b23-89e9-1660df51b797" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="rewardCode" value="${#[ActivityCertificate#AddFixedDateRangeRew#AddReward]#Response#$['RewardCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>rewardCode</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>23b012f4-93e0-4e16-94f3-35fba33cd50f</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

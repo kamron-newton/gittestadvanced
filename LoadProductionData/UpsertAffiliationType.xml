@@ -3,6 +3,202 @@
   <con:settings>
     <con:setting id="993da7c3-bedf-4e8c-b5ac-8cb9ed2d0ef1fileName">UpsertAffiliationType</con:setting>
   </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="AffiliationTypes" id="c76fc338-3733-4e6d-b861-777449dba415">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/AffiliationTypes.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>AffiliationTypeCode</con:property>
+      <con:property>AffiliationTypeDescription</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>3</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetAffiliationTypes" id="77a305e7-1aaa-4ef5-b274-728775270580">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/affiliationtype" methodName="GetAffiliationTypes" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAffiliationTypes" id="cf49e1be-15ea-4ff5-bebd-027d33a29e38" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/affiliationtype</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="823b6979-930b-4720-b725-1b2d23490a6f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value=" OAuth ${#Project#AuthToken} "/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="AffiliationTypeCond" id="9b2667b9-dd7d-4f0c-b6ca-649bb92adf7b">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetAffiliationTypes#Response}'))
+
+//datasource
+def AffiliationTypesDatasource =context.expand( '${AffiliationTypes#AffiliationTypeCode}')
+
+def getAffTypeIdByAffCode = { code ->  json.find {it?.AffiliationTypeCode == AffiliationTypesDatasource}?.AffiliationTypeId }
+
+def AffiliationTypeId= (getAffTypeIdByAffCode('AffiliationTypesDatasource'))
+
+if ( AffiliationTypeId == "" || AffiliationTypeId== null ) 
+    testRunner.gotoStepByName("AddAffiliation")
+else{
+	testRunner.gotoStepByName("AffiliationTypeId")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddAffiliationType" id="ccf1c454-98af-4af1-bda6-8e1248ba9b10">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/affiliationtype" methodName="AddAffiliationType" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddAffiliationType" id="60448943-2deb-4f84-bc98-f49e6b8231b3" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+ "AffiliationTypeDescription":  "${AffiliationTypes#AffiliationTypeDescription}",
+ "AffiliationTypeCode":  "${AffiliationTypes#AffiliationTypeCode}",
+  "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/affiliationtype</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="80cf7c2d-d368-4842-a117-23251e293534" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="AffiliationTypeId" id="5eb0cf26-68fe-4a95-b86e-8d4f0b6f883f">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetAffiliationTypes#Response}'))
+
+//datasource
+def AffiliationTypesDatasource =context.expand( '${AffiliationTypes#AffiliationTypeCode}')
+
+def getAffTypeIdByAffCode = { code ->  json.find {it?.AffiliationTypeCode == AffiliationTypesDatasource}?.AffiliationTypeId }
+
+def AffiliationTypeId= (getAffTypeIdByAffCode('AffiliationTypesDatasource'))
+
+def response = context.expand( '${AddAffiliationType#Response}' )
+
+if(response==null || response =="")
+  	return AffiliationTypeId;
+
+ else
+ {
+    AffiliationTypeId = context.expand( '${AddAffiliationType#Response#$[\'AffiliationTypeId\']}' )
+    return AffiliationTypeId;
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateAffiliationType" id="87960944-ddc7-4a61-807e-7cf8d5e6c788">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/affiliationtype/{affiliationTypeId}" methodName="UpdateAffiliationType" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateAffiliationType" id="f06ca4c0-eda7-4953-8018-8861de7d1b07" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+ "AffiliationTypeDescription":  "${AffiliationTypes#AffiliationTypeDescription}",
+ "AffiliationTypeCode":  "${AffiliationTypes#AffiliationTypeCode}",
+  "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/affiliationtype/affiliationTypeId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="7040ca78-1711-4f70-b289-e753eedb8fef" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="affiliationTypeId" value="${AffiliationTypeId#result}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>affiliationTypeId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="AffiliationTypeLoop" id="46181e5a-2e04-4109-80a8-7297133ce57a">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>AffiliationTypes</dataSourceStep>
+      <targetStep>GetAffiliationTypes</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
 </con:testCase>

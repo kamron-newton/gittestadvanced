@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="441a2684-8f26-4ded-ba60-3c539efae9be" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ValExchangeTxnMomOffer" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="441a2684-8f26-4ded-ba60-3c539efae9befileName">ValExchangeTxnMomOffer</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="Transaction" id="62e940ca-9c14-47fa-9129-d31cd0f82388">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>10</generatedDataCount>
+          <generatorsTotalNumber>1</generatorsTotalNumber>
+          <lastSelectedProperty>1</lastSelectedProperty>
+          <GeneratorType0>STR</GeneratorType0>
+          <PropertyName0>TransactionNum</PropertyName0>
+          <repetitionCountTransactionNum>0</repetitionCountTransactionNum>
+          <repeatValuesTransactionNum>false</repeatValuesTransactionNum>
+          <PasswordDataGeneratorUseSpacesTransactionNum>false</PasswordDataGeneratorUseSpacesTransactionNum>
+          <PasswordDataGeneratorUsePunctuationMarksTransactionNum>false</PasswordDataGeneratorUsePunctuationMarksTransactionNum>
+          <PasswordDataGeneratorUseLettersTransactionNum>true</PasswordDataGeneratorUseLettersTransactionNum>
+          <PasswordDataGeneratorUseDigitsTransactionNum>true</PasswordDataGeneratorUseDigitsTransactionNum>
+          <PasswordDataGeneratorMaxCharacterCountTransactionNum>10</PasswordDataGeneratorMaxCharacterCountTransactionNum>
+          <PasswordDataGeneratorMinCharacterCountTransactionNum>5</PasswordDataGeneratorMinCharacterCountTransactionNum>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>TransactionNum</con:property>
+      <con:property>OriginalTrxnNum</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="cb475db5-6caa-416d-97cc-93ac96d28317">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="bd595274-e1f8-401c-9ac8-2938c40f02e9" name="PurchaseTransaction" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="PurchaseTransaction" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{  
+   "TransactionTypeCode":"PR",
+   "ProfileId":"${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
+   "GrossAmount":66.00,
+   "TransactionTotalTax":6.00,
+   "ShippingAndHandling":0.0,
+   "Gratuity":0.0,
+   "PostSalesAdjustment":0.0,
+   "TransactionNetTotal":60.00,
+   "TransactionEligible":null,
+   "DiscountAmount":3.00,
+   "TransactionNumber":"TRANS${Transaction#TransactionNum}",
+   "TransactionDateTime":"2021-10-27T00:00:00Z",
+   "TransactionEndDateTime":"2021-10-27T00:00:00Z", 
+   "StoreCode":"PP1501",
+   "CurrencyCode":"USD",
+   "TransactionDescription":"PR Transaction",
+   "TransactionDetails":[  
+      {  
+         "DollarValueGross":44.0,
+         "TaxAmount":4.0,
+         "DollarValueNet":40.0,
+         "EligibleRevenue":null,
+         "DiscountAmount":2.0,
+         "Quantity":1,
+         "ItemNumber":"100100",
+         "ItemNumberTypeCode":"S",
+         "LineNumber":1         
+      },
+      {  
+         "DollarValueGross":22.0,
+         "TaxAmount":2.0,
+         "DollarValueNet":20.0,
+         "EligibleRevenue":null,
+         "DiscountAmount":1.0,
+         "Quantity":1,
+         "ItemNumber":"100200",
+         "ItemNumberTypeCode":"S",
+         "LineNumber":2         
+      }
+   ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="1a8e63d8-5393-464d-b0d5-5c56f76f1c3f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProgramOffers" id="a2f668d3-27b8-49dd-b8f2-ec3105d8e7dd">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers" methodName="Get Program Offers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProgramOffers" id="01b55446-a40a-4369-9fab-5cac544244cc" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:assertion type="Valid HTTP Status Codes" id="e701cc43-cec5-4db6-b3da-2035e66c8ae6" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="pageNumber" value=";`"/>
+          <con:entry key="offerCode" value="AOFFER88"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>offerCode</con:entry>
+          <con:entry>offerName</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>shortDescription</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>isCouponOffer</con:entry>
+          <con:entry>offerType</con:entry>
+          <con:entry>isDefaultOffer</con:entry>
+          <con:entry>customDataName</con:entry>
+          <con:entry>customDataValue</con:entry>
+          <con:entry>sortBy</con:entry>
+          <con:entry>numberPerPage</con:entry>
+          <con:entry>pageNumber</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="CreateOffer" id="296fa184-99eb-42a1-b5ac-ec048227f5e6">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>591d7dfb-5670-496e-a426-5423b6444eaf</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="CreateMoment" id="e2a15ba9-b616-4fc0-afcb-2d76064a3113">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>58a85117-5558-4be0-b68f-214c9fbde4c3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>MomentName</con:name>
+        </con:property>
+        <con:property>
+          <con:name>Body</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="e5d6cfdb-5990-4ce8-82a1-55471db6ab64" name="ExchangeTransaction" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="ExchangeTransaction" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+       "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
+    "TransactionTypeCode": "EX",
+    "TransactionNetTotal": 100,
+    "TransactionEligible":100,
+    "ShippingAndHandling": 0,
+    "Gratuity": 0,
+    "TransactionNumber": "${Transaction#TransactionNum}",
+    "CurrencyCode": "USD",
+    "TransactionDateTime":"2021-10-27T00:00:00Z",
+    "TransactionEndDateTime":"2021-10-27T00:00:00Z", 
+    "OriginalStoreCode": "PP1501",
+    "OriginalTransactionDateTime": "2021-11-26T00:00:00Z",
+    "OriginalTransactionEndDateTime": "2021-11-27T00:00:00Z",
+    "OriginalTransactionNumber": "ORTXN${Transaction#OriginalTrxnNum}",
+    "StoreCode": "PP1501",
+   
+    "TransactionDetails": [
+        {
+            "TaxAmount": -400,
+            "DollarValueGross": -400,
+            "DollarValueNet": -400,
+            "EligibleRevenue": -400,
+            "ItemNumber": "100321",
+            "ItemNumberTypeCode": "S",
+            "Quantity": 1,
+            "LineNumber": 1,
+           "ItemTransactionTypeCode": "RT",
+      "OriginalStoreCode": "PP1501",
+    "OriginalTransactionDateTime": "2021-11-26T00:00:00Z",
+    "OriginalTransactionEndDateTime": "2021-11-27T00:00:00Z",
+"OriginalTransactionNumber": "ORTXN${Transaction#OriginalTrxnNum}",
+        },
+                                  {
+            "TaxAmount": 500,
+            "DollarValueGross": 500,
+            "DollarValueNet": 500,
+            "EligibleRevenue": 500,
+            "ItemNumber": "1004234",
+            "ItemNumberTypeCode": "S",
+            "Quantity": 1,
+            "LineNumber": 2,
+           "ItemTransactionTypeCode": "PR",
+      
+        }   
+   ]   
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="1a8e63d8-5393-464d-b0d5-5c56f76f1c3f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProgramOffersById" id="475f362b-7d01-4385-bc04-3b282a605167">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers/{sysOfferId}" methodName="Get Program Offer by Id" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProgramOffersById" id="ee2ad520-1d32-4346-a597-2616b62150b9" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:assertion type="Valid HTTP Status Codes" id="a92437bd-1b7f-4ced-9826-987b328d02cd" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>sysOfferId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>62e940ca-9c14-47fa-9129-d31cd0f82388</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e5d6cfdb-5990-4ce8-82a1-55471db6ab64</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

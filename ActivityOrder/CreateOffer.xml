@@ -4,6 +4,75 @@
     <con:setting id="591d7dfb-5670-496e-a426-5423b6444eaffileName">CreateOffer</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="ProgramOffers" id="2e8cd952-7fb8-47c8-8ec5-74891434a6bb">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/ProgramOffers.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>OfferCode</con:property>
+      <con:property>OfferStartDate</con:property>
+      <con:property>OfferEndDate</con:property>
+      <con:property>OptInRequired</con:property>
+      <con:property>DaysValid</con:property>
+      <con:property>OfferName</con:property>
+      <con:property>OfferName1</con:property>
+      <con:property>OfferName2</con:property>
+      <con:property>OfferName3</con:property>
+      <con:property>OfferName4</con:property>
+      <con:property>OfferName5</con:property>
+      <con:property>OfferName6</con:property>
+      <con:property>OfferShortDescription</con:property>
+      <con:property>OfferShortDescription1</con:property>
+      <con:property>OfferShortDescription2</con:property>
+      <con:property>OfferShortDescription3</con:property>
+      <con:property>OfferShortDescription4</con:property>
+      <con:property>OfferShortDescription5</con:property>
+      <con:property>OfferShortDescription6</con:property>
+      <con:property>OfferDescription</con:property>
+      <con:property>OfferDescription1</con:property>
+      <con:property>OfferDescription2</con:property>
+      <con:property>OfferDescription3</con:property>
+      <con:property>OfferDescription4</con:property>
+      <con:property>OfferDescription5</con:property>
+      <con:property>OfferDescription6</con:property>
+      <con:property>OfferTermsAndConditions</con:property>
+      <con:property>OfferTermsAndConditions1</con:property>
+      <con:property>OfferTermsAndConditions2</con:property>
+      <con:property>OfferTermsAndConditions3</con:property>
+      <con:property>OfferTermsAndConditions4</con:property>
+      <con:property>OfferTermsAndConditions5</con:property>
+      <con:property>OfferTermsAndConditions6</con:property>
+      <con:property>UsageLimit</con:property>
+      <con:property>RedemptionCodeReqInPurchase</con:property>
+      <con:property>ImageNameSmall</con:property>
+      <con:property>ImageNameMedium</con:property>
+      <con:property>ImageNameLarge</con:property>
+      <con:property>IsCouponOffer</con:property>
+      <con:property>CustomDataName</con:property>
+      <con:property>CustomDataValue</con:property>
+      <con:property>GlobalLimit</con:property>
+      <con:property>IsEligibleOffer</con:property>
+      <con:property>InvalidCustomDataName</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetProgramOffers" id="f7231440-df50-4b8e-ac35-7a912457d93d">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers" methodName="Get Program Offers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -13,6 +82,7 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="92f1c656-9978-407d-9054-0b6766e103c5" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
@@ -27,9 +97,11 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="pageNumber" value=";`"/>
+          <con:entry key="offerCode" value="${#TestCase#offerCode}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="status" value="A"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Accept-Language</con:entry>
@@ -68,7 +140,7 @@
       <script>import static com.jayway.jsonpath.JsonPath.parse
 
 def status = context.expand( '${GetProgramOffers#HarResponse#$[\'status\']}' ).toInteger();
-def rewardId = context.expand('${GetProgramOffers#Response#$[\'RewardId\']}')
+def rewardId = context.expand('${GetProgramOffers#Response#$[\'sys\']}')
 
 
 
@@ -85,23 +157,56 @@ else if (status == 200)   testRunner.gotoStepByName("UpdateProgramOffers")</scri
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-    "OfferCode": "AOFFER88",
-    "ProgramCode": "PP",
-    "OfferDescription": "Offer description",
-    "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date())}",
-    "OfferEndDate":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'23:59:59.999").format(new Date()+365)}",
-    "OfferShortDescription": "Description ",
-    "OptInRequired": true,
-    "OfferName": "AOFFER88",
-    "OfferType": "",
-    "OfferTermsAndConditions": "",
-    "OfferImageSmallAlt": "",
-    "OfferImageMediumAlt": "",
-    "OfferImageLargeAlt": "",
-    "RedemptionCodeReqInPurchase": false,
-    "IsDefaultOffer": true,
-    "Status": "A"
+  "OfferCode": "${#TestCase#offerCode}",
+  "OfferDescription": "${ProgramOffers#OfferDescription}",
+  "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date())}",
+  "OfferEndDate":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'23:59:59.999").format(new Date()+365)}",
+  "OfferShortDescription": "${ProgramOffers#OfferShortDescription}",
+  "OptInRequired": "${ProgramOffers#OptInRequired}",
+  "DaysValid": "${ProgramOffers#DaysValid}",
+  "OfferName": "${ProgramOffers#OfferName}",
+  "OfferTermsAndConditions": "${ProgramOffers#OfferTermsAndConditions}",
+  "OfferName1": "${ProgramOffers#OfferName1}",
+  "OfferShortDescription1": "${ProgramOffers#OfferShortDescription1}",
+  "OfferDescription1":"${ProgramOffers#OfferDescription1}",
+  "OfferTermsAndConditions1": "${ProgramOffers#OfferTermsAndConditions1}",
+  "OfferName2": "${ProgramOffers#OfferName2}",
+  "OfferShortDescription2": "${ProgramOffers#OfferShortDescription2}",
+  "OfferDescription2": "${ProgramOffers#OfferDescription2}",
+  "OfferTermsAndConditions2": "${ProgramOffers#OfferTermsAndConditions2}",
+  "OfferName3": "${ProgramOffers#OfferName3}",
+  "OfferShortDescription3": "${ProgramOffers#OfferShortDescription3}",
+  "OfferDescription3": "${ProgramOffers#OfferDescription3}",
+  "OfferTermsAndConditions3": "${ProgramOffers#OfferTermsAndConditions3}",
+  "OfferName4": "${ProgramOffers#OfferName4}",
+  "OfferShortDescription4": "${ProgramOffers#OfferShortDescription4}",
+  "OfferDescription4": "${ProgramOffers#OfferDescription4}",
+  "OfferTermsAndConditions4": "${ProgramOffers#OfferTermsAndConditions4}",
+  "OfferName5": "${ProgramOffers#OfferName5}",
+  "OfferShortDescription5": "${ProgramOffers#OfferShortDescription5}",
+  "OfferDescription5": "${ProgramOffers#OfferDescription5}",
+  "OfferTermsAndConditions5": "${ProgramOffers#OfferTermsAndConditions5}",
+  "OfferName6": "${ProgramOffers#OfferName6}",
+  "OfferShortDescription6": "${ProgramOffers#OfferShortDescription6}",
+  "OfferDescription6": "${ProgramOffers#OfferDescription6}",
+  "OfferTermsAndConditions6": "${ProgramOffers#OfferTermsAndConditions6}",
+  "UsageLimit": ${ProgramOffers#UsageLimit},
+  "RedemptionCodeReqInPurchase": "${ProgramOffers#RedemptionCodeReqInPurchase}",
+  "ImageNameSmall": "${ProgramOffers#ImageNameSmall}",
+  "ImageNameMedium": "${ProgramOffers#ImageNameMedium}",
+  "ImageNameLarge": "${ProgramOffers#ImageNameLarge}",
+  "IsCouponOffer":"${ProgramOffers#IsCouponOffer}",
+   "Status": "A",
+"GlobalLimit": ${ProgramOffers#GlobalLimit},
+    "OfferCustomDataGroup": {
+    "CustomData": [
+      {
+        "CustomDataName": "${ProgramOffers#CustomDataName}",
+        "CustomDataValue": "${ProgramOffers#CustomDataValue}"
+      }
+  ]}
 }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers/sysOfferId</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="be19997a-1c00-46a2-9d84-4cd6b400b97b" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
@@ -118,6 +223,7 @@ else if (status == 200)   testRunner.gotoStepByName("UpdateProgramOffers")</scri
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="sysOfferId" value="${GetProgramOffers#Response#$[0]['SysOfferId']}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>sysOfferId</con:entry>
@@ -137,6 +243,16 @@ else if (status == 200)   testRunner.gotoStepByName("UpdateProgramOffers")</scri
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="UpdateProgramOffersCond" id="bc549828-e664-429e-892b-4d437f8e78f0">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${UpdateProgramOffers#HarResponse#$[\'status\']}' ).toInteger();
+
+if (status == 200)  testRunner.gotoStepByName("sysOfferId")</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="AddProgramOffers" id="8bcfff9a-6b62-4068-a4df-2b79c5b4899e">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers" methodName="Add Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -145,7 +261,25 @@ else if (status == 200)   testRunner.gotoStepByName("UpdateProgramOffers")</scri
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
+        <con:request>{
+    "OfferCode": "${#TestCase#offerCode}",
+    "ProgramCode": "PP",
+    "OfferDescription": "Offer description",
+    "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date())}",
+    "OfferEndDate":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'23:59:59.999").format(new Date()+365)}",
+    "OfferShortDescription": "Description ",
+    "OptInRequired": true,
+    "OfferName": "AOFFER88",
+    "OfferType": "",
+    "OfferTermsAndConditions": "",
+    "OfferImageSmallAlt": "",
+    "OfferImageMediumAlt": "",
+    "OfferImageLargeAlt": "",
+    "RedemptionCodeReqInPurchase": false,
+    "IsDefaultOffer": true,
+    "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="da0c8189-c886-4c26-8042-35480e4d8a20" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
@@ -180,10 +314,51 @@ else if (status == 200)   testRunner.gotoStepByName("UpdateProgramOffers")</scri
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties/>
+  <con:testStep type="groovy" name="sysOfferId" id="a004caec-0578-46da-a59e-1e4e07e1282a">
+    <con:settings/>
+    <con:config>
+      <script>def rewardId = context.expand('${GetProgramOffers#Response#$[\'sysOfferId\']}')
+def responseAddReward = context.expand( '${AddProgramOffers#Response}' )
+def responseUpdateReward = context.expand('${UpdateProgramOffers#Response}')
+
+if(responseAddProgramOffers==null || responseAddProgramOffers=="")
+ {
+ 	if(responseUpdateProgramOffers ==null || responseUpdateProgramOffers  =="")
+ 	{
+ 		return sysOfferId
+ 	}
+ 	else
+ 	{
+ 		sysOfferId = context.expand( '${UpdateProgramOffers#Response#$[\'sysOfferId\']}' )
+   		 return sysOfferId;
+ 	}
+ }
+ else
+ {
+   sysOfferId = context.expand( '${AddProgramOffers#Response#$[\'sysOfferId\']}' )
+    return sysOfferId;
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>offerCode</con:name>
+      <con:value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>50162c87-070c-4236-8044-67d995497f0f</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>bc549828-e664-429e-892b-4d437f8e78f0</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2e8cd952-7fb8-47c8-8ec5-74891434a6bb</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

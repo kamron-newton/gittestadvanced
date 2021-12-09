@@ -4,13 +4,67 @@
     <con:setting id="441a2684-8f26-4ded-ba60-3c539efae9befileName">ValExchangeTxnMomOffer</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="MomentOfferOutcome" id="bbae2940-1356-43b4-b101-94495bb09560">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/MomentOfferOutcome.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ï»¿row</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>MomentCode</con:property>
+      <con:property>MomentType</con:property>
+      <con:property>BaseInd</con:property>
+      <con:property>PointTypeVal</con:property>
+      <con:property>PointSubTypeVal</con:property>
+      <con:property>StartDate</con:property>
+      <con:property>EndDate</con:property>
+      <con:property>Description</con:property>
+      <con:property>QualifyingDateAttribute</con:property>
+      <con:property>QualifyingDateAttributeDrools</con:property>
+      <con:property>EventType</con:property>
+      <con:property>OfferName</con:property>
+      <con:property>CalculationTemplate</con:property>
+      <con:property>OutcomeEquationTemplate</con:property>
+      <con:property>OutcomeEquationDrools1</con:property>
+      <con:property>OutcomeEquationDrools2</con:property>
+      <con:property>OutcomeEquationDrools3</con:property>
+      <con:property>FormulaName</con:property>
+      <con:property>RuleEquationUI</con:property>
+      <con:property>RuleEquationDrools</con:property>
+      <con:property>OutcomeEquationUiVal</con:property>
+      <con:property>LeafValue</con:property>
+      <con:property>OutcomeEquationTemplate1</con:property>
+      <con:property>OutcomeEquationTemplate2</con:property>
+      <con:property>ValueGroup</con:property>
+      <con:property>OutcomeEquationTemplate3</con:property>
+      <con:property>OutcomeEquationDrools4</con:property>
+      <con:property>OutcomeEquationUiVal1</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="datasource" name="Transaction" id="62e940ca-9c14-47fa-9129-d31cd0f82388">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="Data Generator">
         <con:configuration>
           <generatedDataCount>10</generatedDataCount>
-          <generatorsTotalNumber>1</generatorsTotalNumber>
+          <generatorsTotalNumber>2</generatorsTotalNumber>
           <lastSelectedProperty>1</lastSelectedProperty>
           <GeneratorType0>STR</GeneratorType0>
           <PropertyName0>TransactionNum</PropertyName0>
@@ -22,6 +76,11 @@
           <PasswordDataGeneratorUseDigitsTransactionNum>true</PasswordDataGeneratorUseDigitsTransactionNum>
           <PasswordDataGeneratorMaxCharacterCountTransactionNum>10</PasswordDataGeneratorMaxCharacterCountTransactionNum>
           <PasswordDataGeneratorMinCharacterCountTransactionNum>5</PasswordDataGeneratorMinCharacterCountTransactionNum>
+          <GeneratorType1>BOOL</GeneratorType1>
+          <PropertyName1>OriginalTrxnNum</PropertyName1>
+          <repetitionCountOriginalTrxnNum>0</repetitionCountOriginalTrxnNum>
+          <repeatValuesOriginalTrxnNum>false</repeatValuesOriginalTrxnNum>
+          <boolViewOriginalTrxnNum>Classic</boolViewOriginalTrxnNum>
           <escapeSpaceSequence/>
         </con:configuration>
       </con:dataSource>
@@ -141,6 +200,7 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="e701cc43-cec5-4db6-b3da-2035e66c8ae6" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
@@ -155,7 +215,7 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="pageNumber" value=";`"/>
-          <con:entry key="offerCode" value="AOFFER88"/>
+          <con:entry key="offerCode" value="${#[ActivityOrder#CreateOffer]#offerCode}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -195,7 +255,11 @@
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>591d7dfb-5670-496e-a426-5423b6444eaf</con:targetTestCase>
-      <con:properties/>
+      <con:properties>
+        <con:property>
+          <con:name>offerCode</con:name>
+        </con:property>
+      </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
@@ -207,9 +271,11 @@
       <con:properties>
         <con:property>
           <con:name>MomentName</con:name>
+          <con:value>MOMENTTXNOFFER</con:value>
         </con:property>
         <con:property>
           <con:name>Body</con:name>
+          <con:value>{   "MomentCode": "{{MOMENTTXNOFFER}}",    "StartDate": "{{MomentOfferOutcome.MomentOfferOutcome#csv.StartDate}}",   "EndDate": "{{MomentOfferOutcome.MomentOfferOutcome#csv.EndDate}}",   "Description": "{{MOMENTTXNOFFER}}",   "MomentType": "{{MomentOfferOutcome.MomentOfferOutcome#csv.MomentType}}",   "MomentEvent": {     "MomentCode": "{{MOMENTTXNOFFER}}",     "EventType": "{{MomentOfferOutcome.MomentOfferOutcome#csv.EventType}}",     "MomentQualifyingDateAttribute": "{{MomentOfferOutcome.MomentOfferOutcome#csv.QualifyingDateAttribute}}",     "MomentQualifyingDateAttributeDrools": "{{MomentOfferOutcome.MomentOfferOutcome#csv.QualifyingDateAttributeDrools}}",     "MomentOffers": [       {         "MomentCode": "{{MOMENTTXNOFFER}}",         "OfferName": "{{MOMENTTXNOFFER}}",         "EventType": "{{MomentOfferOutcome.MomentOfferOutcome#csv.EventType}}",         "Description": "{{MomentOfferOutcome.MomentOfferOutcome#csv.Description}}",         "MomentOutcome": {           "MomentCode": "{{MOMENTTXNOFFER}}",           "EventType": "{{MomentOfferOutcome.MomentOfferOutcome#csv.EventType}}",           "OfferName": "{{MOMENTTXNOFFER}}", 		  "OutcomeEquationUi": "{{MomentOfferOutcome.MomentOfferOutcome#csv.OutcomeEquationUiVal}}",           "CalculationTemplate": "{{MomentOfferOutcome.MomentOfferOutcome#csv.CalculationTemplate}}",           "OutcomeEquationTemplate": "{{MomentOfferOutcome.MomentOfferOutcome#csv.OutcomeEquationTemplate1}}",           "OutcomeEquationDrools": "{{MomentOfferOutcome.MomentOfferOutcome#csv.OutcomeEquationDrools1}}",           "FormulaName": "{{MomentOfferOutcome.MomentOfferOutcome#csv.FormulaName}}", 		  "Status": "P"         },         "MomentQualifyingRule": {           "MomentCode": "{{MOMENTTXNOFFER}}",           "EventType": "{{MomentOfferOutcome.MomentOfferOutcome#csv.EventType}}",           "OfferName": "{{MOMENTTXNOFFER}}",           "RuleEquationUI": "{{MomentOfferOutcome.MomentOfferOutcome#csv.RuleEquationUI}}",           "RuleEquationDrools": "{{MomentOfferOutcome.MomentOfferOutcome#csv.RuleEquationDrools}}",           "Status": "P"                  }       }     ]   },   "ReleaseState": "P" }</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -333,6 +399,7 @@
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="sysOfferId" value="${#[ActivityOrder#CreateOffer#GetProgramOffers]#Response#$[0]['SysOfferId']}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>sysOfferId</con:entry>
@@ -352,6 +419,47 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="Groovy Script" id="5ff9ecab-99e9-4167-bc26-eb7e5c518d79">
+    <con:settings/>
+    <con:config>
+      <script>{   "MomentCode": "{{MOMENTTXNOFFER}}",    
+"StartDate": "",   
+"EndDate": "{{MomentOfferOutcome.MomentOfferOutcome#csv.EndDate}}",  
+"Description": "{{MOMENTTXNOFFER}}",   
+"MomentType": "{{MomentOfferOutcome.MomentOfferOutcome#csv.MomentType}}",   
+"MomentEvent": {     "MomentCode": "{{MOMENTTXNOFFER}}",     
+"EventType": "{{MomentOfferOutcome.MomentOfferOutcome#csv.EventType}}",     
+"MomentQualifyingDateAttribute": "{{MomentOfferOutcome.MomentOfferOutcome#csv.QualifyingDateAttribute}}",     "MomentQualifyingDateAttributeDrools": "{{MomentOfferOutcome.MomentOfferOutcome#csv.QualifyingDateAttributeDrools}}",     "MomentOffers": [      
+ {        
+ "MomentCode": "{{MOMENTTXNOFFER}}",         
+"OfferName": "{{MOMENTTXNOFFER}}",         
+"EventType": "{{MomentOfferOutcome.MomentOfferOutcome#csv.EventType}}",         
+"Description": "{{MomentOfferOutcome.MomentOfferOutcome#csv.Description}}",         
+"MomentOutcome": {          
+"MomentCode": "{{MOMENTTXNOFFER}}",           
+"EventType": "{{MomentOfferOutcome.MomentOfferOutcome#csv.EventType}}",           
+"OfferName": "{{MOMENTTXNOFFER}}", 		  
+"OutcomeEquationUi": "{{MomentOfferOutcome.MomentOfferOutcome#csv.OutcomeEquationUiVal}}",           
+"CalculationTemplate": "{{MomentOfferOutcome.MomentOfferOutcome#csv.CalculationTemplate}}",           
+"OutcomeEquationTemplate": "{{MomentOfferOutcome.MomentOfferOutcome#csv.OutcomeEquationTemplate1}}",           "OutcomeEquationDrools": "{{MomentOfferOutcome.MomentOfferOutcome#csv.OutcomeEquationDrools1}}",           
+"FormulaName": "{{MomentOfferOutcome.MomentOfferOutcome#csv.FormulaName}}", 		  
+"Status": "P"         
+},         
+"MomentQualifyingRule": {           
+"MomentCode": "{{MOMENTTXNOFFER}}",           
+"EventType": "{{MomentOfferOutcome.MomentOfferOutcome#csv.EventType}}",           
+"OfferName": "{{MOMENTTXNOFFER}}",           
+"RuleEquationUI": "{{MomentOfferOutcome.MomentOfferOutcome#csv.RuleEquationUI}}",           
+"RuleEquationDrools": "{{MomentOfferOutcome.MomentOfferOutcome#csv.RuleEquationDrools}}",           
+"Status": "P"                  
+}       
+}     
+]   
+},   
+"ReleaseState": "P" 
+}</script>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
@@ -361,6 +469,11 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>e5d6cfdb-5990-4ce8-82a1-55471db6ab64</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>bbae2940-1356-43b4-b101-94495bb09560</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

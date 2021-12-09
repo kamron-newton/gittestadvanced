@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="591d7dfb-5670-496e-a426-5423b6444eaf" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="CreateOffer" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="2b34b612-ffca-42c8-942f-0607b58db548" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="CreateOffer" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="591d7dfb-5670-496e-a426-5423b6444eaffileName">CreateOffer</con:setting>
+    <con:setting id="2b34b612-ffca-42c8-942f-0607b58db548fileName">CreateOffer</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="ProgramOffers" id="2e8cd952-7fb8-47c8-8ec5-74891434a6bb">
+  <con:testStep type="datasource" name="ProgramOffers" id="cc086dda-62dc-4ec0-a036-eb09c97a98bf">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -73,7 +73,7 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProgramOffers" id="f7231440-df50-4b8e-ac35-7a912457d93d">
+  <con:testStep type="restrequest" name="GetProgramOffers" id="6c6b2c0a-e876-401e-9682-d0b37a6a1230">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers" methodName="Get Program Offers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetProgramOffers" id="01b55446-a40a-4369-9fab-5cac544244cc" mediaType="application/json">
@@ -134,126 +134,21 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="UpsertProgramOffer" id="50162c87-070c-4236-8044-67d995497f0f">
+  <con:testStep id="0a7fb921-c853-41ab-941a-a0880b73f74d" name="sysOfferIdCond" type="groovy">
     <con:settings/>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
 
-def status = context.expand( '${GetProgramOffers#HarResponse#$[\'status\']}' ).toInteger();
-def rewardId = context.expand('${GetProgramOffers#Response#$[\'sys\']}')
+//def refPointTypeId = context.expand( '${GetProgramOffers#Response#$[0][\'\']}' )
+def SysOfferId = context.expand( '${GetProgramOffers#Response#$[0][\'SysOfferId\']}' )
 
-
-
-if (status == 404 )  testRunner.gotoStepByName("AddProgramOffers")
-else if (status == 200)   testRunner.gotoStepByName("UpdateProgramOffers")</script>
+if (SysOfferId == "" ) 
+    testRunner.gotoStepByName("AddProgramOffers")
+else
+     testRunner.gotoStepByName("SysOfferId")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateProgramOffers" id="090732f0-b549-434b-9052-1fe796430f0f">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers/{sysOfferId}" methodName="Update Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateProgramOffers" id="ee2ad520-1d32-4346-a597-2616b62150b9" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "OfferCode": "${#TestCase#offerCode}",
-  "OfferDescription": "${ProgramOffers#OfferDescription}",
-  "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date())}",
-  "OfferEndDate":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'23:59:59.999").format(new Date()+365)}",
-  "OfferShortDescription": "${ProgramOffers#OfferShortDescription}",
-  "OptInRequired": "${ProgramOffers#OptInRequired}",
-  "DaysValid": "${ProgramOffers#DaysValid}",
-  "OfferName": "${ProgramOffers#OfferName}",
-  "OfferTermsAndConditions": "${ProgramOffers#OfferTermsAndConditions}",
-  "OfferName1": "${ProgramOffers#OfferName1}",
-  "OfferShortDescription1": "${ProgramOffers#OfferShortDescription1}",
-  "OfferDescription1":"${ProgramOffers#OfferDescription1}",
-  "OfferTermsAndConditions1": "${ProgramOffers#OfferTermsAndConditions1}",
-  "OfferName2": "${ProgramOffers#OfferName2}",
-  "OfferShortDescription2": "${ProgramOffers#OfferShortDescription2}",
-  "OfferDescription2": "${ProgramOffers#OfferDescription2}",
-  "OfferTermsAndConditions2": "${ProgramOffers#OfferTermsAndConditions2}",
-  "OfferName3": "${ProgramOffers#OfferName3}",
-  "OfferShortDescription3": "${ProgramOffers#OfferShortDescription3}",
-  "OfferDescription3": "${ProgramOffers#OfferDescription3}",
-  "OfferTermsAndConditions3": "${ProgramOffers#OfferTermsAndConditions3}",
-  "OfferName4": "${ProgramOffers#OfferName4}",
-  "OfferShortDescription4": "${ProgramOffers#OfferShortDescription4}",
-  "OfferDescription4": "${ProgramOffers#OfferDescription4}",
-  "OfferTermsAndConditions4": "${ProgramOffers#OfferTermsAndConditions4}",
-  "OfferName5": "${ProgramOffers#OfferName5}",
-  "OfferShortDescription5": "${ProgramOffers#OfferShortDescription5}",
-  "OfferDescription5": "${ProgramOffers#OfferDescription5}",
-  "OfferTermsAndConditions5": "${ProgramOffers#OfferTermsAndConditions5}",
-  "OfferName6": "${ProgramOffers#OfferName6}",
-  "OfferShortDescription6": "${ProgramOffers#OfferShortDescription6}",
-  "OfferDescription6": "${ProgramOffers#OfferDescription6}",
-  "OfferTermsAndConditions6": "${ProgramOffers#OfferTermsAndConditions6}",
-  "UsageLimit": ${ProgramOffers#UsageLimit},
-  "RedemptionCodeReqInPurchase": "${ProgramOffers#RedemptionCodeReqInPurchase}",
-  "ImageNameSmall": "${ProgramOffers#ImageNameSmall}",
-  "ImageNameMedium": "${ProgramOffers#ImageNameMedium}",
-  "ImageNameLarge": "${ProgramOffers#ImageNameLarge}",
-  "IsCouponOffer":"${ProgramOffers#IsCouponOffer}",
-   "Status": "A",
-"GlobalLimit": ${ProgramOffers#GlobalLimit},
-    "OfferCustomDataGroup": {
-    "CustomData": [
-      {
-        "CustomDataName": "${ProgramOffers#CustomDataName}",
-        "CustomDataValue": "${ProgramOffers#CustomDataValue}"
-      }
-  ]}
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers/sysOfferId</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="be19997a-1c00-46a2-9d84-4cd6b400b97b" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>201</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="sysOfferId" value="${GetProgramOffers#Response#$[0]['SysOfferId']}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>sysOfferId</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Program-Code</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="UpdateProgramOffersCond" id="bc549828-e664-429e-892b-4d437f8e78f0">
-    <con:settings/>
-    <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse
-
-def status = context.expand( '${UpdateProgramOffers#HarResponse#$[\'status\']}' ).toInteger();
-
-if (status == 200)  testRunner.gotoStepByName("sysOfferId")</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="AddProgramOffers" id="8bcfff9a-6b62-4068-a4df-2b79c5b4899e">
+  <con:testStep type="restrequest" name="AddProgramOffers" id="b1a23e14-d0c5-4ef0-843c-a5cb86294439">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers" methodName="Add Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="AddProgramOffers" id="e6cd6a15-8800-4f34-912b-da1e6f9af091" mediaType="application/json" postQueryString="false">
@@ -314,51 +209,40 @@ if (status == 200)  testRunner.gotoStepByName("sysOfferId")</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="sysOfferId" id="a004caec-0578-46da-a59e-1e4e07e1282a">
+  <con:testStep id="5beb0eea-d349-4f9a-a138-ed4e05d2197d" name="SysOfferId" type="groovy">
     <con:settings/>
     <con:config>
-      <script>def rewardId = context.expand('${GetProgramOffers#Response#$[\'sysOfferId\']}')
-def responseAddReward = context.expand( '${AddProgramOffers#Response}' )
-def responseUpdateReward = context.expand('${UpdateProgramOffers#Response}')
+      <script>def SysOfferId = context.expand( '${GetProgramOffers#Response#$[0][\'SysOfferId\']}' )
+def response = context.expand( '${AddProgramOffers#Response}' )
 
-if(responseAddProgramOffers==null || responseAddProgramOffers=="")
- {
- 	if(responseUpdateProgramOffers ==null || responseUpdateProgramOffers  =="")
- 	{
- 		return sysOfferId
- 	}
- 	else
- 	{
- 		sysOfferId = context.expand( '${UpdateProgramOffers#Response#$[\'sysOfferId\']}' )
-   		 return sysOfferId;
- 	}
- }
+if(response==null || response =="")
+  	return SysOfferId;
  else
  {
-   sysOfferId = context.expand( '${AddProgramOffers#Response#$[\'sysOfferId\']}' )
-    return sysOfferId;
+    SysOfferId = context.expand( '${AddProgramOffers#Response#$[\'SysOfferId\']}' )
+    return SysOfferId;
  }</script>
     </con:config>
   </con:testStep>
   <con:properties>
     <con:property>
       <con:name>offerCode</con:name>
-      <con:value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+      <con:value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">AOFFER88</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>
   <con:breakPoints>
-    <con:testStepId>50162c87-070c-4236-8044-67d995497f0f</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>bc549828-e664-429e-892b-4d437f8e78f0</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
     <con:testStepId>2e8cd952-7fb8-47c8-8ec5-74891434a6bb</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2a0ae8c7-0d94-4033-b014-570fbf46d640</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>d31d3e9c-f615-4407-b90d-81a8fb3a34c8</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

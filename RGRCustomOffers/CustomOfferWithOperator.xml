@@ -93,6 +93,7 @@
 	
 	"PackagedAudience": {  		
 			"PackagedAudienceId": "${ProcessMarketingEvent#PackagedAudienceId}"
+			"AudienceCode":"${ProcessMarketingEvent#AudienceCode}"
 			}, 
 			"AudienceSource": "PACKAGED_AUDIENCE",
 	"PackagedOffer": {
@@ -172,10 +173,95 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="ApproveMarketingEvent" id="5e2356b3-f541-42e0-a607-3d28931b99bc">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/{eventCode}/approve" methodName="ApproveMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ApproveMarketingEvent" id="17832095-74ce-48f7-9423-f269052ad077" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/approve</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="d035d6d1-064a-4242-8b1a-56167edfd015" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="eventCode" value="${ProcessMarketingEventMulTrxn#Response#$['EventCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>eventCode</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="DeployMarketingPromotion" id="f5166c6f-9a72-4f45-bef2-efcc5bc1cd47">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/job/deploy" methodName="DeployMarketingPromotion" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="DeployMarketingPromotion" id="c2f7d22a-311d-40e4-8720-8af8701930be" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "JobName": "${#[OffersPrerequisite#ProcessMarketingEvent#ProcessMarketingEventPreReq]#Response#$['EventCode']}",
+  "EmailAddresses": "WebTest_TestMail@dx2mail.co",
+  "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b30",
+  "MarketingEventCode": "${#[OffersPrerequisite#ProcessMarketingEvent#ProcessMarketingEventPreReq]#Response#$['EventCode']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/job/deploy</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="02948db1-1694-4272-ac2c-764302f684df" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>d2735be7-30aa-4ef5-b01c-ece3e1ada9d6</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>5e2356b3-f541-42e0-a607-3d28931b99bc</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f5166c6f-9a72-4f45-bef2-efcc5bc1cd47</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

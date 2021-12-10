@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="58a85117-5558-4be0-b68f-214c9fbde4c3" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="CreateMoment" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="58a85117-5558-4be0-b68f-214c9fbde4c3" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertMoment" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="58a85117-5558-4be0-b68f-214c9fbde4c3fileName">CreateMoment</con:setting>
+    <con:setting id="58a85117-5558-4be0-b68f-214c9fbde4c3fileName">UpsertMoment</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
   <con:testStep id="b3b7fd85-7c2a-483d-b36a-1ceda53f0144" name="GetMomentByMomentCode" type="restrequest">
@@ -168,27 +168,24 @@ if (status == 200)  testRunner.gotoStepByName("MomentId")</script>
   <con:testStep id="45ccab26-c2ea-465a-a5f4-cc211c822cf2" name="MomentId" type="groovy">
     <con:settings/>
     <con:config>
-      <script>def momentid = context.expand( '${GetMomentByMomentCode#Response#$[\'MomentId\']}' )
-def responseCreateMoment = context.expand( '${CreateMoment#Response}' )
-def responseUpdateMoment = context.expand('${UpdateMoment#Response}')
-
-if(responseCreateMoment==null || responseCreateMoment =="")
- {
- 	if(responseUpdateMoment==null || responseUpdateMoment =="")
- 	{
- 		return momentid
- 	}
- 	else
- 	{
- 		momentid = context.expand( '${UpdateMoment#Response#$[\'MomentId\']}' )
-   		 return momentid;
- 	}
- }
- else
- {
-    momentid = context.expand( '${CreateMoment#Response#$[\'MomentId\']}' )
-    return momentid;
- }</script>
+      <script>return context.expand( '${GetMomentByMomentCode#Response#$.MomentId}') ?: context.expand( '${CreateMoment#Response#$.MomentId}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="Extract Moment Id" id="a20cc81f-2580-4d18-9f8f-64302694e556">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>MomentId</con:name>
+        <con:sourceType>result</con:sourceType>
+        <con:sourceStep>MomentId</con:sourceStep>
+        <con:sourcePath/>
+        <con:targetType>MomentId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:targetTransferType>JSONPATH</con:targetTransferType>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
     </con:config>
   </con:testStep>
   <con:testStep id="114b8f52-354f-49ef-b94d-cda182301f9e" name="ActivateMoment" type="restrequest">
@@ -292,8 +289,17 @@ if(responseCreateMoment==null || responseCreateMoment =="")
       <con:name>UpdMomentJson</con:name>
       <con:value>{  "MomentCode": "MOMENTTXNOFFER",      "StartDate": "2017-01-01T20:14:50.943349Z",    "EndDate": "2030-12-30T20:14:50.943349Z",  "Description": "MOMENTTXNOFFER",  "MomentType": "OFFERS", "MomentStatus": "A",  "MomentEvent": {  "MomentCode": "MOMENTTXNOFFER",  "EventType": "PurchaseTxn",  "MomentQualifyingDateAttribute": "CurrentDateTime",  "MomentQualifyingDateAttributeDrools": "$PurchaseTxn:PurchaseTxnC(IsItBetween( new Date() ,\"1/1/2017 12:00:00 AM\",\"12/30/2030 11:59:59 PM\"))",  "MomentOffers": [  {  "MomentCode": "MOMENTTXNOFFER",  "OfferName": "MOMENTTXNOFFER",  "EventType": "PurchaseTxn",  "Description": "MOMENTTXNOFFER",  "MomentOutcome": {  "MomentCode": "MOMENTTXNOFFER", "EventType": "PurchaseTxn",  "OfferName": "MOMENTTXNOFFER",  "OutcomeEquationUi": "\"AOFFER88\"",  "CalculationTemplate": "&lt;offer_code,[String]>",  "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22offer_code%22%2C%22type%22%3A%22String%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22%5C%22AOFFER88%5C%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%229fdc97d1-ede3-b078-e053-57439e0a26be%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(%5C%22AOFFER88%5C%22)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",  "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"MOMENTTXNOFFER\"),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\nMomentParam[] outcomeValues = null;\nmo.add(new MomentOutcome(\"AAOFFERMOM88\",String.valueOf(\"AOFFER88\"),params, outcomeValues));\n",  "FormulaName": "OFFER",   "Status": "A"   },  "MomentQualifyingRule": {  "MomentCode": "MOMENTTXNOFFER",  "EventType": "PurchaseTxn",  "OfferName": "MOMENTTXNOFFER",  "RuleEquationUI": "PurchaseTxn.ProgramCode==\"PP\"",   "RuleEquationDrools": "PurchaseTxnC(ProgramCode == \"PP\")",   "Status": "A" ,  } ,   "Status": "A",  }   ] ,   "Status": "A",   },   "ReleaseState": "P",  "Status": "A"  }</con:value>
     </con:property>
+    <con:property userSpecific="true">
+      <con:name>MomentId</con:name>
+      <con:value/>
+    </con:property>
   </con:properties>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>a20cc81f-2580-4d18-9f8f-64302694e556</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
   <con:environmentSpec>
     <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
       <con:authProfile>Inherit From Parent</con:authProfile>

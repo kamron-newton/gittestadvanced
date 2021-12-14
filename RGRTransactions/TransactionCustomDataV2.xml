@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="503ec189-2a0f-46a8-b878-b9ea5e4b8d5e" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="TransactionCustomDataV2" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="503ec189-2a0f-46a8-b878-b9ea5e4b8d5efileName">TransactionCustomDataV2</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="16a8eccf-19ae-4cfc-9304-3e90c338b123">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>d15dfd07-9c6a-4567-812e-15019a5cf04c</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddTransactionWithCustomData" id="0299b04e-8fe3-44e1-8a8b-a3284f9b0641">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>b50e420d-e767-406a-b048-bcbc061b461e</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value>${=java.util.UUID.randomUUID()}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${AddProfileRGR#ProfileId}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDate</con:name>
+          <con:value>${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>RawTransactionId</con:name>
+          <con:value>35284f0e-e2d4-440e-8146-e7b39ac21d8d</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>RawTransactionId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Transaction By Id V2" id="20b9ae19-e025-48e1-8107-d106b194257f">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetTransactionById" resourcePath="/api/v2/transaction/rawtransactions/{rawtransactionid}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Transaction By Id V2" id="b8e4cad2-7b23-49fb-9514-66a652e1f09c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:assertion type="Valid HTTP Status Codes" id="cd828aca-bf73-4166-a73b-e7f1e1254cfa" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="1c51e2d0-7d60-4780-a558-f680b3a5e5c8" name="Verify BENEFIT custom data value exists and = Test">
+          <con:configuration>
+            <path>$.TransactionCustomDataGroup.CustomData[?(@.CustomDataName == 'BENEFIT')].CustomDataValue[0]</path>
+            <content>Test</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileid" value="${AddProfileRGR#ProfileId}"/>
+          <con:entry key="rawtransactionid" value="${AddTransactionWithCustomData#RawTransactionId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>rawtransactionid</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>profileid</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

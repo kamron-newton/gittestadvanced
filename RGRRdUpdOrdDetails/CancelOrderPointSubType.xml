@@ -447,6 +447,36 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
+        <con:assertion type="GroovyScriptAssertion" id="7a99f040-9ec8-4529-8d73-21c0053db804" name="Script Assertion for Sumvalidation of BalancePoint">
+          <con:configuration>
+            <scriptText>import groovy.json.JsonSlurper
+
+// Get the PointSubTypeId
+def pointSybTypeId = context.expand( '${GetPointTypeById#Response#$[\'PointSubTypes\'][?(@.PointSubTypeCode==\'HATCHED\')].PointSubTypeId[0]}' )
+
+// To get all the balance points
+//def allBalancePoints = context.expand( '${GetPointsSummary#Response#$[?(@.PointSubTypeId==\''+ pointSybTypeId +'\' &amp;&amp; @.ActivityType==\'REWARD\')].BalancePoints}' )
+
+//Get the Activity Type
+def activityType="REWARD"
+
+//Get the Points Summary Response
+def response = context.expand( '${GetPointsSummary#Response}' )
+
+// Parse the  Points Summary Response  with JsonSlurper
+def pointsSummary = new JsonSlurper().parseText( response )
+
+// Loop through the json array, and add the balance points
+def balancePoints = new BigDecimal(0)
+pointsSummary.each{val ->
+               if(val.PointSubTypeId == pointSybTypeId &amp;&amp; val.ActivityType == activityType) {
+                                             balancePoints = balancePoints + val.BalancePoints.toBigDecimal()
+               }
+}
+
+assert balancePoints ==2000</scriptText>
+          </con:configuration>
+        </con:assertion>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>

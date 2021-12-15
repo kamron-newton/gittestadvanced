@@ -4,12 +4,12 @@
     <con:setting id="7a92a3bc-6145-4d4e-9667-7a82cac4b61ffileName">EarnPointsOnMultipleTransaction</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="ProcessMarketingEvent" id="89f694e1-d29c-4ae0-8fe6-c4ea6ad7192b">
+  <con:testStep type="datasource" name="ProcessMarketingEvent" id="7a26cb04-5ead-4f77-90d4-8976abf90255">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
         <con:configuration>
-          <fileName>${#Project#ProjectPath}/References/ProcessMarketingEvent.csv</fileName>
+          <fileName>ReadyAPI/References/ProcessMarketingEvent.csv</fileName>
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
@@ -45,11 +45,8 @@
       <con:property>PackagedOfferCategoryId</con:property>
       <con:property>PackagedOfferCategoryCode</con:property>
       <con:property>ParamOperatorId</con:property>
-      <con:property>OperatorName</con:property>
-      <con:property>OperatorCode</con:property>
-      <con:property>OperatorSign</con:property>
       <con:property>PackagedAudienceId</con:property>
-      <con:property>AudienceCode</con:property>
+      <con:property>AudienceName</con:property>
       <con:property>MarketingEventChannelId</con:property>
       <con:property>ChannelName</con:property>
       <con:startRow>4</con:startRow>
@@ -84,14 +81,14 @@
 		[ 		
 			{ 		
          	"MarketingEventChannelId": "${ProcessMarketingEvent#MarketingEventChannelId}", 
-			"ChannelName": "${ProcessMarketingEvent#ChannelName}" 	
+			"ChannelName": "${ProcessMarketingEvent#ChannelName}",
 			} 	
 		], 	
 		"EventName": "PROMO_NAME${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventName}", 	
 		"EventCode": "PROMO_CODE${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventCode}", 
 		"PackagedAudience": {  		
-			"PackagedAudienceId": "${ProcessMarketingEvent#PackagedAudienceId}"
-
+			"PackagedAudienceId": "${ProcessMarketingEvent#PackagedAudienceId}",
+               "AudienceName": "${ProcessMarketingEvent#AudienceName}",
 			}, 
 			"AudienceSource": "PACKAGED_AUDIENCE", 	
 			"PackagedOffer": 
@@ -510,15 +507,125 @@
       <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="GetProgramOffers" id="4732ab55-e105-4be6-a2ce-69d379417f9c">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers" methodName="Get Program Offers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProgramOffers" id="01b55446-a40a-4369-9fab-5cac544244cc" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a5b8dbc2-0eba-4f13-8abf-71c585cd5fbf" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="pageNumber" value=";`"/>
+          <con:entry key="offerCode" value="${ProcessMarketingEventMulTrxn#Response#$['EventCode']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>offerCode</con:entry>
+          <con:entry>offerName</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>shortDescription</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>isCouponOffer</con:entry>
+          <con:entry>offerType</con:entry>
+          <con:entry>isDefaultOffer</con:entry>
+          <con:entry>customDataName</con:entry>
+          <con:entry>customDataValue</con:entry>
+          <con:entry>sortBy</con:entry>
+          <con:entry>numberPerPage</con:entry>
+          <con:entry>pageNumber</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateProamOffer" id="c4e7b6bd-29d1-4ec0-8c1e-94937613f08a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers/{sysOfferId}" methodName="Update Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateProamOffer" id="ee2ad520-1d32-4346-a597-2616b62150b9" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+ "OfferCode": "${GetProgramOffers#Response#$[0]['OfferCode']}",
+ "SysOfferId": "${GetProgramOffers#Response#$[0]['SysOfferId']}",
+  "OfferName": "${GetProgramOffers#Response#$[0]['OfferName']}",
+  "OfferStartDate": "${GetProgramOffers#Response#$[0]['OfferStartDate']}",
+  "OfferEndDate": "${GetProgramOffers#Response#$[0]['OfferEndDate']}",
+  "OfferShortDescription": "${GetProgramOffers#Response#$[0]['OfferShortDescription']}",
+  "OptInRequired": false,
+  "Status": "I"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers/709ecb72-618d-4587-8314-82ffa84e1011</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="94918038-0793-4319-a528-88681c328c24" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="sysOfferId" value="${GetProgramOffers#Response#$[0]['SysOfferId']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>sysOfferId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>49ab5e83-cde2-4840-93c5-f3a15be2609f</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>89f694e1-d29c-4ae0-8fe6-c4ea6ad7192b</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
@@ -544,6 +651,11 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>c275a4a5-3891-46a0-8a8b-72fd95f93b90</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>7a26cb04-5ead-4f77-90d4-8976abf90255</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

@@ -4,7 +4,7 @@
     <con:setting id="1ab1ac5b-aad5-4faf-9faa-833532c5b25cfileName">EarnPointsPerDollar</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="ProcessMarketingEvent" id="4c01c697-3eaf-462d-a610-911e43915110">
+  <con:testStep type="datasource" name="ProcessMarketingData" id="223bb020-3390-4afd-b97e-93d7d6be1fd7">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -39,6 +39,16 @@
       <con:property>ValueOfferLim</con:property>
       <con:property>PanelIdOfferLim</con:property>
       <con:property>PanelCodeOfferLim</con:property>
+      <con:property>PackagedOfferId</con:property>
+      <con:property>PackagedOfferCode</con:property>
+      <con:property>PackagedOfferName</con:property>
+      <con:property>PackagedOfferCategoryId</con:property>
+      <con:property>PackagedOfferCategoryCode</con:property>
+      <con:property>ParamOperatorId</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceName</con:property>
+      <con:property>MarketingEventChannelId</con:property>
+      <con:property>ChannelName</con:property>
       <con:startRow>1</con:startRow>
       <con:endRow/>
       <con:recordsPerIteration>1</con:recordsPerIteration>
@@ -58,38 +68,193 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="ProcessMarketingEventPerDollar" id="e371d90a-9e77-4b6b-bb5a-eb66601b320b">
+  <con:testStep type="restrequest" name="ProcesMarketingEvent" id="66e532e4-0d6a-451d-92ac-6678bc4efdf8">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>d0dc88ed-8e9d-4440-8500-16448aba0a24</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>ProcessMarketingEventBody</con:name>
-          <con:value>{ 	 	 	"MarketingEventChannels":  		[ 		 			{ 		          	"MarketingEventChannelId": "",  			"ChannelName": "" 	 			} 	 		], 	 		"EventName": "PROMO_NAME9222927041", 	 		"EventCode": "PROMO_CODE14655839409",  		"PackagedAudience": {  		 			"PackagedAudienceId": ""  			},  			"AudienceSource": "PACKAGED_AUDIENCE", 	 			"PackagedOffer":  		{ 		 			"PackagedOfferId": "", 		  			"PackagedOfferCode": "", 		 	 			"PackagedOfferName": "",   	 		"PackagedOfferParams": 			[ 	 			{ 				 				 			"PackagedOfferParamId": "fa7588bf-06ee-4541-b9c5-4d03adcf7c61", 		 			"PackagedOfferId": "", 			 			"ParamName": "Minimum transaction amount", 			 			"ParamCode": "MIN_TXN_AMT",  				 			"Value": "100",  				 			"PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",  			 			"PanelCode":  "CUSTOMER_ACTIVITY",  			}, 		 			{ 				 				 			"PackagedOfferParamId":"a1579fd2-2a7c-44e6-88bc-ed7d6319de83",  		 			"PackagedOfferId": "",			 			"ParamName": "Point amount", 	 			"ParamCode": "POINT_AMT_REWARDED",			 			"Value": "5", 	 			"PanelId": "e0e698ac-4291-d25d-e053-5dedef0ac6ef",				 			"PanelCode": "CUSTOMER_REWARD",		 			}, 		 			{ 				 			"PackagedOfferParamId": "54d2ac4f-e01e-4cf0-8f96-5ead9abb7f2d", 				 			"PackagedOfferId": "",					 			"ParamName": "Maximum offers per member (optional)", 				 			"ParamCode": "MAX_OFFERS_PER_MEMBER",			 			"Value": "2",				 			"PanelId": "e0e698ac-4391-d25d-e053-5dedef0ac6ef",			 			"PanelCode": "OFFER_LIMITS",				 			} 		 			], 		 			"PackagedOfferCategoryId": "", 			"PackagedOfferCategoryCode": "", 		},  			"OfferStartDate": "11/23/2021 01:21:47 PM", 			"OfferEndDate": "1/12/2022 01:23:22 PM",  			"Status": "A",  }</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties>
-        <con:entry>ProcessMarketingEventBody</con:entry>
-      </con:returnProperties>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcesMarketingEvent" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	
+	"MarketingEventChannels": [
+		{
+			"MarketingEventChannelId": "${ProcessMarketingData#MarketingEventChannelId}",
+			"ChannelName": "${ProcessMarketingData#ChannelName}"
+		}
+	],
+	"EventName": "PROMO_NAME${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventName}",
+	"EventCode": "PROMO_CODE${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventCode}",
+	"PackagedAudience": {
+
+		"PackagedAudienceId": "${ProcessMarketingData#PackagedAudienceId}"
+	},
+	"AudienceSource": "PACKAGED_AUDIENCE",
+	"PackagedOffer": {
+		"PackagedOfferId": "${ProcessMarketingData#PackagedOfferId}",
+		
+		"PackagedOfferCode": "${ProcessMarketingData#PackagedOfferCode}",
+		
+		"PackagedOfferName": "${ProcessMarketingData#PackagedOfferName}",
+	
+		"PackagedOfferParams": [
+			{
+				
+				"PackagedOfferParamId": "${ProcessMarketingData#PackagedOfferParamIdCustAct}",
+			     "PackagedOfferId": "${ProcessMarketingData#PackagedOfferIdCustAct}",
+				"ParamName": "${ProcessMarketingData#ParamNameCustAct}",
+				"ParamCode": "${ProcessMarketingData#ParamCodeCustAct}",
+				"Value": "${ProcessMarketingData#ValueCustAct}",
+				"PanelId": "${ProcessMarketingData#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingData#PanelCodeCustAct}"
+			},
+			{
+				
+				"PackagedOfferParamId": "${ProcessMarketingData#PackagedOfferParamIdCustRew}",
+				"PackagedOfferId": "${ProcessMarketingData#PackagedOfferIdCustRew}",
+				"ParamName": "${ProcessMarketingData#ParamNameCustRew}",
+				"ParamCode": "${ProcessMarketingData#ParamCodeCustRew}",
+				"Value": "${ProcessMarketingData#ValueCustRew}",
+				"PanelId": "${ProcessMarketingData#PanelIdCustRew}",
+				"PanelCode": "${ProcessMarketingData#PanelCodeCustRew}"
+			},
+			{
+				"PackagedOfferParamId": "${ProcessMarketingData#PackagedOfferParamIdOfferLim}",
+				"PackagedOfferId": "${ProcessMarketingData#PackagedOfferIdOfferLim}",
+				"ParamName": "${ProcessMarketingData#ParamNameOfferLim}",
+				"ParamCode": "${ProcessMarketingData#ParamCodeOfferLim}",
+				"Value": "${ProcessMarketingData#ValueOfferLim}",
+				"PanelId": "${ProcessMarketingData#PanelIdOfferLim}",
+				"PanelCode": "${ProcessMarketingData#PanelCodeOfferLim}"
+			}
+		],
+		"PackagedOfferCategoryId": "${ProcessMarketingData#PackagedOfferCategoryId}",
+		"PackagedOfferCategoryCode": "${ProcessMarketingData#PackagedOfferCategoryCode}"
+	},
+  "OfferStartDate": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferStartDate}",
+"OfferEndDate": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferEndDate}",
+	"Status": "A",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="044c7f8e-aa5f-4a18-a027-e36e0545815a" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="validateOffer" value="false"/>
+          <con:entry key="validateAudience" value="false"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>validateAudience</con:entry>
+          <con:entry>validateOffer</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="7eaabedf-9b0e-40ec-9765-e551268f0048">
+  <con:testStep type="restrequest" name="ApproveMarketingEvent" id="b1742d69-5dc6-442e-9145-d07e5f6e4c4b">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
-      <con:properties/>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/{eventCode}/approve" methodName="ApproveMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ApproveMarketingEvent" id="17832095-74ce-48f7-9423-f269052ad077" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/%7B%0A%20%20%22MarketingEventId%22%3A%20%224822515f-5a70-4907-bb02-2b3c9a95ed57%22%2C%0A%20%20%22MarketingEventChannels%22%3A%20%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22MarketingEventId%22%3A%20%224822515f-5a70-4907-bb02-2b3c9a95ed57%22%2C%0A%20%20%20%20%20%20%22MarketingEventChannelId%22%3A%20%22bce4fc4f-1b7d-2d49-b498-cea4e90a6105%22%2C%0A%20%20%20%20%20%20%22ChannelName%22%3A%20%22No%20Channel%22%0A%20%20%20%20%7D%0A%20%20%5D%2C%0A%20%20%22EventName%22%3A%20%22PROMO_NAME47203054%22%2C%0A%20%20%22EventCode%22%3A%20%22PROMO_CODE87426386663%22%2C%0A%20%20%22EventStatus%22%3A%20%22DRAFT%22%2C%0A%20%20%22ProgramCode%22%3A%20%22PP%22%2C%0A%20%20%22PackagedAudience%22%3A%20%7B%0A%20%20%20%20%22PackagedAudienceId%22%3A%20%227ae1f987-515e-4669-e053-5ca8e70ad3ee%22%2C%0A%20%20%20%20%22MarketingEventId%22%3A%20%224822515f-5a70-4907-bb02-2b3c9a95ed57%22%2C%0A%20%20%20%20%22AudienceName%22%3A%20%22All%20Members%22%2C%0A%20%20%20%20%22AudienceDescription%22%3A%20%22All%20enrolled%20members%20with%20an%20active%20profile%20status%22%2C%0A%20%20%20%20%22PackagedAudienceParams%22%3A%20%5B%5D%2C%0A%20%20%20%20%22AudienceMomentEligibleCriteriaPart%22%3A%20%22PurchaseTxn.Enrollment.MemberStatus%20%3D%3D%20%5C%5C%5C%22A%5C%5C%5C%22%22%2C%0A%20%20%20%20%22SurveyMomentEligibleCriteriaPart%22%3A%20%22ProfileSurveyResponse.Enrollment.MemberStatus%20%3D%3D%20%5C%5C%5C%22A%5C%5C%5C%22%22%0A%20%20%7D%2C%0A%20%20%22AudienceSource%22%3A%20%22PACKAGED_AUDIENCE%22%2C%0A%20%20%22PackagedOffer%22%3A%20%7B%0A%20%20%20%20%22PackagedOfferId%22%3A%20%22423f01e8-1d88-454e-ab94-bc7bea80d1fb%22%2C%0A%20%20%20%20%22MarketingEventId%22%3A%20%224822515f-5a70-4907-bb02-2b3c9a95ed57%22%2C%0A%20%20%20%20%22PackagedOfferCode%22%3A%20%22EARN_POINTS_PER_ELIG_DOLLAR%22%2C%0A%20%20%20%20%22PackagedOfferName%22%3A%20%22Earn%20Points%20per%20Dollar%22%2C%0A%20%20%20%20%22PackagedOfferDescription%22%3A%20%22Earn%20points%20per%20dollars%20spent%20on%20eligible%20purchases%22%2C%0A%20%20%20%20%22SimulationQueryTemplate%22%3A%20%22SELECT%20COUNT%28distinct%20profile_id%29%20AS%20unique_customers%2C%20SUM%28profile_trans%29%20AS%20total_offers%2C%20SUM%28profile_points%29%20AS%20total_points%2C%5Cnceil%28SUM%28profile_trans%29%2F%7B%7BSIMULATION_DATE_DIFF%7D%7D%29%20AS%20avg_offers_per_day%2C%5Cnceil%28SUM%28profile_points%29%2F%7B%7BSIMULATION_DATE_DIFF%7D%7D%29%20AS%20avg_points_per_day%2C%5Cnceil%28%28SUM%28profile_trans%29%2F%7B%7BSIMULATION_DATE_DIFF%7D%7D%29%20*%20%7B%7BOFFER_DATE_DIFF%7D%7D%29%20AS%20projected_total_offers%2C%5Cnceil%28%28SUM%28profile_points%29%2F%7B%7BSIMULATION_DATE_DIFF%7D%7D%29%20*%20%7B%7BOFFER_DATE_DIFF%7D%7D%29%20AS%20projected_total_points%5CnFROM%5Cn%28%5CnSELECT%20profile_id%2C%5Cn%7B%7BOFFERS_QUERY%7D%7D%5CnFROM%20t_act_transaction%5CnWHERE%20program_code%20%3D%20%3AProgramCode%20AND%20status%20IN%20%28%27A%27%2C%27P%27%29%20AND%20transaction_type_code%20IN%20%28%27PR%27%2C%27EP%27%2C%27RT%27%2C%27ER%27%2C%27EX%27%29%20AND%20act_transaction_xref_id%20is%20null%5CnAND%20transaction_date%20%3E%3D%20%3ASIMULATION_START_DATE%20AND%20transaction_date%20%3C%20%3ASIMULATION_END_DATE%20AND%20eligible_revenue%20%3E%3D%20%7B%7BMIN_TXN_AMT%7D%7D%5Cn%7B%7BAUDIENCE_QUERY%7D%7D%5CnGROUP%20BY%20PROFILE_ID%5Cn%29%22%2C%0A%20%20%20%20%22OfferMomentEligibleCriteriaPart%22%3A%20%22%28PurchaseTxn.Offers.OfferCode%20%3D%3D%20%5C%5C%5C%22%7B%7BOFFERCODEOFFERNAME%7D%7D%5C%5C%5C%22%29%22%2C%0A%20%20%20%20%22PackagedOfferParams%22%3A%20%5B%0A%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22MarketingEventId%22%3A%20%224822515f-5a70-4907-bb02-2b3c9a95ed57%22%2C%0A%20%20%20%20%20%20%20%20%22PackagedOfferParamId%22%3A%20%22fce3de2b-ffcc-4e8f-bc98-dd5d7b5ee58b%22%2C%0A%20%20%20%20%20%20%20%20%22PackagedOfferId%22%3A%20%22423f01e8-1d88-454e-ab94-bc7bea80d1fb%22%2C%0A%20%20%20%20%20%20%20%20%22ParamName%22%3A%20%22Minimum%20transaction%20amount%20%28optional%29%22%2C%0A%20%20%20%20%20%20%20%20%22ParamCode%22%3A%20%22MIN_TXN_AMT%22%2C%0A%20%20%20%20%20%20%20%20%22ParamDescription%22%3A%20%220%22%2C%0A%20%20%20%20%20%20%20%20%22DefaultValue%22%3A%20%220%22%2C%0A%20%20%20%20%20%20%20%20%22DataType%22%3A%20%22input%22%2C%0A%20%20%20%20%20%20%20%20%22ParamControl%22%3A%20%22decimal%22%2C%0A%20%20%20%20%20%20%20%20%22IsRequired%22%3A%20false%2C%0A%20%20%20%20%20%20%20%20%22Value%22%3A%20%22100%22%2C%0A%20%20%20%20%20%20%20%20%22PanelId%22%3A%20%22e0e698ac-4191-d25d-e053-5dedef0ac6ef%22%2C%0A%20%20%20%20%20%20%20%20%22PanelCode%22%3A%20%22CUSTOMER_ACTIVITY%22%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22MarketingEventId%22%3A%20%224822515f-5a70-4907-bb02-2b3c9a95ed57%22%2C%0A%20%20%20%20%20%20%20%20%22PackagedOfferParamId%22%3A%20%22538fd3f9-67ce-43f4-b08b-bad7c47cbb3c%22%2C%0A%20%20%20%20%20%20%20%20%22PackagedOfferId%22%3A%20%22423f01e8-1d88-454e-ab94-bc7bea80d1fb%22%2C%0A%20%20%20%20%20%20%20%20%22ParamName%22%3A%20%22Points%20per%20eligible%20dollar%22%2C%0A%20%20%20%20%20%20%20%20%22ParamCode%22%3A%20%22POINT_AMT_PER_ELIG_DOLLAR%22%2C%0A%20%20%20%20%20%20%20%20%22ParamDescription%22%3A%20%220%22%2C%0A%20%20%20%20%20%20%20%20%22DataType%22%3A%20%22input%22%2C%0A%20%20%20%20%20%20%20%20%22ParamControl%22%3A%20%22number%22%2C%0A%20%20%20%20%20%20%20%20%22IsRequired%22%3A%20true%2C%0A%20%20%20%20%20%20%20%20%22Value%22%3A%20%222%22%2C%0A%20%20%20%20%20%20%20%20%22PanelId%22%3A%20%22e0e698ac-4291-d25d-e053-5dedef0ac6ef%22%2C%0A%20%20%20%20%20%20%20%20%22PanelCode%22%3A%20%22CUSTOMER_REWARD%22%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22MarketingEventId%22%3A%20%224822515f-5a70-4907-bb02-2b3c9a95ed57%22%2C%0A%20%20%20%20%20%20%20%20%22PackagedOfferParamId%22%3A%20%22f6c3faa1-8c75-4c76-a264-deabd000a233%22%2C%0A%20%20%20%20%20%20%20%20%22PackagedOfferId%22%3A%20%22423f01e8-1d88-454e-ab94-bc7bea80d1fb%22%2C%0A%20%20%20%20%20%20%20%20%22ParamName%22%3A%20%22Maximum%20offers%20per%20member%20%28optional%29%22%2C%0A%20%20%20%20%20%20%20%20%22ParamCode%22%3A%20%22MAX_OFFERS_PER_MEMBER%22%2C%0A%20%20%20%20%20%20%20%20%22ParamDescription%22%3A%20%220%22%2C%0A%20%20%20%20%20%20%20%20%22DataType%22%3A%20%22input%22%2C%0A%20%20%20%20%20%20%20%20%22ParamControl%22%3A%20%22number%22%2C%0A%20%20%20%20%20%20%20%20%22IsRequired%22%3A%20false%2C%0A%20%20%20%20%20%20%20%20%22Value%22%3A%20%225%22%2C%0A%20%20%20%20%20%20%20%20%22PanelId%22%3A%20%22e0e698ac-4391-d25d-e053-5dedef0ac6ef%22%2C%0A%20%20%20%20%20%20%20%20%22PanelCode%22%3A%20%22OFFER_LIMITS%22%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%2C%0A%20%20%20%20%22PackagedOfferCategoryId%22%3A%20%2217872aea-5187-8d43-a4be-555c17300611%22%2C%0A%20%20%20%20%22PackagedOfferCategoryCode%22%3A%20%22TEMPLATES%22%0A%20%20%7D%2C%0A%20%20%22OfferStartDate%22%3A%20%222021-12-15T17%3A50%3A48Z%22%2C%0A%20%20%22OfferEndDate%22%3A%20%222023-01-01T17%3A35%3A44Z%22%2C%0A%20%20%22OnlineMessageCode%22%3A%20%22PROMO_CODE87426386663%22%2C%0A%20%20%22OptInStatus%22%3A%20false%2C%0A%20%20%22AddOnlineMessageToEmail%22%3A%20false%2C%0A%20%20%22IsAudienceCountCompleted%22%3A%20false%2C%0A%20%20%22IsOfferSimulationCompleted%22%3A%20false%2C%0A%20%20%22BusinessUnitTimeZone%22%3A%20%22UTC%22%2C%0A%20%20%22Status%22%3A%20%22A%22%2C%0A%20%20%22CreateUser%22%3A%20%22AUTO_USER%22%2C%0A%20%20%22CreateDate%22%3A%20%222021-12-20T12%3A51%3A52.638671Z%22%2C%0A%20%20%22UpdateUser%22%3A%20%22AUTO_USER%22%2C%0A%20%20%22UpdateDate%22%3A%20%222021-12-20T12%3A51%3A52.638671Z%22%0A%7D/approve</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="66f58aa0-a240-45dc-a32d-d412bf52daf1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="eventCode" value="${ProcesMarketingEvent#Response#$['EventCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>eventCode</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="DeployMarketingPromotion" id="72b593bf-6b93-44bf-b29b-ab33423c2a92">
+  <con:testStep type="restrequest" name="DeployMarketingPromotion" id="8dd31c85-8ab1-4882-bfaa-dcf5449d1969">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>4e31c31c-5e5f-4dab-8caf-7c5cf7fef68f</con:targetTestCase>
-      <con:properties/>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/job/deploy" methodName="DeployMarketingPromotion" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="DeployMarketingPromotion" id="c2f7d22a-311d-40e4-8720-8af8701930be" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "JobName": "${ApproveMarketingEvent#Response#$['EventCode']}",
+  "EmailAddresses": "WebTest_TestMail@dx2mail.co",
+  "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b30",
+  "MarketingEventCode": "${ApproveMarketingEvent#Response#$['EventCode']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/job/deploy</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b2e6585a-e40d-475f-981e-94970a072897" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="WaitForBatchJob" id="14b8b0bf-9b1d-40ef-b958-752dd1f030d1">
@@ -99,7 +264,7 @@
       <con:properties>
         <con:property>
           <con:name>JobId</con:name>
-          <con:value>${#[OffersPrerequisite#DeployMarketingPromotion#DeployMarketingPromotion]#Response#$['BatchJobId']}</con:value>
+          <con:value>${DeployMarketingPromotion#Response#$['BatchJobId']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -113,7 +278,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>b1ec3207-f280-4e6c-9fdd-aedad8feb130</con:value>
+          <con:value>33759136-4a50-478a-864d-2dddaf404c91</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -311,7 +476,7 @@
       <con:properties>
         <con:property>
           <con:name>MomentId</con:name>
-          <con:value/>
+          <con:value>c35bd1a1-0da6-4f8f-a338-5ae27522012d</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -323,17 +488,27 @@
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
-    <con:testStepId>4c01c697-3eaf-462d-a610-911e43915110</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>e371d90a-9e77-4b6b-bb5a-eb66601b320b</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
     <con:testStepId>7ebbde86-9a78-464c-a56d-ba3ea9920b87</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>66e532e4-0d6a-451d-92ac-6678bc4efdf8</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>223bb020-3390-4afd-b97e-93d7d6be1fd7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>b1742d69-5dc6-442e-9145-d07e5f6e4c4b</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>8dd31c85-8ab1-4882-bfaa-dcf5449d1969</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="271d3375-9f08-4719-a453-be51d2124635" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ExternalVoidMergeVictim" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="271d3375-9f08-4719-a453-be51d2124635fileName">ExternalVoidMergeVictim</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="calltestcase" name="Add Profile" id="e23a0f5d-19ab-4df4-a2fc-c8354c2e53f9">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>f05cc014-90b9-4902-b259-503bcadda514</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Generate Guid" id="cdca8854-3491-4d75-9d12-58ebcd5c97dc">
+    <con:settings/>
+    <con:config>
+      <script>java.util.UUID.randomUUID()</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Generate Date" id="144da2ff-cb8b-41b9-ab13-716f251b80e6">
+    <con:settings/>
+    <con:config>
+      <script>new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Purchase Transaction" id="540dc6b9-b2ba-4309-9733-28d6d4a2bda7">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>721c9d8e-bdd9-4288-a701-c671b71b71ef</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value>${Generate Guid#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${Add Profile#ProfileId}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDate</con:name>
+          <con:value>${Generate Date#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>RawTransactionId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Victim Profile" id="d334e2c2-f264-4f1a-808c-322b51904fb4">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>003c9098-0a75-4a1e-8071-d22e57eaef41</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Survivor Profile" id="66b1ee45-f3a1-4b58-a5bc-650036133598">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>81adb4dd-8f65-4e74-9dcc-68e896da19a8</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Merge Profiles" id="46a345a1-a92f-4ee8-9a4c-8aadb7f3c17f">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="Merge Profiles" resourcePath="/api/v1/profiles/{profileId}/link/merge" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Merge Profiles" id="5ef9723f-ed54-4a52-911c-66961a31ad61" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SecondaryId": "${Add Victim Profile#ProfileId}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/link/merge</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="3ca657ed-1c4d-4acf-b743-3d844d216d75" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${Add Survivor Profile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="58fdda4b-8926-4c7e-b291-d43ed4f2940d">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="2263a0ba-822a-426a-9f0c-98aabd6417d5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Void Transaction" id="bd427e8b-b302-4fb3-b306-3f32a93fcc19">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>ed4c6fc8-fe7d-4916-8b4c-cffc42f96f07</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value>${Generate Guid#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${Add Victim Profile#ProfileId}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDate</con:name>
+          <con:value>${Generate Date#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>RawTransactionId</con:name>
+          <con:value>92346e44-f967-430f-9ae1-5dd1af0c9664</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>RawTransactionId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Transactions" id="52565ffe-6530-4ff2-a2a8-19c819861c46">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/transaction/rawtransactions" methodName="GetTransactions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Transactions" id="edb31061-b900-4722-b5c8-12f83ebdf5f7" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://d6alqa-pveapi.epsilonagilityloyalty.com/api/v2/transaction/rawtransactions</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a43c0ca8-0f17-44e9-9bff-8156c03deb0d" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Existence Match" id="8d58a0d6-e180-4e40-8e32-7a2b6539b158" name="JSONPath Existence Match">
+          <con:configuration>
+            <path>$[?(@.TransactionId == '${Void Transaction#RawTransactionId}')]</path>
+            <content>true</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${Add Profile#ProfileId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="postingKeyValue" value=""/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>profileId</con:entry>
+          <con:entry>transactionTypeCode</con:entry>
+          <con:entry>storeCode</con:entry>
+          <con:entry>netAmount</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>transactionNumber</con:entry>
+          <con:entry>anonymous</con:entry>
+          <con:entry>suspended</con:entry>
+          <con:entry>returnRecentTransactions</con:entry>
+          <con:entry>postingKeyCode</con:entry>
+          <con:entry>postingKeyValue</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="58fdda4b-8926-4c7e-b291-d43ed4f2940d">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="2263a0ba-822a-426a-9f0c-98aabd6417d5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>cdca8854-3491-4d75-9d12-58ebcd5c97dc</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>144da2ff-cb8b-41b9-ab13-716f251b80e6</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:environmentSpec>
+    <con:entry environmentId="58fdda4b-8926-4c7e-b291-d43ed4f2940d">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+    <con:entry environmentId="2263a0ba-822a-426a-9f0c-98aabd6417d5">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+  </con:environmentSpec>
+</con:testCase>

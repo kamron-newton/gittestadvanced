@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="cb57021f-ef2a-40a2-a523-29cdc58df217" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertCustomDataLink" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="cb57021f-ef2a-40a2-a523-29cdc58df217fileName">UpsertCustomDataLink</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="CustomDataLinks" id="f5acb60b-bb35-42fc-81c7-03810e9885ab">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/CustomDataLinks.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>LinkTableName</con:property>
+      <con:property>LinkColumnName</con:property>
+      <con:property>FriendlyTableName</con:property>
+      <con:property>FriendlyColumnName</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>3</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetCustomDataLinks" id="c338eded-c739-415c-b5f6-1f739129181f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata/link" methodName="GetCustomDataLinks" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetCustomDataLinks" id="a40c8287-5a5c-46b3-9311-402bb9d78cdd" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/customdata/link</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="35803b65-d704-4e96-9397-a4f864bb921e" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="linkColumnName" value="${CustomDataLinks#LinkColumnName}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="linkTableName" value="${CustomDataLinks#LinkTableName}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>linkTableName</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>linkColumnName</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="CustomDatalinkCond" id="92747956-4d68-44a1-8ea8-8393ddab3b89">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def CustomDataLinkId = context.expand( '${GetCustomDataLinks#Response#$[0][\'CustomDataLinkId\']}' )
+if (CustomDataLinkId=="" || CustomDataLinkId == null )
+	testRunner.gotoStepByName("AddCustomDataLink")
+  else
+ 	testRunner.gotoStepByName("CustomDataLinkId")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddCustomDataLink" id="41ad1608-bc28-415b-8d59-e52615b4e59e">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata/link" methodName="AddCustomDataLink" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddCustomDataLink" id="f843f8c4-35ac-432b-b881-cff3b72da267" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+"LinkTableName":  "${CustomDataLinks#LinkTableName}",
+"LinkColumnName":  "${CustomDataLinks#LinkColumnName}",
+"FriendlyTableName":  "${CustomDataLinks#FriendlyTableName}",
+"FriendlyColumnName":  "${CustomDataLinks#FriendlyColumnName}",
+ "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/customdata/link</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="60d52b68-d70d-4688-8974-c147d43a6933" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="CustomDataLinkId" id="0683aefe-65c2-4000-a51e-08f9d4f027c7">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def response = context.expand( '${GetCustomDataLinks#Response}' )
+def CustomDataLinkId
+
+if(response==null || response =="")
+ {
+    CustomDataLinkId = context.expand( '${AddCustomDataLink#Response#$[0][\'CustomDataLinkId\']}' )
+    return CustomDataLinkId
+ } 	
+
+ else
+ {
+    CustomDataLinkId = context.expand( '${GetCustomDataLinks#Response#$[0][\'CustomDataLinkId\']}' )
+    return CustomDataLinkId
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateCustomDataLink" id="efeef62a-9afe-4398-a2b2-0703a8fa346e">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata/link/{customDataLinkId}" methodName="UpdateCustomDataLink" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateCustomDataLink" id="422827b3-d8e0-46c7-b47e-ce730a213251" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+"LinkTableName":  "${CustomDataLinks#LinkTableName}",
+"LinkColumnName":  "${CustomDataLinks#LinkColumnName}",
+"FriendlyTableName":  "${CustomDataLinks#FriendlyTableName}",
+"FriendlyColumnName":  "${CustomDataLinks#FriendlyColumnName}",
+ "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/customdata/link/customDataLinkId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="766b6ab9-2101-4b19-9102-a5e98297d06c" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="customDataLinkId" value="${CustomDataLinkId#result}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>customDataLinkId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="CustomDataLinkLoop" id="9eb1edc6-0e6b-44ae-821c-e79628598b7c">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>CustomDataLinks</dataSourceStep>
+      <targetStep>GetCustomDataLinks</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>f5acb60b-bb35-42fc-81c7-03810e9885ab</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>efeef62a-9afe-4398-a2b2-0703a8fa346e</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>92747956-4d68-44a1-8ea8-8393ddab3b89</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0683aefe-65c2-4000-a51e-08f9d4f027c7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

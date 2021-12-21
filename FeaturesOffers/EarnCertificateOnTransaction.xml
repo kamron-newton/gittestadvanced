@@ -68,6 +68,20 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
+  <con:testStep type="calltestcase" name="AddFlexibleDateRew" id="ab68a4dd-16ab-45e9-8672-b16065bf85bb">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>0e0d967b-f1f8-4be8-96cb-b0a0f31a6bcb</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>rewardCode</con:name>
+          <con:value>RD_EARN_TRANS</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="ProcessMarketingEvent" id="3c43c52c-df6e-4e20-b7b7-dcf3a61ab180">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -115,7 +129,7 @@
 				"PackagedOfferId": "${ProcessMarketingData#PackagedOfferIdCustRew}",
 				"ParamName": "${ProcessMarketingData#ParamNameCustRew}",
 				"ParamCode": "${ProcessMarketingData#ParamCodeCustRew}",
-				"Value": "${ProcessMarketingData#ValueCustRew}",
+				"Value": "${AddFlexibleDateRew#rewardCode}",
 				"PanelId": "${ProcessMarketingData#PanelIdCustRew}",
 				"PanelCode": "${ProcessMarketingData#PanelCodeCustRew}"
 			},
@@ -220,11 +234,12 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-  "JobName": "{{EventCode}}",
+  "JobName": "${ApproveMarketingEvent#Response#$['EventCode']}",
   "EmailAddresses": "WebTest_TestMail@dx2mail.co",
   "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b30",
-  "MarketingEventCode": "{{EventCode}}"
+  "MarketingEventCode": "${ApproveMarketingEvent#Response#$['EventCode']}"
 }</con:request>
+        <con:originalUri>https://d2aldv-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/job/deploy</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="b259049d-5c72-42a3-99ad-af524ce40bd6" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
@@ -258,4 +273,9 @@
   </con:testStep>
   <con:properties/>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>ab68a4dd-16ab-45e9-8672-b16065bf85bb</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
 </con:testCase>

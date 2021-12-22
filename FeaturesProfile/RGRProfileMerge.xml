@@ -6,7 +6,7 @@
   <con:savedRecentRuns>1</con:savedRecentRuns>
   <con:testStep type="restrequest" name="GetPointEarnCaps" id="f6bc93cf-01da-48b2-84d0-25c17b93522e">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointearncaps" methodName="pointearncaps" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointearncaps" methodName="GetPointEarnCaps" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetPointEarnCaps" id="d355790e-704e-48ea-9a2e-9c938f387fa4" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
@@ -27,6 +27,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value=""/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="status" value="A"/>
         </con:parameters>
@@ -34,6 +35,7 @@
           <con:entry>status</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
         </con:parameterOrder>
       </con:restRequest>
     </con:config>
@@ -46,22 +48,22 @@
 def pointEarnCapIdToChangeCaps = context.expand( '${GetPointEarnCaps#Response#$[0][\'PointEarnCapId\']}' )
 
 if (pointEarnCapIdToChangeCaps != "" ) 
-    testRunner.gotoStepByName("PointEarnCapId")
+    testRunner.gotoStepByName("GetPointEarnCapById")
      else 
-        testRunner.gotoStepByName("Add Profile")</script>
+        testRunner.gotoStepByName("Add Survivor Profile")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="PointEarnCapId" id="15072f35-b902-4818-b97f-ef74bce2e956">
+  <con:testStep type="restrequest" name="GetPointEarnCapById" id="89eaa0b3-814b-4de2-9c8c-b37ae76db525">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointearncaps/{pointEarnCapId}" methodName="GetPointEarnCapsbyId" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="PointEarnCapId" id="867072c6-46c3-4f48-a44b-f103993bb584" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointearncaps/{pointEarnCapId}" methodName="GetPointEarnCapById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPointEarnCapById" id="64678f01-4024-42ec-9454-3237bd887181" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://d3aldv-pveapi.skynetlowerenv.com/</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="45fbc1d1-58e3-48e6-b83b-d065f95923fe" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointearncaps/4b55d2ac-29b0-420e-ae2c-86f6e4b97f78</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="2e6a1334-f51d-4341-bd03-795586de66a8" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -74,28 +76,30 @@ if (pointEarnCapIdToChangeCaps != "" )
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="{pointEarnCapId}" value="${GetPointEarnCaps#Response#$[0]['PointEarnCapId']}"/>
+          <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="pointEarnCapId" value="${GetPointEarnCaps#Response#$[0]['PointEarnCapId']}"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>{PointEarnCapIdToChangeCaps</con:entry>
-          <con:entry>Authorization</con:entry>
+          <con:entry>pointEarnCapId</con:entry>
           <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
         </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdatePointEarnCapId" id="f002b953-3ec1-48b2-bbbd-460f5f12fb23">
+  <con:testStep type="restrequest" name="UpdatePointEarnCap" id="209e7d21-1d7b-4ad3-8c6e-eea6bc8b6c76">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointearncaps/{pointEarnCapId}" methodName="UpdatePointEarnCaps" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdatePointEarnCapId" id="f92ec2a2-4d83-4428-820c-2c324a0c6a0a" mediaType="application/json" postQueryString="false">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointearncaps/{pointEarnCapId}" methodName="UpdatePointEarnCap" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdatePointEarnCap" id="c8139e6c-7a29-4277-8d94-71dfd8ca2723" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="27b742c4-17a7-4de2-a83e-d409e787491b" name="Valid HTTP Status Codes">
+        <con:request>${GetPointEarnCapById#Response}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointearncaps/4b55d2ac-29b0-420e-ae2c-86f6e4b97f78</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="c9bb7e2f-b103-490d-b942-af599f5da25b" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -108,21 +112,22 @@ if (pointEarnCapIdToChangeCaps != "" )
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="{PointEarnCapIdToChangeCaps}" value=""/>
-          <con:entry key="{PointEarnCapIdToChangeCaps" value=""/>
+          <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="pointEarnCapId" value="${GetPointEarnCaps#Response#$[0]['PointEarnCapId']}"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>{PointEarnCapIdToChangeCaps</con:entry>
-          <con:entry>Authorization</con:entry>
+          <con:entry>pointEarnCapId</con:entry>
           <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
         </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="GetPointEarnCapsStatus" id="a1fcc9d8-6be2-4508-9323-6f023e70a66f">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointearncaps" methodName="pointearncaps" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointearncaps" methodName="GetPointEarnCaps" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetPointEarnCapsStatus" id="d355790e-704e-48ea-9a2e-9c938f387fa4" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
@@ -143,6 +148,7 @@ if (pointEarnCapIdToChangeCaps != "" )
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value=""/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="status" value="A"/>
         </con:parameters>
@@ -150,6 +156,7 @@ if (pointEarnCapIdToChangeCaps != "" )
           <con:entry>status</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
         </con:parameterOrder>
       </con:restRequest>
     </con:config>
@@ -183,12 +190,17 @@ if (pointEarnCapIdToChangeCaps != "" )
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
-    <con:testStepId>15072f35-b902-4818-b97f-ef74bce2e956</con:testStepId>
+    <con:testStepId>a1fcc9d8-6be2-4508-9323-6f023e70a66f</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>a1fcc9d8-6be2-4508-9323-6f023e70a66f</con:testStepId>
+    <con:testStepId>89eaa0b3-814b-4de2-9c8c-b37ae76db525</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>209e7d21-1d7b-4ad3-8c6e-eea6bc8b6c76</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

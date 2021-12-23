@@ -90,6 +90,40 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
+  <con:testStep type="datasource" name="ProfileAdjustments" id="96d021b8-fb5d-403d-8b17-9fc4e8f19d4b">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/ProfileAdjustments.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>Row</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>PointSubTypeCode</con:property>
+      <con:property>AdjustmentReasonCode</con:property>
+      <con:property>Points1</con:property>
+      <con:property>Points2</con:property>
+      <con:property>Reward1</con:property>
+      <con:property>Reward2</con:property>
+      <con:property>Points3</con:property>
+      <con:property>Points4</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetPointEarnCaps" id="f6bc93cf-01da-48b2-84d0-25c17b93522e">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointearncaps" methodName="GetPointEarnCaps" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -249,15 +283,18 @@ if (pointEarnCapIdToChangeCaps != "" )
   </con:testStep>
   <con:testStep type="calltestcase" name="Add Survivor Profile" id="6ad870a8-56af-4647-ac5d-7acd2c151288">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:config xsi:type="con:RunTestCaseStep" copyLoadTestProperties="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
+          <con:value>58956dc3-9f3e-473e-9fc8-304a955a73bc</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="Add Victim Profile" id="309fd385-d8da-4c86-81d8-15d53c51f9e0">
@@ -267,9 +304,12 @@ if (pointEarnCapIdToChangeCaps != "" )
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
+          <con:value>3d34c8d3-644e-4ebb-aabe-674bedc4f0fc</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties/>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
@@ -405,7 +445,7 @@ if (pointEarnCapIdToChangeCaps != "" )
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="pointTypeId" value="${GetPointTypes#Response#$[0]['RefPointTypeId']}"/>
-          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="profileId" value="${Add Victim Profile#ProfileId}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
           <con:entry key="auctionCode" value="${Add Auction#Response#$['AuctionCode']}"/>
@@ -420,6 +460,290 @@ if (pointEarnCapIdToChangeCaps != "" )
           <con:entry>endDate</con:entry>
           <con:entry>status</con:entry>
           <con:entry>pointTypeId</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddAjustmentForAuction" id="14464d8d-d47a-4c7d-bdc4-821635e6bd9a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/adjustments" methodName="AddAdjustment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="9a3422f2-f90a-4dcd-9195-4f82d76a9c75" mediaType="application/json" name="AddAjustmentForAuction" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "AdjustmentReasonCode": "${ProfileAdjustments#AdjustmentReasonCode}",
+  "AdjustmentComment": "test",
+  "NumPoints": "${Add Auction#Response#$['BidMinPoint']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/adjustment</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="08b97f92-b65b-47d3-8b7a-b753bb10dd58" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${Add Victim Profile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="BidForAuction" id="f5f8310a-9f90-44cf-95da-7973a510b873">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/auctions/{auctionId}/bid" methodName="SetProfileAuctionBid" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="BidForAuction" id="d6932cc6-61b1-4723-ab45-4e78c8fd1aef" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "AuctionId": "${Add Auction#Response#$['AuctionId']}",
+  "PointTypeId": "${GetPointTypes#Response#$[0]['RefPointTypeId']}",
+  "BidAmount": "${Add Auction#Response#$['BidMinPoint']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/4455c51f-2c96-4a76-900a-79aee972ae6b/auctions/dfb8f240-5477-48c6-87fc-627fc5ec5f74/bid</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="0f04380d-f394-404b-af01-e2a39db67f96" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="auctionId" value="${Add Auction#Response#$['AuctionId']}"/>
+          <con:entry key="profileId" value="${Add Victim Profile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>auctionId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetAuctionBidHistoryForVictim" id="fe6886ea-ac52-4c1b-81f7-5e9d550879bd">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/auctions/{auctionId}/bid/history" methodName="GetProfileAuctionBidHistory" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAuctionBidHistoryForVictim" id="196da8ec-33b4-40af-832f-898502ed59f8" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/4455c51f-2c96-4a76-900a-79aee972ae6b/auctions/dfb8f240-5477-48c6-87fc-627fc5ec5f74/bid/history</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5751e12a-ac7e-4cdb-99b6-ff69d3caead8" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="237c2b98-8eec-4e79-a2b7-f7b38bcd0b93" name="JSONPath Match">
+          <con:configuration>
+            <path>$[0]['BidAmount']</path>
+            <content>${Add Auction#Response#$['BidMinPoint']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="auctionId" value="${Add Auction#Response#$['AuctionId']}"/>
+          <con:entry key="profileId" value="${Add Victim Profile#ProfileId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>auctionId</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="MergeProfiles" id="e7a30b2c-3dc2-4cfe-92fd-65337bac8cb1">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/merge" methodName="Merge Profiles" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="MergeProfiles" id="b124f3c2-afd9-4016-aab2-98af90069deb" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SecondaryId": "${Add Victim Profile#ProfileId}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/link/merge</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="44747e57-9953-44cf-b8fb-a30423fbfd89" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${Add Survivor Profile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetAuctionBidHistoryForSurvivor" id="1818661f-c388-44fc-a02d-0a7a27a1eb6b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/auctions/{auctionId}/bid/history" methodName="GetProfileAuctionBidHistory" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAuctionBidHistoryForSurvivor" id="196da8ec-33b4-40af-832f-898502ed59f8" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/4455c51f-2c96-4a76-900a-79aee972ae6b/auctions/dfb8f240-5477-48c6-87fc-627fc5ec5f74/bid/history</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5751e12a-ac7e-4cdb-99b6-ff69d3caead8" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="237c2b98-8eec-4e79-a2b7-f7b38bcd0b93" name="JSONPath Match">
+          <con:configuration>
+            <path>$[0]['BidAmount']</path>
+            <content>${Add Auction#Response#$['BidMinPoint']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="auctionId" value="${Add Auction#Response#$['AuctionId']}"/>
+          <con:entry key="profileId" value="${Add Survivor Profile#ProfileId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>auctionId</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetAuctionBidHistoryForVictimAfterMerge" id="f6f3573d-3703-405a-a041-19a259932b1f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/auctions/{auctionId}/bid/history" methodName="GetProfileAuctionBidHistory" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAuctionBidHistoryForVictimAfterMerge" id="196da8ec-33b4-40af-832f-898502ed59f8" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/4455c51f-2c96-4a76-900a-79aee972ae6b/auctions/dfb8f240-5477-48c6-87fc-627fc5ec5f74/bid/history</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5751e12a-ac7e-4cdb-99b6-ff69d3caead8" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple Contains" id="8ba1d7d2-db3b-4292-8624-f70da8e8e148" name="Contains">
+          <con:configuration>
+            <token>null</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="auctionId" value="${Add Auction#Response#$['AuctionId']}"/>
+          <con:entry key="profileId" value="${Add Victim Profile#ProfileId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>auctionId</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
         </con:parameterOrder>
       </con:restRequest>
     </con:config>
@@ -448,6 +772,11 @@ if (pointEarnCapIdToChangeCaps != "" )
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>1e021677-5f2c-44a2-9a02-3609c5040bb9</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>96d021b8-fb5d-403d-8b17-9fc4e8f19d4b</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" id="3da27e4c-a23f-4581-bb7b-f2b5e37ddd47" keepSession="false" name="MomentWithMessage" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="3da27e4c-a23f-4581-bb7b-f2b5e37ddd47fileName">MomentWithMessage</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep id="1f30c387-f346-46af-8f0e-556eebe01a73" name="Run EnableOrDisableProgramSetting" type="calltestcase">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>58358ab6-63cb-4437-8821-6fda8375ad78</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="cb5289a4-b39f-46f8-8d42-768597ab639e" name="GetMomentByMomentCode" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="GetMomentByCode" resourcePath="/api/v1/momentmgmt/moment/{momentCode}" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="dd52f0c5-0006-459f-bcbd-9cf595dabc6c" mediaType="application/json" name="GetMomentByMomentCode">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt/moment/%24%28%23MomentWithMessage%23RGRMOMENTNAME%7D</con:originalUri>
+        <con:assertion id="9438d3d9-511c-428e-8de9-ba4480810d72" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="momentCode" value="${#TestCase#RGRMOMENTNAME}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>momentCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="b075b5f3-342a-453b-8fe0-d66455b0f1f7" name="UpsertMessageMomentCond" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script><![CDATA[import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${GetMomentByMomentCode#HarResponse#$[\'status\']}' ).toInteger()
+def momentId = context.expand('${GetMomentByMomentCode#Response#$[\'MomentId\']}')
+def momentStatus = context.expand('${GetMomentByMomentCode#Response#$[\'Status\']}')
+
+
+if (status == 404 && momentId == "")  testRunner.gotoStepByName("CreateMoment")
+else if (status == 200 && momentId != "" && momentStatus == "I")   testRunner.gotoStepByName("UpdateMoment")
+else
+testRunner.gotoStepByName("MomentId")]]></script>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="2fd03dd8-f719-44f2-a26f-9c92741d2541" name="UpdateMoment" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="UpdateMoment" resourcePath="/api/v1/momentmgmt/{momentId}" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="e4359f26-93ff-4eab-a884-4195a8f77ae6" mediaType="application/json" name="UpdateMoment" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{\r
+   "MomentCode" : "${#TestCase#RGRMOMENTNAME}",\r
+   "Description" : "Moment to display messages for PP profiles",\r
+   "MomentType" : "MESSAGE",\r
+   "StartDate" : "2019-07-18T00:00:00Z",\r
+   "StartDateString" : "07/18/2019 12:00:00 AM",\r
+   "EndDate" : "2022-12-31T23:59:00Z",\r
+   "EndDateString" : "12/31/2022 11:59:00 PM",\r
+   "OldEndDate" : "2022-12-31T23:59:59Z",\r
+   "TenantId" : "3e0da31e-4947-7616-e053-5ba8e70a2457",\r
+   "MomentStatus" : "A",\r
+   "MomentEvent" : {\r
+      "MomentCode" : "${#TestCase#RGRMOMENTNAME}",\r
+      "EventType" : "GetProfileById",\r
+      "MomentQualifyingDateAttribute" : "CurrentDateTime",\r
+      "MomentQualifyingDateAttributeDrools" : "$GetProfileById:GetProfileByIdC(isItBetween( new Date() ,\"07/18/2019 12:00:00 AM\",\"12/31/2022 11:59:00 PM\"))",\r
+      "MomentOffers" : [\r
+         {\r
+            "MomentCode" : "${#TestCase#RGRMOMENTNAME}",\r
+            "EventType" : "GetProfileById",\r
+            "OfferName" : "${#TestCase#RGRMOMENTNAME}",\r
+            "MomentOutcome" : {\r
+               "MomentCode" : "${#TestCase#RGRMOMENTNAME}",\r
+               "EventType" : "GetProfileById",\r
+               "OfferName" : "${#TestCase#RGRMOMENTNAME}",\r
+               "OutcomeEquationUi" : "\"Get Message PP profiles\"",\r
+               "CalculationTemplate" : "&lt;message,[String]>",\r
+               "OutcomeEquationTemplate" : "%5B%7B%22name%22%3A%22message%22%2C%22type%22%3A%22String%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22%5C%22Get%20Message%20PP%20profiles%5C%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(%5C%22Get%20Message%20PP%20profiles%5C%22)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",\r
+               "OutcomeEquationDrools" : "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"${#TestCase#RGRMOMENTNAME}\"),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\_r\nMomentParam[] outcomeValues = null;\_r\nmo.add(new MomentOutcome(\"${#TestCase#RGRMOMENTNAME}\",String.valueOf(\"Get Message PP profiles\"),params, outcomeValues));\_r\n",\r
+               "FormulaName" : "MESSAGE",\r
+               "Status" : "P"\r
+            },\r
+            "MomentQualifyingRule" : {\r
+               "MomentCode" : "${#TestCase#RGRMOMENTNAME}",\r
+               "EventType" : "GetProfileById",\r
+               "OfferName" : "${#TestCase#RGRMOMENTNAME}",\r
+               "RuleEquationUI" : "GetProfileById.ProgramCode==\"PP\"",\r
+               "RuleEquationDrools" : "GetProfileByIdC(ProgramCode == \"PP\")",\r
+               "Status" : "P"\r
+            },\r
+            "Rank" : "2",\r
+            "Questions" : null,\r
+            "Status" : "A"\r
+         }\r
+      ],\r
+      "Status" : "P"\r
+   },\r
+   "BestOfferIndicator" : false,\r
+   "AdvancedModeIndicator" : false,\r
+   "ReleaseState" : "P",\r
+   "IsTestUser" : false,\r
+   "Status" : "A"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt/</con:originalUri>
+        <con:assertion id="f367b875-3980-4258-81dd-f183eff0d89a" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="momentId" value="${GetMomentByMomentCode#Response#$['MomentId']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>momentId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="fb006f39-33c8-4633-a222-6fafb44abc42" name="UpdateMomentCond" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${UpdateMoment#HarResponse#$[\'status\']}' ).toInteger()
+
+if (status == 200)  testRunner.gotoStepByName("MomentId")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="b399d350-89e4-4665-8965-2ad5782ac357" name="CreateMoment" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="AddMoment" resourcePath="/api/v1/momentmgmt" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="a1688ce7-78e7-40b0-a3d3-fdae0cd31567" mediaType="application/json" name="CreateMoment" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "MomentCode": "${#TestCase#RGRMOMENTNAME}",
+  "Description": "Moment to display messages for PP profiles",
+  "MomentCode": "${#TestCase#RGRMOMENTNAME}",
+  "MomentType": "MESSAGE",
+  "StartDate": "2019-07-18T00:00:00Z",
+  "StartDateString": "07/18/2019 12:00:00 AM",
+  "EndDate": "2022-12-31T23:59:59Z",
+  "EndDateString": "12/31/2022 11:59:59 PM",
+  "MomentStatus": "P",
+   "MomentEvent": {
+    "MomentCode": "${#TestCase#RGRMOMENTNAME}",
+    "EventType": "GetProfileById",
+    "MomentQualifyingDateAttribute": "CurrentDateTime",
+    "MomentQualifyingDateAttributeDrools": "$GetProfileById:GetProfileByIdC(isItBetween( new Date() ,\"07/18/2019 12:00:00 AM\",\"12/31/2022 11:59:59 PM\"))",
+    "MomentOffers": [
+      {
+        "MomentCode": "${#TestCase#RGRMOMENTNAME}",
+        "EventType": "GetProfileById",
+        "OfferName": "${#TestCase#RGRMOMENTNAME}",
+        "Description": "Moment to display messages for PP profiles",
+        "MomentOutcome": {
+          "MomentCode": "${#TestCase#RGRMOMENTNAME}",
+          "EventType": "GetProfileById",
+          "OfferName": "${#TestCase#RGRMOMENTNAME}",
+          "OutcomeEquationUi": "\"Get Message PP profiles\"",
+          "CalculationTemplate": "&lt;message,[String]>",
+          "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22message%22%2C%22type%22%3A%22String%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22%5C%22Get%20Message%20PP%20profiles%5C%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(%5C%22Get%20Message%20PP%20profiles%5C%22)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",
+          "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"${#TestCase#RGRMOMENTNAME}\"),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\_r\nMomentParam[] outcomeValues = null;\_r\nmo.add(new MomentOutcome(\"${#TestCase#RGRMOMENTNAME}\",String.valueOf(\"Get Message PP profiles\"),params, outcomeValues));\_r\n",
+          "FormulaName": "MESSAGE",
+          "Status": "P"         
+        },
+        "MomentQualifyingRule": {
+          "MomentCode": "${#TestCase#RGRMOMENTNAME}",
+          "EventType": "GetProfileById",
+          "OfferName": "${#TestCase#RGRMOMENTNAME}",
+          "RuleEquationUI": "GetProfileById.ProgramCode==\"PP\"",
+           "RuleEquationDrools": "GetProfileByIdC(ProgramCode == \"PP\")",
+          "Status": "P"
+          
+        },
+        "Status": "P"
+        
+      }
+    ],
+   "Status": "P"
+   
+  },
+  
+ 
+  "BestOfferIndicator": false,
+  "AdvancedModeIndicator": false,
+  "ReleaseState": "P",
+  "IsTestUser": false,
+  "Status": "P"
+  
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt</con:originalUri>
+        <con:assertion id="e66fe6ad-3090-4fbd-b8e1-8027ca200e73" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="contant-type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>contant-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="3f58a247-6ff5-4d1f-8853-5df166ac80cd" name="MomentId" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script>def momentid = context.expand( '${GetMomentByMomentCode#Response#$[\'MomentId\']}' )
+def responseCreateMoment = context.expand( '${CreateMoment#Response}' )
+def responseUpdateMoment = context.expand('${UpdateMoment#Response}')
+
+if(responseCreateMoment==null || responseCreateMoment =="")
+ {
+ 	if(responseUpdateMoment==null || responseUpdateMoment =="")
+ 	{
+ 		return momentid
+ 	}
+ 	else
+ 	{
+ 		momentid = context.expand( '${UpdateMoment#Response#$[\'MomentId\']}' )
+   		 return momentid;
+ 	}
+ }
+ else
+ {
+    momentid = context.expand( '${CreateMoment#Response#$[\'MomentId\']}' )
+    return momentid;
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="2963b055-5fff-45f1-90f1-9de992ea259a" name="ActivateMoment" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="ActivateMoment" resourcePath="/api/v1/momentmgmt/{momentId}/activate" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="83e08a66-8efd-4474-b1a8-ffeea07c82d6" mediaType="application/json" name="ActivateMoment" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt/activate</con:originalUri>
+        <con:assertion id="4b8327be-e8c5-42f7-8e94-88ef80a45263" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="momentId" value="${MomentId#result}"/>
+        </con:parameters>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="fc1b2323-c80d-4c69-b2b5-65055cb2c88f" name="MomentEngineReload" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="RefreshEngine" resourcePath="/api/v1/operations/engine/refresh" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="57c47b89-fe65-498e-93ba-cc0119906e4b" mediaType="application/json" name="MomentEngineReload" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/operations/engine/refresh</con:originalUri>
+        <con:assertion id="918cf777-639c-4ba9-a4b8-3b2f3492ed9c" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="isSyncProcess" value="True"/>
+          <con:entry key="refreshAllEngines" value="True"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>refreshAllEngines</con:entry>
+          <con:entry>isSyncProcess</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunAddProfileRGR" id="4790793f-9bea-4a9a-a09e-142180be3a74">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="b8c0fbeb-390c-40e6-af8a-7404ee2ded03" name="ValidateProfileMomentTriggered" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="GetProfileByID" resourcePath="/api/v1/profiles/{profileId}" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="caa82c6c-fb0c-4527-9a62-8abf1c42fa9d" mediaType="application/json" name="ValidateProfileMomentTriggered">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/</con:originalUri>
+        <con:assertion id="9d1f8252-1e4e-4cb0-8687-279836b53a06" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion id="a232fd71-fb4a-4e6f-9587-2db5fa7e3a8a" name="JSONPath Match" type="JsonPath Match">
+          <con:configuration>
+            <path>$['MomentResults'][?(@['MomentCode']=='${#TestCase#RGRMOMENTNAME}')]['Description']</path>
+            <content>[Moment to display messages for PP profiles]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>RGRMOMENTNAME</con:name>
+      <con:value>RGRMESSAGEMOMENT</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>cb5289a4-b39f-46f8-8d42-768597ab639e</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>b075b5f3-342a-453b-8fe0-d66455b0f1f7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2fd03dd8-f719-44f2-a26f-9c92741d2541</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>3f58a247-6ff5-4d1f-8853-5df166ac80cd</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>1f30c387-f346-46af-8f0e-556eebe01a73</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>4790793f-9bea-4a9a-a09e-142180be3a74</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:environmentSpec>
+    <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+    <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+    <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+  </con:environmentSpec>
+</con:testCase>

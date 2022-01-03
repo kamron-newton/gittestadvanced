@@ -9,7 +9,7 @@
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
         <con:configuration>
-          <fileName>ReadyAPI/References/ProcessMarketingEvent.csv</fileName>
+          <fileName>${#Project#ProjectPath}/References/ProcessMarketingEvent.csv</fileName>
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
@@ -157,79 +157,32 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ApproveMarketingEvent" id="1128ff17-18cc-407f-a82f-44af0adf3b2d">
+  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="79f5e410-5e27-431f-a3e7-3bb7a14952ca">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/{eventCode}/approve" methodName="ApproveMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ApproveMarketingEvent" id="17832095-74ce-48f7-9423-f269052ad077" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/approve</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="d035d6d1-064a-4242-8b1a-56167edfd015" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="eventCode" value="${ProcessMarketingEventMulTrxn#Response#$['EventCode']}"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>eventCode</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-        </con:parameterOrder>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEventMulTrxn#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="DeployMarketingPromotion" id="33b99232-72ef-4145-9f1f-195f355e9608">
+  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="61f451c2-1f8c-4849-8386-af035b135e15">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/job/deploy" methodName="DeployMarketingPromotion" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="DeployMarketingPromotion" id="c2f7d22a-311d-40e4-8720-8af8701930be" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "JobName": "${ProcessMarketingEventMulTrxn#Response#$['EventCode']}",
-  "EmailAddresses": "WebTest_TestMail@dx2mail.co",
-  "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b30",
-  "MarketingEventCode": "${ProcessMarketingEventMulTrxn#Response#$['EventCode']}"
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/job/deploy</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="02948db1-1694-4272-ac2c-764302f684df" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Program-Code</con:entry>
-        </con:parameterOrder>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4e31c31c-5e5f-4dab-8caf-7c5cf7fef68f</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ApproveMarketingEvent#EventCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="WaitForBatchJob" id="3ca63a72-4158-473e-9788-9cb1c8884d50">
@@ -239,7 +192,7 @@
       <con:properties>
         <con:property>
           <con:name>JobId</con:name>
-          <con:value>${DeployMarketingPromotion#Response#$['BatchJobId']}</con:value>
+          <con:value>${#[OffersPrerequisite#DeployMarketingPromotion#DeployMarketingPromotion]#Response#$['BatchJobId']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -253,7 +206,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>473fd327-d93c-4401-8a2e-f9048e5333e2</con:value>
+          <con:value>2f272abd-7c8e-4084-a47f-e7539cf47eeb</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -437,7 +390,7 @@
       <con:properties>
         <con:property>
           <con:name>MomentId</con:name>
-          <con:value/>
+          <con:value xsi:nil="true"/>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -604,17 +557,17 @@
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>1128ff17-18cc-407f-a82f-44af0adf3b2d</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>33b99232-72ef-4145-9f1f-195f355e9608</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
     <con:testStepId>f02ff753-039e-463f-a99f-21507e9bc4b4</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>79f5e410-5e27-431f-a3e7-3bb7a14952ca</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>61f451c2-1f8c-4849-8386-af035b135e15</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

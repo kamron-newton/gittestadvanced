@@ -4,12 +4,12 @@
     <con:setting id="7aa4082d-44fd-4a3b-a706-d715d1e0f0ebfileName">EarnCertificateOnTransaction</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="ProcessMarketingData" id="6d3eccc0-3de0-4156-aca1-de922f773f82">
+  <con:testStep type="datasource" name="ProcessMarketingData" id="4bdafa1c-c2d3-45da-bac8-d19eb36ed972">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
         <con:configuration>
-          <fileName>ReadyAPI/References/ProcessMarketingEvent.csv</fileName>
+          <fileName>${#Project#ProjectPath}/References/ProcessMarketingEvent.csv</fileName>
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
@@ -18,37 +18,34 @@
       </con:dataSource>
       <con:shared>true</con:shared>
       <con:restartShared>true</con:restartShared>
+      <con:property>MarketingEventChannelId</con:property>
+      <con:property>ChannelName</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceName</con:property>
+      <con:property>PackagedOfferId</con:property>
+      <con:property>PackagedOfferCode</con:property>
+      <con:property>PackagedOfferName</con:property>
       <con:property>PackagedOfferParamIdCustAct</con:property>
-      <con:property>PackagedOfferIdCustAct</con:property>
       <con:property>ParamNameCustAct</con:property>
       <con:property>ParamCodeCustAct</con:property>
       <con:property>ValueCustAct</con:property>
       <con:property>PanelIdCustAct</con:property>
       <con:property>PanelCodeCustAct</con:property>
       <con:property>PackagedOfferParamIdCustRew</con:property>
-      <con:property>PackagedOfferIdCustRew</con:property>
       <con:property>ParamNameCustRew</con:property>
       <con:property>ParamCodeCustRew</con:property>
       <con:property>ValueCustRew</con:property>
       <con:property>PanelIdCustRew</con:property>
       <con:property>PanelCodeCustRew</con:property>
       <con:property>PackagedOfferParamIdOfferLim</con:property>
-      <con:property>PackagedOfferIdOfferLim</con:property>
       <con:property>ParamNameOfferLim</con:property>
       <con:property>ParamCodeOfferLim</con:property>
       <con:property>ValueOfferLim</con:property>
       <con:property>PanelIdOfferLim</con:property>
       <con:property>PanelCodeOfferLim</con:property>
-      <con:property>PackagedOfferId</con:property>
-      <con:property>PackagedOfferCode</con:property>
-      <con:property>PackagedOfferName</con:property>
       <con:property>PackagedOfferCategoryId</con:property>
       <con:property>PackagedOfferCategoryCode</con:property>
       <con:property>ParamOperatorId</con:property>
-      <con:property>PackagedAudienceId</con:property>
-      <con:property>AudienceName</con:property>
-      <con:property>MarketingEventChannelId</con:property>
-      <con:property>ChannelName</con:property>
       <con:startRow>7</con:startRow>
       <con:endRow/>
       <con:recordsPerIteration>1</con:recordsPerIteration>
@@ -116,7 +113,7 @@
 			{
 				
 				"PackagedOfferParamId": "${ProcessMarketingData#PackagedOfferParamIdCustAct}",
-			     "PackagedOfferId": "${ProcessMarketingData#PackagedOfferIdCustAct}",
+			     "PackagedOfferId": "${ProcessMarketingData#PackagedOfferId}",
 				"ParamName": "${ProcessMarketingData#ParamNameCustAct}",
 				"ParamCode": "${ProcessMarketingData#ParamCodeCustAct}",
 				"Value": "${ProcessMarketingData#ValueCustAct}",
@@ -126,7 +123,7 @@
 			{
 				
 				"PackagedOfferParamId": "${ProcessMarketingData#PackagedOfferParamIdCustRew}",
-				"PackagedOfferId": "${ProcessMarketingData#PackagedOfferIdCustRew}",
+				"PackagedOfferId": "${ProcessMarketingData#PackagedOfferId}",
 				"ParamName": "${ProcessMarketingData#ParamNameCustRew}",
 				"ParamCode": "${ProcessMarketingData#ParamCodeCustRew}",
 				"Value": "${AddFlexibleDateRew#rewardCode}",
@@ -135,7 +132,7 @@
 			},
 			{
 				"PackagedOfferParamId": "${ProcessMarketingData#PackagedOfferParamIdOfferLim}",
-				"PackagedOfferId": "${ProcessMarketingData#PackagedOfferIdOfferLim}",
+				"PackagedOfferId": "${ProcessMarketingData#PackagedOfferId}",
 				"ParamName": "${ProcessMarketingData#ParamNameOfferLim}",
 				"ParamCode": "${ProcessMarketingData#ParamCodeOfferLim}",
 				"Value": "${ProcessMarketingData#ValueOfferLim}",
@@ -186,89 +183,32 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ApproveMarketingEvent" id="2477d4cd-c630-4ed0-9869-237141c200ad">
+  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="7b396453-73fc-486f-83b4-f0d12b502f7d">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/{eventCode}/approve" methodName="ApproveMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ApproveMarketingEvent" id="17832095-74ce-48f7-9423-f269052ad077" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/approve</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="768dcb5c-5fe7-4803-9690-d6ee54ad72cd" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="eventCode" value="${ProcessMarketingEvent#Response#$['EventCode']}"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>eventCode</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEvent#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="DeployMarketingEvent" id="4015584a-ff2e-49bd-b5d5-0d08e56c5648">
+  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="95cb4836-b83c-4f5b-981c-4ab61f9f2b14">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/job/deploy" methodName="DeployMarketingPromotion" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="DeployMarketingEvent" id="c2f7d22a-311d-40e4-8720-8af8701930be" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "JobName": "${ApproveMarketingEvent#Response#$['EventCode']}",
-  "EmailAddresses": "WebTest_TestMail@dx2mail.co",
-  "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b30",
-  "MarketingEventCode": "${ApproveMarketingEvent#Response#$['EventCode']}"
-}</con:request>
-        <con:originalUri>https://d2aldv-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/job/deploy</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="b259049d-5c72-42a3-99ad-af524ce40bd6" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Program-Code</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4e31c31c-5e5f-4dab-8caf-7c5cf7fef68f</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ApproveMarketingEvent#EventCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="WaitForBatchJob" id="03fbb0dd-5161-4a44-8165-f42332c534d9">
@@ -278,7 +218,7 @@
       <con:properties>
         <con:property>
           <con:name>JobId</con:name>
-          <con:value>${DeployMarketingEvent#Response#$['BatchJobId']}</con:value>
+          <con:value>${#[OffersPrerequisite#DeployMarketingPromotion#DeployMarketingPromotion]#Response#$['BatchJobId']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -307,7 +247,7 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="eventCode" value="${DeployMarketingEvent#Response#$['MarketingEventCode']}"/>
+          <con:entry key="eventCode" value="${#[OffersPrerequisite#DeployMarketingPromotion]#EventCode}"/>
         </con:parameters>
         <con:environmentSpec>
           <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
@@ -324,7 +264,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>83f95706-56b5-4852-a9b0-f8fd3758a261</con:value>
+          <con:value>3ef7dbd8-2e06-4efa-b7e5-1f4c88811a22</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -532,6 +472,21 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>d89fc1e7-0a77-47d6-8921-575cd90055f8</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>4bdafa1c-c2d3-45da-bac8-d19eb36ed972</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>7b396453-73fc-486f-83b4-f0d12b502f7d</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>95cb4836-b83c-4f5b-981c-4ab61f9f2b14</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

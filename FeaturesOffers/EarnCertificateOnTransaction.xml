@@ -143,8 +143,8 @@
 		"PackagedOfferCategoryId": "${ProcessMarketingData#PackagedOfferCategoryId}",
 		"PackagedOfferCategoryCode": "${ProcessMarketingData#PackagedOfferCategoryCode}"
 	},
-  "OfferStartDate": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferStartDate}",
-"OfferEndDate": "${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferEndDate}",
+  "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
+	"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}",
 	"Status": "A",
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
@@ -264,7 +264,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>3ef7dbd8-2e06-4efa-b7e5-1f4c88811a22</con:value>
+          <con:value>e19c96ec-e005-46c7-b088-c1a87202dc65</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -273,42 +273,24 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="delay" name="Delay" id="68479360-71a0-43f8-802f-c652af0d96b9">
+  <con:testStep type="restrequest" name="Adjustments" id="43661519-6589-4ae4-9e69-5466ac1faec9">
     <con:settings/>
-    <con:config>
-      <delay>12000</delay>
-    </con:config>
-  </con:testStep>
-  <con:testStep id="2f03f591-46af-4efe-9622-3bc07e9814b3" name="PurchaseTransaction" type="restrequest">
-    <con:settings/>
-    <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="PurchaseTransaction" postQueryString="false">
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/adjustments" methodName="AddAdjustment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="9a3422f2-f90a-4dcd-9195-4f82d76a9c75" mediaType="application/json" name="Adjustments" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:request>{  
-   "TransactionTypeCode":"PR",
-   "ProfileId":"${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
-   "GrossAmount":100.00,
-   "TransactionTotalTax":0.00,
-   "ShippingAndHandling":0.0,
-   "Gratuity":0.0,
-   "PostSalesAdjustment":0.0,
-   "TransactionNetTotal":100.00,
-   "TransactionEligible":100,
-   "DiscountAmount":0.00,
-   "TransactionNumber":"${=java.util.UUID.randomUUID()}",
-   "TransactionDateTime":"${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#OfferStartDate}",
-   "StoreCode":"PP1501",
-   "CurrencyCode":"USD",
-   "TransactionDescription":"PR Transaction",
-   
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "AdjustmentReasonCode": "PPGOODW",
+  "AdjustmentComment": "Automated adjustment for reward progress test",
+  "NumPoints": "10000"
 }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="1a8e63d8-5393-464d-b0d5-5c56f76f1c3f" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/adjustment</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9159ecdc-8c01-4dcd-a53c-c0b6e90fbf99" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200</codes>
+            <codes>201</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -318,11 +300,13 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfileRGR#ProfileId}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
+          <con:entry>profileId</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>content-type</con:entry>
           <con:entry>Accept-Language</con:entry>
@@ -340,6 +324,29 @@
           </con:entry>
         </con:environmentSpec>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="delay" name="Delay" id="68479360-71a0-43f8-802f-c652af0d96b9">
+    <con:settings/>
+    <con:config>
+      <delay>12000</delay>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="PurchaseTransaction" id="647ae704-7a88-4a33-9493-d61a788bac5f">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>981060e9-8e55-4bc2-8e64-e3d2b5197f95</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TransactionEligible</con:name>
+          <con:value>50</con:value>
+        </con:property>
+        <con:property>
+          <con:name>Nights</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="GetMomentByCode" id="104feab1-ec19-45a9-baed-431436bb45af">
@@ -407,7 +414,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="78a9904b-786d-43f7-8168-1ce40b60e352" name="JSONPath Match">
           <con:configuration>
-            <path>$.[?(@.ProfileId== '${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}')].RewardCode</path>
+            <path>$.[?(@.ProfileId== '${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}')].RewardCode[1]</path>
             <content>${AddFlexibleDateRew#rewardCode}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -487,6 +494,16 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>95cb4836-b83c-4f5b-981c-4ab61f9f2b14</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>43661519-6589-4ae4-9e69-5466ac1faec9</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>647ae704-7a88-4a33-9493-d61a788bac5f</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

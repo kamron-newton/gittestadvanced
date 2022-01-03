@@ -4,12 +4,12 @@
     <con:setting id="7c7cbb5c-da76-4db1-9f94-b1d65792baf6fileName">CustomOfferWithLesserThanOperator</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="ProcessMarketingEvent" id="f788ac65-231b-4511-945f-f72ee8f62503">
+  <con:testStep type="datasource" name="ProcessMarketingEvent" id="876a79f2-e0c3-4a88-b321-f56e48c16839">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
         <con:configuration>
-          <fileName>${#Project#ProjectPath}/References/ProcessMarketingEvent.csv</fileName>
+          <fileName>ReadyAPI/References/ProcessMarketingEvent.csv</fileName>
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
@@ -18,37 +18,34 @@
       </con:dataSource>
       <con:shared>true</con:shared>
       <con:restartShared>true</con:restartShared>
+      <con:property>MarketingEventChannelId</con:property>
+      <con:property>ChannelName</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceName</con:property>
+      <con:property>PackagedOfferId</con:property>
+      <con:property>PackagedOfferCode</con:property>
+      <con:property>PackagedOfferName</con:property>
       <con:property>PackagedOfferParamIdCustAct</con:property>
-      <con:property>PackagedOfferIdCustAct</con:property>
       <con:property>ParamNameCustAct</con:property>
       <con:property>ParamCodeCustAct</con:property>
       <con:property>ValueCustAct</con:property>
       <con:property>PanelIdCustAct</con:property>
       <con:property>PanelCodeCustAct</con:property>
       <con:property>PackagedOfferParamIdCustRew</con:property>
-      <con:property>PackagedOfferIdCustRew</con:property>
       <con:property>ParamNameCustRew</con:property>
       <con:property>ParamCodeCustRew</con:property>
       <con:property>ValueCustRew</con:property>
       <con:property>PanelIdCustRew</con:property>
       <con:property>PanelCodeCustRew</con:property>
       <con:property>PackagedOfferParamIdOfferLim</con:property>
-      <con:property>PackagedOfferIdOfferLim</con:property>
       <con:property>ParamNameOfferLim</con:property>
       <con:property>ParamCodeOfferLim</con:property>
       <con:property>ValueOfferLim</con:property>
       <con:property>PanelIdOfferLim</con:property>
       <con:property>PanelCodeOfferLim</con:property>
-      <con:property>PackagedOfferId</con:property>
-      <con:property>PackagedOfferCode</con:property>
-      <con:property>PackagedOfferName</con:property>
       <con:property>PackagedOfferCategoryId</con:property>
       <con:property>PackagedOfferCategoryCode</con:property>
       <con:property>ParamOperatorId</con:property>
-      <con:property>PackagedAudienceId</con:property>
-      <con:property>AudienceCode</con:property>
-      <con:property>MarketingEventChannelId</con:property>
-      <con:property>ChannelName</con:property>
       <con:startRow>3</con:startRow>
       <con:endRow/>
       <con:recordsPerIteration>1</con:recordsPerIteration>
@@ -280,73 +277,21 @@
       <delay>13000</delay>
     </con:config>
   </con:testStep>
-  <con:testStep id="3752aee8-1004-42a8-a5c2-adc7d8460b02" name="PurchaseTransaction" type="restrequest">
+  <con:testStep type="calltestcase" name="PurchaseTransaction" id="45625ae8-19a8-4a9e-b714-1f4874bef70a">
     <con:settings/>
-    <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="PurchaseTransaction" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:request>{  
-   "TransactionTypeCode":"PR",
-   "ProfileId":"${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
-   "GrossAmount":80.00,
-   "TransactionTotalTax":0.00,
-   "ShippingAndHandling":0.0,
-   "Gratuity":0.0,
-   "PostSalesAdjustment":0.0,
-   "TransactionNetTotal":80.00,
-   "TransactionEligible":80,
-   "DiscountAmount":0.00,
-   "TransactionNumber":"${=java.util.UUID.randomUUID()}",
-   "TransactionDateTime":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
-   "StoreCode":"PP1501",
-   "CurrencyCode":"USD",
-   "TransactionDescription":"PR Transaction",
-   
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="1a8e63d8-5393-464d-b0d5-5c56f76f1c3f" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Program-Code</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="delay" name="Delay 2" id="529c8887-324c-4762-8044-96810c79c7d4">
-    <con:settings/>
-    <con:config>
-      <delay>1000</delay>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>981060e9-8e55-4bc2-8e64-e3d2b5197f95</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TransactionEligible</con:name>
+          <con:value>80</con:value>
+        </con:property>
+        <con:property>
+          <con:name>Nights</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="GetMomentByCode" id="920ce13d-1081-46d0-baa2-1d379f7354c5">
@@ -414,7 +359,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="d718b76f-6e63-422d-9479-043918f3d753" name="ValidationForPointsAmount">
           <con:configuration>
-            <path>$.[?(@.ActTransactionId == '${PurchaseTransaction#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${GetMomentByCode#Response#$['MomentId']}')].PointsAmount</path>
+            <path>$.[?(@.ActTransactionId == '${#[OffersPrerequisite#PurchaseTransaction#PurchaseTransaction]#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${GetMomentByCode#Response#$['MomentId']}')].PointsAmount</path>
             <content>[10.0]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -590,12 +535,12 @@
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>f788ac65-231b-4511-945f-f72ee8f62503</con:testStepId>
+    <con:testStepId>45625ae8-19a8-4a9e-b714-1f4874bef70a</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>529c8887-324c-4762-8044-96810c79c7d4</con:testStepId>
+    <con:testStepId>876a79f2-e0c3-4a88-b321-f56e48c16839</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

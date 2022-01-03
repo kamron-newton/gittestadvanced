@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="981060e9-8e55-4bc2-8e64-e3d2b5197f95" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="PurchaseTransaction" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="981060e9-8e55-4bc2-8e64-e3d2b5197f95fileName">PurchaseTransaction</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="restrequest" name="PurchaseTransaction" id="616ea532-7f17-4778-92e5-5bd7d3c8554a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/transaction" methodName="ProcessTransaction" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="PurchaseTransaction" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{  
+   "TransactionTypeCode":"PR",
+   "ProfileId":"${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
+   "GrossAmount":100.00,
+   "TransactionTotalTax":0.00,
+   "ShippingAndHandling":0.0,
+   "Gratuity":0.0,
+   "PostSalesAdjustment":0.0,
+   "TransactionNetTotal":100.00,
+   "TransactionEligible":"${#TestCase#TransactionEligible}",
+   "DiscountAmount":0.00,
+   "TransactionNumber":"${=java.util.UUID.randomUUID()}",
+   "TransactionDateTime":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
+   "StoreCode":"PP1501",
+   "CurrencyCode":"USD",
+   "TransactionDescription":"PR Transaction",
+   "Nights":"${#TestCase#Nights}",
+
+   "TransactionDetails": [
+    {
+      "TaxAmount": "1",
+      "DollarValueGross": "150",
+      "DollarValueNet": "150",
+      "ItemNumber": "SKU-00004",
+      "ItemNumberTypeCode": "S",
+      "Quantity": "2",
+      "LineNumber": 1,
+      "ItemTransactionTypeCode": "PR",
+  }
+  ],	
+     
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="eca3dadf-3581-4117-a590-77e655d20ffc" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property userSpecific="true">
+      <con:name>TransactionEligible</con:name>
+      <con:value>150</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>Nights</con:name>
+      <con:value>3</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

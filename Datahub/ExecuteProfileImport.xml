@@ -27,7 +27,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="scriptName" value="SampleTest"/>
+          <con:entry key="scriptName" value="${#TestCase#ScriptName}"/>
           <con:entry key="Environment" value="PRODUCTION"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
@@ -88,7 +88,7 @@
         <con:request>{  
    "IsStandalone":true,
    "IsPlaceholder":false,
-   "ScriptName":"SampleTest", 
+   "ScriptName":${#TestCase#ScriptName}, 
    "Content":"try%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Epsilon.Fusion.Models.Batch.BatchJobModel%20model%20%3D%20JsonConvert.DeserializeObject%3CEpsilon.Fusion.Models.Batch.BatchJobModel%3E(input.ToString())%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(model.JsonExternalData%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dynamic%20xmlJson%20%3D%20verb.AccessExternalData(model)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(xmlJson%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.WriteFile(xmlJson.FileName.ToString()%2C%20JsonConvert.DeserializeObject%3Cdynamic%3E(xmlJson.FileContent.ToString())%2C%20xmlJson.FileLocation.ToString()%2C%20useHeaders%3A%20(bool)xmlJson.UseHeader)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2Fupdate%20Json%20to%20null%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20DbParameterCollection%20parameters%20%3D%20new%20DbParameterCollection()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20parameters.Add(new%20DbParameter(%22BatchJobId%22%2C%20model.BatchJobId%2C%20DbType.Guid))%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.BeginDatabaseTransaction()%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20string%20sql%20%3D%20string.Format(%22UPDATE%20T_SYS_JOB%20SET%20JSON_EXTERNAL_DATA%20%3D%20null%20WHERE%20SYS_JOB_ID%20%3D%20%3ABatchJobId%22)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.ModifyDatabase(sql%2C%20parameters)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.CommitDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20catch%20(Exception%20ex)%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.RollbackDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20throw%20new%20Exception(ex.Message)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D"},
    "Version":""
 }</con:request>
@@ -265,7 +265,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>933ba34a-0881-432a-8f38-83d48cc62f36</con:value>
+          <con:value>50467810-2271-475e-a951-d14f56bd5cab</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -321,6 +321,22 @@
           </con:entry>
         </con:environmentSpec>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="ProfileLayoutDataSource" id="18fcd37b-7755-454e-bcf7-b7b95cd16e7e">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>10</generatedDataCount>
+          <generatorsTotalNumber>0</generatorsTotalNumber>
+          <lastSelectedProperty>-1</lastSelectedProperty>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:restartOnRun>true</con:restartOnRun>
     </con:config>
   </con:testStep>
   <con:testStep type="transfer" name="TransferPropertiesToProfileLayout" id="9955df26-c719-458d-84c0-55e3d4a30090">
@@ -1129,10 +1145,10 @@
     <con:settings/>
     <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
   </con:testStep>
-  <con:testStep type="properties" name="ProfileLayoutProperties" id="10736392-4a6c-435e-b923-6dca5e3def4f">
+  <con:testStep type="properties" name="ProfileLayoutProperties" id="219fdad1-5e13-4953-8ebc-9eb65afb069d">
     <con:settings/>
     <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:source/>
+      <con:source>../../Downloads/ProfileLayout.Properties</con:source>
       <con:properties>
         <con:property>
           <con:name>RecordNumber</con:name>
@@ -1140,11 +1156,11 @@
         </con:property>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>933ba34a-0881-432a-8f38-83d48cc62f36</con:value>
+          <con:value>50467810-2271-475e-a951-d14f56bd5cab</con:value>
         </con:property>
         <con:property>
           <con:name>JoinDate</con:name>
-          <con:value>2021-12-28T23:13:16Z</con:value>
+          <con:value>2022-01-05T21:07:23Z</con:value>
         </con:property>
         <con:property>
           <con:name>CompanyName</con:name>
@@ -1152,11 +1168,11 @@
         </con:property>
         <con:property>
           <con:name>BirthDate</con:name>
-          <con:value>1998-02-22T00:00:00Z</con:value>
+          <con:value>1938-04-04T00:00:00Z</con:value>
         </con:property>
         <con:property>
           <con:name>Gender</con:name>
-          <con:value>M</con:value>
+          <con:value/>
         </con:property>
         <con:property>
           <con:name>MaritalStatus</con:name>
@@ -1184,7 +1200,7 @@
         </con:property>
         <con:property>
           <con:name>LastName</con:name>
-          <con:value>Patel</con:value>
+          <con:value>Hoover</con:value>
         </con:property>
         <con:property>
           <con:name>MiddleInit</con:name>
@@ -1192,7 +1208,7 @@
         </con:property>
         <con:property>
           <con:name>FirstName</con:name>
-          <con:value>Elijah</con:value>
+          <con:value>Cullen</con:value>
         </con:property>
         <con:property>
           <con:name>Prefix</con:name>
@@ -1212,7 +1228,7 @@
         </con:property>
         <con:property>
           <con:name>SourceAccountNumber</con:name>
-          <con:value>933ba34a-0881-432a-8f38-83d48cc62f36</con:value>
+          <con:value>50467810-2271-475e-a951-d14f56bd5cab</con:value>
         </con:property>
         <con:property>
           <con:name>ActivityDate</con:name>
@@ -1232,7 +1248,7 @@
         </con:property>
         <con:property>
           <con:name>SrcFirstName</con:name>
-          <con:value>Elijah</con:value>
+          <con:value>Cullen</con:value>
         </con:property>
         <con:property>
           <con:name>SrcMiddleInit</con:name>
@@ -1240,7 +1256,7 @@
         </con:property>
         <con:property>
           <con:name>SrcLastName</con:name>
-          <con:value>Patel</con:value>
+          <con:value>Hoover</con:value>
         </con:property>
         <con:property>
           <con:name>SrcSuffix</con:name>
@@ -1248,7 +1264,7 @@
         </con:property>
         <con:property>
           <con:name>SrcGender</con:name>
-          <con:value>M</con:value>
+          <con:value/>
         </con:property>
         <con:property>
           <con:name>SrcUnparsedName</con:name>
@@ -1264,7 +1280,7 @@
         </con:property>
         <con:property>
           <con:name>InteractionId</con:name>
-          <con:value/>
+          <con:value>0000</con:value>
         </con:property>
         <con:property>
           <con:name>PrefChannelCode</con:name>
@@ -1304,7 +1320,7 @@
         </con:property>
         <con:property>
           <con:name>OrigActivityDate</con:name>
-          <con:value>2021-12-28T23:13:16Z</con:value>
+          <con:value>2022-01-05T21:07:23Z</con:value>
         </con:property>
         <con:property>
           <con:name>ProfessionalSuffix</con:name>
@@ -1324,7 +1340,7 @@
         </con:property>
         <con:property>
           <con:name>CardNumber</con:name>
-          <con:value>ff1cb5f7-e801-4924-bf13-6677c8da396c</con:value>
+          <con:value>4cef05ec-5348-4d79-a979-41b7551e8df4</con:value>
         </con:property>
         <con:property>
           <con:name>EndDate</con:name>
@@ -1404,11 +1420,11 @@
         </con:property>
         <con:property>
           <con:name>UpdateFileId</con:name>
-          <con:value/>
+          <con:value>1110</con:value>
         </con:property>
         <con:property>
           <con:name>UpdateRecordNumber</con:name>
-          <con:value/>
+          <con:value>2220</con:value>
         </con:property>
       </con:properties>
     </con:config>
@@ -1424,15 +1440,15 @@
         </con:property>
         <con:property>
           <con:name>AddressId</con:name>
-          <con:value>7c460aae-8924-4cfa-a364-c70a2854bad4</con:value>
+          <con:value>f863c681-0065-4ebc-b935-bbeecd77aa53</con:value>
         </con:property>
         <con:property>
           <con:name>AddressLine1</con:name>
-          <con:value>443 Carrillo Blvd.</con:value>
+          <con:value>816 SPENCER BLVD</con:value>
         </con:property>
         <con:property>
           <con:name>AddressLine2</con:name>
-          <con:value>#333</con:value>
+          <con:value># 445</con:value>
         </con:property>
         <con:property>
           <con:name>AddressLine3</con:name>
@@ -1440,11 +1456,11 @@
         </con:property>
         <con:property>
           <con:name>City</con:name>
-          <con:value>Atlanta</con:value>
+          <con:value>FREDERICK</con:value>
         </con:property>
         <con:property>
           <con:name>StateCode</con:name>
-          <con:value>MN</con:value>
+          <con:value>OH</con:value>
         </con:property>
         <con:property>
           <con:name>CountryCode</con:name>
@@ -1452,7 +1468,7 @@
         </con:property>
         <con:property>
           <con:name>PostalCode</con:name>
-          <con:value>08093</con:value>
+          <con:value>04473</con:value>
         </con:property>
         <con:property>
           <con:name>ChannelCode</con:name>
@@ -1536,11 +1552,11 @@
         </con:property>
         <con:property>
           <con:name>SrcAddrLine1</con:name>
-          <con:value>443 Carrillo Blvd.</con:value>
+          <con:value>816 Spencer Blvd.</con:value>
         </con:property>
         <con:property>
           <con:name>SrcAddrLine2</con:name>
-          <con:value>#333</con:value>
+          <con:value>#445</con:value>
         </con:property>
         <con:property>
           <con:name>SrcAddrLine3</con:name>
@@ -1548,15 +1564,15 @@
         </con:property>
         <con:property>
           <con:name>SrcCity</con:name>
-          <con:value>Atlanta</con:value>
+          <con:value>Frederick</con:value>
         </con:property>
         <con:property>
           <con:name>SrcState</con:name>
-          <con:value>MN</con:value>
+          <con:value>OH</con:value>
         </con:property>
         <con:property>
           <con:name>SrcPostalCd</con:name>
-          <con:value>08093</con:value>
+          <con:value>04473</con:value>
         </con:property>
         <con:property>
           <con:name>SrcCountry</con:name>
@@ -1568,7 +1584,7 @@
         </con:property>
         <con:property>
           <con:name>InteractionId</con:name>
-          <con:value/>
+          <con:value>0000</con:value>
         </con:property>
         <con:property>
           <con:name>AddressLine4</con:name>
@@ -1612,7 +1628,7 @@
         </con:property>
         <con:property>
           <con:name>SourceAccountNumber</con:name>
-          <con:value>933ba34a-0881-432a-8f38-83d48cc62f36</con:value>
+          <con:value>50467810-2271-475e-a951-d14f56bd5cab</con:value>
         </con:property>
         <con:property>
           <con:name>JsonExternalData</con:name>
@@ -1624,11 +1640,11 @@
         </con:property>
         <con:property>
           <con:name>UpdateFileId</con:name>
-          <con:value/>
+          <con:value>1110</con:value>
         </con:property>
         <con:property>
           <con:name>UpdateRecordNumber</con:name>
-          <con:value/>
+          <con:value>2220</con:value>
         </con:property>
       </con:properties>
     </con:config>
@@ -1660,7 +1676,7 @@
         </con:property>
         <con:property>
           <con:name>EmailId</con:name>
-          <con:value>ecba2251-5907-44cb-8ce6-b09c912eea5a</con:value>
+          <con:value>e5283302-6c1e-438a-87ea-121567e081bc</con:value>
         </con:property>
         <con:property>
           <con:name>IsPreferred</con:name>
@@ -1696,7 +1712,7 @@
         </con:property>
         <con:property>
           <con:name>InteractionId</con:name>
-          <con:value/>
+          <con:value>0000</con:value>
         </con:property>
         <con:property>
           <con:name>EmailType</con:name>
@@ -1716,7 +1732,7 @@
         </con:property>
         <con:property>
           <con:name>SourceAccountNumber</con:name>
-          <con:value>933ba34a-0881-432a-8f38-83d48cc62f36</con:value>
+          <con:value>50467810-2271-475e-a951-d14f56bd5cab</con:value>
         </con:property>
         <con:property>
           <con:name>BrandOrgCode</con:name>
@@ -1728,11 +1744,11 @@
         </con:property>
         <con:property>
           <con:name>UpdateFileId</con:name>
-          <con:value/>
+          <con:value>1110</con:value>
         </con:property>
         <con:property>
           <con:name>UpdateRecordNumber</con:name>
-          <con:value/>
+          <con:value>2220</con:value>
         </con:property>
       </con:properties>
     </con:config>
@@ -1760,11 +1776,11 @@
         </con:property>
         <con:property>
           <con:name>PhoneNumber</con:name>
-          <con:value>8798825984</con:value>
+          <con:value>7533617119</con:value>
         </con:property>
         <con:property>
           <con:name>PhoneId</con:name>
-          <con:value>ac0845f0-6ce3-44a0-8c13-434dd05b861d</con:value>
+          <con:value>b609b6a7-c472-403b-965e-4a6f2ad5d94b</con:value>
         </con:property>
         <con:property>
           <con:name>IsPreferred</con:name>
@@ -1820,7 +1836,7 @@
         </con:property>
         <con:property>
           <con:name>SrcPhoneNumber</con:name>
-          <con:value>8798825984</con:value>
+          <con:value>7533617119</con:value>
         </con:property>
         <con:property>
           <con:name>ContactPointId</con:name>
@@ -1828,7 +1844,7 @@
         </con:property>
         <con:property>
           <con:name>InteractionId</con:name>
-          <con:value/>
+          <con:value>0000</con:value>
         </con:property>
         <con:property>
           <con:name>BrandOrgCode</con:name>
@@ -1844,7 +1860,7 @@
         </con:property>
         <con:property>
           <con:name>SourceAccountNumber</con:name>
-          <con:value>933ba34a-0881-432a-8f38-83d48cc62f36</con:value>
+          <con:value>50467810-2271-475e-a951-d14f56bd5cab</con:value>
         </con:property>
         <con:property>
           <con:name>JsonExternalData</con:name>
@@ -1852,11 +1868,11 @@
         </con:property>
         <con:property>
           <con:name>UpdateFileId</con:name>
-          <con:value/>
+          <con:value>1110</con:value>
         </con:property>
         <con:property>
           <con:name>UpdateRecordNumber</con:name>
-          <con:value/>
+          <con:value>2220</con:value>
         </con:property>
       </con:properties>
     </con:config>
@@ -1872,7 +1888,7 @@
         </con:property>
         <con:property>
           <con:name>InteractionId</con:name>
-          <con:value/>
+          <con:value>0000</con:value>
         </con:property>
         <con:property>
           <con:name>StoreCode</con:name>
@@ -1884,11 +1900,11 @@
         </con:property>
         <con:property>
           <con:name>UpdateFileId</con:name>
-          <con:value/>
+          <con:value>1110</con:value>
         </con:property>
         <con:property>
           <con:name>UpdateRecordNumber</con:name>
-          <con:value/>
+          <con:value>2220</con:value>
         </con:property>
       </con:properties>
     </con:config>
@@ -1902,38 +1918,88 @@ def EmailLayoutList = testRunner.testCase.getTestSteps().EmailLayoutProperties.g
 def PhoneLayoutList = testRunner.testCase.getTestSteps().PhoneLayoutProperties.getPropertyList();
 def PreferredStoreLayoutList = testRunner.testCase.getTestSteps().PreferredStoreLayoutProperties.getPropertyList();
 
-def ProfileString='';
-for( item in ProfileLayoutList)
-{
-	 ProfileString = ProfileString + ','+  item.value  ;
-}
-def AddressString='';
-for( item in AddressLayoutList)
-{
-	 AddressString = AddressString +','+  item.value  ;
-}
-def EmailString='';
-for( item in EmailLayoutList)
-{
-	 EmailString = EmailString +','+  item.value ;
-}
-def PhoneString='';
-for( item in PhoneLayoutList)
-{
-	 PhoneString =  PhoneString +','+  item.value  ;
-}
-def PrefStoreString='';
-for( item in PreferredStoreLayoutList)
-{
-	 PrefStoreString = PrefStoreString  +','+  item.value ;
+def parseCollection(propertyList){  
+	log.info propertyList;
+	def returnValue = '';
+	for( item in propertyList)
+	{
+		if( item.value == null  ){
+			 item.value= '';
+		}
+		if (item.name == 'InteractionId')
+		{
+			 item.value = '0000';
+		}
+		if(item.name == 'UpdateFileId'){
+			item.value = '1110';
+		}
+		if(item.name == 'UpdateRecordNumber'){
+			item.value = '2220';
+		}
+	    if(returnValue == ''){
+	        returnValue =  item.value  +',';
+	    }
+	    else{
+		 returnValue = returnValue +  item.value  +',' ;
+	    }
+	}
+	return returnValue.substring(0, returnValue.length() - 1);
 }
 
-log.info ProfileString;
-log.info AddressString;
-log.info EmailString;
-log.info PhoneString;
-log.info PrefStoreString;
-log.info "hello World";</script>
+def profileString = parseCollection(ProfileLayoutList);
+def AddressString = parseCollection(AddressLayoutList);
+def PhoneString = parseCollection(PhoneLayoutList);
+def EmailString = parseCollection(EmailLayoutList);
+def PreferredStoreString =parseCollection(PreferredStoreLayoutList);
+
+def totalString = profileString + '\n' + AddressString + '\n' + EmailString + '\n' + PhoneString + '\n' + PreferredStoreString ;
+
+log.info totalString;
+return totalString;</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CreateBatchJob" id="0697857e-af7a-470b-82b6-4a031b53507a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/batch/jobs" methodName="Create Batch Job" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="CreateBatchJob" id="0121f0fe-0b53-489c-8475-2dee938e777f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"IsStandalone":true,
+   	"IsPlaceholder":false,
+   	"ScriptName": ${#TestCase#ScriptName}, 
+   	"Content":${CreateProfileImportFile#result},
+   	"Version":""
+}</con:request>
+        <con:assertion type="Valid HTTP Status Codes" id="5cdf49cf-a90d-4647-8cd4-0e391fd5e772" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:setupScript/>
@@ -1941,6 +2007,10 @@ log.info "hello World";</script>
     <con:property userSpecific="true">
       <con:name>ScriptId</con:name>
       <con:value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    </con:property>
+    <con:property>
+      <con:name>ScriptName</con:name>
+      <con:value>SampleTest</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>
@@ -1981,6 +2051,16 @@ log.info "hello World";</script>
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>0513f7b5-98eb-4567-84c8-7925c1b47178</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>18fcd37b-7755-454e-bcf7-b7b95cd16e7e</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>219fdad1-5e13-4953-8ebc-9eb65afb069d</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

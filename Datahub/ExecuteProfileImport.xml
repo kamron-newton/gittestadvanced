@@ -328,14 +328,24 @@
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="Data Generator">
         <con:configuration>
-          <generatedDataCount>10</generatedDataCount>
-          <generatorsTotalNumber>0</generatorsTotalNumber>
-          <lastSelectedProperty>-1</lastSelectedProperty>
+          <generatedDataCount>1</generatedDataCount>
+          <generatorsTotalNumber>2</generatorsTotalNumber>
+          <lastSelectedProperty>0</lastSelectedProperty>
+          <GeneratorType0>GUID</GeneratorType0>
+          <PropertyName0>JobName</PropertyName0>
+          <repetitionCountJobName>0</repetitionCountJobName>
+          <repeatValuesJobName>false</repeatValuesJobName>
+          <GeneratorType1>GUID</GeneratorType1>
+          <PropertyName1>FileName</PropertyName1>
+          <repetitionCountFileName>0</repetitionCountFileName>
+          <repeatValuesFileName>false</repeatValuesFileName>
           <escapeSpaceSequence/>
         </con:configuration>
       </con:dataSource>
       <con:shared>true</con:shared>
       <con:restartShared>true</con:restartShared>
+      <con:property>JobName</con:property>
+      <con:property>FileName</con:property>
       <con:restartOnRun>true</con:restartOnRun>
     </con:config>
   </con:testStep>
@@ -1143,7 +1153,16 @@
   </con:testStep>
   <con:testStep type="transfer" name="TransferPropertiesToPrefStoreLayout" id="0513f7b5-98eb-4567-84c8-7925c1b47178">
     <con:settings/>
-    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>StoreCode</con:name>
+        <con:sourceStep>#Project#</con:sourceStep>
+        <con:sourcePath/>
+        <con:targetStep>CreateBatchJob</con:targetStep>
+        <con:targetPath/>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
   </con:testStep>
   <con:testStep type="properties" name="ProfileLayoutProperties" id="219fdad1-5e13-4953-8ebc-9eb65afb069d">
     <con:settings/>
@@ -1912,15 +1931,17 @@
   <con:testStep type="groovy" name="CreateProfileImportFile" id="9e5318c5-81c7-4cc4-a194-d6d245b365df">
     <con:settings/>
     <con:config>
-      <script>def ProfileLayoutList = testRunner.testCase.getTestSteps().ProfileLayoutProperties.getPropertyList();
-def AddressLayoutList = testRunner.testCase.getTestSteps().AddressLayoutProperties.getPropertyList();
-def EmailLayoutList = testRunner.testCase.getTestSteps().EmailLayoutProperties.getPropertyList();
-def PhoneLayoutList = testRunner.testCase.getTestSteps().PhoneLayoutProperties.getPropertyList();
-def PreferredStoreLayoutList = testRunner.testCase.getTestSteps().PreferredStoreLayoutProperties.getPropertyList();
+      <script>import groovy.json.JsonGenerator
+import groovy.json.JsonGenerator.Converter
 
-def parseCollection(propertyList){  
-	log.info propertyList;
-	def returnValue = '';
+def profileLayoutList = testRunner.testCase.getTestSteps().ProfileLayoutProperties.getPropertyList();
+def addressLayoutList = testRunner.testCase.getTestSteps().AddressLayoutProperties.getPropertyList();
+def emailLayoutList = testRunner.testCase.getTestSteps().EmailLayoutProperties.getPropertyList();
+def phoneLayoutList = testRunner.testCase.getTestSteps().PhoneLayoutProperties.getPropertyList();
+def preferredStoreLayoutList = testRunner.testCase.getTestSteps().PreferredStoreLayoutProperties.getPropertyList();   
+
+def parseCollection(propertyList){  	
+	def mapClass = [:]
 	for( item in propertyList)
 	{
 		if( item.value == null  ){
@@ -1936,26 +1957,54 @@ def parseCollection(propertyList){
 		if(item.name == 'UpdateRecordNumber'){
 			item.value = '2220';
 		}
-	    if(returnValue == ''){
-	        returnValue =  item.value  +',';
-	    }
-	    else{
-		 returnValue = returnValue +  item.value  +',' ;
-	    }
-	}
-	return returnValue.substring(0, returnValue.length() - 1);
+	    mapClass[item.name] = item.value;	  
+	}    
+	return mapClass;
 }
 
-def profileString = parseCollection(ProfileLayoutList);
-def AddressString = parseCollection(AddressLayoutList);
-def PhoneString = parseCollection(PhoneLayoutList);
-def EmailString = parseCollection(EmailLayoutList);
-def PreferredStoreString =parseCollection(PreferredStoreLayoutList);
+def jsonDefaultOutput = new JsonGenerator.Options()
+.dateFormat('MM-dd-yyyy')
+.build(); 
 
-def totalString = profileString + '\n' + AddressString + '\n' + EmailString + '\n' + PhoneString + '\n' + PreferredStoreString ;
+def profileString = parseCollection(profileLayoutList);
+def addressString = parseCollection(addressLayoutList);
+def phoneString = parseCollection(phoneLayoutList);
+def emailString = parseCollection(emailLayoutList);
+def preferredStoreString =parseCollection(preferredStoreLayoutList);
 
-log.info totalString;
-return totalString;</script>
+def s3Bucket = context.expand( '${#Project#S3Bucket}' )
+def todayDate = new Date().format( 'MM-dd-yyyy' );
+def jobName = context.expand( '${ProfileLayoutDataSource#JobName}' )
+def programCode = context.expand( '${#Project#ProgramCode}' )
+def fileContent =  [profileString , addressString  , emailString , phoneString , preferredStoreString  ];
+def scriptName = context.expand( '${#TestCase#ScriptName}' )
+
+def jsonExternalDataMap = [:]
+def fileName = 'ProfileImport' +  context.expand( '${ProfileLayoutDataSource#FileName}' ) + '.txt';
+jsonExternalDataMap["FileName"]  = fileName;
+jsonExternalDataMap["FileLocation"]  = "s3://" + s3Bucket + "/automation/ProcessProfileInput"';
+jsonExternalDataMap["FileContent"] = fileContent;
+jsonExternalDataMap["UseHeader"] = 'false';
+
+def batchInputJsonMap = [:];
+batchInputJsonMap["JobName"] = 'InvokeScript_' + jobName;
+batchInputJsonMap["FileName"] = fileName;
+batchInputJsonMap["FileInputLocation"] = "s3://" + s3Bucket + "/automation/" + todayDate + "/Input";
+batchInputJsonMap["FileOutputLocation"] = "s3://" + s3Bucket + "/automation/" + todayDate + "/Output";
+batchInputJsonMap["EmailAddresses"]= "";
+batchInputJsonMap["JobTypeId"]= "4923d185-0c86-4c15-9356-67597ab70526";
+batchInputJsonMap["JobType"]= "";
+batchInputJsonMap["ProgramCode"]= programCode;
+batchInputJsonMap["DataOutputType"]= "FULL";
+batchInputJsonMap["MaxThreads"]= 50;
+
+batchInputJsonMap["ScriptName"] =  scriptName;
+batchInputJsonMap["JsonExternalData"]= jsonExternalDataMap;
+batchInputJsonMap["AdditionalRunData"]= "";
+
+def batchInputJson = jsonDefaultOutput.toJson(batchInputJsonMap);
+
+return batchInputJson;</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="CreateBatchJob" id="0697857e-af7a-470b-82b6-4a031b53507a">
@@ -1966,17 +2015,12 @@ return totalString;</script>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-	"IsStandalone":true,
-   	"IsPlaceholder":false,
-   	"ScriptName": ${#TestCase#ScriptName}, 
-   	"Content":${CreateProfileImportFile#result},
-   	"Version":""
-}</con:request>
+        <con:request>${CreateProfileImportFile#result}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/batch/jobs</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="5cdf49cf-a90d-4647-8cd4-0e391fd5e772" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200</codes>
+            <codes>201</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>

@@ -81,8 +81,8 @@
 			"ChannelName": "${ProcessMarketingData#ChannelName}"
 		}
 	],
-	"EventName": "PROMO_NAME${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventName}",
-	"EventCode": "PROMO_CODE${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventCode}",
+	"EventName": "PROMO_NAME${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}",
+	"EventCode": "PROMO_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}",
 	"PackagedAudience": {
 
 		"PackagedAudienceId": "${ProcessMarketingData#PackagedAudienceId}"
@@ -218,7 +218,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>d9328633-940c-47f4-9ee1-6403dca3f5ce</con:value>
+          <con:value>3f41d5be-f262-4a07-a997-2ee5af61d585</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -250,51 +250,18 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetMomentByCode" id="053418cd-342a-458f-a076-912fe5950730">
+  <con:testStep type="calltestcase" name="GetMomentByCode" id="0b34af52-7bd5-412c-bf3e-0c3b33f355a9">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/momentmgmt/moment/{momentCode}" methodName="GetMomentByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="dd52f0c5-0006-459f-bcbd-9cf595dabc6c" mediaType="application/json" name="GetMomentByCode">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/momentmgmt/moment/PROMO_CODE3546506</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="d802cea0-bd57-4822-a10f-c59c34805731" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="momentCode" value="PROMO_CODE${#[OffersPrerequisite#RandomNumberGenerator#RandomNumberGenerator]#EventCode}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>momentCode</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Accept-Language</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>f4019890-b4bf-40e5-b64c-59b6bbe7b94d</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcesMarketingEvent#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="GetPointsSummary" id="c9cfbbce-4a74-4a03-a0a2-deaf1c9e9db0">
@@ -347,12 +314,40 @@
       <con:properties>
         <con:property>
           <con:name>MomentId</con:name>
-          <con:value/>
+          <con:value xsi:nil="true"/>
         </con:property>
       </con:properties>
       <con:returnProperties>
         <con:entry>MomentId</con:entry>
       </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="GetProgramOffers" id="20509669-e53a-4591-a178-0d1b864f8f96">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4607f14c-fd49-4eab-bc7e-4ba196bb73a9</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcesMarketingEvent#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="UpdateProgramOffer" id="daa9b1a5-bdae-474c-b307-6e3a3e0bc5ca">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>25d1254f-0637-4596-a5bf-1eba1aeac44c</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>SysOfferId</con:name>
+          <con:value>${#[OffersPrerequisite#GetProgramOffers#GetProgramOffers]#Response#$[0]['SysOfferId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
@@ -385,6 +380,11 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>97a4cef7-8ec7-47aa-a471-d6849caf13c2</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0b34af52-7bd5-412c-bf3e-0c3b33f355a9</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

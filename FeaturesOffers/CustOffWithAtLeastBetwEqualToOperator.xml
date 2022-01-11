@@ -4,6 +4,43 @@
     <con:setting id="78991458-7aee-46a8-a696-6cbf2647bbb0fileName">CustOffWithAtLeastBetwEqualToOperator</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="ProcessMarketingEventData" id="ac201d72-1759-4e45-8bf8-50a9450263db">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/ProcessMarketingEvent.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>MarketingEventChannelId</con:property>
+      <con:property>ChannelName</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceName</con:property>
+      <con:property>AudienceSource</con:property>
+      <con:property>PanelIdCustAct</con:property>
+      <con:property>PanelCodeCustAct</con:property>
+      <con:property>PanelIdCustRew</con:property>
+      <con:property>PanelCodeCustRew</con:property>
+      <con:property>PanelIdOfferLim</con:property>
+      <con:property>PanelCodeOfferLim</con:property>
+      <con:property>PackagedOfferCategoryId</con:property>
+      <con:property>PackagedOfferCategoryCode</con:property>
+      <con:startRow>2</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="ProcessMktEventWithEqualToOperator" id="7f042409-6596-4bc2-b43f-a0cfcb7e4699">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -16,15 +53,15 @@
 	
 	"MarketingEventChannels": [
 		{
-			"MarketingEventChannelId": "bce4fc4f-1b7d-2d49-b498-cea4e90a6105",
-			"ChannelName": "No Channel"
+			"MarketingEventChannelId": "${ProcessMarketingEventData#MarketingEventChannelId}",
+			"ChannelName": "${ProcessMarketingEventData#ChannelName}"
 		}
 	],
 	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 	
 		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 
 	"PackagedAudience": {
-		"PackagedAudienceId": "7ae1f987-515e-4669-e053-5ca8e70ad3ee",
-		"AudienceName": "All Members",
+		"PackagedAudienceId": "${ProcessMarketingEventData#PackagedAudienceId}",
+		"AudienceName": "${ProcessMarketingEventData#AudienceName}",
 		"AudienceDescription": "All enrolled members with an active profile status",
 		"PackagedAudienceParams": [
 			{
@@ -35,7 +72,7 @@
 			}
 		],
 	},
-	"AudienceSource": "PACKAGED_AUDIENCE",
+	"AudienceSource": "${ProcessMarketingEventData#AudienceSource}",
 	"PackagedOffer": {
 		"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
 		"PackagedOfferCode": "CUSTOM_OFFER",
@@ -48,8 +85,8 @@
 				"ParamName": "Spend amount is",
 				"ParamCode": "CUSTOM_TXN_AMT",
 				"Value": "100",
-				"PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
-				"PanelCode": "CUSTOMER_ACTIVITY",
+				"PanelId": "${ProcessMarketingEventData#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEventData#PanelCodeCustAct}",
 				"ParamOperatorId": "8a4966d0-8f8d-4cd7-8bfe-7974a7b4cd00",
 				"OperatorCode": "AT_LEAST",
 			},
@@ -60,8 +97,8 @@
 				"ParamName": "Point amount",
 				"ParamCode": "CUSTOM_POINT_AMT_REWARDED",
 				"Value": "10",
-				"PanelId": "e0e698ac-4291-d25d-e053-5dedef0ac6ef",
-				"PanelCode": "CUSTOMER_REWARD",
+				"PanelId": "${ProcessMarketingEventData#PanelIdCustRew}",
+				"PanelCode": "${ProcessMarketingEventData#PanelCodeCustRew}",
 			},
 			{
 				
@@ -89,8 +126,8 @@
 				"OperatorCode": "IN_BETWEEN",
 			}
 		],
-		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
-		"PackagedOfferCategoryCode": "CUSTOM_OFFER",
+		"PackagedOfferCategoryId": "${ProcessMarketingEventData#PackagedOfferCategoryId}",
+		"PackagedOfferCategoryCode": "${ProcessMarketingEventData#PackagedOfferCategoryCode}",
 		"CustomOfferActivityValue": {
 			"Type": "AND",
 			"GroupType": "GROUP",
@@ -368,6 +405,11 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>d51720d1-ad3e-42f1-8da3-17339d8466a2</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>ac201d72-1759-4e45-8bf8-50a9450263db</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

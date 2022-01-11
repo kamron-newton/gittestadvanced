@@ -4,6 +4,43 @@
     <con:setting id="260b6352-f2dc-43c9-af28-a3f1df7a6555fileName">Location-Bonus</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="ProcessMarketingEventData" id="72a6a17f-261c-4fd9-9272-178a8196ac23">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/ProcessMarketingEvent.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>MarketingEventChannelId</con:property>
+      <con:property>ChannelName</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceName</con:property>
+      <con:property>AudienceSource</con:property>
+      <con:property>PanelIdCustAct</con:property>
+      <con:property>PanelCodeCustAct</con:property>
+      <con:property>PanelIdCustRew</con:property>
+      <con:property>PanelCodeCustRew</con:property>
+      <con:property>PanelIdOfferLim</con:property>
+      <con:property>PanelCodeOfferLim</con:property>
+      <con:property>PackagedOfferCategoryId</con:property>
+      <con:property>PackagedOfferCategoryCode</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="ProcessMarketingEventLocationBonus" id="02161889-e9d8-4ab1-8f2b-a73c26e5f99a">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -17,17 +54,17 @@
 	"MarketingEventChannels": [
 		{
 
-			"MarketingEventChannelId": "bce4fc4f-1b7d-2d49-b498-cea4e90a6105",
-			"ChannelName": "No Channel"
+			"MarketingEventChannelId": "${ProcessMarketingEventData#MarketingEventChannelId}",
+			"ChannelName": "${ProcessMarketingEventData#ChannelName}"
 		}
 	],
-    "EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 	
-		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 
+    "EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
+		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 
 	"PackagedAudience": {
-		"PackagedAudienceId": "7ae1f987-515e-4669-e053-5ca8e70ad3ee",
-		"AudienceName": "All Members",
+		"PackagedAudienceId": "${ProcessMarketingEventData#PackagedAudienceId}",
+		"AudienceName": "${ProcessMarketingEventData#AudienceName}",
 	},
-	"AudienceSource": "PACKAGED_AUDIENCE",
+	"AudienceSource": "${ProcessMarketingEventData#AudienceSource}",
 	"PackagedOffer": {
 		"PackagedOfferId": "6c029289-c3c3-437d-b726-9c276fce02c3",
 		"PackagedOfferCode": "LOCATION_BONUS",
@@ -39,8 +76,8 @@
 				"ParamName": "Minimum transaction amount (optional)",
 				"ParamCode": "MINIMUM_PURCHASE_AMOUNT",	
 				"Value": "100",
-				"PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
-				"PanelCode": "CUSTOMER_ACTIVITY"
+				"PanelId": "${ProcessMarketingEventData#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEventData#PanelCodeCustAct}"
 			},
 
 			{
@@ -49,8 +86,8 @@
 				"ParamName": "Points per eligible dollar",
 				"ParamCode": "POINTS_PER_ELIG_DOLLAR",
 				"Value": "0.15",
-				"PanelId": "e0e698ac-4291-d25d-e053-5dedef0ac6ef",
-				"PanelCode": "CUSTOMER_REWARD"
+				"PanelId": "${ProcessMarketingEventData#PanelIdCustRew}",
+				"PanelCode": "${ProcessMarketingEventData#PanelCodeCustRew}"
 			},
 			{
 				"PackagedOfferParamId": "2f671272-2402-4f3d-bc6c-828f174652c8",
@@ -68,12 +105,12 @@
           "LocationSelectType": 0,
           "Chain": "FALL_RIVER"
         },
-        "PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
-        "PanelCode": "CUSTOMER_ACTIVITY"
+        "PanelId": "${ProcessMarketingEventData#PanelIdCustAct}",
+        "PanelCode": "${ProcessMarketingEventData#PanelCodeCustAct}"
 			}
 		],
-		"PackagedOfferCategoryId": "17872aea-5187-8d43-a4be-555c17300611",
-		"PackagedOfferCategoryCode": "TEMPLATES"
+		"PackagedOfferCategoryId": "${ProcessMarketingEventData#PackagedOfferCategoryId}",
+		"PackagedOfferCategoryCode": "${ProcessMarketingEventData#PackagedOfferCategoryCode}"
 	},
 	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
 	"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}",
@@ -314,6 +351,11 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>318de8f8-7a09-4cbc-b2e6-3bab230f93bf</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>72a6a17f-261c-4fd9-9272-178a8196ac23</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

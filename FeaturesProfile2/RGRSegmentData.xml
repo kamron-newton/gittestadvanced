@@ -3,6 +3,333 @@
   <con:settings>
     <con:setting id="3cb910f4-17a7-4377-8360-5e8b78d282d3fileName">RGRSegmentData</con:setting>
   </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="SegmentData" id="2b02c543-c8f9-47b7-a824-68856b18130e">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>1</generatedDataCount>
+          <generatorsTotalNumber>3</generatorsTotalNumber>
+          <lastSelectedProperty>2</lastSelectedProperty>
+          <GeneratorType0>CUSTOM</GeneratorType0>
+          <PropertyName0>SegmentDataName</PropertyName0>
+          <repetitionCountSegmentDataName>0</repetitionCountSegmentDataName>
+          <repeatValuesSegmentDataName>false</repeatValuesSegmentDataName>
+          <CustomStringDataGeneratorFormatSegmentDataName>ATTRITION_SCORE</CustomStringDataGeneratorFormatSegmentDataName>
+          <GeneratorType1>CUSTOM</GeneratorType1>
+          <PropertyName1>SegmentDataValue</PropertyName1>
+          <repetitionCountSegmentDataValue>0</repetitionCountSegmentDataValue>
+          <repeatValuesSegmentDataValue>false</repeatValuesSegmentDataValue>
+          <CustomStringDataGeneratorFormatSegmentDataValue>123</CustomStringDataGeneratorFormatSegmentDataValue>
+          <GeneratorType2>CUSTOM</GeneratorType2>
+          <PropertyName2>UpdatedSegmentDataValue</PropertyName2>
+          <repetitionCountUpdatedSegmentDataValue>0</repetitionCountUpdatedSegmentDataValue>
+          <repeatValuesUpdatedSegmentDataValue>false</repeatValuesUpdatedSegmentDataValue>
+          <CustomStringDataGeneratorFormatUpdatedSegmentDataValue>1234</CustomStringDataGeneratorFormatUpdatedSegmentDataValue>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>SegmentDataName</con:property>
+      <con:property>SegmentDataValue</con:property>
+      <con:property>UpdatedSegmentDataValue</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfile" id="6914d34c-8a14-4188-92ff-9d0fc5ef0c2e">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>dd227384-319f-4788-918b-85e9ce8bd8c3</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddSegmentToProfile" id="d1105c3d-7f53-4692-aadb-b4859d43ce00">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/segmentdata" methodName="SetProfileSegment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddSegmentToProfile" id="c6aa6cfa-ef43-4d92-98e6-d9e7dd974bf7" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SegmentData": [
+    {
+      "SegmentDataName": "${SegmentData#SegmentDataName}",
+      "SegmentDataValue": ${SegmentData#SegmentDataValue}
+    }
+  ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/segmentdata</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="52699313-685c-43d9-9c88-65bef1613d96" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="VerifySegmentData" id="5043c581-4a45-49b5-84bd-347274ba5c78">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/segmentdata" methodName="GetProfileSegments" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="VerifySegmentData" id="c6aa6cfa-ef43-4d92-98e6-d9e7dd974bf7" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/5f1d0de7-fd26-4686-8d51-2e48aadc6825/segmentdata</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="cd2aa21e-1b33-4f0d-b860-587f19031b2b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="0ee41bda-91cd-40f1-a3f3-2d593f225cfd" name="JSONPath Match">
+          <con:configuration>
+            <path>$['SegmentData'][0]['SegmentDataName']</path>
+            <content>${SegmentData#SegmentDataName}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileSegmentHistory" id="c9e67d9b-0265-4776-8072-22a07757dad5">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/segmentdata/segment/segmentHistory" methodName="GetProfileSegmentHistory" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileSegmentHistory" id="77455cca-2610-4db3-9efc-e8d876d763fe" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/5f1d0de7-fd26-4686-8d51-2e48aadc6825/segmentdata/segment/segmentHistory</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="1ef9ca6f-2d4d-4f34-aab1-533446d8c878" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="b812e630-d152-45e2-b0e5-50a2d28ea3b6" name="JSONPath Match">
+          <con:configuration>
+            <path>$[0]['SegmentDataName']</path>
+            <content>${SegmentData#SegmentDataName}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="segmentDataName" value="ATTRITION_SCORE"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>segmentDataName</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateSegmentData" id="79ca5897-6c9b-433a-9563-948721684c2b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/segmentdata" methodName="SetProfileSegment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateSegmentData" id="c6aa6cfa-ef43-4d92-98e6-d9e7dd974bf7" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SegmentData": [
+    {
+      "SegmentDataName": "${SegmentData#SegmentDataName}",
+      "SegmentDataValue": ${SegmentData#UpdatedSegmentDataValue}
+    }
+  ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/segmentdata</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="52699313-685c-43d9-9c88-65bef1613d96" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="cdd86dac-bbed-4799-9cb6-92554270ae6d" name="JSONPath Match">
+          <con:configuration>
+            <path>$['SegmentData'][0]['SegmentDataValue']</path>
+            <content>${SegmentData#UpdatedSegmentDataValue}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="DeleteSegment" id="f1a9bf98-9481-4e71-b1ec-29573fa06519">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/segmentdata/{segmentDataName}" methodName="DeleteProfileSegment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="DeleteSegment" id="53591f24-3894-4d28-9ef9-3ba77dc4e9ef" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/b221f973-3479-4871-83ae-39e948e87b79/segmentdata/ATTRITION_SCORE</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="066204d2-d353-4467-b9ea-3b23ce76744a" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="segmentDataName" value="${SegmentData#SegmentDataName}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>segmentDataName</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="VerifyDeletion" id="1f7f4b72-07a4-4375-aac6-17a884ae9b7d">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/segmentdata" methodName="GetProfileSegments" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="VerifyDeletion" id="c6aa6cfa-ef43-4d92-98e6-d9e7dd974bf7" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/5f1d0de7-fd26-4686-8d51-2e48aadc6825/segmentdata</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="cd2aa21e-1b33-4f0d-b860-587f19031b2b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="0ee41bda-91cd-40f1-a3f3-2d593f225cfd" name="JSONPath Match">
+          <con:configuration>
+            <path>$</path>
+            <content>null</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>2b02c543-c8f9-47b7-a824-68856b18130e</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f1a9bf98-9481-4e71-b1ec-29573fa06519</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
 </con:testCase>

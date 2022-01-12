@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="e8ba275d-c88d-4930-b974-a2f5a5e54c6a" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="OrderProfileRewardCertWithJSONExterData" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="8ea7e5cc-70b8-4b8c-b9b0-2960408d8dc4" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="PlaceOrderWithJsonExterData" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="e8ba275d-c88d-4930-b974-a2f5a5e54c6afileName">OrderProfileRewardCertWithJSONExterData</con:setting>
+    <con:setting id="8ea7e5cc-70b8-4b8c-b9b0-2960408d8dc4fileName">PlaceOrderWithJsonExterData</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="groovy" name="JSONEXTDATA" id="7708ecdc-5684-4daf-a925-46a5f4e2ddca">
+  <con:testStep type="groovy" name="JSONEXTDATA" id="7dcc3ae4-5de0-4a55-85ec-a4aafb0ad58a">
     <con:settings/>
     <con:config>
       <script>use (groovy.time.TimeCategory)
@@ -14,7 +14,17 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
 }</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddFixedReward" id="abbf275f-0721-4faa-94c5-24aa01c9f7e0">
+  <con:testStep type="groovy" name="JSONEXTDATADetail" id="441a959f-a64e-4fef-bec2-e28c2702959f">
+    <con:settings/>
+    <con:config>
+      <script>use (groovy.time.TimeCategory)
+{
+def today = new Date()+1
+def formattedDate = today.format("mmddyyyyhhmmssmmm")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddFixedReward" id="1583926c-c9bc-476b-bad5-638c3e186bc5">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>8bf5ee42-5590-4394-a74b-52da24ef4882</con:targetTestCase>
@@ -28,7 +38,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddProfileRGR" id="f5fbb575-ce3c-4f6f-89df-ee30735919f0">
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="f6a1079d-56e1-47e8-b6da-40864826b9ec">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
@@ -41,7 +51,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddAdjustment" id="cde7c856-3325-4900-bd23-1cfd1c5af703">
+  <con:testStep type="calltestcase" name="AddAdjustment" id="196f7690-b9fe-4858-93fe-b9ff86729971">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>d3339fb2-45d2-479b-9947-1ea66f3877fa</con:targetTestCase>
@@ -63,23 +73,49 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="OrderProfileRewardCertificate" id="957a478d-28c2-4926-abe9-9e33d999afbc">
+  <con:testStep type="calltestcase" name="AddProfileMulCart" id="050e767c-8a75-4489-b998-0887eecdcfa3">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/certificates" methodName="OrderProfileRewardCertificate" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="OrderProfileRewardCertificate" id="e354648b-37e1-4496-a132-c435c1467f5b" mediaType="application/json" postQueryString="false">
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>9ebbff1b-7202-4274-8a3f-0c718860cfc0</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>RewardId</con:name>
+          <con:value>${#[ActivityOrder#AddFixedRewardFraud#RewardId]#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>RewardQuantity</con:name>
+          <con:value>1</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="PlaceOrder" id="e784d451-84fe-45e2-8788-23a34b1ed6d4">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/catalogs/orders" methodName="PlaceOrder" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="PlaceOrder" id="8d02832b-3c04-477f-9d8e-53363a8ed3b0" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-"RewardCode": "${AddFixedReward#rewardCode}",
+  "EmailAddress": "test@dx2mail.com",
 "JsonExternalData": {
-"RewardCatogoryCode": "JSON${JSONEXTDATA#result}"
+"RewardOrderheaderJson": "JSON${JSONEXTDATA#result}"
+},
+  "OrderDetails": [
+    {
+      "RewardId": "${#[ActivityOrder#AddFixedRewardFraud#RewardId]#result}",
+      "Quantity": 1,
+"JsonExternalData": {
+"RewardOrderDetailJson": "JSON${JSONEXTDATADetail#result}"
 }
-}
+    }
+  ]
 }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/certificates</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="79494a8e-b073-4b17-8b1b-1266f7a21262" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/6eadadbc-eca7-4f7c-bc60-dbacf170a25b/rewards/catalogs/orders</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="0ec1e535-3624-42f4-bea9-bdd7b47a3ab4" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>201</codes>
@@ -115,7 +151,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileOrderById" id="9be5d424-3e95-4c30-9fb7-407ba8ca38a1">
+  <con:testStep type="restrequest" name="GetProfileOrderById" id="ca05be30-3702-4908-954b-14771bed9a89">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/catalogs/orders/{orderId}" methodName="GetProfileOrderById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetProfileOrderById" id="92047192-20ce-4022-a194-72c068fa9db7" mediaType="application/json">
@@ -133,8 +169,8 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         </con:assertion>
         <con:assertion type="JsonPath Match" id="02332a76-8d2e-4728-9d00-e95294270ce8" name="JsonExternalData Validation">
           <con:configuration>
-            <path>$.JsonExternalData.RewardCatogoryCode</path>
-            <content>${OrderProfileRewardCertificate#Response#$['JsonExternalData']['RewardCatogoryCode']}</content>
+            <path>$.JsonExternalData.RewardOrderheaderJson</path>
+            <content>${PlaceOrder#Response#$['JsonExternalData']['RewardOrderheaderJson']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -147,7 +183,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="orderId" value="${OrderProfileRewardCertificate#Response#$['OrderId']}"/>
+          <con:entry key="orderId" value="${PlaceOrder#Response#$['OrderId']}"/>
           <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
@@ -176,7 +212,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
-    <con:testStepId>7708ecdc-5684-4daf-a925-46a5f4e2ddca</con:testStepId>
+    <con:testStepId>441a959f-a64e-4fef-bec2-e28c2702959f</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

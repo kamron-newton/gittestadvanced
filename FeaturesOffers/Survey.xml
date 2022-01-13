@@ -236,6 +236,52 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="BuildSurvey" id="050c1298-66a5-4608-9fd8-1e8ad21a00a2">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/surveys/surveys/{surveyId}/buildsurvey" methodName="BuildSurvey" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="BuildSurvey" id="201bd69c-e11f-42b6-b3b9-63c5df03369f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ProgramCode": "${Survey#ProgramCode}",
+  "Questions": [
+    {
+      "QuestionId": "${GetQuestions#Response#$[0]['QuestionId']}",
+      "QuestionOrder": 1,  
+      "ResponseTypeCode": "${Survey#ResponseTypeCode}",
+      "ValidationTypeCode": "${Survey#ValidationTypeCode}",
+      "Answers": [
+        {
+          "AnswerId": "${GetAnswers#Response#$[0]['AnswerId']}",
+          "AnswerOrder": 1
+        }
+      ]
+    },
+  ],
+  "Status": "${Survey#Status}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/surveys/surveys/buildsurvey</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="4b8af4bb-4206-4130-a41c-a41af58ac981" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="surveyId" value="${AddSurvey#Response#$['SurveyId']}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="AddProfileRGR" id="a67153e8-7e0b-43c2-aa1b-6d7e72ac3083">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -370,52 +416,6 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddProfileSurveyAnswer" id="0d096a53-7ed1-4785-8188-d0c46193429b">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/surveys/{surveyId}/questions/{questionId}" methodName="AddProfileSurveyAnswer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="AddProfileSurveyAnswer" id="0104d493-6b0f-48e9-b497-fa666eee0a3d" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "ProgramCode": "${Survey#ProgramCode}",
-  "Questions": [
-    {
-      "QuestionId": "${GetQuestions#Response#$[0]['QuestionId']}",
-      "QuestionOrder": 1,  
-      "ResponseTypeCode": "${Survey#ResponseTypeCode}",
-      "ValidationTypeCode": "${Survey#ValidationTypeCode}",
-      "Answers": [
-        {
-          "AnswerId": "${GetAnswers#Response#$[0]['AnswerId']}",
-          "AnswerOrder": 1
-        }
-      ]
-    },
-  ],
-  "Status": "${Survey#Status}"
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/surveys/questions/</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="2650d2d1-e78c-4ec1-b3c3-be225f6ea31f" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="surveyId" value="${AddSurvey#Response#$['SurveyId']}"/>
-          <con:entry key="questionId" value="${GetQuestions#Response#$[0]['QuestionId']}"/>
-          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
-        </con:parameters>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
@@ -439,7 +439,7 @@
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>0d096a53-7ed1-4785-8188-d0c46193429b</con:testStepId>
+    <con:testStepId>050c1298-66a5-4608-9fd8-1e8ad21a00a2</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

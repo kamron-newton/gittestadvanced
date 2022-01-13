@@ -159,10 +159,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="7b396453-73fc-486f-83b4-f0d12b502f7d">
+  <con:testStep type="calltestcase" name="RunMarketingEventJob" id="766de9cd-b45e-47f8-bcb0-5780a023ec11">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
+      <con:targetTestCase>b033f509-ccf7-4703-a30f-947c1731ed44</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
@@ -173,32 +173,18 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="95cb4836-b83c-4f5b-981c-4ab61f9f2b14">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>4e31c31c-5e5f-4dab-8caf-7c5cf7fef68f</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>EventCode</con:name>
-          <con:value>${ApproveMarketingEvent#EventCode}</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="WaitForBatchJob" id="03fbb0dd-5161-4a44-8165-f42332c534d9">
+  <con:testStep type="calltestcase" name="WaitForBatchJobCount" id="65425a4d-0c13-4b10-aaca-fe420ff51a33">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>JobId</con:name>
-          <con:value>${#[OffersPrerequisite#DeployMarketingPromotion#DeployMarketingPromotion]#Response#$['BatchJobId']}</con:value>
+          <con:value>${#[OffersPrerequisite#RunMarketingEventJob#RunMarketingEventJob]#Response#$['BatchJobId']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+      <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="GetMarketingEventbyEventCode" id="ee2de051-45f2-4fd4-9621-59fa706f300c">
@@ -240,12 +226,112 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>3b1e6e28-1984-4051-869f-83988f4b459d</con:value>
+          <con:value>bf4a11a7-7f77-40ae-9b92-a70cdb3c3fc0</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
         <con:entry>ProfileId</con:entry>
       </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunMarketingEventJob 2" id="c8d24ac1-3610-44e5-8d85-8723fd2806a7">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>b033f509-ccf7-4703-a30f-947c1731ed44</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEventCertTrxn#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="WaitForBatchJobCount 2" id="cae8f5f9-504b-45f8-872d-4d5ae541abba">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>JobId</con:name>
+          <con:value>${#[OffersPrerequisite#RunMarketingEventJob#RunMarketingEventJob]#Response#$['BatchJobId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode 2" id="622a0bde-5259-4051-b9b1-1eb9c356cdf4">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetMarketingEventbyEventCode" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetMarketingEventbyEventCode 2" id="65238c02-5ba1-41b4-90f5-cc1d0ca30e98" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b4017063-0878-4c70-999f-123e6d4b95da" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="eventCode" value="${ProcessMarketingEventCertTrxn#Response#$['EventCode']}"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="7b396453-73fc-486f-83b4-f0d12b502f7d">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEventCertTrxn#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="95cb4836-b83c-4f5b-981c-4ab61f9f2b14">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4e31c31c-5e5f-4dab-8caf-7c5cf7fef68f</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ApproveMarketingEvent#EventCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="WaitForBatchJob" id="03fbb0dd-5161-4a44-8165-f42332c534d9">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>JobId</con:name>
+          <con:value>${#[OffersPrerequisite#DeployMarketingPromotion#DeployMarketingPromotion]#Response#$['BatchJobId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
@@ -326,7 +412,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="78a9904b-786d-43f7-8168-1ce40b60e352" name="JSONPath Match">
           <con:configuration>
-            <path>$.[?(@.ProfileId== '${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}')].RewardCode[1]</path>
+            <path>$.[?(@.ProfileId== '${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}')].RewardCode</path>
             <content>${AddFlexibleDateRew#rewardCode}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -449,6 +535,41 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>891409fd-f46b-4654-93bb-326dc4dac378</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>766de9cd-b45e-47f8-bcb0-5780a023ec11</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>65425a4d-0c13-4b10-aaca-fe420ff51a33</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>ee2de051-45f2-4fd4-9621-59fa706f300c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>5fef7042-b63d-4056-a931-75045b90d27c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>c8d24ac1-3610-44e5-8d85-8723fd2806a7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>cae8f5f9-504b-45f8-872d-4d5ae541abba</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>622a0bde-5259-4051-b9b1-1eb9c356cdf4</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

@@ -30,6 +30,45 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
+  <con:testStep type="datasource" name="Survey" id="85d02673-1dfd-4df0-b1c0-446e140edaa4">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/Survey.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>SurveyDescription</con:property>
+      <con:property>StoreAsPreferenceInd</con:property>
+      <con:property>IsDefaultSurvey</con:property>
+      <con:property>IntroductoryCaption</con:property>
+      <con:property>CompletionMessage</con:property>
+      <con:property>Question</con:property>
+      <con:property>AnswerDescription</con:property>
+      <con:property>AnswerType</con:property>
+      <con:property>AnswerValue</con:property>
+      <con:property>Status</con:property>
+      <con:property>ResponseTypeCode</con:property>
+      <con:property>ValidationTypeCode</con:property>
+      <con:property>SurveyCode</con:property>
+      <con:property>SurveyQuestionAnswerId</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetAnswers" id="5c23c588-184c-4a2b-84b2-be9f0b31d9a3">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/surveys/answers" methodName="GetAnswers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -159,10 +198,248 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="AddSurvey" id="e5455043-da9f-47de-b67e-395b80bef5b0">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/surveys/surveys" methodName="AddSurvey" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddSurvey" id="33467203-3c8e-4524-a4ab-13e383602375" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SurveyCode": "SURVEY_CODE-${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}",
+  "SurveyDescription": "Std Survey for Survey Moment${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}",
+  "CategoryId": "${AddSurveyCategory#Response#$['CategoryId']}",
+  "StoreAsPreferenceInd": "${Survey#StoreAsPreferenceInd}",
+  "IsDefaultSurvey": "${Survey#IsDefaultSurvey}",
+  "SurveyStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
+  "SurveyEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}",
+  "IntroductoryCaption": "${Survey#IntroductoryCaption}",
+  "CompletionMessage": "${Survey#CompletionMessage}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/surveys/surveys</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="dd433a7c-3831-4d71-b737-52d8e3c97261" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="a67153e8-7e0b-43c2-aa1b-6d7e72ac3083">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value/>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="ProcessMarketingEvent" id="c5671acd-4c1e-4176-aa06-9d1857eea438">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/ProcessMarketingEvent.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>MarketingEventChannelId</con:property>
+      <con:property>ChannelName</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceName</con:property>
+      <con:property>AudienceSource</con:property>
+      <con:property>PanelIdCustAct</con:property>
+      <con:property>PanelCodeCustAct</con:property>
+      <con:property>PanelIdCustRew</con:property>
+      <con:property>PanelCodeCustRew</con:property>
+      <con:property>PanelIdOfferLim</con:property>
+      <con:property>PanelCodeOfferLim</con:property>
+      <con:property>PackagedOfferCategoryId</con:property>
+      <con:property>PackagedOfferCategoryCode</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessMarkeyingEventSurvey" id="8ae826ac-df30-45be-8db0-f85c2d412c25">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessMarkeyingEventSurvey" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MarketingEventChannels": [
+		{
+		  "MarketingEventChannelId": "${ProcessMarketingEvent#MarketingEventChannelId}",
+		  "Status": "A"
+		},
+	],
+	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
+		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}",
+	"ProgramCode": "PP",
+	"PackagedAudience": {
+		"PackagedAudienceId": "${ProcessMarketingEvent#PackagedAudienceId}",
+		"AudienceName": "${ProcessMarketingEvent#AudienceName}",
+		"PackagedAudienceParams": []
+	},
+	"AudienceSource": "${ProcessMarketingEvent#AudienceSource}",	
+                "PackagedOffer": {
+		"PackagedOfferId": "f7fa7f59-1636-1a43-acae-c6ccb5724ea4",
+		"PackagedOfferParams":[
+				{
+				"PackagedOfferId": "f7fa7f59-1636-1a43-acae-c6ccb5724ea4",
+				"PackagedOfferParamId": "ef84399b-8646-4c99-9f02-d514da0a4eb0",
+				"ParamName":"Complete Survey",
+				"ParamCode": "SURVEY_CODE",
+				"Value": "${AddSurvey#Response#$['SurveyCode']}"
+				},
+{
+				"PackagedOfferId": "f7fa7f59-1636-1a43-acae-c6ccb5724ea4",
+				"PackagedOfferParamId": "22da4b4a-ee65-45df-b8d5-c4871a384312",
+				"ParamName":"Point amount (optional)",
+				"ParamCode": "POINT_AMT",
+				"Value": "10"
+				}
+		]
+	},
+     "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
+	"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}",
+      "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="0ca49ba7-1afd-43c9-b5f4-c47fd1b0250c" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="validateOffer" value="false"/>
+          <con:entry key="validateAudience" value="false"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>validateAudience</con:entry>
+          <con:entry>validateOffer</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddProfileSurveyAnswer" id="0d096a53-7ed1-4785-8188-d0c46193429b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/surveys/{surveyId}/questions/{questionId}" methodName="AddProfileSurveyAnswer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddProfileSurveyAnswer" id="0104d493-6b0f-48e9-b497-fa666eee0a3d" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ProgramCode": "${Survey#ProgramCode}",
+  "Questions": [
+    {
+      "QuestionId": "${GetQuestions#Response#$[0]['QuestionId']}",
+      "QuestionOrder": 1,  
+      "ResponseTypeCode": "${Survey#ResponseTypeCode}",
+      "ValidationTypeCode": "${Survey#ValidationTypeCode}",
+      "Answers": [
+        {
+          "AnswerId": "${GetAnswers#Response#$[0]['AnswerId']}",
+          "AnswerOrder": 1
+        }
+      ]
+    },
+  ],
+  "Status": "${Survey#Status}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/surveys/questions/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="2650d2d1-e78c-4ec1-b3c3-be225f6ea31f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="surveyId" value="${AddSurvey#Response#$['SurveyId']}"/>
+          <con:entry key="questionId" value="${GetQuestions#Response#$[0]['QuestionId']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>afba0df9-d6d9-4ce8-bced-db4bda1f5e44</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>85d02673-1dfd-4df0-b1c0-446e140edaa4</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>a67153e8-7e0b-43c2-aa1b-6d7e72ac3083</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>c5671acd-4c1e-4176-aa06-9d1857eea438</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0d096a53-7ed1-4785-8188-d0c46193429b</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

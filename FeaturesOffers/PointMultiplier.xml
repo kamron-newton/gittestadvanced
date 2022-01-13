@@ -1,0 +1,1830 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="f67b1be8-5901-4140-b79f-4bfcca4ceed8" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="PointMultiplier" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="f67b1be8-5901-4140-b79f-4bfcca4ceed8fileName">PointMultiplier</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="ProcessMarketingEvent" id="a7a607b2-e127-48a2-a81c-d45c7312e7b6">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/ProcessMarketingEvent.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>MarketingEventChannelId</con:property>
+      <con:property>ChannelName</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceName</con:property>
+      <con:property>AudienceSource</con:property>
+      <con:property>PanelIdCustAct</con:property>
+      <con:property>PanelCodeCustAct</con:property>
+      <con:property>PanelIdCustRew</con:property>
+      <con:property>PanelCodeCustRew</con:property>
+      <con:property>PanelIdOfferLim</con:property>
+      <con:property>PanelCodeOfferLim</con:property>
+      <con:property>PackagedOfferCategoryId</con:property>
+      <con:property>PackagedOfferCategoryCode</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessMarketingEventPointMul" id="353f3750-1f70-4610-82f2-e229624290ac">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessMarketingEventPointMul" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MarketingEventChannels": [
+		{
+			
+			"MarketingEventChannelId": "${ProcessMarketingEvent#MarketingEventChannelId}", 
+			"ChannelName": "${ProcessMarketingEvent#ChannelName}",
+		}
+	],
+	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 	
+	"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 
+	"PackagedAudience": {
+			"PackagedAudienceId": "${ProcessMarketingEvent#PackagedAudienceId}",
+               "AudienceName": "${ProcessMarketingEvent#AudienceName}",		
+	},
+	"AudienceSource": "${ProcessMarketingEvent#AudienceSource}", 
+	"PackagedOffer": {
+		"PackagedOfferId": "a23bcbd3-92de-b45b-e053-5dedef0ad2b6",		
+		"PackagedOfferCode": "POINT_MULTIPLIER",
+		"PackagedOfferName": "Point multiplier",
+		"PackagedOfferParams": [
+			{
+				
+				"PackagedOfferParamId": "a23bcbd3-94de-b45b-e053-5dedef0ad2b6",
+				"PackagedOfferId": "a23bcbd3-92de-b45b-e053-5dedef0ad2b6",
+				"ParamName": "Minimum nights (optional)",
+				"ParamCode": "MINIMUM_NIGHTS",
+				"PanelId": "${ProcessMarketingEvent#PanelIdCustAct}",  			
+			"PanelCode":  "${ProcessMarketingEvent#PanelCodeCustAct}",
+			},
+			{
+				
+				"PackagedOfferParamId": "a23bcbd3-98de-b45b-e053-5dedef0ad2b6",
+				"PackagedOfferId": "a23bcbd3-92de-b45b-e053-5dedef0ad2b6",
+				"ParamName": "Maximum offers per member (optional)",
+				"ParamCode": "MAX_OFFERS_PER_MEMBER",
+				"PanelId": "${ProcessMarketingEvent#PanelIdOfferLim}",
+				"PanelCode": "${ProcessMarketingEvent#PanelCodeOfferLim}"
+			},
+			{
+				
+				"PackagedOfferParamId": "a23bcbd3-97de-b45b-e053-5dedef0ad2b6",
+				"PackagedOfferId": "a23bcbd3-92de-b45b-e053-5dedef0ad2b6",
+				"ParamName": "Points per eligible dollar",
+				"ParamCode": "POINTS_PER_ELIG_DOLLAR",
+				"Value": "2",
+				"PanelId": "${ProcessMarketingEvent#PanelIdCustRew}",				
+			"PanelCode": "${ProcessMarketingEvent#PanelCodeCustRew}",
+			},
+			{
+				
+				"PackagedOfferParamId": "a23bcbd3-95de-b45b-e053-5dedef0ad2b6",
+				"PackagedOfferId": "a23bcbd3-92de-b45b-e053-5dedef0ad2b6",
+				"ParamName": "Purchase",
+				"ParamCode": "OPTIONALPRODUCT",
+				"Value": "Any rate code / product category",
+				"ParamCustomValue": {
+					"ProductLevelList": [],
+					"ProductCode": [],
+					"DisplayProductCode": [],
+					"ProductSelectType": 2
+				},
+				"PanelId": "${ProcessMarketingEvent#PanelIdCustAct}",  			
+			"PanelCode":  "${ProcessMarketingEvent#PanelCodeCustAct}",
+			},
+			{
+				
+				"PackagedOfferParamId": "a23bcbd3-99de-b45b-e053-5dedef0ad2b6",
+				"PackagedOfferId": "a23bcbd3-92de-b45b-e053-5dedef0ad2b6",
+				"ParamName": "Maximum points issued per member (optional)",
+				"ParamCode": "MAX_POINTS_PER_MEMBER",
+				"PanelId": "e0e698ac-4391-d25d-e053-5dedef0ac6ef",
+				"PanelCode": "OFFER_LIMITS"
+			},
+			{
+				
+				"PackagedOfferParamId": "a23bcbd3-96de-b45b-e053-5dedef0ad2b6",
+				"PackagedOfferId": "a23bcbd3-92de-b45b-e053-5dedef0ad2b6",
+				"ParamName": "Visit",
+				"ParamCode": "OPTIONALLOCATION",
+				"Value": "Any location",
+				"ParamCustomValue": {
+					"StoreCode": [],
+					"DisplayStoreCode": [],
+					"LocationSelectType": 2,
+					"FileName": null
+				},
+				"PanelId": "${ProcessMarketingEvent#PanelIdCustAct}",  			
+			"PanelCode":  "${ProcessMarketingEvent#PanelCodeCustAct}",
+			}
+		],
+	"PackagedOfferCategoryId": "${ProcessMarketingEvent#PackagedOfferCategoryId}",
+			"PackagedOfferCategoryCode": "${ProcessMarketingEvent#PackagedOfferCategoryCode}",
+	},
+	 "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
+			"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}", 
+	
+}</con:request>
+        <con:originalUri>https://d2aldv-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="d7664c17-3abc-4b2f-93d2-ce58adf21d4f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="validateOffer" value="false"/>
+          <con:entry key="validateAudience" value="false"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>validateAudience</con:entry>
+          <con:entry>validateOffer</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunMarketingEventJob" id="8dbeae28-83b2-404b-abb2-de583f59d8a4">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>b033f509-ccf7-4703-a30f-947c1731ed44</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEventPointMul#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="WaitForBatchJobCount" id="3b82572a-da02-413d-a4c0-7c0bb4a99720">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>JobId</con:name>
+          <con:value>${#[OffersPrerequisite#RunMarketingEventJob#RunMarketingEventJob]#Response#$['BatchJobId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode" id="64baee48-669f-4448-98e0-599530309168">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetMarketingEventbyEventCode" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetMarketingEventbyEventCode" id="65238c02-5ba1-41b4-90f5-cc1d0ca30e98" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b4017063-0878-4c70-999f-123e6d4b95da" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="eventCode" value="${ProcessMarketingEventPointMul#Response#$['EventCode']}"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="a0ebd5e0-c9e7-476d-8c83-31522fc467d9">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>45753bd3-d304-49ce-ba87-68de68b342d1</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunMarketingEventJob 2" id="7f20714a-772d-4f67-bdb7-9cde52e9cc38">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>b033f509-ccf7-4703-a30f-947c1731ed44</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEventPointMul#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="WaitForBatchJobCount 2" id="76a92cc4-7554-4dda-936f-8cc2f967bf2d">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>JobId</con:name>
+          <con:value>${#[OffersPrerequisite#RunMarketingEventJob#RunMarketingEventJob]#Response#$['BatchJobId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode2" id="857d2fd4-411f-44ab-a55e-8b39ddc44893">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetMarketingEventbyEventCode" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetMarketingEventbyEventCode2" id="65238c02-5ba1-41b4-90f5-cc1d0ca30e98" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b4017063-0878-4c70-999f-123e6d4b95da" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="MessageContentAssertion" id="f81d1668-7a4b-437a-9c9e-9cf19c6798b7" name="Message Content Assertion">
+          <con:configuration xsi:type="con:MessageContentAssertion">
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:MarketingEventId[1]</con:xpath>
+              <con:element>MarketingEventId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>c2fb4175-9726-4598-bc2a-c6339ab4510b</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:MarketingEventChannels[1]/ns1:e[1]/ns1:MarketingEventId[1]</con:xpath>
+              <con:element>MarketingEventId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>c2fb4175-9726-4598-bc2a-c6339ab4510b</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:MarketingEventChannels[1]/ns1:e[1]/ns1:MarketingEventChannelId[1]</con:xpath>
+              <con:element>MarketingEventChannelId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>bce4fc4f-1b7d-2d49-b498-cea4e90a6105</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:MarketingEventChannels[1]/ns1:e[1]/ns1:ChannelName[1]</con:xpath>
+              <con:element>ChannelName</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>No Channel</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:EventName[1]</con:xpath>
+              <con:element>EventName</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PROMO_NAME38643971</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:EventCode[1]</con:xpath>
+              <con:element>EventCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PROMO_CODE17394599</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:EventStatus[1]</con:xpath>
+              <con:element>EventStatus</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DRAFT</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:ProgramCode[1]</con:xpath>
+              <con:element>ProgramCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PP</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:PackagedAudienceId[1]</con:xpath>
+              <con:element>PackagedAudienceId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>7ae1f987-515e-4669-e053-5ca8e70ad3ee</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:MarketingEventId[1]</con:xpath>
+              <con:element>MarketingEventId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>c2fb4175-9726-4598-bc2a-c6339ab4510b</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:AudienceName[1]</con:xpath>
+              <con:element>AudienceName</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>All Members</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:AudienceDescription[1]</con:xpath>
+              <con:element>AudienceDescription</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>All enrolled members with an active profile status</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:type[1]</con:xpath>
+              <con:element>type</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AND</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:groupType[1]</con:xpath>
+              <con:element>groupType</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>GROUP</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:type[1]</con:xpath>
+              <con:element>type</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AND</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:groupType[1]</con:xpath>
+              <con:element>groupType</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>GROUP</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[1]/ns1:type[1]</con:xpath>
+              <con:element>type</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ATTRIBUTE</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[1]/ns1:attributeName[1]</con:xpath>
+              <con:element>attributeName</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PROGRAMCODE</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[1]/ns1:attributeId[1]</con:xpath>
+              <con:element>attributeId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>{{PROFILE_MASTER~PROGRAMCODE~ID}}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[1]/ns1:operator[1]</con:xpath>
+              <con:element>operator</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EQ</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[1]/ns1:values[1]/ns1:e[1]</con:xpath>
+              <con:element>e</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>{{PROGRAMCODE}}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[1]/ns1:tableId[1]</con:xpath>
+              <con:element>tableId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PROFILE_MASTER</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[1]/ns1:caseSensitive[1]</con:xpath>
+              <con:element>caseSensitive</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>false</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[2]/ns1:type[1]</con:xpath>
+              <con:element>type</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ATTRIBUTE</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[2]/ns1:attributeName[1]</con:xpath>
+              <con:element>attributeName</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ENROLLMENTSTATUS</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[2]/ns1:attributeId[1]</con:xpath>
+              <con:element>attributeId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>{{PROFILE_MASTER~ENROLLMENTSTATUS~ID}}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[2]/ns1:operator[1]</con:xpath>
+              <con:element>operator</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EQ</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[2]/ns1:values[1]/ns1:e[1]</con:xpath>
+              <con:element>e</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>A</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[2]/ns1:tableId[1]</con:xpath>
+              <con:element>tableId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PROFILE_MASTER</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[1]/ns1:conditions[1]/ns1:e[2]/ns1:caseSensitive[1]</con:xpath>
+              <con:element>caseSensitive</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>false</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[2]/ns1:type[1]</con:xpath>
+              <con:element>type</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ATTRIBUTE</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[2]/ns1:attributeName[1]</con:xpath>
+              <con:element>attributeName</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PROFILESTATUS</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[2]/ns1:attributeId[1]</con:xpath>
+              <con:element>attributeId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>{{PROFILE_MASTER~PROFILESTATUS~ID}}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[2]/ns1:operator[1]</con:xpath>
+              <con:element>operator</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EQ</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[2]/ns1:values[1]/ns1:e[1]</con:xpath>
+              <con:element>e</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>A</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[2]/ns1:tableId[1]</con:xpath>
+              <con:element>tableId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PROFILE_MASTER</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:HarmonyTemplate[1]/ns1:conditions[1]/ns1:e[2]/ns1:caseSensitive[1]</con:xpath>
+              <con:element>caseSensitive</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>false</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:PackagedAudienceParams[1]</con:xpath>
+              <con:element>PackagedAudienceParams</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>exists</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue xsi:nil="true"/>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:AudienceMomentEligibleCriteriaPart[1]</con:xpath>
+              <con:element>AudienceMomentEligibleCriteriaPart</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PurchaseTxn.Enrollment.MemberStatus == \"A\"</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedAudience[1]/ns1:SurveyMomentEligibleCriteriaPart[1]</con:xpath>
+              <con:element>SurveyMomentEligibleCriteriaPart</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ProfileSurveyResponse.Enrollment.MemberStatus == \"A\"</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:AudienceSource[1]</con:xpath>
+              <con:element>AudienceSource</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PACKAGED_AUDIENCE</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferId[1]</con:xpath>
+              <con:element>PackagedOfferId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>327a3e11-59eb-4867-9711-dbf011421ae6</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:MarketingEventId[1]</con:xpath>
+              <con:element>MarketingEventId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>c2fb4175-9726-4598-bc2a-c6339ab4510b</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferCode[1]</con:xpath>
+              <con:element>PackagedOfferCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EARN_POINTS_ON_TXN</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferName[1]</con:xpath>
+              <con:element>PackagedOfferName</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Earn Points on a Transaction</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferDescription[1]</con:xpath>
+              <con:element>PackagedOfferDescription</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Earn points for spending a minimum amount</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:MomentTemplate[1]</con:xpath>
+              <con:element>MomentTemplate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>{
+"MomentCode": "{{MOMENTCODE}}",
+"StartDate": "{{STARTDATE}}",
+"EndDate": "{{ENDDATE}}",
+"Description": "{{DESCRIPTION}}",
+"MomentType": "PROMOTIONAL_CURRENCY",
+"MomentStatus": "A",
+"MomentResponseValues": [
+ {
+  "MomentCode": "{{MOMENTCODE}}",
+  "MomentType": "PROMOTIONAL_CURRENCY",
+  "ResponsePropertyName": "BASE INDICATOR",
+  "ResponsePropertyValue": "N",
+  "Status": "P"
+ },
+ {
+  "MomentCode": "{{MOMENTCODE}}",
+  "MomentType": "PROMOTIONAL_CURRENCY",
+  "ResponsePropertyName": "ENGAGE INDICATOR",
+  "ResponsePropertyValue": "Y",
+  "Status": "P"
+ },
+ {
+  "MomentCode": "{{MOMENTCODE}}",
+  "MomentType": "PROMOTIONAL_CURRENCY",
+  "ResponsePropertyName": "POINT SUBTYPE",
+  "ResponsePropertyValue": "{{DEFAULTPOINTSUBTYPEID}}",
+  "Status": "P"
+ },
+ {
+  "MomentCode": "{{MOMENTCODE}}",
+  "MomentType": "PROMOTIONAL_CURRENCY",
+  "ResponsePropertyName": "POINT TYPE",
+  "ResponsePropertyValue": "{{DEFAULTPOINTTYPEID}}",
+  "Status": "P"
+ }
+],
+"MomentEvent": {
+ "MomentCode": "{{MOMENTCODE}}",
+ "EventType": "PurchaseTxn",
+ "MomentQualifyingDateAttribute": "PurchaseTxn.TransactionDateTime",
+ "MomentOffers": [
+  {
+   "MomentCode": "{{MOMENTCODE}}",
+   "EventType": "PurchaseTxn",
+   "OfferName": "{{MOMENTCODE}}",
+   "Description": "{{DESCRIPTION}}",
+   "MomentOutcome": {
+    "MomentCode": "{{MOMENTCODE}}",
+    "EventType": "PurchaseTxn",
+    "OfferName": "{{MOMENTCODE}}",
+    "OutcomeEquationUi": "{{POINT_AMT_REWARDED}}",
+    "CalculationTemplate": "&lt;fixedpoints,[Number]>",
+    "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22{{POINT_AMT_REWARDED}}%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf({{POINT_AMT_REWARDED}})%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",
+    "FormulaName": "FIXEDAMT",
+    "Status": "A"
+   },
+   "MomentQualifyingRule": {
+    "MomentCode": "{{MOMENTCODE}}",
+    "EventType": "PurchaseTxn",
+    "OfferName": "{{MOMENTCODE}}",
+    "RuleEquationUI": "PurchaseTxn.ProgramCode ==\"{{PROGRAMCODE}}\" &amp;&amp; {{MOMENT_ELIGIBILITY_CRITERIA_PART}} &amp;&amp; PurchaseTxn.TransactionEligible >={{MIN_TXN_AMT}} {{AUDIENCE}}",
+    "MomentCap": [{{MAX_OFFERS_PER_MEMBER_TEMPLATE}}{{MAX_POINTS_PER_MEMBER_TEMPLATE}}]
+   },
+   "Status": "A"
+  }
+ ]
+},
+"Status": "A",
+"BestOfferIndicator": false,
+"AdvancedModeIndicator": false,
+"IsTestUser": false,
+"ReleaseState": "P"
+}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:SimulationQueryTemplate[1]</con:xpath>
+              <con:element>SimulationQueryTemplate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>SELECT COUNT(distinct profile_id) AS unique_customers, SUM(profile_trans) AS total_offers, SUM(profile_points) AS total_points,
+ceil(SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}) AS avg_offers_per_day,
+ceil(SUM(profile_points)/{{SIMULATION_DATE_DIFF}}) AS avg_points_per_day,
+ceil((SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}) * {{OFFER_DATE_DIFF}}) AS projected_total_offers,
+ceil((SUM(profile_points)/{{SIMULATION_DATE_DIFF}}) * {{OFFER_DATE_DIFF}}) AS projected_total_points
+FROM
+(
+    SELECT profile_id,
+    {{OFFERS_QUERY}}
+    FROM t_act_transaction
+    WHERE program_code = :ProgramCode AND status IN ('A','P') AND (transaction_type_code IN ('PR','EP') OR (transaction_type_code IN ('RT','ER','EX') AND act_transaction_xref_id is null))
+    AND transaction_date >= :SIMULATION_START_DATE AND transaction_date &lt; :SIMULATION_END_DATE AND eligible_revenue >= {{MIN_TXN_AMT}}
+    {{AUDIENCE_QUERY}}
+    GROUP BY profile_id
+)</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:OfferMomentEligibleCriteriaPart[1]</con:xpath>
+              <con:element>OfferMomentEligibleCriteriaPart</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>(PurchaseTxn.Offers.OfferCode == \"{{OFFERCODEOFFERNAME}}\")</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:MarketingEventId[1]</con:xpath>
+              <con:element>MarketingEventId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>c2fb4175-9726-4598-bc2a-c6339ab4510b</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:PackagedOfferParamId[1]</con:xpath>
+              <con:element>PackagedOfferParamId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>fa7588bf-06ee-4541-b9c5-4d03adcf7c61</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:PackagedOfferId[1]</con:xpath>
+              <con:element>PackagedOfferId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>327a3e11-59eb-4867-9711-dbf011421ae6</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:ParamName[1]</con:xpath>
+              <con:element>ParamName</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Minimum transaction amount</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:ParamCode[1]</con:xpath>
+              <con:element>ParamCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>MIN_TXN_AMT</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:ParamDescription[1]</con:xpath>
+              <con:element>ParamDescription</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:DataType[1]</con:xpath>
+              <con:element>DataType</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>input</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:ParamControl[1]</con:xpath>
+              <con:element>ParamControl</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>decimal</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:IsRequired[1]</con:xpath>
+              <con:element>IsRequired</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>true</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:Value[1]</con:xpath>
+              <con:element>Value</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>100</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:PanelId[1]</con:xpath>
+              <con:element>PanelId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>e0e698ac-4191-d25d-e053-5dedef0ac6ef</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[1]/ns1:PanelCode[1]</con:xpath>
+              <con:element>PanelCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>CUSTOMER_ACTIVITY</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:MarketingEventId[1]</con:xpath>
+              <con:element>MarketingEventId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>c2fb4175-9726-4598-bc2a-c6339ab4510b</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:PackagedOfferParamId[1]</con:xpath>
+              <con:element>PackagedOfferParamId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>a1579fd2-2a7c-44e6-88bc-ed7d6319de83</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:PackagedOfferId[1]</con:xpath>
+              <con:element>PackagedOfferId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>327a3e11-59eb-4867-9711-dbf011421ae6</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:ParamName[1]</con:xpath>
+              <con:element>ParamName</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Point amount</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:ParamCode[1]</con:xpath>
+              <con:element>ParamCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>POINT_AMT_REWARDED</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:ParamDescription[1]</con:xpath>
+              <con:element>ParamDescription</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:DataType[1]</con:xpath>
+              <con:element>DataType</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>input</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:ParamControl[1]</con:xpath>
+              <con:element>ParamControl</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>number</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:IsRequired[1]</con:xpath>
+              <con:element>IsRequired</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>true</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:Value[1]</con:xpath>
+              <con:element>Value</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>5</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:PanelId[1]</con:xpath>
+              <con:element>PanelId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>e0e698ac-4291-d25d-e053-5dedef0ac6ef</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferParams[1]/ns1:e[2]/ns1:PanelCode[1]</con:xpath>
+              <con:element>PanelCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>CUSTOMER_REWARD</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferCategoryId[1]</con:xpath>
+              <con:element>PackagedOfferCategoryId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>17872aea-5187-8d43-a4be-555c17300611</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:PackagedOffer[1]/ns1:PackagedOfferCategoryCode[1]</con:xpath>
+              <con:element>PackagedOfferCategoryCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>TEMPLATES</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:OfferStartDate[1]</con:xpath>
+              <con:element>OfferStartDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-01-09T10:55:43Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:OfferEndDate[1]</con:xpath>
+              <con:element>OfferEndDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-01-20T10:55:43Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:OnlineMessageCode[1]</con:xpath>
+              <con:element>OnlineMessageCode</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PROMO_CODE17394599</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:OptInStatus[1]</con:xpath>
+              <con:element>OptInStatus</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>false</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:AddOnlineMessageToEmail[1]</con:xpath>
+              <con:element>AddOnlineMessageToEmail</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>false</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:IsAudienceCountCompleted[1]</con:xpath>
+              <con:element>IsAudienceCountCompleted</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>true</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:IsOfferSimulationCompleted[1]</con:xpath>
+              <con:element>IsOfferSimulationCompleted</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>false</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:MarketingEventAudienceCount[1]/ns1:AudienceCountId[1]</con:xpath>
+              <con:element>AudienceCountId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1853549d-121b-437e-8432-eb3c062e3897</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:MarketingEventAudienceCount[1]/ns1:MarketingEventId[1]</con:xpath>
+              <con:element>MarketingEventId</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>c2fb4175-9726-4598-bc2a-c6339ab4510b</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:MarketingEventAudienceCount[1]/ns1:AudienceCountCalculationStartTime[1]</con:xpath>
+              <con:element>AudienceCountCalculationStartTime</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-01-05T10:55:48.429138Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:MarketingEventAudienceCount[1]/ns1:AudienceCountCalculationEndTime[1]</con:xpath>
+              <con:element>AudienceCountCalculationEndTime</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-01-05T10:55:48.429138Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:MarketingEventAudienceCount[1]/ns1:AudienceCount[1]</con:xpath>
+              <con:element>AudienceCount</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>&lt;</con:operator>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>${GetMarketingEventbyEventCode#Response#$['MarketingEventAudienceCount']['AudienceCount']}</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>true</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:MarketingEventAudienceCount[1]/ns1:AudienceCountStatus[1]</con:xpath>
+              <con:element>AudienceCountStatus</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>C</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:BusinessUnitTimeZone[1]</con:xpath>
+              <con:element>BusinessUnitTimeZone</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>UTC</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:Status[1]</con:xpath>
+              <con:element>Status</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>A</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:CreateUser[1]</con:xpath>
+              <con:element>CreateUser</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AUTO_USER</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:CreateDate[1]</con:xpath>
+              <con:element>CreateDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-01-05T10:55:45.232569Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:UpdateUser[1]</con:xpath>
+              <con:element>UpdateUser</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>BATCH_USER</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:elements>
+              <con:xpath>declare namespace ns1='https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613';
+//ns1:Response[1]/ns1:UpdateDate[1]</con:xpath>
+              <con:element>UpdateDate</con:element>
+              <con:type xsi:nil="true"/>
+              <con:operator>=</con:operator>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-01-05T10:55:56.393507Z</con:expectedValue>
+              <con:hasValue>false</con:hasValue>
+              <con:numberType>false</con:numberType>
+            </con:elements>
+            <con:originalMessage><![CDATA[<Response xmlns="https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613">
+   <MarketingEventId>c2fb4175-9726-4598-bc2a-c6339ab4510b</MarketingEventId>
+   <MarketingEventChannels>
+      <e>
+         <MarketingEventId>c2fb4175-9726-4598-bc2a-c6339ab4510b</MarketingEventId>
+         <MarketingEventChannelId>bce4fc4f-1b7d-2d49-b498-cea4e90a6105</MarketingEventChannelId>
+         <ChannelName>No Channel</ChannelName>
+      </e>
+   </MarketingEventChannels>
+   <EventName>PROMO_NAME38643971</EventName>
+   <EventCode>PROMO_CODE17394599</EventCode>
+   <EventStatus>DRAFT</EventStatus>
+   <ProgramCode>PP</ProgramCode>
+   <PackagedAudience>
+      <PackagedAudienceId>7ae1f987-515e-4669-e053-5ca8e70ad3ee</PackagedAudienceId>
+      <MarketingEventId>c2fb4175-9726-4598-bc2a-c6339ab4510b</MarketingEventId>
+      <AudienceName>All Members</AudienceName>
+      <AudienceDescription>All enrolled members with an active profile status</AudienceDescription>
+      <HarmonyTemplate>
+         <type>AND</type>
+         <groupType>GROUP</groupType>
+         <conditions>
+            <e>
+               <type>AND</type>
+               <groupType>GROUP</groupType>
+               <conditions>
+                  <e>
+                     <type>ATTRIBUTE</type>
+                     <attributeName>PROGRAMCODE</attributeName>
+                     <attributeId>{{PROFILE_MASTER~PROGRAMCODE~ID}}</attributeId>
+                     <operator>EQ</operator>
+                     <values>
+                        <e>{{PROGRAMCODE}}</e>
+                     </values>
+                     <tableId>PROFILE_MASTER</tableId>
+                     <caseSensitive>false</caseSensitive>
+                  </e>
+                  <e>
+                     <type>ATTRIBUTE</type>
+                     <attributeName>ENROLLMENTSTATUS</attributeName>
+                     <attributeId>{{PROFILE_MASTER~ENROLLMENTSTATUS~ID}}</attributeId>
+                     <operator>EQ</operator>
+                     <values>
+                        <e>A</e>
+                     </values>
+                     <tableId>PROFILE_MASTER</tableId>
+                     <caseSensitive>false</caseSensitive>
+                  </e>
+               </conditions>
+            </e>
+            <e>
+               <type>ATTRIBUTE</type>
+               <attributeName>PROFILESTATUS</attributeName>
+               <attributeId>{{PROFILE_MASTER~PROFILESTATUS~ID}}</attributeId>
+               <operator>EQ</operator>
+               <values>
+                  <e>A</e>
+               </values>
+               <tableId>PROFILE_MASTER</tableId>
+               <caseSensitive>false</caseSensitive>
+            </e>
+         </conditions>
+      </HarmonyTemplate>
+      <PackagedAudienceParams/>
+      <AudienceMomentEligibleCriteriaPart>PurchaseTxn.Enrollment.MemberStatus == \"A\"</AudienceMomentEligibleCriteriaPart>
+      <SurveyMomentEligibleCriteriaPart>ProfileSurveyResponse.Enrollment.MemberStatus == \"A\"</SurveyMomentEligibleCriteriaPart>
+   </PackagedAudience>
+   <AudienceSource>PACKAGED_AUDIENCE</AudienceSource>
+   <PackagedOffer>
+      <PackagedOfferId>327a3e11-59eb-4867-9711-dbf011421ae6</PackagedOfferId>
+      <MarketingEventId>c2fb4175-9726-4598-bc2a-c6339ab4510b</MarketingEventId>
+      <PackagedOfferCode>EARN_POINTS_ON_TXN</PackagedOfferCode>
+      <PackagedOfferName>Earn Points on a Transaction</PackagedOfferName>
+      <PackagedOfferDescription>Earn points for spending a minimum amount</PackagedOfferDescription>
+      <MomentTemplate>{
+"MomentCode": "{{MOMENTCODE}}",
+"StartDate": "{{STARTDATE}}",
+"EndDate": "{{ENDDATE}}",
+"Description": "{{DESCRIPTION}}",
+"MomentType": "PROMOTIONAL_CURRENCY",
+"MomentStatus": "A",
+"MomentResponseValues": [
+ {
+  "MomentCode": "{{MOMENTCODE}}",
+  "MomentType": "PROMOTIONAL_CURRENCY",
+  "ResponsePropertyName": "BASE INDICATOR",
+  "ResponsePropertyValue": "N",
+  "Status": "P"
+ },
+ {
+  "MomentCode": "{{MOMENTCODE}}",
+  "MomentType": "PROMOTIONAL_CURRENCY",
+  "ResponsePropertyName": "ENGAGE INDICATOR",
+  "ResponsePropertyValue": "Y",
+  "Status": "P"
+ },
+ {
+  "MomentCode": "{{MOMENTCODE}}",
+  "MomentType": "PROMOTIONAL_CURRENCY",
+  "ResponsePropertyName": "POINT SUBTYPE",
+  "ResponsePropertyValue": "{{DEFAULTPOINTSUBTYPEID}}",
+  "Status": "P"
+ },
+ {
+  "MomentCode": "{{MOMENTCODE}}",
+  "MomentType": "PROMOTIONAL_CURRENCY",
+  "ResponsePropertyName": "POINT TYPE",
+  "ResponsePropertyValue": "{{DEFAULTPOINTTYPEID}}",
+  "Status": "P"
+ }
+],
+"MomentEvent": {
+ "MomentCode": "{{MOMENTCODE}}",
+ "EventType": "PurchaseTxn",
+ "MomentQualifyingDateAttribute": "PurchaseTxn.TransactionDateTime",
+ "MomentOffers": [
+  {
+   "MomentCode": "{{MOMENTCODE}}",
+   "EventType": "PurchaseTxn",
+   "OfferName": "{{MOMENTCODE}}",
+   "Description": "{{DESCRIPTION}}",
+   "MomentOutcome": {
+    "MomentCode": "{{MOMENTCODE}}",
+    "EventType": "PurchaseTxn",
+    "OfferName": "{{MOMENTCODE}}",
+    "OutcomeEquationUi": "{{POINT_AMT_REWARDED}}",
+    "CalculationTemplate": "&lt;fixedpoints,[Number]>",
+    "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22{{POINT_AMT_REWARDED}}%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf({{POINT_AMT_REWARDED}})%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",
+    "FormulaName": "FIXEDAMT",
+    "Status": "A"
+   },
+   "MomentQualifyingRule": {
+    "MomentCode": "{{MOMENTCODE}}",
+    "EventType": "PurchaseTxn",
+    "OfferName": "{{MOMENTCODE}}",
+    "RuleEquationUI": "PurchaseTxn.ProgramCode ==\"{{PROGRAMCODE}}\" &amp;&amp; {{MOMENT_ELIGIBILITY_CRITERIA_PART}} &amp;&amp; PurchaseTxn.TransactionEligible >={{MIN_TXN_AMT}} {{AUDIENCE}}",
+    "MomentCap": [{{MAX_OFFERS_PER_MEMBER_TEMPLATE}}{{MAX_POINTS_PER_MEMBER_TEMPLATE}}]
+   },
+   "Status": "A"
+  }
+ ]
+},
+"Status": "A",
+"BestOfferIndicator": false,
+"AdvancedModeIndicator": false,
+"IsTestUser": false,
+"ReleaseState": "P"
+}</MomentTemplate>
+      <SimulationQueryTemplate>SELECT COUNT(distinct profile_id) AS unique_customers, SUM(profile_trans) AS total_offers, SUM(profile_points) AS total_points,
+ceil(SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}) AS avg_offers_per_day,
+ceil(SUM(profile_points)/{{SIMULATION_DATE_DIFF}}) AS avg_points_per_day,
+ceil((SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}) * {{OFFER_DATE_DIFF}}) AS projected_total_offers,
+ceil((SUM(profile_points)/{{SIMULATION_DATE_DIFF}}) * {{OFFER_DATE_DIFF}}) AS projected_total_points
+FROM
+(
+    SELECT profile_id,
+    {{OFFERS_QUERY}}
+    FROM t_act_transaction
+    WHERE program_code = :ProgramCode AND status IN ('A','P') AND (transaction_type_code IN ('PR','EP') OR (transaction_type_code IN ('RT','ER','EX') AND act_transaction_xref_id is null))
+    AND transaction_date >= :SIMULATION_START_DATE AND transaction_date &lt; :SIMULATION_END_DATE AND eligible_revenue >= {{MIN_TXN_AMT}}
+    {{AUDIENCE_QUERY}}
+    GROUP BY profile_id
+)</SimulationQueryTemplate>
+      <OfferMomentEligibleCriteriaPart>(PurchaseTxn.Offers.OfferCode == \"{{OFFERCODEOFFERNAME}}\")</OfferMomentEligibleCriteriaPart>
+      <PackagedOfferParams>
+         <e>
+            <MarketingEventId>c2fb4175-9726-4598-bc2a-c6339ab4510b</MarketingEventId>
+            <PackagedOfferParamId>fa7588bf-06ee-4541-b9c5-4d03adcf7c61</PackagedOfferParamId>
+            <PackagedOfferId>327a3e11-59eb-4867-9711-dbf011421ae6</PackagedOfferId>
+            <ParamName>Minimum transaction amount</ParamName>
+            <ParamCode>MIN_TXN_AMT</ParamCode>
+            <ParamDescription>0</ParamDescription>
+            <DataType>input</DataType>
+            <ParamControl>decimal</ParamControl>
+            <IsRequired>true</IsRequired>
+            <Value>100</Value>
+            <PanelId>e0e698ac-4191-d25d-e053-5dedef0ac6ef</PanelId>
+            <PanelCode>CUSTOMER_ACTIVITY</PanelCode>
+         </e>
+         <e>
+            <MarketingEventId>c2fb4175-9726-4598-bc2a-c6339ab4510b</MarketingEventId>
+            <PackagedOfferParamId>a1579fd2-2a7c-44e6-88bc-ed7d6319de83</PackagedOfferParamId>
+            <PackagedOfferId>327a3e11-59eb-4867-9711-dbf011421ae6</PackagedOfferId>
+            <ParamName>Point amount</ParamName>
+            <ParamCode>POINT_AMT_REWARDED</ParamCode>
+            <ParamDescription>0</ParamDescription>
+            <DataType>input</DataType>
+            <ParamControl>number</ParamControl>
+            <IsRequired>true</IsRequired>
+            <Value>5</Value>
+            <PanelId>e0e698ac-4291-d25d-e053-5dedef0ac6ef</PanelId>
+            <PanelCode>CUSTOMER_REWARD</PanelCode>
+         </e>
+      </PackagedOfferParams>
+      <PackagedOfferCategoryId>17872aea-5187-8d43-a4be-555c17300611</PackagedOfferCategoryId>
+      <PackagedOfferCategoryCode>TEMPLATES</PackagedOfferCategoryCode>
+   </PackagedOffer>
+   <OfferStartDate>2022-01-09T10:55:43Z</OfferStartDate>
+   <OfferEndDate>2022-01-20T10:55:43Z</OfferEndDate>
+   <OnlineMessageCode>PROMO_CODE17394599</OnlineMessageCode>
+   <OptInStatus>false</OptInStatus>
+   <AddOnlineMessageToEmail>false</AddOnlineMessageToEmail>
+   <IsAudienceCountCompleted>true</IsAudienceCountCompleted>
+   <IsOfferSimulationCompleted>false</IsOfferSimulationCompleted>
+   <MarketingEventAudienceCount>
+      <AudienceCountId>1853549d-121b-437e-8432-eb3c062e3897</AudienceCountId>
+      <MarketingEventId>c2fb4175-9726-4598-bc2a-c6339ab4510b</MarketingEventId>
+      <AudienceCountCalculationStartTime>2022-01-05T10:55:48.429138Z</AudienceCountCalculationStartTime>
+      <AudienceCountCalculationEndTime>2022-01-05T10:55:48.429138Z</AudienceCountCalculationEndTime>
+      <AudienceCount>919</AudienceCount>
+      <AudienceCountStatus>C</AudienceCountStatus>
+   </MarketingEventAudienceCount>
+   <BusinessUnitTimeZone>UTC</BusinessUnitTimeZone>
+   <Status>A</Status>
+   <CreateUser>AUTO_USER</CreateUser>
+   <CreateDate>2022-01-05T10:55:45.232569Z</CreateDate>
+   <UpdateUser>BATCH_USER</UpdateUser>
+   <UpdateDate>2022-01-05T10:55:56.393507Z</UpdateDate>
+</Response>]]></con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="eventCode" value="${ProcessMarketingEventPointMul#Response#$['EventCode']}"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="3c73f7b3-abdf-4a20-9030-1a44a4b0fca9">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEventPointMul#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="7c7575c2-47b8-43fc-9f66-ab6ba077ea2e">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4e31c31c-5e5f-4dab-8caf-7c5cf7fef68f</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ApproveMarketingEvent#EventCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="WaitForBatchJob" id="830b71f4-578c-476b-bc13-ad5dbef0e1c7">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>JobId</con:name>
+          <con:value>${#[OffersPrerequisite#DeployMarketingPromotion#DeployMarketingPromotion]#Response#$['BatchJobId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="delay" name="Delay" id="19a285a6-838b-457d-88e3-c1fdef3d6801">
+    <con:settings/>
+    <con:config>
+      <delay>6000</delay>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="PurchaseTransaction" id="90f06d80-5aa4-4949-8cb4-5a57f5a6a0d8">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>981060e9-8e55-4bc2-8e64-e3d2b5197f95</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TransactionEligible</con:name>
+          <con:value>100</con:value>
+        </con:property>
+        <con:property>
+          <con:name>Nights</con:name>
+          <con:value/>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="GetMomentByCode" id="762d288c-c9ec-48f1-b5fb-d05e480b47bf">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>f4019890-b4bf-40e5-b64c-59b6bbe7b94d</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEventPointMul#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPointsSummary" id="00933538-dde5-463b-b782-24bf34c42505">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPointsSummary" id="90aa5f43-a530-41eb-9446-2dde6c33780e" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/%7B%20%20%20%22Prefix%22%3A%22%22%2C%20%20%20%22FirstName%22%3A%20%22%22%2C%20%20%20%22MiddleInit%22%3A%22%22%2C%20%20%20%22LastName%22%3A%22%22%2C%20%20%20%22CardNumber%22%3A%22c62c3524-f4bd-4b58-ab51-8984747839a8%22%2C%20%20%20%22Suffix%22%3A%20%22%22%2C%20%20%20%22GlobalOptOut%22%3A%20%22%22%2C%20%20%20%22GlobalOptDate%22%3A%20%20%22%22%2C%20%20%20%22GlobalOptSource%22%3A%20%22%22%2C%20%20%20%22LanguageCode%22%3A%20%20%22%22%2C%20%20%20%22MaritalStatus%22%3A%20%22%22%2C%20%20%20%22Gender%22%3A%20%22%22%2C%20%20%20%22BirthDate%22%3A%20%22%22%2C%20%20%20%22CompanyName%22%3A%20%22%22%2C%20%20%20%22Addresses%22%3A%20%5B%20%20%20%20%20%7B%20%20%20%20%20%20%20%22AddressLine1%22%3A%22%22%2C%20%20%20%20%20%20%20%22AddressLine2%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22AddressLine3%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22City%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22StateCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22CountryCode%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22PostalCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22ChannelCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22LocationCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22IsPreferred%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22DeliveryStatus%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22DoNotStandardize%22%3A%20%20%22%22%20%20%20%20%20%7D%20%20%20%5D%2C%20%20%20%22Emails%22%3A%20%5B%20%20%20%20%20%7B%20%20%20%20%20%20%20%22EmailAddress%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22ChannelCode%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22LocationCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22IsPreferred%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22DeliveryStatus%22%3A%20%22%22%20%20%20%20%20%7D%20%20%20%5D%2C%20%20%20%22Phones%22%3A%20%5B%20%20%20%20%20%7B%20%20%20%20%20%20%20%22PhoneNumber%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22PhoneCountryCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22AcceptsText%22%3A%22%22%2C%20%20%20%20%20%20%20%22Frequency%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22ChannelCode%22%3A%22%22%2C%20%20%20%20%20%20%20%22LocationCode%22%3A%22%22%2C%20%20%20%20%20%20%20%22IsPreferred%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22DeliveryStatus%22%3A%22%22%20%20%20%20%20%7D%20%20%20%5D%2C%20%20%20%22SourceCode%22%3A%20%22%22%2C%20%20%20%22EnrollChannelCode%22%3A%20%22%22%2C%20%20%20%22AutoRewardOptInInd%22%3A%20%20%22%22%2C%20%20%20%22TermsConditionsAcceptedInd%22%3A%20%22%22%20%20%7D/points/summary</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a022dce5-2b60-4dcb-8b1c-2a71e54018fc" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="d718b76f-6e63-422d-9479-043918f3d753" name="ValidationForPointsAmount">
+          <con:configuration>
+            <path>$.[?(@.ActTransactionId == '${#[OffersPrerequisite#PurchaseTransaction#PurchaseTransaction]#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${#[OffersPrerequisite#GetMomentByCode#GetMomentByCode]#Response#$['MomentId']}')].PointsAmount</path>
+            <content>[200.0]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="DeactivateMoment" id="291ed390-0372-4fa3-b839-b39632c32374">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>c903534c-32ad-44dc-9cb6-a72fc8de1482</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>MomentId</con:name>
+          <con:value/>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>MomentId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="UpdateProgramOffer" id="213d4d2d-c675-4f6a-b6be-cf7b1f46df51">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>25d1254f-0637-4596-a5bf-1eba1aeac44c</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>SysOfferId</con:name>
+          <con:value>${#[OffersPrerequisite#GetProgramOffers#GetProgramOffers]#Response#$[0]['SysOfferId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>a7a607b2-e127-48a2-a81c-d45c7312e7b6</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

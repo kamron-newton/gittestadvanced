@@ -20,6 +20,27 @@
       <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
+  <con:testStep type="calltestcase" name="RunExecuteBatchWorkFlowforProfileImport" id="2a767463-d28c-487e-ab56-1767b6d13352">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>493c35b3-7a9e-4c79-a0c4-3423fbf93331</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>DataHubProcessDefinitionKey</con:name>
+          <con:value>Automation_Profile_Import</con:value>
+        </con:property>
+        <con:property>
+          <con:name>DataHubProcessId</con:name>
+          <con:value>01c82c44-7a2f-11ec-969c-1235580c8ebb</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>DataHubProcessDefinitionKey</con:entry>
+        <con:entry>DataHubProcessId</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetScriptDefaultContent" id="2e50f2ef-ce35-4eff-b556-0fb2120d48c2">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/defaultcontent" methodName="Get Default Content" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -2168,18 +2189,44 @@ return batchInputJson;</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="RunExecuteBatchWorkFlowforProfileImport" id="2a767463-d28c-487e-ab56-1767b6d13352">
+  <con:testStep type="restrequest" name="SendDatahubWorkflowResumeMessage" id="a6fd735a-ddfc-4d86-b08c-0a3936367435">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>493c35b3-7a9e-4c79-a0c4-3423fbf93331</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>DataHubProcessDefinitionKey</con:name>
-          <con:value>Automation_Profile_Import</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>PARALLELL</con:runMode>
+    <con:config service="DatahubAPIs" resourcePath="/orchestration/v1/process-instance/resume" methodName="ResumeWorkFlow" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="SendDatahubWorkflowResumeMessage" id="fbab81a6-bfc0-4489-b4d8-80bf4a5ab419" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "messageName": "Message_Resume",
+  "processInstanceIds": [
+    "${RunExecuteBatchWorkFlowforProfileImport#DataHubProcessId}"
+  ]
+}</con:request>
+        <con:originalUri>https://u-acpapi.datahub.epsilon.com/orchestration/v1/process-instance/resume</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="2c8d8994-2b8b-4f33-8e23-1e59af96eb13" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Bearer ${#Project#Datahub Orchestration Token}"/>
+          <con:entry key="X-ADH-Tenant-Code" value="${#Project#Tenant}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+          <con:entry key="accept" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>X-ADH-Tenant-Code</con:entry>
+          <con:entry>accept</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:setupScript/>
@@ -2261,6 +2308,11 @@ return batchInputJson;</script>
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>e4ae8e13-5f82-4617-a0d2-93239583fef5</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2a767463-d28c-487e-ab56-1767b6d13352</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

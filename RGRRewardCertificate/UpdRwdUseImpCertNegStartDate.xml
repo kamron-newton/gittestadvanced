@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="3300c579-22df-46fb-a020-8dcb85ac827e" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="AddRwdUseImportCerts" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="ff4a5893-bfc1-4379-b889-d1fb079e2945" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpdRwdUseImpCertNegStartDate" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="3300c579-22df-46fb-a020-8dcb85ac827efileName">AddRwdUseImportCerts</con:setting>
+    <con:setting id="ff4a5893-bfc1-4379-b889-d1fb079e2945fileName">UpdRwdUseImpCertNegStartDate</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="RewardCertificates" id="7f86a983-8e32-4b92-840a-859256ea1af7">
+  <con:testStep type="datasource" name="RewardCertificates" id="d54084cc-3e8a-4f89-aab0-b2506ca55464">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -54,7 +54,7 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="CurrentDate" id="bb19a887-a74c-420a-be2d-f6be7c8e95f4">
+  <con:testStep type="groovy" name="CurrentDate" id="f2f2e1e0-b9d0-47b9-95aa-698df1102d7c">
     <con:settings/>
     <con:config>
       <script>use (groovy.time.TimeCategory)
@@ -64,7 +64,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
 }</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddReward" id="ff66cdb8-535b-4f48-b311-f70243dcc008">
+  <con:testStep type="restrequest" name="AddReward" id="dc6e9036-0688-45dd-8282-7760049bd919">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards" methodName="AddReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="AddReward" id="e1eeb6c0-074c-4d78-893d-adb7c364e104" mediaType="application/json" postQueryString="false">
@@ -73,8 +73,8 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         </con:settings>
         <con:request>{
 	"RewardCode":"${CurrentDate#result}",
-	"StartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date()+90)}",
-     "EndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date()+180)}",
+	"StartDate": "${RewardCertificates#StartDate}",
+     "EndDate": "${RewardCertificates#EndDate}",
 	"RewardType": "${RewardCertificates#RewardType}",
 	"PointTypeCode": "${RewardCertificates#PointTypeCode}",
 	"RewardUsageTypeId": "${RewardCertificates#RewardUsageTypeId}",
@@ -125,7 +125,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetRewardByCode" id="947bd72a-46cc-43ad-a5bd-8264568a9fe8">
+  <con:testStep type="restrequest" name="GetRewardByCode" id="0103e4e0-2c57-4b0c-aa9e-089ef6745a13">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="GetRewardByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetRewardByCode" id="2cac3c06-239f-407b-b046-7e23810f6fb0" mediaType="application/json">
@@ -181,7 +181,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateRwdUseImportCerts" id="ced3a30d-b990-46b5-bca0-0b16e4cbe802">
+  <con:testStep type="restrequest" name="UpdateRwdUseImportCerts" id="9a60ce3d-ea31-401f-ac3b-85813c1c137c">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="UpdateReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="UpdateRwdUseImportCerts" id="48f5a14a-f9a2-4d56-9aee-3f1662d2eb7f" mediaType="application/json" postQueryString="false">
@@ -240,26 +240,26 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetRewardByCode2" id="064c548a-456b-4271-a035-ee38245af1fe">
+  <con:testStep type="restrequest" name="GetRewardByCode 2" id="085d021c-dd24-474f-98cd-7aaaf7eef618">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="GetRewardByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetRewardByCode2" id="2cac3c06-239f-407b-b046-7e23810f6fb0" mediaType="application/json">
+      <con:restRequest name="GetRewardByCode 2" id="2cac3c06-239f-407b-b046-7e23810f6fb0" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="eb956949-aee6-4b53-b6b1-e6b3b9bf58bd" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="aea76f34-5a03-4147-82f2-37884c34a5c8" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200</codes>
+            <codes>200,404</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="f4a5a1f1-9385-4037-bcbe-743f1aabd6df" name="CertificateType Validation">
+        <con:assertion type="JsonPath Match" id="db2425c3-a705-4511-90dd-7837bf7bf7cc" name="CertificateType Validation">
           <con:configuration>
             <path>CertificateType</path>
-            <content>${UpdateRwdUseImportCerts#Response#$['CertificateType']}</content>
+            <content>${AddReward#Response#$['CertificateType']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -273,7 +273,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="profileId" value="{profileId}"/>
-          <con:entry key="rewardCode" value="${UpdateRwdUseImportCerts#Response#$['RewardCode']}"/>
+          <con:entry key="rewardCode" value="${CurrentDate#result}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -298,19 +298,4 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
   </con:testStep>
   <con:properties/>
   <con:reportParameters/>
-  <con:breakPoints>
-    <con:testStepId>947bd72a-46cc-43ad-a5bd-8264568a9fe8</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>7f86a983-8e32-4b92-840a-859256ea1af7</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>ced3a30d-b990-46b5-bca0-0b16e4cbe802</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
 </con:testCase>

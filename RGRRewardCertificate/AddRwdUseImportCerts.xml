@@ -73,8 +73,8 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         </con:settings>
         <con:request>{
 	"RewardCode":"${CurrentDate#result}",
-	"StartDate": "${RewardCertificates#StartDate}",
-     "EndDate": "${RewardCertificates#EndDate}",
+	"StartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date()+90)}",
+     "EndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date()+180)}",
 	"RewardType": "${RewardCertificates#RewardType}",
 	"PointTypeCode": "${RewardCertificates#PointTypeCode}",
 	"RewardUsageTypeId": "${RewardCertificates#RewardUsageTypeId}",
@@ -141,6 +141,15 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
             <codes>200,404</codes>
           </con:configuration>
         </con:assertion>
+        <con:assertion type="JsonPath Match" id="db2425c3-a705-4511-90dd-7837bf7bf7cc" name="CertificateType Validation">
+          <con:configuration>
+            <path>CertificateType</path>
+            <content>${AddReward#Response#$['CertificateType']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>
@@ -172,14 +181,13 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateReward" id="83febb75-22c7-47b9-8b50-d5b386a07749">
+  <con:testStep type="restrequest" name="UpdateReward" id="ced3a30d-b990-46b5-bca0-0b16e4cbe802">
     <con:settings/>
-    <con:config service="RestAPIs" methodName="UpdateReward" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateReward" id="a672c868-567f-47a3-9940-530a49dc8621" mediaType="application/json" postQueryString="false">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="UpdateReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateReward" id="48f5a14a-f9a2-4d56-9aee-3f1662d2eb7f" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
 	"RewardCode":"${CurrentDate#result}",
@@ -195,8 +203,8 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
        	"FixedPoints": "${RewardCertificates#FixedPoints}",
         "Status":"A"
 }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewards/30212022113011030</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="156eb8e1-17f6-4791-943d-facb51ac2258" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewards/57212022125737057</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="8db21c58-e8ed-4550-bc90-1183b4f7b2ca" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -210,27 +218,42 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
-          <con:entry key="rewardCode" value="${CurrentDate#result}"/>
+          <con:entry key="rewardCode" value="${GetRewardByCode#Response#$['RewardCode']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>rewardCode</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetRewardByCode 2" id="8f5ecdb2-b1e5-49d3-ae0c-d0c953aba3ee">
+  <con:testStep type="restrequest" name="REST Request" id="064c548a-456b-4271-a035-ee38245af1fe">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards/{rewardCode}" methodName="GetRewardByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetRewardByCode 2" id="2cac3c06-239f-407b-b046-7e23810f6fb0" mediaType="application/json">
+      <con:restRequest name="REST Request" id="2cac3c06-239f-407b-b046-7e23810f6fb0" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="aea76f34-5a03-4147-82f2-37884c34a5c8" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" id="eb956949-aee6-4b53-b6b1-e6b3b9bf58bd" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
-            <codes>200,404</codes>
+            <codes>200</codes>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -241,7 +264,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="profileId" value="{profileId}"/>
-          <con:entry key="rewardCode" value="${CurrentDate#result}"/>
+          <con:entry key="rewardCode" value="${UpdateReward#Response#$['RewardCode']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -273,6 +296,11 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>7f86a983-8e32-4b92-840a-859256ea1af7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>ced3a30d-b990-46b5-bca0-0b16e4cbe802</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="cd3ea6ba-a0c3-4b34-9be2-897c09a133f0" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGRBankOrderRewardCertificate" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="cd3ea6ba-a0c3-4b34-9be2-897c09a133f0fileName">RGRBankOrderRewardCertificate</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="groovy" name="CurrentDate" id="8f533418-105c-40a6-af5b-b9284ca5e493">
+    <con:settings/>
+    <con:config>
+      <script>use (groovy.time.TimeCategory)
+{
+def today = new Date()
+def formattedDate = today.format("mmddyyyyhhmmssmmm")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddFixedPointImpCert" id="1035d888-cbf0-4bea-97a9-b2eb16b02ec9">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>99dff089-cdad-48ae-a499-779ddc158955</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="ProcessUnassignedCertificate" id="4fab58b3-1a66-48f2-8574-2a2d08fb3cfb">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>a838b25c-744a-4638-9da9-379afc2e51e3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>CertificateNumber</con:name>
+          <con:value>${=java.util.UUID.randomUUID()}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>RewardCode</con:name>
+          <con:value>${#[ActivityCertificate#AddFixedPointImpCert#AddReward]#Response#$['RewardCode']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>BatchJobId</con:name>
+          <con:value>${=java.util.UUID.randomUUID()}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="ProcessUnassignedCertificate 2" id="be7cbc89-8212-4cf2-a5c8-890b096b2636">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>a838b25c-744a-4638-9da9-379afc2e51e3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>CertificateNumber</con:name>
+          <con:value>${=java.util.UUID.randomUUID()}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>RewardCode</con:name>
+          <con:value>${#[ActivityCertificate#AddFixedPointImpCert#AddReward]#Response#$['RewardCode']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>BatchJobId</con:name>
+          <con:value>${=java.util.UUID.randomUUID()}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="9f045a7f-14ed-435f-8b09-f8b487cd1f18">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddAdjustment" id="a65ce770-1927-4867-af55-c608a7698f3d">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>d3339fb2-45d2-479b-9947-1ea66f3877fa</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Points</con:name>
+          <con:value>50</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AdjustmentReason</con:name>
+          <con:value>PPGOODW</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="OrderProfileRewardCertificate" id="e27953e8-58ab-421e-984b-85cb9f0a6e47">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>eca34bb4-95c3-434d-8370-76a7e0a875f4</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>{       "RewardCode": "${#[ActivityCertificate#AddFixedPointImpCert#AddReward]#Response#$['RewardCode']}",        "ActivityDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}"  }</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileRewardCertificate" id="0057ec75-fffc-495b-a534-958b8eb30f4f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/certificates" methodName="GetProfileRewardCertificates" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileRewardCertificate" id="d5988a68-9034-47d0-ae55-7b9dabcbe7cd" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/aa391948-85cf-479f-967a-5c6a24f07359/rewards/certificates</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="901897f1-a1ef-4ae8-824b-a790250385bf" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="12e95bd9-7124-4899-8f52-f858a0badaac" name="CertificateNumber Validation">
+          <con:configuration>
+            <path>$..[?(@.CertificateNumber=='${#[ActivityCertificate#OrderProfileRewardCertificate#OrderProfileRewardCertificate]#Response#$['CertificateNumber']}')].CertificateNumber</path>
+            <content>[${GetProfileRewardCertificate#Response#$[0]['CertificateNumber']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="rewardCode" value="${#[ActivityCertificate#AddFixedPointImpCert#AddReward]#Response#$['RewardCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="startDate" value="${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['OrderDetails'][0]['ActivityDate']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>rewardCode</con:entry>
+          <con:entry>title</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="OrderProfileRewardCertificate 2" id="d444adb5-cd7f-4e4e-8bd3-dec837b3c2e0">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>eca34bb4-95c3-434d-8370-76a7e0a875f4</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>{       "RewardCode": "${#[ActivityCertificate#AddFixedPointImpCert#AddReward]#Response#$['RewardCode']}",        "ActivityDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}"  }</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileRewardCertificate 2" id="32f79b8f-69cd-487a-90d6-841cbf25e2f9">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/certificates" methodName="GetProfileRewardCertificates" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileRewardCertificate 2" id="d5988a68-9034-47d0-ae55-7b9dabcbe7cd" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/aa391948-85cf-479f-967a-5c6a24f07359/rewards/certificates</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="901897f1-a1ef-4ae8-824b-a790250385bf" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="84bc77e1-3f75-4fe5-8901-1493188a8dd8" name="CertificateNumber Validation">
+          <con:configuration>
+            <path>$..[?(@.CertificateNumber=='${#[ActivityCertificate#OrderProfileRewardCertificate#OrderProfileRewardCertificate]#Response#$['CertificateNumber']}')].CertificateNumber</path>
+            <content>[${GetProfileRewardCertificate 2#Response#$[0]['CertificateNumber']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="rewardCode" value="${#[ActivityCertificate#AddFixedPointImpCert#AddReward]#Response#$['RewardCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="startDate" value="${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['OrderDetails'][0]['ActivityDate']}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>rewardCode</con:entry>
+          <con:entry>title</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>1035d888-cbf0-4bea-97a9-b2eb16b02ec9</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>a65ce770-1927-4867-af55-c608a7698f3d</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e27953e8-58ab-421e-984b-85cb9f0a6e47</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>9f045a7f-14ed-435f-8b09-f8b487cd1f18</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

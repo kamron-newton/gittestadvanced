@@ -1,59 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="0bf78bbb-19af-497b-931a-4eeba6a2df70" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="NegPurchaseTransaction" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="d8fc2680-19e5-4d80-91ce-7ecbca68a8f4" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="NegVoidTransaction" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="0bf78bbb-19af-497b-931a-4eeba6a2df70fileName">NegPurchaseTransaction</con:setting>
+    <con:setting id="d8fc2680-19e5-4d80-91ce-7ecbca68a8f4fileName">NegVoidTransaction</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep id="47cd1d4f-28b7-454e-9010-10e19d6cd250" name="NegPurchaseTransaction" type="restrequest">
+  <con:testStep id="0a1b6f92-38a9-48bc-9b05-7306f3e7be31" name="NegVoidTransaction" type="restrequest">
     <con:settings/>
     <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="NegPurchaseTransaction" postQueryString="false">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="NegVoidTransaction" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request>{  
-   "TransactionTypeCode":"PR",
+   "TransactionTypeCode":"VD",
    "ProfileId":"${#TestCase#ProfileId}",
-   "GrossAmount":66.00,
-   "TransactionTotalTax":6.00,
-   "ShippingAndHandling":0.0,
-   "Gratuity":0.0,
-   "PostSalesAdjustment":0.0,
-   "TransactionNetTotal":60.00,
-   "TransactionEligible":null,
-   "DiscountAmount":3.00,
-   "TransactionNumber":"${#TestCase#TransactionNumber}_PR",
+   "TransactionNumber":"${#TestCase#FullTransactionNumber}_VD",
    "TransactionDateTime":"${#TestCase#TransactionDate}",
    "StoreCode":"PP1501",
-   "CurrencyCode":"USD",
-   "TransactionDescription":"PR Transaction",
-   "TransactionDetails":[  
-      {  
-         "DollarValueGross":44.0,
-         "TaxAmount":4.0,
-         "DollarValueNet":40.0,
-         "EligibleRevenue":null,
-         "DiscountAmount":2.0,
-         "Quantity":1,
-         "ItemNumber":"100100",
-         "ItemNumberTypeCode":"S",
-         "LineNumber":1         
-      },
-      {  
-         "DollarValueGross":22.0,
-         "TaxAmount":2.0,
-         "DollarValueNet":20.0,
-         "EligibleRevenue":null,
-         "DiscountAmount":1.0,
-         "Quantity":1,
-         "ItemNumber":"100200",
-         "ItemNumberTypeCode":"S",
-         "LineNumber":2         
-      }
-   ]
+   "OriginalTransactionNumber": "${#TestCase#FullTransactionNumber}",
+   "OriginalTransactionDateTime":"${#TestCase#TransactionDate}",
+   "OriginalStoreCode":"PP1501",
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
-        <con:assertion type="JsonPath Match" id="eea83939-19bb-4fc2-88dd-42efaf4e39df" name="JSONPath Match">
+        <con:assertion type="JsonPath Match" name="JSONPath Match" id="89f6edec-6a06-406f-bb32-35f9d63d6729">
           <con:configuration>
             <path>ErrorCode</path>
             <content>${#TestCase#ExpectedErrorCode}</content>
@@ -62,7 +31,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="Valid HTTP Status Codes" id="24f8ec0e-515d-487a-b958-7ca90c588355" name="Valid HTTP Status Codes">
+        <con:assertion type="Valid HTTP Status Codes" name="Valid HTTP Status Codes" id="d56e6f25-11a4-4956-84fa-966a6551108d">
           <con:settings/>
           <con:configuration>
             <codes>400</codes>
@@ -75,11 +44,13 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
           <con:entry>Accept-Language</con:entry>
           <con:entry>Program-Code</con:entry>
         </con:parameterOrder>
@@ -90,7 +61,10 @@
           <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
             <con:authProfile>Inherit From Parent</con:authProfile>
           </con:entry>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+          <con:entry environmentId="58fdda4b-8926-4c7e-b291-d43ed4f2940d">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="2263a0ba-822a-426a-9f0c-98aabd6417d5">
             <con:authProfile>Inherit From Parent</con:authProfile>
           </con:entry>
         </con:environmentSpec>
@@ -99,20 +73,20 @@
   </con:testStep>
   <con:properties>
     <con:property userSpecific="true">
-      <con:name>TransactionNumber</con:name>
-      <con:value>64fa6430-9c1a-466c-991b-e7e9ac2ea67b</con:value>
+      <con:name>FullTransactionNumber</con:name>
+      <con:value>9c834e5d-83fd-42cf-b14e-cfafd0a30319</con:value>
     </con:property>
     <con:property userSpecific="true">
       <con:name>ProfileId</con:name>
-      <con:value>cff54e0b-68cb-436b-b48d-c431e5c3907a</con:value>
+      <con:value>2ab8cfef-5330-4b32-8a77-2f1b1b22f1f7</con:value>
     </con:property>
     <con:property userSpecific="true">
       <con:name>TransactionDate</con:name>
-      <con:value>2021-11-23T13:09:39-0600</con:value>
+      <con:value>2021-11-16T10:46:08-0600</con:value>
     </con:property>
     <con:property userSpecific="true">
       <con:name>ExpectedErrorCode</con:name>
-      <con:value>VictimOfVictimTransaction</con:value>
+      <con:value>912b746b-ad74-4ab2-8872-96609e2e54e2</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>
@@ -120,7 +94,10 @@
     <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
       <con:authProfile>Inherit From Parent</con:authProfile>
     </con:entry>
-    <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+    <con:entry environmentId="58fdda4b-8926-4c7e-b291-d43ed4f2940d">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+    <con:entry environmentId="2263a0ba-822a-426a-9f0c-98aabd6417d5">
       <con:authProfile>Inherit From Parent</con:authProfile>
     </con:entry>
   </con:environmentSpec>

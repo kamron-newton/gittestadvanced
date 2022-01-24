@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="3f24cdf4-51d5-4e70-bc95-a053ec7e28d9" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="NegVoidExchange" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="3f24cdf4-51d5-4e70-bc95-a053ec7e28d9fileName">NegVoidExchange</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="calltestcase" name="Add Profile" id="81c6fd00-49fc-428b-86ef-6e24bff98153">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>6ae96861-948a-49ac-9326-658df10cefda</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Generate Guid" id="15511aa8-c717-4fda-b87c-cec8828d4dfc">
+    <con:settings/>
+    <con:config>
+      <script>java.util.UUID.randomUUID()</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Generate Date" id="87c372ae-12b1-4538-95e8-8e8dbe86c468">
+    <con:settings/>
+    <con:config>
+      <script>new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Exchange" id="44b93620-3f34-4108-b1d0-a4fcf97ca1e1">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>ae3f3b6f-c790-44c4-8fed-31dedf28b75d</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value>${Generate Guid#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${Add Profile#ProfileId}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDate</con:name>
+          <con:value>${Generate Date#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>RawTransactionId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Negative Add Void" id="1566696a-1db6-443a-9f9e-46e6f83458e6">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>d8fc2680-19e5-4d80-91ce-7ecbca68a8f4</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>FullTransactionNumber</con:name>
+          <con:value>${Generate Guid#result}_RT</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${Add Profile#ProfileId}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDate</con:name>
+          <con:value>${Generate Date#result}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ExpectedErrorCode</con:name>
+          <con:value>VoidInvalidExchange</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>15511aa8-c717-4fda-b87c-cec8828d4dfc</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>87c372ae-12b1-4538-95e8-8e8dbe86c468</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

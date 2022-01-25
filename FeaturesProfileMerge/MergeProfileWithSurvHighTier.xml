@@ -39,14 +39,14 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddSurvivorProfileForSurvivorHigherTier" id="b3d0e15e-c588-4018-8a05-2c4f4c3a0ade">
+  <con:testStep type="calltestcase" name="Add Survivor Profile" id="2162b195-4e7b-4495-be0e-69a505f50b7f">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" copyLoadTestProperties="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>7ff49299-8b46-4ac7-bb5b-83d3ab6f37b5</con:value>
+          <con:value>4f4961d2-cfb1-4015-a2cd-9170fd4c2c34</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -55,19 +55,16 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddVictimProfileForForSurvivorHigherTier" id="32a90555-6fa3-41df-99ce-342e3aa2e9c3">
+  <con:testStep type="calltestcase" name="Add Victim Profile" id="9690e636-4b5a-40f1-80db-c2c33753bc53">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:targetTestCase>f5c457de-a71d-47df-9afc-3385fe3af89a</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>5b480ac8-472c-4b4a-aaff-cbcc7b1baa47</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties>
-        <con:entry>ProfileId</con:entry>
-      </con:returnProperties>
+      <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
@@ -106,7 +103,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${AddSurvivorProfileForSurvivorHigherTier#ProfileId}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -129,52 +126,18 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="MergeSurvivorProfileWithVictimProfileForSurvivorHigherTier" id="079368d5-c58a-4799-9c59-6b30bccaf683">
+  <con:testStep type="calltestcase" name="Merge Profiles" id="6c561654-faee-4f56-812f-de0ea2d53859">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/merge" methodName="Merge Profiles" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="MergeSurvivorProfileWithVictimProfileForSurvivorHigherTier" id="b124f3c2-afd9-4016-aab2-98af90069deb" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "SecondaryId": "${AddVictimProfileForForSurvivorHigherTier#ProfileId}"
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/link/merge</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="44747e57-9953-44cf-b8fb-a30423fbfd89" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${AddSurvivorProfileForSurvivorHigherTier#ProfileId}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>profileId</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Program-Code</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>a8cd971b-fab6-43b8-87bd-9544f8860872</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>{   "SecondaryId": "${#[Profile#AddVictimProfileRGR#AddProfileRGR]#Response#$['ProfileId']}" }</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="GetSurvivorTierAfterMerge" id="aab8c139-0163-4354-91d1-ef1ba7c7c1f6">
@@ -209,7 +172,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${AddSurvivorProfileForSurvivorHigherTier#ProfileId}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -236,6 +199,21 @@
   <con:reportParameters/>
   <con:breakPoints>
     <con:testStepId>143b4e46-fc45-4cd7-8243-2fbe2b9d52e5</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2162b195-4e7b-4495-be0e-69a505f50b7f</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>9690e636-4b5a-40f1-80db-c2c33753bc53</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>6c561654-faee-4f56-812f-de0ea2d53859</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="a8e6af1e-1ef4-4eb1-9423-57f3e57140a0" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="AddPublicAnnonClientKeys" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="a8e6af1e-1ef4-4eb1-9423-57f3e57140a0fileName">AddPublicAnnonClientKeys</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="restrequest" name="GetPublicClientKey" id="80d7dca6-add9-43ce-bb3f-d18c4ddfcbd5">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/clientkeys/{consumerKey}" methodName="GetClientKeyByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPublicClientKey" id="dfa0e0e5-fe82-4435-9b87-332c74ca020d" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/clientkeys/consumerKey</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="095bb140-688a-44e1-b5c6-105ece951e33" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="consumerKey" value="PP_KEY"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>consumerKey</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="IfSysOauthClientIdForPublicKey" id="0dd9cf62-38e6-4af4-a7dc-b2548eeef9f3">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>SysOauthClientId</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>exists(//*:Response/*:SysOauthClientId)</con:expression>
+        <con:targetStep>GetPublicAnnonKey</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddPublicClientkey" id="32eb8d1d-508b-47d4-b18d-dc2160741871">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/clientkeys" methodName="AddClientKey" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddPublicClientkey" id="829c4c49-f4a9-47f0-b2a7-1975a4767e1f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ConsumerKey": "PP_KEY",
+  "ConsumerSecret": "Admin.123",
+  "Name": "PP Public Client Key",
+  "Description": "Public Client Key and secrect used by MemberNet for PP Program",
+  "OAuthClientType": "PUBLIC",
+  "TokenMinutesToExpire": 20,
+  "RefreshTokenMinutesToExpire": 40,
+  "ProgramCode": "PP"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/clientkeys</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="6931a2d7-fa5c-45f1-844b-7aed5d43aaf2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPublicAnnonKey" id="1346be61-5162-49fd-906d-b4da6a001890">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/clientkeys/{consumerKey}" methodName="GetClientKeyByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPublicAnnonKey" id="dfa0e0e5-fe82-4435-9b87-332c74ca020d" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/clientkeys/consumerKey</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="095bb140-688a-44e1-b5c6-105ece951e33" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="consumerKey" value="ANON_KEY"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>consumerKey</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="IfSysOauthClientIdForClientKey" id="a90dce45-6e0b-4773-990c-136c5cb7da59">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>SysOauthClientId</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>exists(//*:Response/*:SysOauthClientId)</con:expression>
+        <con:targetStep>GetPublicAnnonKey 2</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddAnnonClientkey" id="7d033741-3f12-43f7-85d5-f373b549e255">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/clientkeys" methodName="AddClientKey" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddAnnonClientkey" id="829c4c49-f4a9-47f0-b2a7-1975a4767e1f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ConsumerKey": "ANON_KEY",
+  "ConsumerSecret": "xO_l5_4n4d",
+  "Name": "Anonymous client Key",
+  "Description": "Anonymous client Key for non-authenticated users",
+  "OAuthClientType": "ANONYMOUS",
+  "TokenMinutesToExpire": 20,
+  "RefreshTokenMinutesToExpire": 40
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/clientkeys</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="6931a2d7-fa5c-45f1-844b-7aed5d43aaf2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPublicAnnonKey 2" id="5886a1f5-4c01-4912-859b-4b8c212f190e">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/clientkeys/{consumerKey}" methodName="GetClientKeyByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPublicAnnonKey 2" id="dfa0e0e5-fe82-4435-9b87-332c74ca020d" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/clientkeys/consumerKey</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="095bb140-688a-44e1-b5c6-105ece951e33" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="consumerKey" value="ANON_KEY"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>consumerKey</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

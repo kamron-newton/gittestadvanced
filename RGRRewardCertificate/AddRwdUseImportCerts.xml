@@ -54,16 +54,6 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="CurrentDate" id="bb19a887-a74c-420a-be2d-f6be7c8e95f4">
-    <con:settings/>
-    <con:config>
-      <script>use (groovy.time.TimeCategory)
-{
-def today = new Date()
-def formattedDate = today.format("mmddyyyyhhmmssmmm")
-}</script>
-    </con:config>
-  </con:testStep>
   <con:testStep type="restrequest" name="AddReward" id="ff66cdb8-535b-4f48-b311-f70243dcc008">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards" methodName="AddReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -72,7 +62,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request>{
-	"RewardCode":"${CurrentDate#result}",
+	"RewardCode":"${=new java.text.SimpleDateFormat("yyyyMMddhhmmss").format(new Date())}",
 	"StartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date()+90)}",
      "EndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date()+180)}",
 	"RewardType": "${RewardCertificates#RewardType}",
@@ -157,7 +147,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="profileId" value="{profileId}"/>
-          <con:entry key="rewardCode" value="${CurrentDate#result}"/>
+          <con:entry key="rewardCode" value="${AddReward#Response#$['RewardCode']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -189,7 +179,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-	"RewardCode":"${CurrentDate#result}",
+	"RewardCode":"${AddReward#Response#$['RewardCode']}",
 	"RewardType": "${RewardCertificates#RewardType}",
 	"Title": "${RewardCertificates#Title}",    
 	"CategoryCode": "${RewardCertificates#CategoryCode}",
@@ -217,7 +207,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
-          <con:entry key="rewardCode" value="${GetRewardByCode#Response#$['RewardCode']}"/>
+          <con:entry key="rewardCode" value="${AddReward#Response#$['RewardCode']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>

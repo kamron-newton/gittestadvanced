@@ -54,16 +54,6 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="CurrentDate" id="f2f2e1e0-b9d0-47b9-95aa-698df1102d7c">
-    <con:settings/>
-    <con:config>
-      <script>use (groovy.time.TimeCategory)
-{
-def today = new Date()
-def formattedDate = today.format("mmddyyyyhhmmssmmm")
-}</script>
-    </con:config>
-  </con:testStep>
   <con:testStep type="restrequest" name="AddReward" id="dc6e9036-0688-45dd-8282-7760049bd919">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewards" methodName="AddReward" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -72,7 +62,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request>{
-	"RewardCode":"${CurrentDate#result}",
+	"RewardCode":"${=new java.text.SimpleDateFormat("yyyyMMddhhmmss").format(new Date())}",
 	"StartDate": "${RewardCertificates#StartDate}",
      "EndDate": "${RewardCertificates#EndDate}",
 	"RewardType": "${RewardCertificates#RewardType}",
@@ -158,7 +148,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="profileId" value="{profileId}"/>
-          <con:entry key="rewardCode" value="${CurrentDate#result}"/>
+          <con:entry key="rewardCode" value="${AddReward#Response#$['RewardCode']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -190,7 +180,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-	"RewardCode":"${CurrentDate#result}",
+	"RewardCode":"${AddReward#Response#$['RewardCode']}",
 	"RewardType": "${RewardCertificates#RewardType}",
 	"Title": "${RewardCertificates#Title}",    
 	"CategoryCode": "${RewardCertificates#CategoryCode}",
@@ -273,7 +263,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="profileId" value="{profileId}"/>
-          <con:entry key="rewardCode" value="${CurrentDate#result}"/>
+          <con:entry key="rewardCode" value="${UpdateRwdUseImportCerts#Response#$['RewardCode']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>

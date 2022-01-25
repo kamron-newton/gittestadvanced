@@ -4,14 +4,40 @@
     <con:setting id="cd3ea6ba-a0c3-4b34-9be2-897c09a133f0fileName">RGRBankOrderRewardCertificate</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="groovy" name="CurrentDate" id="8f533418-105c-40a6-af5b-b9284ca5e493">
+  <con:testStep type="datasource" name="RandomGenerator" id="2f7acbe8-d8b5-4654-a3f2-34744426f536">
     <con:settings/>
-    <con:config>
-      <script>use (groovy.time.TimeCategory)
-{
-def today = new Date()
-def formattedDate = today.format("mmddyyyyhhmmssmmm")
-}</script>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>10</generatedDataCount>
+          <generatorsTotalNumber>4</generatorsTotalNumber>
+          <lastSelectedProperty>3</lastSelectedProperty>
+          <GeneratorType0>GUID</GeneratorType0>
+          <PropertyName0>CertificateNumber</PropertyName0>
+          <repetitionCountCertificateNumber>0</repetitionCountCertificateNumber>
+          <repeatValuesCertificateNumber>false</repeatValuesCertificateNumber>
+          <GeneratorType1>GUID</GeneratorType1>
+          <PropertyName1>BatchJobId</PropertyName1>
+          <repetitionCountBatchJobId>0</repetitionCountBatchJobId>
+          <repeatValuesBatchJobId>false</repeatValuesBatchJobId>
+          <GeneratorType2>GUID</GeneratorType2>
+          <PropertyName2>CertificateNumberSec</PropertyName2>
+          <repetitionCountCertificateNumberSec>0</repetitionCountCertificateNumberSec>
+          <repeatValuesCertificateNumberSec>false</repeatValuesCertificateNumberSec>
+          <GeneratorType3>GUID</GeneratorType3>
+          <PropertyName3>BatchJobIdSec</PropertyName3>
+          <repetitionCountBatchJobIdSec>0</repetitionCountBatchJobIdSec>
+          <repeatValuesBatchJobIdSec>false</repeatValuesBatchJobIdSec>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>CertificateNumber</con:property>
+      <con:property>BatchJobId</con:property>
+      <con:property>CertificateNumberSec</con:property>
+      <con:property>BatchJobIdSec</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="AddFixedPointImpCert" id="1035d888-cbf0-4bea-97a9-b2eb16b02ec9">
@@ -30,7 +56,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       <con:properties>
         <con:property>
           <con:name>CertificateNumber</con:name>
-          <con:value>${=java.util.UUID.randomUUID()}</con:value>
+          <con:value>${RandomGenerator#CertificateNumber}</con:value>
         </con:property>
         <con:property>
           <con:name>RewardCode</con:name>
@@ -38,21 +64,21 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         </con:property>
         <con:property>
           <con:name>BatchJobId</con:name>
-          <con:value>${=java.util.UUID.randomUUID()}</con:value>
+          <con:value>${RandomGenerator#BatchJobId}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="ProcessUnassignedCertificate 2" id="be7cbc89-8212-4cf2-a5c8-890b096b2636">
+  <con:testStep type="calltestcase" name="ProcessUnassignedCertificateSec" id="be7cbc89-8212-4cf2-a5c8-890b096b2636">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>a838b25c-744a-4638-9da9-379afc2e51e3</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>CertificateNumber</con:name>
-          <con:value>${=java.util.UUID.randomUUID()}</con:value>
+          <con:value>${RandomGenerator#CertificateNumberSec}</con:value>
         </con:property>
         <con:property>
           <con:name>RewardCode</con:name>
@@ -60,7 +86,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         </con:property>
         <con:property>
           <con:name>BatchJobId</con:name>
-          <con:value>${=java.util.UUID.randomUUID()}</con:value>
+          <con:value>${RandomGenerator#BatchJobIdSec}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -134,8 +160,8 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         </con:assertion>
         <con:assertion type="JsonPath Match" id="12e95bd9-7124-4899-8f52-f858a0badaac" name="CertificateNumber Validation">
           <con:configuration>
-            <path>$..[?(@.CertificateNumber=='${#[ActivityCertificate#OrderProfileRewardCertificate#OrderProfileRewardCertificate]#Response#$['CertificateNumber']}')].CertificateNumber</path>
-            <content>[${GetProfileRewardCertificate#Response#$[0]['CertificateNumber']}]</content>
+            <path>$..[?(@.CertificateNumber=='${RandomGenerator#CertificateNumber}')].CertificateNumber</path>
+            <content>[${RandomGenerator#CertificateNumber}]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -174,7 +200,7 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="OrderProfileRewardCertificate 2" id="d444adb5-cd7f-4e4e-8bd3-dec837b3c2e0">
+  <con:testStep type="calltestcase" name="OrderProfileRewardCertificateSec" id="d444adb5-cd7f-4e4e-8bd3-dec837b3c2e0">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>eca34bb4-95c3-434d-8370-76a7e0a875f4</con:targetTestCase>
@@ -188,10 +214,10 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileRewardCertificate 2" id="32f79b8f-69cd-487a-90d6-841cbf25e2f9">
+  <con:testStep type="restrequest" name="GetProfileRewardCertificateSec" id="32f79b8f-69cd-487a-90d6-841cbf25e2f9">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/certificates" methodName="GetProfileRewardCertificates" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProfileRewardCertificate 2" id="d5988a68-9034-47d0-ae55-7b9dabcbe7cd" mediaType="application/json">
+      <con:restRequest name="GetProfileRewardCertificateSec" id="d5988a68-9034-47d0-ae55-7b9dabcbe7cd" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -206,8 +232,8 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
         </con:assertion>
         <con:assertion type="JsonPath Match" id="84bc77e1-3f75-4fe5-8901-1493188a8dd8" name="CertificateNumber Validation">
           <con:configuration>
-            <path>$..[?(@.CertificateNumber=='${#[ActivityCertificate#OrderProfileRewardCertificate#OrderProfileRewardCertificate]#Response#$['CertificateNumber']}')].CertificateNumber</path>
-            <content>[${GetProfileRewardCertificate 2#Response#$[0]['CertificateNumber']}]</content>
+            <path>$..[?(@.CertificateNumber=='${RandomGenerator#CertificateNumberSec}')].CertificateNumber</path>
+            <content>[${RandomGenerator#CertificateNumberSec}]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -265,6 +291,11 @@ def formattedDate = today.format("mmddyyyyhhmmssmmm")
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>9f045a7f-14ed-435f-8b09-f8b487cd1f18</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2f7acbe8-d8b5-4654-a3f2-34744426f536</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

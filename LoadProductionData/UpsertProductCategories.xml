@@ -122,7 +122,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="ProductId" id="8f1f23ae-c01a-474e-b02c-13044ff766e7">
+  <con:testStep type="groovy" name="ProductIdCond" id="8f1f23ae-c01a-474e-b02c-13044ff766e7">
     <con:settings/>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
@@ -133,7 +133,7 @@ def productId = context.expand( '${GetProductCategories#Response#$[0][\'ProductI
 if ( productId == "" || productId== null ) 
     testRunner.gotoStepByName("AddProductCategories")
 else{
-	testRunner.gotoStepByName("UpdateProductCategories")
+	testRunner.gotoStepByName("ProductID")
   }</script>
     </con:config>
   </con:testStep>
@@ -219,6 +219,22 @@ else{
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="ProductID" id="2ad24d1d-41f3-4d23-8aae-538f20fba4f4">
+    <con:settings/>
+    <con:config>
+      <script>//Get the productId
+def productId = context.expand( '${GetProductCategories#Response#$[0][\'ProductId\']}' )
+def response = context.expand( '${AddProductCategories#Response}' )
+
+if(response==null || response =="")
+  	return productId;
+ else
+ {
+    productId = context.expand( '${AddProductCategories#Response#$[\'ProductId\']}' )
+    return productId;
+ }</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="UpdateProductCategories" id="f1dc550e-5a8b-4a18-885c-9d9dc1163986">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/products/{productId}" methodName="UpdateProductCategories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -282,7 +298,7 @@ else{
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
-          <con:entry key="productId" value="${GetProductCategories#Response#$[0]['ProductId']}"/>
+          <con:entry key="productId" value="${ProductID#result}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Content-Type" value="application/json"/>
         </con:parameters>
@@ -330,6 +346,11 @@ else{
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>8f1f23ae-c01a-474e-b02c-13044ff766e7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2ad24d1d-41f3-4d23-8aae-538f20fba4f4</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="2084d9f2-d9bd-4147-b1c5-eedb8a183cdc" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertSegmentDataLink" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="2084d9f2-d9bd-4147-b1c5-eedb8a183cdcfileName">UpsertSegmentDataLink</con:setting>
+  </con:settings>
+  <con:testStep type="datasource" name="SegmentDataLinks" id="38aef5fb-9a4e-4c70-a40f-acec52989ec0">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/SegmentDataLinks.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>LinkTableName</con:property>
+      <con:property>LinkColumnName</con:property>
+      <con:property>FriendlyTableName</con:property>
+      <con:property>FriendlyColumnName</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSegmentDataLinks" id="31420a45-42a9-4102-bcc5-65875f6be004">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/segmentdata/link" methodName="GetSegmentDataLinks" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSegmentDataLinks" id="7c01e260-ccd5-4876-81c2-49ce9378b47a" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/segmentdata/link</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="07abf037-39bf-4351-b1cf-1ed62db621a6" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>status</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="SegmentDataLinkIdCond" id="c8518816-9807-42c5-b31a-c26530139e32">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetSegmentDataLinks#Response}'))
+
+//datasource 
+def SegmentDataLinksTableNameDSource =context.expand( '${SegmentDataLinks#LinkTableName}')
+
+//SegmentDataLinkId
+def getSegDataLinkID = { code ->  json.find {it?.LinkTableName == SegmentDataLinksTableNameDSource}?.SegmentDataLinkId }
+
+def SegmentDataLinkId= (getSegDataLinkID('SegmentDataLinksTableNameDSource'))
+
+if ( SegmentDataLinkId == "" || SegmentDataLinkId== null ) 
+    testRunner.gotoStepByName("AddSegmentDataLink")
+else{
+	testRunner.gotoStepByName("SegmentDataLinkId")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddSegmentDataLink" id="6ca8e4cd-245a-4ec0-a0a2-33a7ea112081">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/segmentdata/link" methodName="AddSegmentDataLink" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddSegmentDataLink" id="aa980766-e9b2-45fb-be23-236312cd530c" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+"LinkTableName":  "${SegmentDataLinks#LinkTableName}",
+"LinkColumnName":  "${SegmentDataLinks#LinkColumnName}",
+"FriendlyTableName":"${SegmentDataLinks#FriendlyTableName}",
+"FriendlyColumnName":"${SegmentDataLinks#FriendlyColumnName}",
+ "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/segmentdata/link</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="0f96106d-de87-4b2f-a425-1c06f77af113" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="SegmentDataLinkId" id="feaa82ea-21e6-49f3-b105-10dfc7d2c399">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetSegmentDataLinks#Response}'))
+
+//datasource 
+def SegmentDataLinksTableNameDSource =context.expand( '${SegmentDataLinks#LinkTableName}')
+
+//SegmentDataLinkId
+def getSegDataLinkID = { code ->  json.find {it?.LinkTableName == SegmentDataLinksTableNameDSource}?.SegmentDataLinkId }
+
+def SegmentDataLinkId= (getSegDataLinkID('SegmentDataLinksTableNameDSource'))
+
+def response = context.expand( '${AddSegmentDataLink#Response}' )
+
+if(response==null || response =="")
+  	return SegmentDataLinkId;
+
+ else
+ {
+    SegmentDataLinkId = context.expand( '${AddPointCap#Response#$[\'SegmentDataLinkId\']}' )
+    return SegmentDataLinkId;
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateSegmentDataLink" id="5d74734e-5030-4bf9-a790-c2eed0fdafcb">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/segmentdata/link/{segmentDataLinkId}" methodName="UpdateSegmentDataLink" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateSegmentDataLink" id="ffaf6410-4e18-4de0-911f-6739429ea11f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+"LinkTableName":  "${SegmentDataLinks#LinkTableName}",
+"LinkColumnName":  "${SegmentDataLinks#LinkColumnName}",
+"FriendlyTableName":"${SegmentDataLinks#FriendlyTableName}",
+"FriendlyColumnName":"${SegmentDataLinks#FriendlyColumnName}",
+ "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/segmentdata/link/segmentDataLinkId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="fb853e9e-cfc7-4dff-88e3-07ac98f8404b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="segmentDataLinkId" value="${SegmentDataLinkId#result}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>segmentDataLinkId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="SegmentDataLinksLoop" id="368a87cc-ca60-48c8-b3d9-cd8db6b2a2ca">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>SegmentDataLinks</dataSourceStep>
+      <targetStep>GetSegmentDataLinks</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="a2770463-9651-4187-96b0-e0f5fb77f889" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ValidateBatchJobStatus" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="a2770463-9651-4187-96b0-e0f5fb77f889fileName">ValidateBatchJobStatus</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="StatusValidationCounter" id="1ef3923d-715b-4caa-ac1b-6cd9ba844897">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>10</generatedDataCount>
+          <generatorsTotalNumber>1</generatorsTotalNumber>
+          <lastSelectedProperty>0</lastSelectedProperty>
+          <GeneratorType0>INT</GeneratorType0>
+          <PropertyName0>StatusValidateCounter</PropertyName0>
+          <repetitionCountStatusValidateCounter>0</repetitionCountStatusValidateCounter>
+          <repeatValuesStatusValidateCounter>false</repeatValuesStatusValidateCounter>
+          <IntegerDataGeneratorMinValueStatusValidateCounter>1</IntegerDataGeneratorMinValueStatusValidateCounter>
+          <IntegerDataGeneratorMaxValueStatusValidateCounter>10</IntegerDataGeneratorMaxValueStatusValidateCounter>
+          <IntegerDataGeneratorStepValueStatusValidateCounter>1</IntegerDataGeneratorStepValueStatusValidateCounter>
+          <IntegerDataGeneratorConsequentValuesStatusValidateCounter>true</IntegerDataGeneratorConsequentValuesStatusValidateCounter>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>StatusValidateCounter</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetBatchJobById" id="e9aa7e18-dd98-46c7-90d2-f1d30b156e35">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/batch/jobs/{sysJobId}" methodName="Get Batch Job By Id" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetBatchJobById" id="91e91577-b61c-4556-a894-d9c3a806c11e" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/batch/jobs/3aea7594-f7f5-468f-aec5-fb2b50354f6e</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5fc51442-7311-42d2-9ff8-a570e755b082" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="sysJobId" value="${#TestCase#SysJobID}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>sysJobId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="ValidateBatchJobStatusC" id="120db02e-fbbe-44d3-9a2b-d98b98ceecc7">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>BatchJobStatus</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>(//*:Response[1]/*:JobStatus = 'C') or (//*:Response[1]/*:JobStatus = 'E')</con:expression>
+        <con:targetStep>AssertBatchStatusValidaton</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="delay" name="WaitForBatchJobCompletion" id="b5b77934-1fe0-41c3-9b00-f2952f9ed721">
+    <con:settings/>
+    <con:config>
+      <delay>100000</delay>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="LoopBatchJobStatusValidation" id="6b299b98-d9ff-4c50-a3ba-0637d8de833e">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>StatusValidationCounter</dataSourceStep>
+      <targetStep>GetBatchJobById</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="assertionteststep" name="AssertBatchStatusValidaton" id="cc9c5bc9-2ca6-4804-aead-666ea32cf941">
+    <con:settings/>
+    <con:config xsi:type="con:AssertionTestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:entry>
+        <con:id>581dc0f3-7388-4e95-acbc-dfa9e797137e</con:id>
+        <con:isGroup>false</con:isGroup>
+        <con:sourceId>e9aa7e18-dd98-46c7-90d2-f1d30b156e35</con:sourceId>
+        <con:propertyName>Response</con:propertyName>
+        <con:assertion type="JsonPath Match" name="JSONPath Match" id="890d1714-d8f0-4e73-a5af-96aeaad4089b">
+          <con:configuration>
+            <path>$['JobStatus']</path>
+            <content>"C"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+      </con:entry>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property userSpecific="true">
+      <con:name>SysJobID</con:name>
+      <con:value/>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>120db02e-fbbe-44d3-9a2b-d98b98ceecc7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>b5b77934-1fe0-41c3-9b00-f2952f9ed721</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

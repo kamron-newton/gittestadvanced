@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="04069eab-15a0-4a98-8694-cb548d801c3d" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="MergeProfileWithTransactions" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="04069eab-15a0-4a98-8694-cb548d801c3dfileName">MergeProfileWithTransactions</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="EnableOrDisableProgramSetting" id="077ed762-2df5-40f4-9668-b7947184bc5a">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>58358ab6-63cb-4437-8821-6fda8375ad78</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Survivor Profile" id="a8fd4661-5353-49f1-8836-8fc8fe4f5b57">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" copyLoadTestProperties="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>2cd3a07b-692c-43be-81da-a6473fb7a573</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Victim Profile" id="ba195701-d991-497a-b5dc-1757b18a77a1">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>baad9bb0-ef1d-40cc-ad6c-120db1b5f415</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="PurchaseTransactionForSurvivor" id="1e677cf2-1b17-4ea2-b791-cf7ba80edd9f">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>981060e9-8e55-4bc2-8e64-e3d2b5197f95</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TransactionEligible</con:name>
+          <con:value>80</con:value>
+        </con:property>
+        <con:property>
+          <con:name>Nights</con:name>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDateTime</con:name>
+          <con:value>${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+3)}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="PurchaseTransactionForVictim" id="d19dfc39-9a3b-47f8-b470-517d572066f9">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>7e46ce40-8567-441d-9993-719fb6280391</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Merge Profiles" id="69abf769-a21d-4469-bcb2-ecf5515ac1d0">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>a8cd971b-fab6-43b8-87bd-9544f8860872</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>{   "SecondaryId": "${#[Profile#AddProfileWithPostingKey#AddProfileWithPostingKey]#Response#$['ProfileId']}" }</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="VerifyByGetTransactionById" id="bd8337a7-b796-4374-8572-3aba00674486">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/transaction/rawtransactions/{rawtransactionid}" methodName="GetTransactionById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="VerifyByGetTransactionById" id="d866248f-9e10-4bc6-824e-b2fc2f226a21" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction/rawtransactions/rawtransactionid</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="adf4bb0e-816b-4584-a179-8d1636ce5341" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="24ae3944-134c-444b-9637-010274d9e91b" name="TransactionIdForSurvivorTransaction">
+          <con:configuration>
+            <path>$.[?( @.CardNumber == '${#[OffersPrerequisite#PurchaseTransaction#PurchaseTransaction]#Response#$['CardNumber']}')].TransactionId</path>
+            <content>[${#[OffersPrerequisite#PurchaseTransaction#PurchaseTransaction]#Response#$['RawTransactionId']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="TransactionTypeCodeForSurvivorTransaction" id="d60e82bd-a5cd-40d1-9c86-2dba3724d6b1">
+          <con:configuration>
+            <path>$.[?( @.CardNumber == '${#[OffersPrerequisite#PurchaseTransaction#PurchaseTransaction]#Response#$['CardNumber']}')].TransactionTypeCode</path>
+            <content>[${#[OffersPrerequisite#PurchaseTransaction#PurchaseTransaction]#Response#$['TransactionTypeCode']}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="DataAndMetadataAssertion" id="3393986c-580f-4790-9659-118426111da3" name="VitcimTransactionValidations">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Data</con:mode>
+            <con:elements>
+              <con:path>$[0]['TransactionId']</con:path>
+              <con:element>TransactionId</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>${#[Transaction#FullPurchaseTransaction#AddTransaction]#Response#$['RawTransactionId']}</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['ProfileId']</con:path>
+              <con:element>ProfileId</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>90b553b6-a6b5-4bfa-a5c7-6486f38724f6</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['TransactionTypeCode']</con:path>
+              <con:element>TransactionTypeCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>${#[Transaction#FullPurchaseTransaction#AddTransaction]#Response#$['TransactionTypeCode']}</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['TransactionTypeCodeDesc']</con:path>
+              <con:element>TransactionTypeCodeDesc</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Purchase</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['StoreCode']</con:path>
+              <con:element>StoreCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>FR1523</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['StoreName']</con:path>
+              <con:element>StoreName</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Fall River West Region</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['CurrencyCode']</con:path>
+              <con:element>CurrencyCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>USD</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['CardNumber']</con:path>
+              <con:element>CardNumber</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>747a833b-935d-4e0f-b0fe-ba440af6a001</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['TransactionNumber']</con:path>
+              <con:element>TransactionNumber</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>${#[Transaction#FullPurchaseTransaction#AddTransaction]#Response#$['TransactionNumber']}</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['TransactionDateTime']</con:path>
+              <con:element>TransactionDateTime</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-02-06T17:09:03Z</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['EligibleRevenueAmount']</con:path>
+              <con:element>EligibleRevenueAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>80.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['ProgramCurrencyEligibleRevenueAmount']</con:path>
+              <con:element>ProgramCurrencyEligibleRevenueAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>80.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['NetAmount']</con:path>
+              <con:element>NetAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>100.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['GrossAmount']</con:path>
+              <con:element>GrossAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>100.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['ProgramCurrencyNetAmount']</con:path>
+              <con:element>ProgramCurrencyNetAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>100.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['TaxAmount']</con:path>
+              <con:element>TaxAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['ProgramCurrencyTaxAmount']</con:path>
+              <con:element>ProgramCurrencyTaxAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['ShippingAndHandlingAmount']</con:path>
+              <con:element>ShippingAndHandlingAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['ProgramCurrencyShippingAndHandlingAmount']</con:path>
+              <con:element>ProgramCurrencyShippingAndHandlingAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['GratuityAmount']</con:path>
+              <con:element>GratuityAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['ProgramCurrencyGratuityAmount']</con:path>
+              <con:element>ProgramCurrencyGratuityAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['PostSalesAdjustmentAmount']</con:path>
+              <con:element>PostSalesAdjustmentAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['ProgramCurrencyPostSalesAdjustmentAmount']</con:path>
+              <con:element>ProgramCurrencyPostSalesAdjustmentAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['Status']</con:path>
+              <con:element>Status</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>A</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['AccountSourceCode']</con:path>
+              <con:element>AccountSourceCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ALMACCT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['SourceAccountNumber']</con:path>
+              <con:element>SourceAccountNumber</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>90b553b6-a6b5-4bfa-a5c7-6486f38724f6</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['PointsAmount']</con:path>
+              <con:element>PointsAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1980.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['SecuredPostingKey']</con:path>
+              <con:element>SecuredPostingKey</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>false</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>3</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['ReferenceTransactionId']</con:path>
+              <con:element>ReferenceTransactionId</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>c996df4d-fccf-4f62-9733-2207faae2ff1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['ReferenceTableName']</con:path>
+              <con:element>ReferenceTableName</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ACT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['Nights']</con:path>
+              <con:element>Nights</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['CreateUser']</con:path>
+              <con:element>CreateUser</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AUTO_USER</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['CreateDate']</con:path>
+              <con:element>CreateDate</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-02-03T17:09:03.719776Z</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['UpdateUser']</con:path>
+              <con:element>UpdateUser</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AUTO_USER</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[0]['UpdateDate']</con:path>
+              <con:element>UpdateDate</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-02-03T17:09:03.719776Z</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['TransactionId']</con:path>
+              <con:element>TransactionId</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ac3a2d1f-ccb7-429a-afac-27692a3a4b9a</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['ProfileId']</con:path>
+              <con:element>ProfileId</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>90b553b6-a6b5-4bfa-a5c7-6486f38724f6</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['TransactionTypeCode']</con:path>
+              <con:element>TransactionTypeCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PR</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['TransactionTypeCodeDesc']</con:path>
+              <con:element>TransactionTypeCodeDesc</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Purchase</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['StoreCode']</con:path>
+              <con:element>StoreCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PP1501</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['StoreName']</con:path>
+              <con:element>StoreName</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Poultry Perks South Region</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['CurrencyCode']</con:path>
+              <con:element>CurrencyCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>USD</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['CardNumber']</con:path>
+              <con:element>CardNumber</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>e7c56a43-b71a-49c2-b1ac-08b8e203ad54</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['TransactionNumber']</con:path>
+              <con:element>TransactionNumber</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>5CD1ACA9-11CE-4721-883C-E46290755744</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['TransactionDateTime']</con:path>
+              <con:element>TransactionDateTime</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-02-03T17:09:04Z</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['TransactionEndDateTime']</con:path>
+              <con:element>TransactionEndDateTime</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-02-03T17:09:04Z</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['EligibleRevenueAmount']</con:path>
+              <con:element>EligibleRevenueAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>45.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['ProgramCurrencyEligibleRevenueAmount']</con:path>
+              <con:element>ProgramCurrencyEligibleRevenueAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>45.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['NetAmount']</con:path>
+              <con:element>NetAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>90.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['GrossAmount']</con:path>
+              <con:element>GrossAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>100.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['ProgramCurrencyNetAmount']</con:path>
+              <con:element>ProgramCurrencyNetAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>90.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['TaxAmount']</con:path>
+              <con:element>TaxAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>10.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['ProgramCurrencyTaxAmount']</con:path>
+              <con:element>ProgramCurrencyTaxAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>10.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['ShippingAndHandlingAmount']</con:path>
+              <con:element>ShippingAndHandlingAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['ProgramCurrencyShippingAndHandlingAmount']</con:path>
+              <con:element>ProgramCurrencyShippingAndHandlingAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['Status']</con:path>
+              <con:element>Status</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>A</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['AccountSourceCode']</con:path>
+              <con:element>AccountSourceCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ALMACCT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['SourceAccountNumber']</con:path>
+              <con:element>SourceAccountNumber</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>90b553b6-a6b5-4bfa-a5c7-6486f38724f6</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['PointsAmount']</con:path>
+              <con:element>PointsAmount</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1760.0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['PostingKeyCode']</con:path>
+              <con:element>PostingKeyCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>PK1239</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['PostingKeyValue']</con:path>
+              <con:element>PostingKeyValue</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>113880ac-454e-4c61-9135-35a5adc8c082</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['SecuredPostingKey']</con:path>
+              <con:element>SecuredPostingKey</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>false</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>3</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['ReferenceTransactionId']</con:path>
+              <con:element>ReferenceTransactionId</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>edfb9993-86b5-4b4f-982d-f9d048e40e66</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['ReferenceTableName']</con:path>
+              <con:element>ReferenceTableName</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ACT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['Nights']</con:path>
+              <con:element>Nights</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['CreateUser']</con:path>
+              <con:element>CreateUser</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AUTO_USER</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['CreateDate']</con:path>
+              <con:element>CreateDate</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-02-03T17:09:04.801554Z</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['UpdateUser']</con:path>
+              <con:element>UpdateUser</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>AUTO_USER</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$[1]['UpdateDate']</con:path>
+              <con:element>UpdateDate</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2022-02-03T17:09:05.587107Z</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>[
+  {
+    "TransactionId": "e2205dad-5663-4b2b-aa2a-1a322b72050d",
+    "ProfileId": "90b553b6-a6b5-4bfa-a5c7-6486f38724f6",
+    "TransactionTypeCode": "PR",
+    "TransactionTypeCodeDesc": "Purchase",
+    "StoreCode": "FR1523",
+    "StoreName": "Fall River West Region",
+    "CurrencyCode": "USD",
+    "CardNumber": "747a833b-935d-4e0f-b0fe-ba440af6a001",
+    "TransactionNumber": "7011644C-7C30-4A40-802F-17EBE0B7E4AE",
+    "TransactionDateTime": "2022-02-06T17:09:03Z",
+    "EligibleRevenueAmount": 80.0,
+    "ProgramCurrencyEligibleRevenueAmount": 80.0,
+    "NetAmount": 100.0,
+    "GrossAmount": 100.0,
+    "ProgramCurrencyNetAmount": 100.0,
+    "TaxAmount": 0.0,
+    "ProgramCurrencyTaxAmount": 0.0,
+    "ShippingAndHandlingAmount": 0.0,
+    "ProgramCurrencyShippingAndHandlingAmount": 0.0,
+    "GratuityAmount": 0.0,
+    "ProgramCurrencyGratuityAmount": 0.0,
+    "PostSalesAdjustmentAmount": 0.0,
+    "ProgramCurrencyPostSalesAdjustmentAmount": 0.0,
+    "Status": "A",
+    "AccountSourceCode": "ALMACCT",
+    "SourceAccountNumber": "90b553b6-a6b5-4bfa-a5c7-6486f38724f6",
+    "PointsAmount": 1980.0,
+    "SecuredPostingKey": false,
+    "ReferenceTransactionId": "c996df4d-fccf-4f62-9733-2207faae2ff1",
+    "ReferenceTableName": "ACT",
+    "Nights": 1,
+    "CreateUser": "AUTO_USER",
+    "CreateDate": "2022-02-03T17:09:03.719776Z",
+    "UpdateUser": "AUTO_USER",
+    "UpdateDate": "2022-02-03T17:09:03.719776Z"
+  },
+  {
+    "TransactionId": "ac3a2d1f-ccb7-429a-afac-27692a3a4b9a",
+    "ProfileId": "90b553b6-a6b5-4bfa-a5c7-6486f38724f6",
+    "TransactionTypeCode": "PR",
+    "TransactionTypeCodeDesc": "Purchase",
+    "StoreCode": "PP1501",
+    "StoreName": "Poultry Perks South Region",
+    "CurrencyCode": "USD",
+    "CardNumber": "e7c56a43-b71a-49c2-b1ac-08b8e203ad54",
+    "TransactionNumber": "5CD1ACA9-11CE-4721-883C-E46290755744",
+    "TransactionDateTime": "2022-02-03T17:09:04Z",
+    "TransactionEndDateTime": "2022-02-03T17:09:04Z",
+    "EligibleRevenueAmount": 45.0,
+    "ProgramCurrencyEligibleRevenueAmount": 45.0,
+    "NetAmount": 90.0,
+    "GrossAmount": 100.0,
+    "ProgramCurrencyNetAmount": 90.0,
+    "TaxAmount": 10.0,
+    "ProgramCurrencyTaxAmount": 10.0,
+    "ShippingAndHandlingAmount": 0.0,
+    "ProgramCurrencyShippingAndHandlingAmount": 0.0,
+    "Status": "A",
+    "AccountSourceCode": "ALMACCT",
+    "SourceAccountNumber": "90b553b6-a6b5-4bfa-a5c7-6486f38724f6",
+    "PointsAmount": 1760.0,
+    "PostingKeyCode": "PK1239",
+    "PostingKeyValue": "113880ac-454e-4c61-9135-35a5adc8c082",
+    "SecuredPostingKey": false,
+    "ReferenceTransactionId": "edfb9993-86b5-4b4f-982d-f9d048e40e66",
+    "ReferenceTableName": "ACT",
+    "Nights": 1,
+    "CreateUser": "AUTO_USER",
+    "CreateDate": "2022-02-03T17:09:04.801554Z",
+    "UpdateUser": "AUTO_USER",
+    "UpdateDate": "2022-02-03T17:09:05.587107Z"
+  }
+]</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileid" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>rawtransactionid</con:entry>
+          <con:entry>profileid</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

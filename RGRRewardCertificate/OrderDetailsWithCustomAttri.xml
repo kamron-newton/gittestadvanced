@@ -10,7 +10,7 @@
       <con:properties>
         <con:property>
           <con:name>rewardCode</con:name>
-          <con:value>RDODRDETCUST</con:value>
+          <con:value>REW_${=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date())}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -50,6 +50,81 @@
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="OrderCustAttrNotAssociatedRP" id="2bd5a242-777a-420d-947f-f2dcc5d9b695">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>8df164c2-5f55-4c90-a897-f5235bb269f4</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="OrderProfileRewardCertificate" id="f418b03e-2734-47f0-a9cc-319705b32bf1">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>eca34bb4-95c3-434d-8370-76a7e0a875f4</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>{"RewardCode": "${#[ActivityOrder#AddFixedRewardFraud#AddReward]#Response#$['RewardCode']}", 	 	"ProfileOrderCustomDataGroup": { 		"EntityName": "PROFILE_ORDER", 		"CustomData": [{ 			"CustomDataName": "${#[ActivityOrder#OrderCustAttrNotAssociatedRP#GetCustomDataElementById]#Response#$['CustomDataName']}", 			"CustomDataDescription": "CusDesc_${=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date())}", 			"CustomDataValue": "C_${=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date())}" 		}] 	} }</con:value>
+        </con:property>
+        <con:property>
+          <con:name>CustomDataValue</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileOrderById" id="7453cef0-ffc5-407f-9f4b-4e1a4e4c8437">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/catalogs/orders/{orderId}" methodName="GetProfileOrderById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileOrderById" id="92047192-20ce-4022-a194-72c068fa9db7" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/catalogs/orders/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="745506e4-6e95-4275-a362-23ded5436bfa" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="orderId" value="${#[ActivityCertificate#OrderProfileRewardCertificate#OrderProfileRewardCertificate]#Response#$['OrderId']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>orderId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:properties/>

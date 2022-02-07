@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="7aa4082d-44fd-4a3b-a706-d715d1e0f0eb" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="EarnCertificateOnTransaction" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="260b6352-f2dc-43c9-af28-a3f1df7a6555" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="LocationBonus" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="7aa4082d-44fd-4a3b-a706-d715d1e0f0ebfileName">EarnCertificateOnTransaction</con:setting>
+    <con:setting id="260b6352-f2dc-43c9-af28-a3f1df7a6555fileName">LocationBonus</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="ProcessMarketingEventData" id="891409fd-f46b-4654-93bb-326dc4dac378">
+  <con:testStep type="datasource" name="ProcessMarketingEventData" id="72a6a17f-261c-4fd9-9272-178a8196ac23">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -41,90 +41,87 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddFlexibleDateRew" id="ab68a4dd-16ab-45e9-8672-b16065bf85bb">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>0e0d967b-f1f8-4be8-96cb-b0a0f31a6bcb</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>rewardCode</con:name>
-          <con:value>RD_EARN_TRANS</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEventCertTrxn" id="3c43c52c-df6e-4e20-b7b7-dcf3a61ab180">
+  <con:testStep type="restrequest" name="ProcessMarketingEventLocationBonus" id="02161889-e9d8-4ab1-8f2b-a73c26e5f99a">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ProcessMarketingEventCertTrxn" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="ProcessMarketingEventLocationBonus" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-	
+
 	"MarketingEventChannels": [
 		{
+
 			"MarketingEventChannelId": "${ProcessMarketingEventData#MarketingEventChannelId}",
 			"ChannelName": "${ProcessMarketingEventData#ChannelName}"
 		}
 	],
-	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
+    "EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
 		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 
 	"PackagedAudience": {
-
-		"PackagedAudienceId": "${ProcessMarketingEventData#PackagedAudienceId}"
+		"PackagedAudienceId": "${ProcessMarketingEventData#PackagedAudienceId}",
+		"AudienceName": "${ProcessMarketingEventData#AudienceName}",
 	},
 	"AudienceSource": "${ProcessMarketingEventData#AudienceSource}",
 	"PackagedOffer": {
-		"PackagedOfferId": "7d581289-7c77-6f47-e053-5ca8e70aa475",
-		
-		"PackagedOfferCode": "EARN_CERT_ON_TXN",
-		
-		"PackagedOfferName": "Earn a Certificate on a Transaction",
-	
+		"PackagedOfferId": "6c029289-c3c3-437d-b726-9c276fce02c3",
+		"PackagedOfferCode": "LOCATION_BONUS",
+		"PackagedOfferName": "Location Bonus",
 		"PackagedOfferParams": [
 			{
-				
-				"PackagedOfferParamId": "7d581289-7d77-6f47-e053-5ca8e70aa475",
-			     "PackagedOfferId": "7d581289-7c77-6f47-e053-5ca8e70aa475",
-				"ParamName": "Minimum transaction amount",
-				"ParamCode": "MIN_TXN_AMT",
-				"Value": "50",
+	            "PackagedOfferParamId": "7f15ef55-0408-4363-b1af-f2cb26a1a8a8",
+				"PackagedOfferId": "6c029289-c3c3-437d-b726-9c276fce02c3",
+				"ParamName": "Minimum transaction amount (optional)",
+				"ParamCode": "MINIMUM_PURCHASE_AMOUNT",	
+				"Value": "100",
 				"PanelId": "${ProcessMarketingEventData#PanelIdCustAct}",
 				"PanelCode": "${ProcessMarketingEventData#PanelCodeCustAct}"
 			},
+
 			{
-				
-				"PackagedOfferParamId": "7d581289-7f77-6f47-e053-5ca8e70aa475",
-				"PackagedOfferId": "7d581289-7c77-6f47-e053-5ca8e70aa475",
-				"ParamName": "Certificate",
-				"ParamCode": "REWARD_CERT",
-				"Value": "${AddFlexibleDateRew#rewardCode}",
+				"PackagedOfferParamId": "21ba4059-780f-4997-b9b2-23984fc31ceb",
+				"PackagedOfferId": "6c029289-c3c3-437d-b726-9c276fce02c3",
+				"ParamName": "Points per eligible dollar",
+				"ParamCode": "POINTS_PER_ELIG_DOLLAR",
+				"Value": "0.15",
 				"PanelId": "${ProcessMarketingEventData#PanelIdCustRew}",
 				"PanelCode": "${ProcessMarketingEventData#PanelCodeCustRew}"
 			},
 			{
-				"PackagedOfferParamId": "7d581289-7e77-6f47-e053-5ca8e70aa475",
-				"PackagedOfferId": "7d581289-7c77-6f47-e053-5ca8e70aa475",
-				"ParamName": "Maximum offers per member (optional)",
-				"ParamCode": "MAX_OFFERS_PER_MEMBER",
-				"Value": "5",
-				"PanelId": "${ProcessMarketingEventData#PanelIdOfferLim}",
-				"PanelCode": "${ProcessMarketingEventData#PanelCodeOfferLim}"
+				"PackagedOfferParamId": "2f671272-2402-4f3d-bc6c-828f174652c8",
+				"PackagedOfferId": "6c029289-c3c3-437d-b726-9c276fce02c3",
+				"ParamName": "Transact at",
+				"ParamCode": "LOCATION",
+				"Value": "StoreCode in (\"FR1523\")",
+				 "ParamCustomValue": {
+          "StoreCode": [
+            "FR1523"
+          ],
+          "DisplayStoreCode": [
+            "FR1523 - Fall River West Region"
+          ],
+          "LocationSelectType": 0,
+          "Chain": "FALL_RIVER"
+        },
+        "PanelId": "${ProcessMarketingEventData#PanelIdCustAct}",
+        "PanelCode": "${ProcessMarketingEventData#PanelCodeCustAct}"
 			}
 		],
 		"PackagedOfferCategoryId": "${ProcessMarketingEventData#PackagedOfferCategoryId}",
 		"PackagedOfferCategoryCode": "${ProcessMarketingEventData#PackagedOfferCategoryCode}"
 	},
-  "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
 	"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
+
+
+	"BusinessUnitTimeZone": "UTC",
 	"Status": "A",
+
 }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="7ab766b0-e6fe-4717-903e-2afb03fcee8e" name="Valid HTTP Status Codes">
+        <con:originalUri>https://d2aldv-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="d7664c17-3abc-4b2f-93d2-ce58adf21d4f" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -159,25 +156,25 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="RunMarketingEventJob AudienceCount" id="766de9cd-b45e-47f8-bcb0-5780a023ec11">
+  <con:testStep type="calltestcase" name="RunMarketingEventJob AudienceCount" id="c3623ebe-49e3-4ab2-9a6b-80498926e477">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>b033f509-ccf7-4703-a30f-947c1731ed44</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMarketingEventCertTrxn#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMarketingEventLocationBonus#Response#$['EventCode']}</con:value>
         </con:property>
         <con:property>
           <con:name>inputJSON</con:name>
-          <con:value>{     "JobName": "${ProcessMarketingEventCertTrxn#Response#$['EventCode']}",     "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b31",     "ErrorList": [],     "MarketingEventCode": "${ProcessMarketingEventCertTrxn#Response#$['EventCode']}" }</con:value>
+          <con:value>{"JobName": "${ProcessMarketingEventLocationBonus#Response#$['EventCode']}", "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b31",     "ErrorList": [],     "MarketingEventCode": "${ProcessMarketingEventLocationBonus#Response#$['EventCode']}" }</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="WaitForBatchJobCount" id="65425a4d-0c13-4b10-aaca-fe420ff51a33">
+  <con:testStep type="calltestcase" name="WaitForBatchJobCount" id="9e461572-e6b7-4ce5-aad8-18a810fbf7af">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
@@ -191,17 +188,18 @@
       <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode" id="ee2de051-45f2-4fd4-9621-59fa706f300c">
+  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode" id="204bbde3-7849-4517-87d6-f5db531f65ce">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" methodName="GetMarketingEventbyEventCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetMarketingEventbyEventCode" id="471c557e-ad15-4e9a-a9f1-2d173dd4c5cf" mediaType="application/json">
+    <con:config service="RestAPIs" methodName="GetMarketingEventbyEventCode" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetMarketingEventbyEventCode" id="65238c02-5ba1-41b4-90f5-cc1d0ca30e98" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
+        <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/6f523811-4155-49c4-8e19-4258e8d9200b</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="d4989006-0f0b-4631-bada-9c10772a3068" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/PROMO_CODE763287613</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b4017063-0878-4c70-999f-123e6d4b95da" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -213,35 +211,32 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="eventCode" value="${ProcessMarketingEventCertTrxn#Response#$['EventCode']}"/>
+          <con:entry key="eventCode" value="${ProcessMarketingEventLocationBonus#Response#$['EventCode']}"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="RunMarketingEventJob RunSimulation" id="8cb101c0-69e3-493e-bf3f-5f0f4e748a8b">
+  <con:testStep type="calltestcase" name="RunMarketingEventJob RunSimulation" id="41ac63fd-c5a7-4af6-8e25-f36ac17f8c2e">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>b033f509-ccf7-4703-a30f-947c1731ed44</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMarketingEventCertTrxn#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMarketingEventLocationBonus#Response#$['EventCode']}</con:value>
         </con:property>
         <con:property>
           <con:name>inputJSON</con:name>
-          <con:value>{     "RunSimulationStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-4)}",     "RunSimulationEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-2)}",     "JobName": "${ProcessMarketingEventCertTrxn#Response#$['EventCode']}",     "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b32",     "ErrorList": [],     "MarketingEventCode": "${ProcessMarketingEventCertTrxn#Response#$['EventCode']}" }</con:value>
+          <con:value>{     "RunSimulationStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-4)}",     "RunSimulationEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-2)}",     "JobName": "${ProcessMarketingEventLocationBonus#Response#$['EventCode']}",     "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b32",     "ErrorList": [],     "MarketingEventCode": "${ProcessMarketingEventLocationBonus#Response#$['EventCode']}" }</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="WaitForBatchJobCount 3" id="ff50c2d3-5cb0-403b-bf5f-5527629abeda">
+  <con:testStep type="calltestcase" name="WaitForBatchJobCount 3" id="51cf29ea-2626-41e6-9968-291cd86c2736">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
@@ -255,7 +250,7 @@
       <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode 3" id="0494eb06-11f9-4548-bd25-90925396dc95">
+  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode 3" id="758d0edd-1a7b-4f1a-ba1b-b5df980c4253">
     <con:settings/>
     <con:config service="RestAPIs" methodName="GetMarketingEventbyEventCode" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetMarketingEventbyEventCode 3" id="65238c02-5ba1-41b4-90f5-cc1d0ca30e98" mediaType="application/json">
@@ -278,46 +273,45 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="eventCode" value="${ProcessMarketingEventCertTrxn#Response#$['EventCode']}"/>
+          <con:entry key="eventCode" value="${ProcessMarketingEventLocationBonus#Response#$['EventCode']}"/>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddProfileRGRJoinDate" id="af917f06-1f41-4b8d-8d5f-3bc5741d7606">
+  <con:testStep type="calltestcase" name="AddProfileRGRJoinDate" id="0fa22b5a-054d-4fa3-ba26-d9692430b257">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>f74dbf78-eab1-4809-a94f-f8950443159c</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>9994948c-1e86-4c7f-9ca0-bd12e6a31ffc</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties></con:returnProperties>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="RunMarketingEventJob AudienceCount1" id="c8d24ac1-3610-44e5-8d85-8723fd2806a7">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>b033f509-ccf7-4703-a30f-947c1731ed44</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>EventCode</con:name>
-          <con:value>${ProcessMarketingEventCertTrxn#Response#$['EventCode']}</con:value>
-        </con:property>
-        <con:property>
-          <con:name>inputJSON</con:name>
-          <con:value>{     "JobName": "${ProcessMarketingEventCertTrxn#Response#$['EventCode']}",     "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b31",     "ErrorList": [],     "MarketingEventCode": "${ProcessMarketingEventCertTrxn#Response#$['EventCode']}" }</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="WaitForBatchJobCount 2" id="cae8f5f9-504b-45f8-872d-4d5ae541abba">
+  <con:testStep type="calltestcase" name="RunMarketingEventJob AudienceCount1" id="8db3b1af-c63d-4d77-9d4a-af338c688644">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>b033f509-ccf7-4703-a30f-947c1731ed44</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEventLocationBonus#Response#$['EventCode']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>inputJSON</con:name>
+          <con:value>{     "JobName": "${ProcessMarketingEventLocationBonus#Response#$['EventCode']}",     "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b31",     "ErrorList": [],     "MarketingEventCode": "${ProcessMarketingEventLocationBonus#Response#$['EventCode']}" }</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="WaitForBatchJobCount 2" id="1c5868b3-48b6-4f74-8ec5-49cc4890e81e">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
@@ -331,10 +325,10 @@
       <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode 2" id="622a0bde-5259-4051-b9b1-1eb9c356cdf4">
+  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode2" id="6b56f5f6-c998-4c8a-9a9d-447eff8cabad">
     <con:settings/>
     <con:config service="RestAPIs" methodName="GetMarketingEventbyEventCode" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetMarketingEventbyEventCode 2" id="65238c02-5ba1-41b4-90f5-cc1d0ca30e98" mediaType="application/json">
+      <con:restRequest name="GetMarketingEventbyEventCode2" id="65238c02-5ba1-41b4-90f5-cc1d0ca30e98" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -348,7 +342,7 @@
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="DataAndMetadataAssertion" id="43a1dcf3-8829-47bc-8560-912ae324ca1f" name="Smart Assertion">
+        <con:assertion type="DataAndMetadataAssertion" id="d7b5af62-c324-4834-ab47-b0026b3cd1c4" name="Smart Assertion">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Data</con:mode>
             <con:elements>
@@ -356,7 +350,7 @@
               <con:element>MarketingEventId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>b401776f-99e1-4aa1-92ae-7ce9ce03187b</con:expectedValue>
+              <con:expectedValue>21778a44-2d37-4f2a-8a68-4b934e544710</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -366,7 +360,7 @@
               <con:element>MarketingEventId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>b401776f-99e1-4aa1-92ae-7ce9ce03187b</con:expectedValue>
+              <con:expectedValue>21778a44-2d37-4f2a-8a68-4b934e544710</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -406,7 +400,7 @@
               <con:element>EventName</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>OFFER_NAME02032022061718017</con:expectedValue>
+              <con:expectedValue>OFFER_NAME02032022061829018</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -416,7 +410,7 @@
               <con:element>EventCode</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>OFFER_CODE02032022061718017</con:expectedValue>
+              <con:expectedValue>OFFER_CODE02032022061829018</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -456,7 +450,7 @@
               <con:element>MarketingEventId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>b401776f-99e1-4aa1-92ae-7ce9ce03187b</con:expectedValue>
+              <con:expectedValue>21778a44-2d37-4f2a-8a68-4b934e544710</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -776,7 +770,7 @@
               <con:element>PackagedOfferId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>7d581289-7c77-6f47-e053-5ca8e70aa475</con:expectedValue>
+              <con:expectedValue>6c029289-c3c3-437d-b726-9c276fce02c3</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -786,7 +780,7 @@
               <con:element>MarketingEventId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>b401776f-99e1-4aa1-92ae-7ce9ce03187b</con:expectedValue>
+              <con:expectedValue>21778a44-2d37-4f2a-8a68-4b934e544710</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -796,7 +790,7 @@
               <con:element>PackagedOfferCode</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>EARN_CERT_ON_TXN</con:expectedValue>
+              <con:expectedValue>LOCATION_BONUS</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -806,7 +800,7 @@
               <con:element>PackagedOfferName</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Earn a Certificate on a Transaction</con:expectedValue>
+              <con:expectedValue>Location Bonus</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -816,7 +810,7 @@
               <con:element>PackagedOfferDescription</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Earn a certificate for spending a minimum amount</con:expectedValue>
+              <con:expectedValue>Earn points for transactions made at specific locations</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -826,59 +820,7 @@
               <con:element>MomentTemplate</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>{
-"MomentCode": "{{MOMENTCODE}}",
-"StartDate": "{{STARTDATE}}",
-"EndDate": "{{ENDDATE}}",
-"Description": "{{DESCRIPTION}}",
-"MomentType": "REWARD_CERTIFICATES",
-"MomentStatus": "A",
-"MomentResponseValues": [
-{
-  "MomentCode": "{{MOMENTCODE}}",
-  "MomentType": "REWARD_CERTIFICATES",
-  "ResponsePropertyName": "ENGAGE INDICATOR",
-  "ResponsePropertyValue": "Y",
-  "Status": "A"
-}
-],
-"MomentEvent": {
-"MomentCode": "{{MOMENTCODE}}",
-"EventType": "PurchaseTxn",
-"MomentQualifyingDateAttribute": "PurchaseTxn.TransactionDateTime",
-"MomentOffers": [
-  {
-"MomentCode": "{{MOMENTCODE}}",
-"EventType": "PurchaseTxn",
-"OfferName": "{{MOMENTCODE}}",
-"Description": "{{DESCRIPTION}}",
-"MomentOutcome": {
-  "MomentCode": "{{MOMENTCODE}}",
-  "EventType": "PurchaseTxn",
-  "OfferName": "{{MOMENTCODE}}",
-  "OutcomeEquationUi": "\"{{REWARD_CERT}}\"",
-  "CalculationTemplate": "&lt;RewardCode,[String]>",
- "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22RewardCode%22%2C%22type%22%3A%22String%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22{{REWARD_CERT}}%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf%28{{REWARD_CERT}}%29%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",
-  "FormulaName": "FIXED_POINT_CERTIFICATE",
-  "Status": "A"
-},
-"MomentQualifyingRule": {
-  "MomentCode": "{{MOMENTCODE}}",
-  "EventType": "PurchaseTxn",
-  "OfferName": "{{MOMENTCODE}}",
-  "RuleEquationUI": "PurchaseTxn.ProgramCode == \"{{PROGRAMCODE}}\" &amp;&amp; {{MOMENT_ELIGIBILITY_CRITERIA_PART}} &amp;&amp; PurchaseTxn.TransactionEligible >= {{MIN_TXN_AMT}}",
-  "MomentCap": [{{MAX_OFFERS_PER_MEMBER_TEMPLATE}}]
-},
-   "Status": "A"
-  }
-]
-},
-"Status": "A",
-"BestOfferIndicator": false,
-"AdvancedModeIndicator": false,
-"IsTestUser": false,
-"ReleaseState": "P"
-}</con:expectedValue>
+              <con:expectedValue><![CDATA[{"MomentCode":"{{MOMENTCODE}}","StartDate":"{{STARTDATE}}","EndDate":"{{ENDDATE}}","Description":"{{DESCRIPTION}}","MomentType":"PROMOTIONAL_CURRENCY","MomentStatus":"A","MomentResponseValues":[{"MomentCode":"{{MOMENTCODE}}","MomentType":"PROMOTIONAL_CURRENCY","ResponsePropertyName":"BASE INDICATOR","ResponsePropertyValue":"N","Status":"P"},{"MomentCode":"{{MOMENTCODE}}","MomentType":"PROMOTIONAL_CURRENCY","ResponsePropertyName":"ENGAGE INDICATOR","ResponsePropertyValue":"Y","Status":"P"},{"MomentCode":"{{MOMENTCODE}}","MomentType":"PROMOTIONAL_CURRENCY","ResponsePropertyName":"POINT SUBTYPE","ResponsePropertyValue":"{{DEFAULTPOINTSUBTYPEID}}","Status":"P"},{"MomentCode":"{{MOMENTCODE}}","MomentType":"PROMOTIONAL_CURRENCY","ResponsePropertyName":"POINT TYPE","ResponsePropertyValue":"{{DEFAULTPOINTTYPEID}}","Status":"P"}],"MomentEvent":{"MomentCode":"{{MOMENTCODE}}","EventType":"PurchaseTxn","MomentQualifyingDateAttribute":"PurchaseTxn.TransactionDateTime","MomentOffers":[{"MomentCode":"{{MOMENTCODE}}","EventType":"PurchaseTxn","OfferName":"{{MOMENTCODE}}","Description":"{{DESCRIPTION}}","MomentOutcome":{"MomentCode":"{{MOMENTCODE}}","EventType":"PurchaseTxn","OfferName":"{{MOMENTCODE}}","OutcomeEquationUi":"round({{POINTS_PER_ELIG_DOLLAR}}*PurchaseTxn.TransactionEligible)","CalculationTemplate":"round(<Multiplier,[Number]>*<EligibleRevenue,[Number]>)","OutcomeEquationTemplate":"%5B%7B%22name%22%3A%22round%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22func%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22Math.round%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22(%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22Multiplier%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22{{POINTS_PER_ELIG_DOLLAR}}%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22*%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22EligibleRevenue%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_1%22%2C%22value%22%3A%22PurchaseTxn.TransactionEligible%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%24PurchaseTxn.getTransactionEligible()%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22)%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(new%20Double(Math.round({{POINTS_PER_ELIG_DOLLAR}}*%24PurchaseTxn.getTransactionEligible())))%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D","OutcomeEquationDrools":"MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"PLOC_TRANSPTCAP\"),new MomentParam(\"QualifyingDateAttributeValue\",$PurchaseTxn.getTransactionDateTime())};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"PLOC_TRANSPTCAP\",String.valueOf(new Double(Math.round({{POINTS_PER_ELIG_DOLLAR}}*$PurchaseTxn.getTransactionEligible()))),params, outcomeValues));\r\n","FormulaName":"SUM_QUALIFIED_ITEMS","Status":"A"},"MomentQualifyingRule":{"MomentCode":"{{MOMENTCODE}}","EventType":"PurchaseTxn","OfferName":"{{MOMENTCODE}}","RuleEquationUI":"PurchaseTxn.ProgramCode == \"{{PROGRAMCODE}}\" && {{MOMENT_ELIGIBILITY_CRITERIA_PART}} && PurchaseTxn.{{LOCATION}}","MomentCap":[{{MAX_OFFERS_PER_MEMBER_TEMPLATE}}{{MAX_POINTS_PER_MEMBER_TEMPLATE}}{{MAX_POINTS_PER_TRANSACTION_TEMPLATE}}]},"Status":"A"}]},"Status":"A","BestOfferIndicator":false,"AdvancedModeIndicator":false,"IsTestUser":false,"ReleaseState":"P"}]]></con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -888,20 +830,27 @@
               <con:element>SimulationQueryTemplate</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>SELECT COUNT(distinct profile_id) AS unique_customers, SUM(profile_trans) AS total_offers, null AS total_points,
+              <con:expectedValue>SELECT
+COUNT(distinct profile_id) AS unique_customers,
+SUM(profile_trans) AS total_offers,
+sum(eligible_revenue) as total_points,
 ceil(SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}) AS avg_offers_per_day,
-null AS avg_points_per_day,
-ceil((SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}) * {{OFFER_DATE_DIFF}}) AS projected_total_offers,
-null AS projected_total_points
+ceil(SUM(eligible_revenue)/{{SIMULATION_DATE_DIFF}}) AS avg_points_per_day,
+ceil(SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}*{{OFFER_DATE_DIFF}}) AS projected_total_offers,
+ceil(SUM(eligible_revenue)/{{SIMULATION_DATE_DIFF}}*{{OFFER_DATE_DIFF}}) AS projected_total_points
 FROM
 (
-    SELECT profile_id,
-    {{OFFERS_QUERY}}
-    FROM t_act_transaction
-    WHERE program_code = :ProgramCode AND status IN ('A','P') AND (transaction_type_code IN ('PR','EP') OR (transaction_type_code IN ('RT','ER','EX') AND act_transaction_xref_id is null))
-    AND transaction_date >= :SIMULATION_START_DATE AND transaction_date &lt; :SIMULATION_END_DATE AND eligible_revenue >= {{MIN_TXN_AMT}}
-    {{AUDIENCE_QUERY}}
-    GROUP BY profile_id
+
+           {{OFFERS_QUERY}}
+            FROM T_ACT_TRANSACTION
+            INNER JOIN
+            T_CHAIN_STORE
+            ON T_ACT_TRANSACTION.TRANS_LOCATION = T_CHAIN_STORE.STORE_CODE
+            WHERE T_ACT_TRANSACTION.PROGRAM_CODE = :ProgramCode AND T_ACT_TRANSACTION.STATUS IN('A','P') and(T_ACT_TRANSACTION.TRANSACTION_TYPE_CODE IN('PR', 'EP') OR(TRANSACTION_TYPE_CODE IN('RT', 'ER', 'EX') and ACT_TRANSACTION_XREF_ID is null))
+            AND TRANSACTION_DATE >= :SIMULATION_START_DATE and TRANSACTION_DATE &lt; :SIMULATION_END_DATE AND T_ACT_TRANSACTION.ELIGIBLE_REVENUE >= {{MINIMUM_PURCHASE_AMOUNT}}
+            AND {{TRANSACTION_LOCATION}}
+            {{AUDIENCE_QUERY}}
+            {{OFFER_QUERY_GROUP_BY}}
 )</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
@@ -912,7 +861,7 @@ FROM
               <con:element>OfferMomentEligibleCriteriaPart</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>(PurchaseTxn.Offers.OfferCode == \"{{OFFERCODEOFFERNAME}}\")</con:expectedValue>
+              <con:expectedValue>PurchaseTxn.Offers.OfferCode == \"{{OFFERCODEOFFERNAME}}\"</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -922,7 +871,7 @@ FROM
               <con:element>MarketingEventId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>b401776f-99e1-4aa1-92ae-7ce9ce03187b</con:expectedValue>
+              <con:expectedValue>21778a44-2d37-4f2a-8a68-4b934e544710</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -932,7 +881,7 @@ FROM
               <con:element>PackagedOfferParamId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>7d581289-7d77-6f47-e053-5ca8e70aa475</con:expectedValue>
+              <con:expectedValue>7f15ef55-0408-4363-b1af-f2cb26a1a8a8</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -942,7 +891,7 @@ FROM
               <con:element>PackagedOfferId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>7d581289-7c77-6f47-e053-5ca8e70aa475</con:expectedValue>
+              <con:expectedValue>6c029289-c3c3-437d-b726-9c276fce02c3</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -952,7 +901,7 @@ FROM
               <con:element>ParamName</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Minimum transaction amount</con:expectedValue>
+              <con:expectedValue>Minimum transaction amount (optional)</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -962,7 +911,7 @@ FROM
               <con:element>ParamCode</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>MIN_TXN_AMT</con:expectedValue>
+              <con:expectedValue>MINIMUM_PURCHASE_AMOUNT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1002,7 +951,7 @@ FROM
               <con:element>IsRequired</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>true</con:expectedValue>
+              <con:expectedValue>false</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>3</con:expectedDataType>
@@ -1012,7 +961,7 @@ FROM
               <con:element>Value</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>50</con:expectedValue>
+              <con:expectedValue>100</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1042,7 +991,7 @@ FROM
               <con:element>MarketingEventId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>b401776f-99e1-4aa1-92ae-7ce9ce03187b</con:expectedValue>
+              <con:expectedValue>21778a44-2d37-4f2a-8a68-4b934e544710</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1052,7 +1001,7 @@ FROM
               <con:element>PackagedOfferParamId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>7d581289-7f77-6f47-e053-5ca8e70aa475</con:expectedValue>
+              <con:expectedValue>21ba4059-780f-4997-b9b2-23984fc31ceb</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1062,7 +1011,7 @@ FROM
               <con:element>PackagedOfferId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>7d581289-7c77-6f47-e053-5ca8e70aa475</con:expectedValue>
+              <con:expectedValue>6c029289-c3c3-437d-b726-9c276fce02c3</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1072,7 +1021,7 @@ FROM
               <con:element>ParamName</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Certificate</con:expectedValue>
+              <con:expectedValue>Points per eligible dollar</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1082,7 +1031,7 @@ FROM
               <con:element>ParamCode</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>REWARD_CERT</con:expectedValue>
+              <con:expectedValue>POINTS_PER_ELIG_DOLLAR</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1092,7 +1041,7 @@ FROM
               <con:element>ParamDescription</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Select a certificate</con:expectedValue>
+              <con:expectedValue>0</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1102,17 +1051,7 @@ FROM
               <con:element>DataType</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>list</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['PackagedOffer']['PackagedOfferParams'][1]['RouteUrl']</con:path>
-              <con:element>RouteUrl</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>v1/referencedata/rewards/rewards?certificateInd=true&amp;status=A&amp;startDate={startDate}&amp;endDate={endDate}</con:expectedValue>
+              <con:expectedValue>input</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1122,7 +1061,7 @@ FROM
               <con:element>ParamControl</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>text</con:expectedValue>
+              <con:expectedValue>decimal</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1142,7 +1081,7 @@ FROM
               <con:element>Value</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>RD_EARN_TRANS</con:expectedValue>
+              <con:expectedValue>0.15</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1172,7 +1111,7 @@ FROM
               <con:element>MarketingEventId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>b401776f-99e1-4aa1-92ae-7ce9ce03187b</con:expectedValue>
+              <con:expectedValue>21778a44-2d37-4f2a-8a68-4b934e544710</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1182,7 +1121,7 @@ FROM
               <con:element>PackagedOfferParamId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>7d581289-7e77-6f47-e053-5ca8e70aa475</con:expectedValue>
+              <con:expectedValue>2f671272-2402-4f3d-bc6c-828f174652c8</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1192,7 +1131,7 @@ FROM
               <con:element>PackagedOfferId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>7d581289-7c77-6f47-e053-5ca8e70aa475</con:expectedValue>
+              <con:expectedValue>6c029289-c3c3-437d-b726-9c276fce02c3</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1202,7 +1141,7 @@ FROM
               <con:element>ParamName</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Maximum offers per member (optional)</con:expectedValue>
+              <con:expectedValue>Transact at</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1212,17 +1151,7 @@ FROM
               <con:element>ParamCode</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>MAX_OFFERS_PER_MEMBER</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['PackagedOffer']['PackagedOfferParams'][2]['ParamDescription']</con:path>
-              <con:element>ParamDescription</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>0</con:expectedValue>
+              <con:expectedValue>LOCATION</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1232,7 +1161,7 @@ FROM
               <con:element>DataType</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>input</con:expectedValue>
+              <con:expectedValue>custom</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1242,7 +1171,7 @@ FROM
               <con:element>ParamControl</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>number</con:expectedValue>
+              <con:expectedValue>location</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1252,7 +1181,7 @@ FROM
               <con:element>IsRequired</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>false</con:expectedValue>
+              <con:expectedValue>true</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>3</con:expectedDataType>
@@ -1262,7 +1191,47 @@ FROM
               <con:element>Value</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>5</con:expectedValue>
+              <con:expectedValue>StoreCode in ("FR1523")</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['PackagedOffer']['PackagedOfferParams'][2]['ParamCustomValue']['StoreCode'][0]</con:path>
+              <con:element>0</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>FR1523</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['PackagedOffer']['PackagedOfferParams'][2]['ParamCustomValue']['DisplayStoreCode'][0]</con:path>
+              <con:element>0</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>FR1523 - Fall River West Region</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['PackagedOffer']['PackagedOfferParams'][2]['ParamCustomValue']['LocationSelectType']</con:path>
+              <con:element>LocationSelectType</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>true</con:numberType>
+              <con:expectedDataType>2</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['PackagedOffer']['PackagedOfferParams'][2]['ParamCustomValue']['Chain']</con:path>
+              <con:element>Chain</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>FALL_RIVER</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1272,7 +1241,7 @@ FROM
               <con:element>PanelId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>e0e698ac-4391-d25d-e053-5dedef0ac6ef</con:expectedValue>
+              <con:expectedValue>e0e698ac-4191-d25d-e053-5dedef0ac6ef</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1282,7 +1251,7 @@ FROM
               <con:element>PanelCode</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>OFFER_LIMITS</con:expectedValue>
+              <con:expectedValue>CUSTOMER_ACTIVITY</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1312,7 +1281,7 @@ FROM
               <con:element>OfferStartDate</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>2022-02-07T12:47:18Z</con:expectedValue>
+              <con:expectedValue>2022-02-07T12:48:29Z</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1322,7 +1291,7 @@ FROM
               <con:element>OfferEndDate</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>2022-02-18T12:47:18Z</con:expectedValue>
+              <con:expectedValue>2022-02-18T12:48:29Z</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1332,7 +1301,7 @@ FROM
               <con:element>OnlineMessageCode</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>OFFER_CODE02032022061718017</con:expectedValue>
+              <con:expectedValue>OFFER_CODE02032022061829018</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1382,7 +1351,7 @@ FROM
               <con:element>AudienceCountId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>e367f192-81b3-4f13-9d78-f6249bfa4fc4</con:expectedValue>
+              <con:expectedValue>01663782-513e-4e17-b99b-e5ac340a3d32</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1392,7 +1361,7 @@ FROM
               <con:element>MarketingEventId</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>b401776f-99e1-4aa1-92ae-7ce9ce03187b</con:expectedValue>
+              <con:expectedValue>21778a44-2d37-4f2a-8a68-4b934e544710</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1402,7 +1371,7 @@ FROM
               <con:element>AudienceCountCalculationStartTime</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>2022-02-03T12:47:25.279416Z</con:expectedValue>
+              <con:expectedValue>2022-02-03T12:48:34.835952Z</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1412,7 +1381,7 @@ FROM
               <con:element>AudienceCountCalculationEndTime</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>2022-02-03T12:47:25.279417Z</con:expectedValue>
+              <con:expectedValue>2022-02-03T12:48:34.835952Z</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1472,7 +1441,7 @@ FROM
               <con:element>CreateDate</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>2022-02-03T12:47:19.160911Z</con:expectedValue>
+              <con:expectedValue>2022-02-03T12:48:29.976682Z</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1492,28 +1461,28 @@ FROM
               <con:element>UpdateDate</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>2022-02-03T12:47:33.205829Z</con:expectedValue>
+              <con:expectedValue>2022-02-03T12:48:43.239648Z</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
             <con:originalMessage><![CDATA[{
-  "MarketingEventId": "b401776f-99e1-4aa1-92ae-7ce9ce03187b",
+  "MarketingEventId": "21778a44-2d37-4f2a-8a68-4b934e544710",
   "MarketingEventChannels": [
     {
-      "MarketingEventId": "b401776f-99e1-4aa1-92ae-7ce9ce03187b",
+      "MarketingEventId": "21778a44-2d37-4f2a-8a68-4b934e544710",
       "MarketingEventChannelId": "bce4fc4f-1b7d-2d49-b498-cea4e90a6105",
       "ChannelName": "No Channel",
       "ChannelCode": "NO_CHANNEL"
     }
   ],
-  "EventName": "OFFER_NAME02032022061718017",
-  "EventCode": "OFFER_CODE02032022061718017",
+  "EventName": "OFFER_NAME02032022061829018",
+  "EventCode": "OFFER_CODE02032022061829018",
   "EventStatus": "DRAFT",
   "ProgramCode": "PP",
   "PackagedAudience": {
     "PackagedAudienceId": "7ae1f987-515e-4669-e053-5ca8e70ad3ee",
-    "MarketingEventId": "b401776f-99e1-4aa1-92ae-7ce9ce03187b",
+    "MarketingEventId": "21778a44-2d37-4f2a-8a68-4b934e544710",
     "AudienceName": "All Members",
     "AudienceDescription": "All enrolled members with an active profile status",
     "HarmonyTemplate": {
@@ -1567,83 +1536,91 @@ FROM
   },
   "AudienceSource": "PACKAGED_AUDIENCE",
   "PackagedOffer": {
-    "PackagedOfferId": "7d581289-7c77-6f47-e053-5ca8e70aa475",
-    "MarketingEventId": "b401776f-99e1-4aa1-92ae-7ce9ce03187b",
-    "PackagedOfferCode": "EARN_CERT_ON_TXN",
-    "PackagedOfferName": "Earn a Certificate on a Transaction",
-    "PackagedOfferDescription": "Earn a certificate for spending a minimum amount",
-    "MomentTemplate": "{\n\"MomentCode\": \"{{MOMENTCODE}}\",\n\"StartDate\": \"{{STARTDATE}}\",\n\"EndDate\": \"{{ENDDATE}}\",\n\"Description\": \"{{DESCRIPTION}}\",\n\"MomentType\": \"REWARD_CERTIFICATES\",\n\"MomentStatus\": \"A\",\n\"MomentResponseValues\": [\n{\n  \"MomentCode\": \"{{MOMENTCODE}}\",\n  \"MomentType\": \"REWARD_CERTIFICATES\",\n  \"ResponsePropertyName\": \"ENGAGE INDICATOR\",\n  \"ResponsePropertyValue\": \"Y\",\n  \"Status\": \"A\"\n}\n],\n\"MomentEvent\": {\n\"MomentCode\": \"{{MOMENTCODE}}\",\n\"EventType\": \"PurchaseTxn\",\n\"MomentQualifyingDateAttribute\": \"PurchaseTxn.TransactionDateTime\",\n\"MomentOffers\": [\n  {\n\"MomentCode\": \"{{MOMENTCODE}}\",\n\"EventType\": \"PurchaseTxn\",\n\"OfferName\": \"{{MOMENTCODE}}\",\n\"Description\": \"{{DESCRIPTION}}\",\n\"MomentOutcome\": {\n  \"MomentCode\": \"{{MOMENTCODE}}\",\n  \"EventType\": \"PurchaseTxn\",\n  \"OfferName\": \"{{MOMENTCODE}}\",\n  \"OutcomeEquationUi\": \"\\\"{{REWARD_CERT}}\\\"\",\n  \"CalculationTemplate\": \"<RewardCode,[String]>\",\n \"OutcomeEquationTemplate\": \"%5B%7B%22name%22%3A%22RewardCode%22%2C%22type%22%3A%22String%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22{{REWARD_CERT}}%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf%28{{REWARD_CERT}}%29%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D\",\n  \"FormulaName\": \"FIXED_POINT_CERTIFICATE\",\n  \"Status\": \"A\"\n},\n\"MomentQualifyingRule\": {\n  \"MomentCode\": \"{{MOMENTCODE}}\",\n  \"EventType\": \"PurchaseTxn\",\n  \"OfferName\": \"{{MOMENTCODE}}\",\n  \"RuleEquationUI\": \"PurchaseTxn.ProgramCode == \\\"{{PROGRAMCODE}}\\\" && {{MOMENT_ELIGIBILITY_CRITERIA_PART}} && PurchaseTxn.TransactionEligible >= {{MIN_TXN_AMT}}\",\n  \"MomentCap\": [{{MAX_OFFERS_PER_MEMBER_TEMPLATE}}]\n},\n   \"Status\": \"A\"\n  }\n]\n},\n\"Status\": \"A\",\n\"BestOfferIndicator\": false,\n\"AdvancedModeIndicator\": false,\n\"IsTestUser\": false,\n\"ReleaseState\": \"P\"\n}",
-    "SimulationQueryTemplate": "SELECT COUNT(distinct profile_id) AS unique_customers, SUM(profile_trans) AS total_offers, null AS total_points,\nceil(SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}) AS avg_offers_per_day,\nnull AS avg_points_per_day,\nceil((SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}) * {{OFFER_DATE_DIFF}}) AS projected_total_offers,\nnull AS projected_total_points\nFROM\n(\n    SELECT profile_id,\n    {{OFFERS_QUERY}}\n    FROM t_act_transaction\n    WHERE program_code = :ProgramCode AND status IN ('A','P') AND (transaction_type_code IN ('PR','EP') OR (transaction_type_code IN ('RT','ER','EX') AND act_transaction_xref_id is null))\n    AND transaction_date >= :SIMULATION_START_DATE AND transaction_date < :SIMULATION_END_DATE AND eligible_revenue >= {{MIN_TXN_AMT}}\n    {{AUDIENCE_QUERY}}\n    GROUP BY profile_id\n)",
-    "OfferMomentEligibleCriteriaPart": "(PurchaseTxn.Offers.OfferCode == \\\"{{OFFERCODEOFFERNAME}}\\\")",
+    "PackagedOfferId": "6c029289-c3c3-437d-b726-9c276fce02c3",
+    "MarketingEventId": "21778a44-2d37-4f2a-8a68-4b934e544710",
+    "PackagedOfferCode": "LOCATION_BONUS",
+    "PackagedOfferName": "Location Bonus",
+    "PackagedOfferDescription": "Earn points for transactions made at specific locations",
+    "MomentTemplate": "{\"MomentCode\":\"{{MOMENTCODE}}\",\"StartDate\":\"{{STARTDATE}}\",\"EndDate\":\"{{ENDDATE}}\",\"Description\":\"{{DESCRIPTION}}\",\"MomentType\":\"PROMOTIONAL_CURRENCY\",\"MomentStatus\":\"A\",\"MomentResponseValues\":[{\"MomentCode\":\"{{MOMENTCODE}}\",\"MomentType\":\"PROMOTIONAL_CURRENCY\",\"ResponsePropertyName\":\"BASE INDICATOR\",\"ResponsePropertyValue\":\"N\",\"Status\":\"P\"},{\"MomentCode\":\"{{MOMENTCODE}}\",\"MomentType\":\"PROMOTIONAL_CURRENCY\",\"ResponsePropertyName\":\"ENGAGE INDICATOR\",\"ResponsePropertyValue\":\"Y\",\"Status\":\"P\"},{\"MomentCode\":\"{{MOMENTCODE}}\",\"MomentType\":\"PROMOTIONAL_CURRENCY\",\"ResponsePropertyName\":\"POINT SUBTYPE\",\"ResponsePropertyValue\":\"{{DEFAULTPOINTSUBTYPEID}}\",\"Status\":\"P\"},{\"MomentCode\":\"{{MOMENTCODE}}\",\"MomentType\":\"PROMOTIONAL_CURRENCY\",\"ResponsePropertyName\":\"POINT TYPE\",\"ResponsePropertyValue\":\"{{DEFAULTPOINTTYPEID}}\",\"Status\":\"P\"}],\"MomentEvent\":{\"MomentCode\":\"{{MOMENTCODE}}\",\"EventType\":\"PurchaseTxn\",\"MomentQualifyingDateAttribute\":\"PurchaseTxn.TransactionDateTime\",\"MomentOffers\":[{\"MomentCode\":\"{{MOMENTCODE}}\",\"EventType\":\"PurchaseTxn\",\"OfferName\":\"{{MOMENTCODE}}\",\"Description\":\"{{DESCRIPTION}}\",\"MomentOutcome\":{\"MomentCode\":\"{{MOMENTCODE}}\",\"EventType\":\"PurchaseTxn\",\"OfferName\":\"{{MOMENTCODE}}\",\"OutcomeEquationUi\":\"round({{POINTS_PER_ELIG_DOLLAR}}*PurchaseTxn.TransactionEligible)\",\"CalculationTemplate\":\"round(<Multiplier,[Number]>*<EligibleRevenue,[Number]>)\",\"OutcomeEquationTemplate\":\"%5B%7B%22name%22%3A%22round%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22func%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22Math.round%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22(%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22Multiplier%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22{{POINTS_PER_ELIG_DOLLAR}}%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22*%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22EligibleRevenue%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_1%22%2C%22value%22%3A%22PurchaseTxn.TransactionEligible%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22filterType%22%3A%22A%22%2C%22drools%22%3A%22%24PurchaseTxn.getTransactionEligible()%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22)%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22obj%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22round%22%2C%22drools%22%3A%22%22%2C%22filterType%22%3A%22A%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%2C%22attributes%22%3A%5B%5D%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(new%20Double(Math.round({{POINTS_PER_ELIG_DOLLAR}}*%24PurchaseTxn.getTransactionEligible())))%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D\",\"OutcomeEquationDrools\":\"MomentParam[] params = new MomentParam[] {new MomentParam(\\\"OfferName\\\",\\\"PLOC_TRANSPTCAP\\\"),new MomentParam(\\\"QualifyingDateAttributeValue\\\",$PurchaseTxn.getTransactionDateTime())};\\r\\nMomentParam[] outcomeValues = null;\\r\\nmo.add(new MomentOutcome(\\\"PLOC_TRANSPTCAP\\\",String.valueOf(new Double(Math.round({{POINTS_PER_ELIG_DOLLAR}}*$PurchaseTxn.getTransactionEligible()))),params, outcomeValues));\\r\\n\",\"FormulaName\":\"SUM_QUALIFIED_ITEMS\",\"Status\":\"A\"},\"MomentQualifyingRule\":{\"MomentCode\":\"{{MOMENTCODE}}\",\"EventType\":\"PurchaseTxn\",\"OfferName\":\"{{MOMENTCODE}}\",\"RuleEquationUI\":\"PurchaseTxn.ProgramCode == \\\"{{PROGRAMCODE}}\\\" && {{MOMENT_ELIGIBILITY_CRITERIA_PART}} && PurchaseTxn.{{LOCATION}}\",\"MomentCap\":[{{MAX_OFFERS_PER_MEMBER_TEMPLATE}}{{MAX_POINTS_PER_MEMBER_TEMPLATE}}{{MAX_POINTS_PER_TRANSACTION_TEMPLATE}}]},\"Status\":\"A\"}]},\"Status\":\"A\",\"BestOfferIndicator\":false,\"AdvancedModeIndicator\":false,\"IsTestUser\":false,\"ReleaseState\":\"P\"}",
+    "SimulationQueryTemplate": "SELECT\nCOUNT(distinct profile_id) AS unique_customers,\nSUM(profile_trans) AS total_offers,\nsum(eligible_revenue) as total_points,\nceil(SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}) AS avg_offers_per_day,\nceil(SUM(eligible_revenue)/{{SIMULATION_DATE_DIFF}}) AS avg_points_per_day,\nceil(SUM(profile_trans)/{{SIMULATION_DATE_DIFF}}*{{OFFER_DATE_DIFF}}) AS projected_total_offers,\nceil(SUM(eligible_revenue)/{{SIMULATION_DATE_DIFF}}*{{OFFER_DATE_DIFF}}) AS projected_total_points\nFROM\n(\n\n           {{OFFERS_QUERY}}\n            FROM T_ACT_TRANSACTION\n            INNER JOIN\n            T_CHAIN_STORE\n            ON T_ACT_TRANSACTION.TRANS_LOCATION = T_CHAIN_STORE.STORE_CODE\n            WHERE T_ACT_TRANSACTION.PROGRAM_CODE = :ProgramCode AND T_ACT_TRANSACTION.STATUS IN('A','P') and(T_ACT_TRANSACTION.TRANSACTION_TYPE_CODE IN('PR', 'EP') OR(TRANSACTION_TYPE_CODE IN('RT', 'ER', 'EX') and ACT_TRANSACTION_XREF_ID is null))\n            AND TRANSACTION_DATE >= :SIMULATION_START_DATE and TRANSACTION_DATE < :SIMULATION_END_DATE AND T_ACT_TRANSACTION.ELIGIBLE_REVENUE >= {{MINIMUM_PURCHASE_AMOUNT}}\n            AND {{TRANSACTION_LOCATION}}\n            {{AUDIENCE_QUERY}}\n            {{OFFER_QUERY_GROUP_BY}}\n)",
+    "OfferMomentEligibleCriteriaPart": "PurchaseTxn.Offers.OfferCode == \\\"{{OFFERCODEOFFERNAME}}\\\"",
     "PackagedOfferParams": [
       {
-        "MarketingEventId": "b401776f-99e1-4aa1-92ae-7ce9ce03187b",
-        "PackagedOfferParamId": "7d581289-7d77-6f47-e053-5ca8e70aa475",
-        "PackagedOfferId": "7d581289-7c77-6f47-e053-5ca8e70aa475",
-        "ParamName": "Minimum transaction amount",
-        "ParamCode": "MIN_TXN_AMT",
+        "MarketingEventId": "21778a44-2d37-4f2a-8a68-4b934e544710",
+        "PackagedOfferParamId": "7f15ef55-0408-4363-b1af-f2cb26a1a8a8",
+        "PackagedOfferId": "6c029289-c3c3-437d-b726-9c276fce02c3",
+        "ParamName": "Minimum transaction amount (optional)",
+        "ParamCode": "MINIMUM_PURCHASE_AMOUNT",
         "ParamDescription": "0",
         "DataType": "input",
         "ParamControl": "decimal",
-        "IsRequired": true,
-        "Value": "50",
+        "IsRequired": false,
+        "Value": "100",
         "PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
         "PanelCode": "CUSTOMER_ACTIVITY"
       },
       {
-        "MarketingEventId": "b401776f-99e1-4aa1-92ae-7ce9ce03187b",
-        "PackagedOfferParamId": "7d581289-7f77-6f47-e053-5ca8e70aa475",
-        "PackagedOfferId": "7d581289-7c77-6f47-e053-5ca8e70aa475",
-        "ParamName": "Certificate",
-        "ParamCode": "REWARD_CERT",
-        "ParamDescription": "Select a certificate",
-        "DataType": "list",
-        "RouteUrl": "v1/referencedata/rewards/rewards?certificateInd=true&status=A&startDate={startDate}&endDate={endDate}",
-        "ParamControl": "text",
+        "MarketingEventId": "21778a44-2d37-4f2a-8a68-4b934e544710",
+        "PackagedOfferParamId": "21ba4059-780f-4997-b9b2-23984fc31ceb",
+        "PackagedOfferId": "6c029289-c3c3-437d-b726-9c276fce02c3",
+        "ParamName": "Points per eligible dollar",
+        "ParamCode": "POINTS_PER_ELIG_DOLLAR",
+        "ParamDescription": "0",
+        "DataType": "input",
+        "ParamControl": "decimal",
         "IsRequired": true,
-        "Value": "RD_EARN_TRANS",
+        "Value": "0.15",
         "PanelId": "e0e698ac-4291-d25d-e053-5dedef0ac6ef",
         "PanelCode": "CUSTOMER_REWARD"
       },
       {
-        "MarketingEventId": "b401776f-99e1-4aa1-92ae-7ce9ce03187b",
-        "PackagedOfferParamId": "7d581289-7e77-6f47-e053-5ca8e70aa475",
-        "PackagedOfferId": "7d581289-7c77-6f47-e053-5ca8e70aa475",
-        "ParamName": "Maximum offers per member (optional)",
-        "ParamCode": "MAX_OFFERS_PER_MEMBER",
-        "ParamDescription": "0",
-        "DataType": "input",
-        "ParamControl": "number",
-        "IsRequired": false,
-        "Value": "5",
-        "PanelId": "e0e698ac-4391-d25d-e053-5dedef0ac6ef",
-        "PanelCode": "OFFER_LIMITS"
+        "MarketingEventId": "21778a44-2d37-4f2a-8a68-4b934e544710",
+        "PackagedOfferParamId": "2f671272-2402-4f3d-bc6c-828f174652c8",
+        "PackagedOfferId": "6c029289-c3c3-437d-b726-9c276fce02c3",
+        "ParamName": "Transact at",
+        "ParamCode": "LOCATION",
+        "DataType": "custom",
+        "ParamControl": "location",
+        "IsRequired": true,
+        "Value": "StoreCode in (\"FR1523\")",
+        "ParamCustomValue": {
+          "StoreCode": [
+            "FR1523"
+          ],
+          "DisplayStoreCode": [
+            "FR1523 - Fall River West Region"
+          ],
+          "LocationSelectType": 0,
+          "Chain": "FALL_RIVER"
+        },
+        "PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
+        "PanelCode": "CUSTOMER_ACTIVITY"
       }
     ],
     "PackagedOfferCategoryId": "17872aea-5187-8d43-a4be-555c17300611",
     "PackagedOfferCategoryCode": "TEMPLATES"
   },
-  "OfferStartDate": "2022-02-07T12:47:18Z",
-  "OfferEndDate": "2022-02-18T12:47:18Z",
-  "OnlineMessageCode": "OFFER_CODE02032022061718017",
+  "OfferStartDate": "2022-02-07T12:48:29Z",
+  "OfferEndDate": "2022-02-18T12:48:29Z",
+  "OnlineMessageCode": "OFFER_CODE02032022061829018",
   "OptInStatus": false,
   "AddOnlineMessageToEmail": false,
   "IsAudienceCountCompleted": true,
   "IsOfferSimulationCompleted": false,
   "MarketingEventAudienceCount": {
-    "AudienceCountId": "e367f192-81b3-4f13-9d78-f6249bfa4fc4",
-    "MarketingEventId": "b401776f-99e1-4aa1-92ae-7ce9ce03187b",
-    "AudienceCountCalculationStartTime": "2022-02-03T12:47:25.279416Z",
-    "AudienceCountCalculationEndTime": "2022-02-03T12:47:25.279417Z",
-    "AudienceCount": 15437,
+    "AudienceCountId": "01663782-513e-4e17-b99b-e5ac340a3d32",
+    "MarketingEventId": "21778a44-2d37-4f2a-8a68-4b934e544710",
+    "AudienceCountCalculationStartTime": "2022-02-03T12:48:34.835952Z",
+    "AudienceCountCalculationEndTime": "2022-02-03T12:48:34.835952Z",
+    "AudienceCount": 15439,
     "AudienceCountStatus": "C"
   },
   "BusinessUnitTimeZone": "UTC",
   "Status": "A",
   "CreateUser": "AUTO_USER",
-  "CreateDate": "2022-02-03T12:47:19.160911Z",
+  "CreateDate": "2022-02-03T12:48:29.976682Z",
   "UpdateUser": "BATCH_USER",
-  "UpdateDate": "2022-02-03T12:47:33.205829Z"
+  "UpdateDate": "2022-02-03T12:48:43.239648Z"
 }]]></con:originalMessage>
           </con:configuration>
         </con:assertion>
@@ -1653,21 +1630,21 @@ FROM
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="eventCode" value="${ProcessMarketingEventCertTrxn#Response#$['EventCode']}"/>
+          <con:entry key="eventCode" value="${ProcessMarketingEventLocationBonus#Response#$['EventCode']}"/>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="PurchaseTransaction 2" id="5a09f0a8-23ac-41a9-b308-129c7e1681d0">
+  <con:testStep type="calltestcase" name="PurchaseTransaction 2" id="38d092c2-5f17-4011-86fa-b3b259a6537e">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>981060e9-8e55-4bc2-8e64-e3d2b5197f95</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>TransactionEligible</con:name>
-          <con:value>50</con:value>
+          <con:value>100</con:value>
         </con:property>
         <con:property>
           <con:name>Nights</con:name>
@@ -1686,25 +1663,25 @@ FROM
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="RunMarketingEventJob RunSimulation1" id="56b30e12-c875-4036-ae97-db1df49717bf">
+  <con:testStep type="calltestcase" name="RunMarketingEventJob RunSimulation1" id="8a3f4afb-c864-4425-9eb6-62435534e36c">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>b033f509-ccf7-4703-a30f-947c1731ed44</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMarketingEventCertTrxn#Response#$['EventCode']}</con:value>
+          <con:value>${ProcesMarketingEventPerDollar#Response#$['EventCode']}</con:value>
         </con:property>
         <con:property>
           <con:name>inputJSON</con:name>
-          <con:value>{     "RunSimulationStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-4)}",     "RunSimulationEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-2)}",     "JobName": "${ProcessMarketingEventCertTrxn#Response#$['EventCode']}",     "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b32",     "ErrorList": [],     "MarketingEventCode": "${ProcessMarketingEventCertTrxn#Response#$['EventCode']}" }</con:value>
+          <con:value>{     "RunSimulationStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-4)}",     "RunSimulationEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-2)}",     "JobName": "${ProcessMarketingEventLocationBonus#Response#$['EventCode']}",     "JobTypeId": "cd0f6c87-27fe-2403-e053-5ba8e70a8b32",     "ErrorList": [],     "MarketingEventCode": "${ProcessMarketingEventLocationBonus#Response#$['EventCode']}" }</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="WaitForBatchJobCount 4" id="544e676b-1ffe-49af-8096-2f2ca139a46e">
+  <con:testStep type="calltestcase" name="WaitForBatchJobCount 4" id="68b35339-a39e-425b-a75a-49c89990dcdf">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
@@ -1718,7 +1695,7 @@ FROM
       <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode 4" id="31976a3a-06f8-403a-9e9a-b3991b98d64d">
+  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode 4" id="7aed215a-e338-43bb-bfb4-da7b4c6995a3">
     <con:settings/>
     <con:config service="RestAPIs" methodName="GetMarketingEventbyEventCode" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetMarketingEventbyEventCode 4" id="65238c02-5ba1-41b4-90f5-cc1d0ca30e98" mediaType="application/json">
@@ -3206,28 +3183,28 @@ GROUP BY PROFILE_ID
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="eventCode" value="${ProcessMarketingEventCertTrxn#Response#$['EventCode']}"/>
+          <con:entry key="eventCode" value="${ProcessMarketingEventLocationBonus#Response#$['EventCode']}"/>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="7b396453-73fc-486f-83b4-f0d12b502f7d">
+  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="a031f72d-602e-404d-9da6-83c200f9dcb9">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMarketingEventCertTrxn#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMarketingEventLocationBonus#Response#$['EventCode']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="95cb4836-b83c-4f5b-981c-4ab61f9f2b14">
+  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="643125a3-ec9a-4008-a75b-417f0c9851d3">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>4e31c31c-5e5f-4dab-8caf-7c5cf7fef68f</con:targetTestCase>
@@ -3241,7 +3218,7 @@ GROUP BY PROFILE_ID
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="WaitForBatchJob" id="03fbb0dd-5161-4a44-8165-f42332c534d9">
+  <con:testStep type="calltestcase" name="WaitForBatchJob" id="5e5872ef-cbc2-4fb9-90b9-f72d7d7946ad">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
@@ -3255,49 +3232,27 @@ GROUP BY PROFILE_ID
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Adjustment" id="7fbf4ff9-c8b0-4ef0-8243-5c3f7650d6b8">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>d3339fb2-45d2-479b-9947-1ea66f3877fa</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>Points</con:name>
-          <con:value>10000</con:value>
-        </con:property>
-        <con:property>
-          <con:name>ProfileId</con:name>
-          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
-        </con:property>
-        <con:property>
-          <con:name>AdjustmentReason</con:name>
-          <con:value>PPGOODW</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>PARALLELL</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="delay" name="Delay" id="68479360-71a0-43f8-802f-c652af0d96b9">
+  <con:testStep type="delay" name="Delay" id="a37b45bd-9a32-4e36-9ecc-43adc1d4f998">
     <con:settings/>
     <con:config>
       <delay>6000</delay>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="PurchaseTransaction" id="647ae704-7a88-4a33-9493-d61a788bac5f">
+  <con:testStep type="calltestcase" name="PurchaseTransaction1" id="d1174eb5-6d76-4551-a241-10ab0175c8ac">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>981060e9-8e55-4bc2-8e64-e3d2b5197f95</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>TransactionEligible</con:name>
-          <con:value>50</con:value>
+          <con:value>100</con:value>
         </con:property>
         <con:property>
           <con:name>Nights</con:name>
         </con:property>
         <con:property>
           <con:name>TransactionDateTime</con:name>
-          <con:value>${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+5)}</con:value>
+          <con:value>${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+3)}</con:value>
         </con:property>
         <con:property>
           <con:name>ProfileId</con:name>
@@ -3308,40 +3263,40 @@ GROUP BY PROFILE_ID
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="GetMomentByCode" id="0c78d2c5-842e-42ba-8762-8492b685416a">
+  <con:testStep type="calltestcase" name="GetMomentByCode" id="318de8f8-7a09-4cbc-b2e6-3bab230f93bf">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>f4019890-b4bf-40e5-b64c-59b6bbe7b94d</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMarketingEventCertTrxn#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMarketingEventLocationBonus#Response#$['EventCode']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfilesRewardCertificate" id="d89fc1e7-0a77-47d6-8921-575cd90055f8">
+  <con:testStep type="restrequest" name="GetPointsSummary" id="8e2efaa7-1a18-4444-aa66-8bf15852601a">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/rewards/certificates" methodName="GetProfileRewardCertificates" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProfilesRewardCertificate" id="d5988a68-9034-47d0-ae55-7b9dabcbe7cd" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPointsSummary" id="90aa5f43-a530-41eb-9446-2dde6c33780e" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/9fe3975c-8b1d-4182-be0d-a420288fd35c/rewards/certificates</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="1b2bb7a6-0c67-44a7-87ed-3dd65fb7d3b5" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/%7B%20%20%20%22Prefix%22%3A%22%22%2C%20%20%20%22FirstName%22%3A%20%22%22%2C%20%20%20%22MiddleInit%22%3A%22%22%2C%20%20%20%22LastName%22%3A%22%22%2C%20%20%20%22CardNumber%22%3A%22c62c3524-f4bd-4b58-ab51-8984747839a8%22%2C%20%20%20%22Suffix%22%3A%20%22%22%2C%20%20%20%22GlobalOptOut%22%3A%20%22%22%2C%20%20%20%22GlobalOptDate%22%3A%20%20%22%22%2C%20%20%20%22GlobalOptSource%22%3A%20%22%22%2C%20%20%20%22LanguageCode%22%3A%20%20%22%22%2C%20%20%20%22MaritalStatus%22%3A%20%22%22%2C%20%20%20%22Gender%22%3A%20%22%22%2C%20%20%20%22BirthDate%22%3A%20%22%22%2C%20%20%20%22CompanyName%22%3A%20%22%22%2C%20%20%20%22Addresses%22%3A%20%5B%20%20%20%20%20%7B%20%20%20%20%20%20%20%22AddressLine1%22%3A%22%22%2C%20%20%20%20%20%20%20%22AddressLine2%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22AddressLine3%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22City%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22StateCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22CountryCode%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22PostalCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22ChannelCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22LocationCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22IsPreferred%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22DeliveryStatus%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22DoNotStandardize%22%3A%20%20%22%22%20%20%20%20%20%7D%20%20%20%5D%2C%20%20%20%22Emails%22%3A%20%5B%20%20%20%20%20%7B%20%20%20%20%20%20%20%22EmailAddress%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22ChannelCode%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22LocationCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22IsPreferred%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22DeliveryStatus%22%3A%20%22%22%20%20%20%20%20%7D%20%20%20%5D%2C%20%20%20%22Phones%22%3A%20%5B%20%20%20%20%20%7B%20%20%20%20%20%20%20%22PhoneNumber%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22PhoneCountryCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22AcceptsText%22%3A%22%22%2C%20%20%20%20%20%20%20%22Frequency%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22ChannelCode%22%3A%22%22%2C%20%20%20%20%20%20%20%22LocationCode%22%3A%22%22%2C%20%20%20%20%20%20%20%22IsPreferred%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22DeliveryStatus%22%3A%22%22%20%20%20%20%20%7D%20%20%20%5D%2C%20%20%20%22SourceCode%22%3A%20%22%22%2C%20%20%20%22EnrollChannelCode%22%3A%20%22%22%2C%20%20%20%22AutoRewardOptInInd%22%3A%20%20%22%22%2C%20%20%20%22TermsConditionsAcceptedInd%22%3A%20%22%22%20%20%7D/points/summary</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a022dce5-2b60-4dcb-8b1c-2a71e54018fc" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="78a9904b-786d-43f7-8168-1ce40b60e352" name="JSONPath Match">
+        <con:assertion type="JsonPath Match" id="d718b76f-6e63-422d-9479-043918f3d753" name="ValidationForPointsAmount">
           <con:configuration>
-            <path>$.[?(@.ProfileId== '${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}')].RewardCode[1]</path>
-            <content>${AddFlexibleDateRew#rewardCode}</content>
+            <path>$.[?(@.ActTransactionId == '${#[OffersPrerequisite#PurchaseTransaction#PurchaseTransaction]#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${#[OffersPrerequisite#GetMomentByCode#GetMomentByCode]#Response#$['MomentId']}')].PointsAmount</path>
+            <content>[15.0]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -3355,24 +3310,18 @@ GROUP BY PROFILE_ID
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
-          <con:entry key="rewardCode" value="${AddFlexibleDateRew#rewardCode}"/>
+          <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="status" value="A"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>profileId</con:entry>
           <con:entry>status</con:entry>
-          <con:entry>rewardCode</con:entry>
-          <con:entry>title</con:entry>
-          <con:entry>startDate</con:entry>
-          <con:entry>endDate</con:entry>
           <con:entry>Accept-Language</con:entry>
           <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
         </con:parameterOrder>
         <con:environmentSpec>
-          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
           <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
             <con:authProfile>Inherit From Parent</con:authProfile>
           </con:entry>
@@ -3380,37 +3329,34 @@ GROUP BY PROFILE_ID
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="DeactivateMoment" id="bea624af-31fe-4c26-9d0b-1df4c4e064fa">
+  <con:testStep type="calltestcase" name="DeactivateMoment" id="fb27fc10-ad16-4c1c-a54d-f3c8b7695c9b">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>c903534c-32ad-44dc-9cb6-a72fc8de1482</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>MomentId</con:name>
-          <con:value xsi:nil="true"/>
         </con:property>
       </con:properties>
-      <con:returnProperties>
-        <con:entry>MomentId</con:entry>
-      </con:returnProperties>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="GetProgramOffers" id="1c1df3e0-9a9c-4505-ba0c-afeebc5cdb27">
+  <con:testStep type="calltestcase" name="GetProgramOffers" id="3d8c4f71-6968-462a-a055-c9f78ab9e766">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>4607f14c-fd49-4eab-bc7e-4ba196bb73a9</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMarketingEventCertTrxn#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMarketingEventLocationBonus#Response#$['EventCode']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="UpdateProgramOffer" id="1e27a4b0-12a5-493a-9973-b5e87a1774c2">
+  <con:testStep type="calltestcase" name="UpdateProgramOffer" id="fbc6e5b1-a8d0-4172-990e-25c54a962e9b">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>25d1254f-0637-4596-a5bf-1eba1aeac44c</con:targetTestCase>
@@ -3427,72 +3373,47 @@ GROUP BY PROFILE_ID
   <con:properties/>
   <con:reportParameters/>
   <con:breakPoints>
-    <con:testStepId>ab68a4dd-16ab-45e9-8672-b16065bf85bb</con:testStepId>
+    <con:testStepId>643125a3-ec9a-4008-a75b-417f0c9851d3</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>d89fc1e7-0a77-47d6-8921-575cd90055f8</con:testStepId>
+    <con:testStepId>318de8f8-7a09-4cbc-b2e6-3bab230f93bf</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>7b396453-73fc-486f-83b4-f0d12b502f7d</con:testStepId>
+    <con:testStepId>72a6a17f-261c-4fd9-9272-178a8196ac23</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>95cb4836-b83c-4f5b-981c-4ab61f9f2b14</con:testStepId>
+    <con:testStepId>c3623ebe-49e3-4ab2-9a6b-80498926e477</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>647ae704-7a88-4a33-9493-d61a788bac5f</con:testStepId>
+    <con:testStepId>9e461572-e6b7-4ce5-aad8-18a810fbf7af</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>7fbf4ff9-c8b0-4ef0-8243-5c3f7650d6b8</con:testStepId>
+    <con:testStepId>204bbde3-7849-4517-87d6-f5db531f65ce</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>0c78d2c5-842e-42ba-8762-8492b685416a</con:testStepId>
+    <con:testStepId>8db3b1af-c63d-4d77-9d4a-af338c688644</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>891409fd-f46b-4654-93bb-326dc4dac378</con:testStepId>
+    <con:testStepId>6b56f5f6-c998-4c8a-9a9d-447eff8cabad</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>766de9cd-b45e-47f8-bcb0-5780a023ec11</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>65425a4d-0c13-4b10-aaca-fe420ff51a33</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>ee2de051-45f2-4fd4-9621-59fa706f300c</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>c8d24ac1-3610-44e5-8d85-8723fd2806a7</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>cae8f5f9-504b-45f8-872d-4d5ae541abba</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>622a0bde-5259-4051-b9b1-1eb9c356cdf4</con:testStepId>
+    <con:testStepId>1c5868b3-48b6-4f74-8ec5-49cc4890e81e</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

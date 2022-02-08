@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="5134900d-99d5-44d3-9dce-365611a799c3" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="CustomOfferWithGreaterThanOperator" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="8f7695d1-0b42-4024-ab9d-fe77dd5f3c3a" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="DeployCustomOfferReservationPeriod" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="5134900d-99d5-44d3-9dce-365611a799c3fileName">CustomOfferWithGreaterThanOperator</con:setting>
+    <con:setting id="8f7695d1-0b42-4024-ab9d-fe77dd5f3c3afileName">DeployCustomOfferReservationPeriod</con:setting>
   </con:settings>
-  <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="datasource" name="ProcessMarketingEventData" id="ca80554d-68b3-443f-ade9-2f33a2155e33">
+  <con:testStep type="datasource" name="ProcessMarketingEventResPer" id="f7422004-d461-4c42-b71a-e0eb251729a4">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -41,105 +40,101 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMktEventGreaterThanOperator" id="026eb625-52f6-463f-a12b-54f519c334bb">
+  <con:testStep type="restrequest" name="ProcessMarketingEventWithOperator" id="6c045640-c901-406b-9c1a-f36a39cd949e">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ProcessMktEventGreaterThanOperator" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="ProcessMarketingEventWithOperator" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-
 	"MarketingEventChannels": [
 		{
-			"MarketingEventChannelId": "${ProcessMarketingEventData#MarketingEventChannelId}",
-			"ChannelName": "${ProcessMarketingEventData#ChannelName}"
+			
+			"MarketingEventChannelId": "${ProcessMarketingEventResPer#MarketingEventChannelId}",
+			"ChannelName": "${ProcessMarketingEventResPer#ChannelName}"
 		}
 	],
-	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 	
-		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 
-	"PackagedAudience": {
-		"PackagedAudienceId": "${ProcessMarketingEventData#PackagedAudienceId}",
-		"AudienceName": "${ProcessMarketingEventData#AudienceName}",
-		"AudienceDescription": "All enrolled members with an active profile status",
-		"PackagedAudienceParams": [
-			{
-				
-				
-				"PackagedAudienceId": "7ae1f987-515e-4669-e053-5ca8e70ad3ee",
-				"ParamName": "All Members",
-			}
-		],
-	},
-	"AudienceSource": "${ProcessMarketingEventData#AudienceSource}",
+	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
+		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 
+	
+	"PackagedAudience": {  		
+			"PackagedAudienceId": "${ProcessMarketingEventResPer#PackagedAudienceId}",
+			"AudienceName":"${ProcessMarketingEventResPer#AudienceName}"
+			}, 
+			"AudienceSource": "${ProcessMarketingEventResPer#AudienceSource}",
 	"PackagedOffer": {
 		"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-		
 		"PackagedOfferCode": "CUSTOM_OFFER",
-		"PackagedOfferName": "Custom Offer",
-		
 		"PackagedOfferParams": [
-			{
-				
-				"PackagedOfferParamId": "1d5c8eb6-b0b9-ed4e-e053-5dedef0ac6ca",
-				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-				"ParamName": "Spend amount is",
-				"ParamCode": "CUSTOM_TXN_AMT",
-				
-				"Value": "100",
-				"PanelId": "${ProcessMarketingEventData#PanelIdCustAct}",
-				"PanelCode": "${ProcessMarketingEventData#PanelCodeCustAct}",
-				"ParamOperatorId": "d1a250ad-6f67-43e4-8a52-991705740b44",
-			},
 			{
 				"PackagedOfferParamId": "1d5c8eb6-b8b9-ed4e-e053-5dedef0ac6ca",
 				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
 				"ParamName": "Point amount",
 				"ParamCode": "CUSTOM_POINT_AMT_REWARDED",
 				"Value": "10",
-				"PanelId": "${ProcessMarketingEventData#PanelIdCustRew}",
-				"PanelCode": "${ProcessMarketingEventData#PanelCodeCustRew}",
+				"PanelId": "${ProcessMarketingEventResPer#PanelIdCustRew}",
+				"PanelCode": "${ProcessMarketingEventResPer#PanelCodeCustRew}",
+		
+			},
+			{
+				
+				"PackagedOfferParamId": "ada77ccf-d3b7-d56c-e053-5dedef0a7987",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Number of Nights",
+				"ParamCode": "CUSTOM_NIGHTS_THRESHOLD",
+				"Value": "1",
+				"PanelId": "e3856cc4-2a4f-1061-e053-5dedef0a16bd",
+				"PanelCode": "RECURRING_OPTIONS",
 			},
 			{
 				"PackagedOfferParamId": "4cb57acf-1d8f-175d-e053-5dedef0a9b11",
 				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-				"ParamName": "Nights per stay is",
+				"ParamName": "Number of Nights",
 				"ParamCode": "CUSTOM_NIGHTS",
-				"Value": "2",
-				"PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
-				"PanelCode": "CUSTOMER_ACTIVITY",
-				"ParamOperatorId": "05905269-d4c5-4124-9ab4-da12272b86f6",
-	
+				"Value": "5",
+				"PanelId": "${ProcessMarketingEventResPer#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEventResPer#PanelCodeCustAct}",
+                    "ParamOperatorId": "05905269-d4c5-4124-9ab4-da12272b86f6",
+			},
+			{
+				
+				"PackagedOfferParamId": "3c3354cf-d6cd-3651-e053-5dedef0ae6d8",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Reserve between",
+				"ParamCode": "CUSTOM_TXN_RESERVATION_DATE",
+				"Value": "${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+3)}-${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+13)}",
+				"PanelId": "${ProcessMarketingEventResPer#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEventResPer#PanelCodeCustAct}",
 			}
 		],
-		"PackagedOfferCategoryId": "${ProcessMarketingEventData#PackagedOfferCategoryId}",
-		"PackagedOfferCategoryCode": "${ProcessMarketingEventData#PackagedOfferCategoryCode}",
+		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
+		"PackagedOfferCategoryCode": "CUSTOM_OFFER",
 		"CustomOfferActivityValue": {
-			"Type": "AND",
-			"GroupType": "GROUP",
+			"Type": "OR",
+			"GroupType": "NONE",
 			"Conditions": [
 				{
 					"Type": "ATTRIBUTE",
-					"PackagedOfferParamId": "1d5c8eb6-b0b9-ed4e-e053-5dedef0ac6ca",
-					"Value": 100,
-					"ParamOperatorId": "d1a250ad-6f67-43e4-8a52-991705740b44"
+					"PackagedOfferParamId": "3c3354cf-d6cd-3651-e053-5dedef0ae6d8",
+					"Value": "${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+3)}-${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+13)}"
 				},
 				{
 					"Type": "ATTRIBUTE",
 					"PackagedOfferParamId": "4cb57acf-1d8f-175d-e053-5dedef0a9b11",
-					"Value": 2,
-					"ParamOperatorId": "05905269-d4c5-4124-9ab4-da12272b86f6"
+					"Value": 5
 				}
 			]
 		}
 	},
-	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
-	"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}",
+	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+			"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}", 
+	"BusinessUnitTimeZone": "UTC",
 	"Status": "A",
 }</con:request>
-        <con:originalUri>https://d2aldv-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="96e58c11-a3e2-4975-b94f-7d1ece17e2fb" name="Valid HTTP Status Codes">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="05efed05-6654-481f-8b3b-5d35dc1037f1" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
             <codes>200</codes>
@@ -174,21 +169,21 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="e1b3dcd1-8d2a-48ab-9096-22e475c0e26a">
+  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="c92a39fd-fb77-49bc-828a-133965881630">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMktEventGreaterThanOperator#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMarketingEventWithOperator#Response#$['EventCode']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="8fdf272a-aaf6-45d7-957b-d651de117d2f">
+  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="85a27c46-0b94-4baa-a1b2-78aa2c350e9f">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>4e31c31c-5e5f-4dab-8caf-7c5cf7fef68f</con:targetTestCase>
@@ -202,7 +197,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="WaitForBatchJob" id="62ffb75f-ed16-4e4f-b3d3-66f35007c836">
+  <con:testStep type="calltestcase" name="WaitForBatchJob" id="1e0f1cc7-4645-4eef-b846-4071e92fd584">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
@@ -216,7 +211,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddProfileRGR" id="1cf2f8c4-0b9a-4f65-a438-7c936294f2d8">
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="12ac92a1-6cd6-43e9-914f-c9037198d7be">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
@@ -230,24 +225,24 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="delay" name="Delay" id="3ce5775b-dbe2-4874-86a8-a88ec479c988">
+  <con:testStep type="delay" name="Delay" id="be7aadf2-1584-4c6b-8830-ac7769d86803">
     <con:settings/>
     <con:config>
       <delay>7000</delay>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="PurchaseTransaction" id="b01c0c6c-d56b-4cc5-8957-960b4bb51449">
+  <con:testStep type="calltestcase" name="PurchaseTransaction" id="58adc34a-f93c-46c6-bfa4-a571f102b9bb">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>981060e9-8e55-4bc2-8e64-e3d2b5197f95</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>TransactionEligible</con:name>
-          <con:value>120</con:value>
+          <con:value>100</con:value>
         </con:property>
         <con:property>
           <con:name>Nights</con:name>
-          <con:value>2</con:value>
+          <con:value>5</con:value>
         </con:property>
         <con:property>
           <con:name>TransactionDateTime</con:name>
@@ -265,21 +260,21 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="GetMomentByCode" id="3626390f-23c9-44c4-9e80-3d1e3ed73a18">
+  <con:testStep type="calltestcase" name="GetMomentByCode" id="ab3133e8-53c6-4dc9-9126-a35e2c67ce60">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>f4019890-b4bf-40e5-b64c-59b6bbe7b94d</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMktEventGreaterThanOperator#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMarketingEventWithOperator#Response#$['EventCode']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetPointsSummary" id="c1a1088e-40e3-4ae5-aa56-9961f3cf4b9e">
+  <con:testStep type="restrequest" name="GetPointsSummary" id="19c488e3-e8b2-479d-9e1c-d80700166495">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetPointsSummary" id="90aa5f43-a530-41eb-9446-2dde6c33780e" mediaType="application/json">
@@ -298,7 +293,7 @@
         <con:assertion type="JsonPath Match" id="d718b76f-6e63-422d-9479-043918f3d753" name="ValidationForPointsAmount">
           <con:configuration>
             <path>$.[?(@.ActTransactionId == '${#[OffersPrerequisite#PurchaseTransaction#PurchaseTransaction]#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${#[OffersPrerequisite#GetMomentByCode#GetMomentByCode]#Response#$['MomentId']}')].PointsAmount</path>
-            <content>[10.0]</content>
+            <content>[50.0]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -331,34 +326,35 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="DeactivateMoment" id="8d508333-fb9c-41ce-af9b-f6b8c8cc753e">
+  <con:testStep type="calltestcase" name="DeactivateMoment" id="97e57392-5d20-4ca6-aff2-4dc75b743bb9">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>c903534c-32ad-44dc-9cb6-a72fc8de1482</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>MomentId</con:name>
+          <con:value/>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="GetProgramOffers" id="114f9dab-cb11-44d9-831d-48b381b7797c">
+  <con:testStep type="calltestcase" name="GetProgramOffers" id="461dc8e8-69f7-42b2-88bc-498ced148758">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>4607f14c-fd49-4eab-bc7e-4ba196bb73a9</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMktEventGreaterThanOperator#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMarketingEventWithOperator#Response#$['EventCode']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="UpdateProgramOffer" id="8102b872-8e1f-41ed-b7ab-91cfbcb1cb2f">
+  <con:testStep type="calltestcase" name="UpdateProgramOffer" id="a0a06790-487a-430a-b980-dad1a2366f84">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>25d1254f-0637-4596-a5bf-1eba1aeac44c</con:targetTestCase>
@@ -374,29 +370,4 @@
   </con:testStep>
   <con:properties/>
   <con:reportParameters/>
-  <con:breakPoints>
-    <con:testStepId>b01c0c6c-d56b-4cc5-8957-960b4bb51449</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>e1b3dcd1-8d2a-48ab-9096-22e475c0e26a</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>8fdf272a-aaf6-45d7-957b-d651de117d2f</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>3626390f-23c9-44c4-9e80-3d1e3ed73a18</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>ca80554d-68b3-443f-ade9-2f33a2155e33</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
 </con:testCase>

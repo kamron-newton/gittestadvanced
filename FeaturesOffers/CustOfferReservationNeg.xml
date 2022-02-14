@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="f8141d1a-8180-4eb9-973d-f2073b62a062" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="CustOfferReservationNeg" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="f8141d1a-8180-4eb9-973d-f2073b62a062fileName">CustOfferReservationNeg</con:setting>
+  </con:settings>
+  <con:testStep type="datasource" name="ProcessMarketingEventResPer" id="a24521da-ad66-4f9c-a4b9-597922a884d1">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/ProcessMarketingEvent.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>MarketingEventChannelId</con:property>
+      <con:property>ChannelName</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceName</con:property>
+      <con:property>AudienceSource</con:property>
+      <con:property>PanelIdCustAct</con:property>
+      <con:property>PanelCodeCustAct</con:property>
+      <con:property>PanelIdCustRew</con:property>
+      <con:property>PanelCodeCustRew</con:property>
+      <con:property>PanelIdOfferLim</con:property>
+      <con:property>PanelCodeOfferLim</con:property>
+      <con:property>PackagedOfferCategoryId</con:property>
+      <con:property>PackagedOfferCategoryCode</con:property>
+      <con:startRow>2</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessMarketingEventResPer1" id="0f9c01b1-2be0-4f93-ad9d-3787f075c213">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessMarketingEventResPer1" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MarketingEventChannels": [
+		{
+			
+			"MarketingEventChannelId": "${ProcessMarketingEventResPer#MarketingEventChannelId}",
+			"ChannelName": "${ProcessMarketingEventResPer#ChannelName}"
+		}
+	],
+	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
+		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 
+	
+	"PackagedAudience": {  		
+			"PackagedAudienceId": "${ProcessMarketingEventResPer#PackagedAudienceId}",
+			"AudienceName":"${ProcessMarketingEventResPer#AudienceName}"
+			}, 
+			"AudienceSource": "${ProcessMarketingEventResPer#AudienceSource}",
+	"PackagedOffer": {
+		"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+		"PackagedOfferCode": "CUSTOM_OFFER",
+		"PackagedOfferParams": [
+			{
+				"PackagedOfferParamId": "1d5c8eb6-b8b9-ed4e-e053-5dedef0ac6ca",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Point amount",
+				"ParamCode": "CUSTOM_POINT_AMT_REWARDED",
+				"Value": "10",
+				"PanelId": "${ProcessMarketingEventResPer#PanelIdCustRew}",
+				"PanelCode": "${ProcessMarketingEventResPer#PanelCodeCustRew}",
+		
+			},
+			{
+				
+				"PackagedOfferParamId": "ada77ccf-d3b7-d56c-e053-5dedef0a7987",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Number of Nights",
+				"ParamCode": "CUSTOM_NIGHTS_THRESHOLD",
+				"Value": "1",
+				"PanelId": "e3856cc4-2a4f-1061-e053-5dedef0a16bd",
+				"PanelCode": "RECURRING_OPTIONS",
+			},
+			{
+				"PackagedOfferParamId": "4cb57acf-1d8f-175d-e053-5dedef0a9b11",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Number of Nights",
+				"ParamCode": "CUSTOM_NIGHTS",
+				"Value": "5",
+				"PanelId": "${ProcessMarketingEventResPer#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEventResPer#PanelCodeCustAct}",
+                    "ParamOperatorId": "05905269-d4c5-4124-9ab4-da12272b86f6",
+			},
+			{
+				
+				"PackagedOfferParamId": "3c3354cf-d6cd-3651-e053-5dedef0ae6d8",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Reserve between",
+				"ParamCode": "CUSTOM_TXN_RESERVATION_DATE",
+				"Value": "-${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+13)}",
+				"PanelId": "${ProcessMarketingEventResPer#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEventResPer#PanelCodeCustAct}",
+			}
+		],
+		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
+		"PackagedOfferCategoryCode": "CUSTOM_OFFER",
+		"CustomOfferActivityValue": {
+			"Type": "OR",
+			"GroupType": "NONE",
+			"Conditions": [
+				{
+					"Type": "ATTRIBUTE",
+					"PackagedOfferParamId": "3c3354cf-d6cd-3651-e053-5dedef0ae6d8",
+					"Value": "${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+3)}-${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+13)}"
+				},
+				{
+					"Type": "ATTRIBUTE",
+					"PackagedOfferParamId": "4cb57acf-1d8f-175d-e053-5dedef0a9b11",
+					"Value": 5
+				}
+			]
+		}
+	},
+	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+			"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}", 
+	"BusinessUnitTimeZone": "UTC",
+	"Status": "A",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="05efed05-6654-481f-8b3b-5d35dc1037f1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>400</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="d4906d4c-f99a-4158-a167-de063eb2e9d5" name="JSONPath Match">
+          <con:configuration>
+            <path>$['ErrorCode']</path>
+            <content>"ReservationStartDateRequired"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="validateOffer" value="false"/>
+          <con:entry key="validateAudience" value="false"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>validateAudience</con:entry>
+          <con:entry>validateOffer</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessMarketingEventResPer2" id="dd4ea7ba-e914-4b6f-a9d0-c7d710d9ec14">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessMarketingEventResPer2" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MarketingEventChannels": [
+		{
+			
+			"MarketingEventChannelId": "${ProcessMarketingEventResPer#MarketingEventChannelId}",
+			"ChannelName": "${ProcessMarketingEventResPer#ChannelName}"
+		}
+	],
+	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
+		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 
+	
+	"PackagedAudience": {  		
+			"PackagedAudienceId": "${ProcessMarketingEventResPer#PackagedAudienceId}",
+			"AudienceName":"${ProcessMarketingEventResPer#AudienceName}"
+			}, 
+			"AudienceSource": "${ProcessMarketingEventResPer#AudienceSource}",
+	"PackagedOffer": {
+		"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+		"PackagedOfferCode": "CUSTOM_OFFER",
+		"PackagedOfferParams": [
+			{
+				"PackagedOfferParamId": "1d5c8eb6-b8b9-ed4e-e053-5dedef0ac6ca",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Point amount",
+				"ParamCode": "CUSTOM_POINT_AMT_REWARDED",
+				"Value": "10",
+				"PanelId": "${ProcessMarketingEventResPer#PanelIdCustRew}",
+				"PanelCode": "${ProcessMarketingEventResPer#PanelCodeCustRew}",
+		
+			},
+			{
+				
+				"PackagedOfferParamId": "ada77ccf-d3b7-d56c-e053-5dedef0a7987",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Number of Nights",
+				"ParamCode": "CUSTOM_NIGHTS_THRESHOLD",
+				"Value": "1",
+				"PanelId": "e3856cc4-2a4f-1061-e053-5dedef0a16bd",
+				"PanelCode": "RECURRING_OPTIONS",
+			},
+			{
+				"PackagedOfferParamId": "4cb57acf-1d8f-175d-e053-5dedef0a9b11",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Number of Nights",
+				"ParamCode": "CUSTOM_NIGHTS",
+				"Value": "5",
+				"PanelId": "${ProcessMarketingEventResPer#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEventResPer#PanelCodeCustAct}",
+                    "ParamOperatorId": "05905269-d4c5-4124-9ab4-da12272b86f6",
+			},
+			{
+				
+				"PackagedOfferParamId": "3c3354cf-d6cd-3651-e053-5dedef0ae6d8",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Reserve between",
+				"ParamCode": "CUSTOM_TXN_RESERVATION_DATE",
+				"Value": "${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+2)}-${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+1)}",
+				"PanelId": "${ProcessMarketingEventResPer#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEventResPer#PanelCodeCustAct}",
+			}
+		],
+		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
+		"PackagedOfferCategoryCode": "CUSTOM_OFFER",
+		"CustomOfferActivityValue": {
+			"Type": "OR",
+			"GroupType": "NONE",
+			"Conditions": [
+				{
+					"Type": "ATTRIBUTE",
+					"PackagedOfferParamId": "3c3354cf-d6cd-3651-e053-5dedef0ae6d8",
+					"Value": "${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+3)}-${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+13)}"
+				},
+				{
+					"Type": "ATTRIBUTE",
+					"PackagedOfferParamId": "4cb57acf-1d8f-175d-e053-5dedef0a9b11",
+					"Value": 5
+				}
+			]
+		}
+	},
+	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+			"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}", 
+	"BusinessUnitTimeZone": "UTC",
+	"Status": "A",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="05efed05-6654-481f-8b3b-5d35dc1037f1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>400</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="d4906d4c-f99a-4158-a167-de063eb2e9d5" name="JSONPath Match">
+          <con:configuration>
+            <path>$['ErrorCode']</path>
+            <content>"ReservationEndDateGreaterThanOrEqualToReservationStartDate"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="validateOffer" value="false"/>
+          <con:entry key="validateAudience" value="false"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>validateAudience</con:entry>
+          <con:entry>validateOffer</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

@@ -3,6 +3,172 @@
   <con:settings>
     <con:setting id="65fe0238-bb4e-40d3-b740-b8e4a2c2fa21fileName">MktEvtWithoutPgmHeaderNeg</con:setting>
   </con:settings>
-  <con:properties/>
+  <con:testStep type="datasource" name="MarketingEventData" id="7563052c-c212-459c-b07f-319b01e1ac2d">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/MarketingEvent.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>MarketingEventId</con:property>
+      <con:property>MarketingEventTypeId</con:property>
+      <con:property>TypeName</con:property>
+      <con:property>OnlineMsgMarketingEventChannelId</con:property>
+      <con:property>EmailMarketingEventChannelId</con:property>
+      <con:property>EventName</con:property>
+      <con:property>EventCode</con:property>
+      <con:property>PackagedOfferId</con:property>
+      <con:property>PackagedOfferCode</con:property>
+      <con:property>PackagedOfferName</con:property>
+      <con:property>OfferStartDate</con:property>
+      <con:property>OfferEndDate</con:property>
+      <con:property>OnlineMessageBriefDescription</con:property>
+      <con:property>OptInStatus</con:property>
+      <con:property>OnlineMessageStartDate</con:property>
+      <con:property>OnlineMessageEndDate</con:property>
+      <con:property>OnlineMessageDescription</con:property>
+      <con:property>OnlineMessageTermsAndConditions</con:property>
+      <con:property>ImageName</con:property>
+      <con:property>AddOnlineMessageToEmail</con:property>
+      <con:property>CampaignId</con:property>
+      <con:property>IsAudienceCountCompleted</con:property>
+      <con:property>IsOfferSimulationCompleted</con:property>
+      <con:property>EmailScheduledDate</con:property>
+      <con:property>ProgramCode2</con:property>
+      <con:property>NoChannelMarketingEventChannelId</con:property>
+      <con:property>ReportType</con:property>
+      <con:property>ReportType2</con:property>
+      <con:property>TypeName2</con:property>
+      <con:property>MarketingEventTypeId2</con:property>
+      <con:property>ReportType3</con:property>
+      <con:property>FileExportChannelId</con:property>
+      <con:property>UpdEventName</con:property>
+      <con:property>FileSettingNameInvalid</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessMarketingEvent" id="5ece23ee-f362-4e6e-b8f1-865ad27a7a20">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessMarketingEvent" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MarketingEventType": {
+		"MarketingEventTypeId": "${MarketingEventData#MarketingEventTypeId}",
+		"TypeName": "${MarketingEventData#TypeName}"
+	},
+	"MarketingEventChannels": [
+		{
+			"MarketingEventChannelId": "${MarketingEventData#OnlineMsgMarketingEventChannelId}",
+			"Status": "A"
+		},
+		{
+			"MarketingEventChannelId": "${MarketingEventData#EmailMarketingEventChannelId}",
+			"Status": "A"
+		}
+	],
+	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}",
+	"EventCode": "${#TestCase#EventCode}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9ccc6c55-d7b1-40d3-bf5c-5071b6fc0c8f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>400</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="cad50016-6b18-4685-a1ed-858f437400cb" name="ModelStateValidationAssert">
+          <con:configuration>
+            <path>$['ErrorCode']</path>
+            <content>"HeaderRequired"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="validateOffer" value="false"/>
+          <con:entry key="validateAudience" value="false"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>validateAudience</con:entry>
+          <con:entry>validateOffer</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode" id="f31d6253-6e9e-4c0d-af6a-b29edc1446c2">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" methodName="GetMarketingEventbyEventCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetMarketingEventbyEventCode" id="471c557e-ad15-4e9a-a9f1-2d173dd4c5cf" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890123456789012345</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="0f7a44e2-89ac-418d-8000-d78c350d6fb7" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="eventCode" value="${#TestCase#EventCode}"/>
+        </con:parameters>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>EventCode</con:name>
+      <con:value>OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}</con:value>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
 </con:testCase>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="75c43d54-201a-4db6-8361-88c2159dc8f9" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="MktEvtWithoutAudienceSourceNeg" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="75c43d54-201a-4db6-8361-88c2159dc8f9fileName">MktEvtWithoutAudienceSourceNeg</con:setting>
+  </con:settings>
+  <con:testStep type="datasource" name="MarketingEventData" id="14de3143-fdc7-49f2-b343-3f4273a17768">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/MarketingEvent.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>MarketingEventId</con:property>
+      <con:property>MarketingEventTypeId</con:property>
+      <con:property>TypeName</con:property>
+      <con:property>OnlineMsgMarketingEventChannelId</con:property>
+      <con:property>EmailMarketingEventChannelId</con:property>
+      <con:property>EventName</con:property>
+      <con:property>EventCode</con:property>
+      <con:property>PackagedOfferId</con:property>
+      <con:property>PackagedOfferCode</con:property>
+      <con:property>PackagedOfferName</con:property>
+      <con:property>OfferStartDate</con:property>
+      <con:property>OfferEndDate</con:property>
+      <con:property>OnlineMessageBriefDescription</con:property>
+      <con:property>OptInStatus</con:property>
+      <con:property>OnlineMessageStartDate</con:property>
+      <con:property>OnlineMessageEndDate</con:property>
+      <con:property>OnlineMessageDescription</con:property>
+      <con:property>OnlineMessageTermsAndConditions</con:property>
+      <con:property>ImageName</con:property>
+      <con:property>AddOnlineMessageToEmail</con:property>
+      <con:property>CampaignId</con:property>
+      <con:property>IsAudienceCountCompleted</con:property>
+      <con:property>IsOfferSimulationCompleted</con:property>
+      <con:property>EmailScheduledDate</con:property>
+      <con:property>ProgramCode2</con:property>
+      <con:property>NoChannelMarketingEventChannelId</con:property>
+      <con:property>ReportType</con:property>
+      <con:property>ReportType2</con:property>
+      <con:property>TypeName2</con:property>
+      <con:property>MarketingEventTypeId2</con:property>
+      <con:property>ReportType3</con:property>
+      <con:property>FileExportChannelId</con:property>
+      <con:property>UpdEventName</con:property>
+      <con:property>FileSettingNameInvalid</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="GetPackagedAudiences" id="9671237d-7c48-4d56-a52b-659018bb8984">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>5d66f0aa-b082-45a3-bfb5-a7be1059712e</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessMarketingEvent" id="32cd3623-07f1-47f4-a40f-71b91e98f5fa">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessMarketingEvent" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MarketingEventChannels": [
+		{
+			"MarketingEventChannelId": "${MarketingEventData#OnlineMsgMarketingEventChannelId}",
+			"Status": "A"
+		},
+		{
+			"MarketingEventChannelId": "${MarketingEventData#EmailMarketingEventChannelId}",
+			"Status": "A"
+		}
+	],
+	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}",
+	"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}",
+	"ProgramCode": "${#Project#ProgramCode}",
+	"PackagedAudience": {
+		"PackagedAudienceId": "${#[OffersPrerequisite#GetPackagedAudiences#GetPackagedAudiences]#Response#$[0]['PackagedAudienceId']}",
+		"AudienceName": "All Members",
+		"AudienceDescription": "All enrolled members with an active profile status",
+		"PackagedAudienceParam": []
+	},
+	"AudienceSource": "",
+                "PackagedOffer": {
+		"PackagedOfferId": "0625dcba-a576-48d6-9208-cec6f0be9235"
+	}
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9ccc6c55-d7b1-40d3-bf5c-5071b6fc0c8f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>400</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="cad50016-6b18-4685-a1ed-858f437400cb" name="AudSourceIncorrectAssert">
+          <con:configuration>
+            <path>$['ErrorCode']</path>
+            <content>"AudienceSourceInCorrect"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="validateOffer" value="false"/>
+          <con:entry key="validateAudience" value="false"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>validateAudience</con:entry>
+          <con:entry>validateOffer</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

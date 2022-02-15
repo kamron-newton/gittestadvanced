@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="0640b602-c219-4025-a2be-0a3d4a1148a4" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="MktEvtMaxLenEvtCodeNeg" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="65fe0238-bb4e-40d3-b740-b8e4a2c2fa21" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="MktEvtWithoutPgmHeaderNeg" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="0640b602-c219-4025-a2be-0a3d4a1148a4fileName">MktEvtMaxLenEvtCodeNeg</con:setting>
+    <con:setting id="65fe0238-bb4e-40d3-b740-b8e4a2c2fa21fileName">MktEvtWithoutPgmHeaderNeg</con:setting>
   </con:settings>
-  <con:testStep type="datasource" name="MarketingEventData" id="e457fd54-22fb-40d2-8ada-ad8dffb7d189">
+  <con:testStep type="datasource" name="MarketingEventData" id="7563052c-c212-459c-b07f-319b01e1ac2d">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -62,7 +62,7 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEvent" id="780d7dec-284f-4df5-91ed-8ef17b9e4ca3">
+  <con:testStep type="restrequest" name="ProcessMarketingEvent" id="5ece23ee-f362-4e6e-b8f1-865ad27a7a20">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="ProcessMarketingEvent" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
@@ -98,16 +98,7 @@
         <con:assertion type="JsonPath Match" id="cad50016-6b18-4685-a1ed-858f437400cb" name="ModelStateValidationAssert">
           <con:configuration>
             <path>$['ErrorCode']</path>
-            <content>"ModelStateValidation"</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="d476a083-ea42-4963-995a-a57fd1c690f3" name="MaxLengthAssert">
-          <con:configuration>
-            <path>$['ModelState'][0]['Message']</path>
-            <content>"Maximum length is 50 character(s)."</content>
+            <content>"HeaderRequired"</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -124,7 +115,6 @@
           <con:entry key="validateAudience" value="false"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>validateAudience</con:entry>
@@ -142,7 +132,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode" id="7d6b9389-9f9b-4b58-a295-5e30acb80204">
+  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode" id="f31d6253-6e9e-4c0d-af6a-b29edc1446c2">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" methodName="GetMarketingEventbyEventCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetMarketingEventbyEventCode" id="471c557e-ad15-4e9a-a9f1-2d173dd4c5cf" mediaType="application/json">
@@ -177,7 +167,7 @@
   <con:properties>
     <con:property>
       <con:name>EventCode</con:name>
-      <con:value>ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890123456789012345</con:value>
+      <con:value>OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>

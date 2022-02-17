@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" id="f3a2f8fe-9dfe-4406-b37d-ce510c71f7d5" keepSession="false" name="AddDefaultSubPointToProg" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="f3a2f8fe-9dfe-4406-b37d-ce510c71f7d5fileName">AddDefaultSubPointToProg</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep id="f781247d-cc7b-4b11-9f4c-5828614fde31" name="PointTypes" type="datasource">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/PointTypes.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>PointTypeCode</con:property>
+      <con:property>PointTypeDescription</con:property>
+      <con:property>PointTypeShortDescription</con:property>
+      <con:property>RedeemableInd</con:property>
+      <con:property>IsGiftable</con:property>
+      <con:property>SubType1Code</con:property>
+      <con:property>SubType1ShortDesc</con:property>
+      <con:property>SubType1Desc</con:property>
+      <con:property>SubType1ExpiryInd</con:property>
+      <con:property>SubType1ExpiryTimeUnit</con:property>
+      <con:property>SubType1ExpiryTimeValue</con:property>
+      <con:property>SubType2Code</con:property>
+      <con:property>SubType2ShortDesc</con:property>
+      <con:property>SubType2Desc</con:property>
+      <con:property>SubType2ExpiryInd</con:property>
+      <con:property>SubType2ExpiryTimeUnit</con:property>
+      <con:property>SubType2ExpiryTimeValue</con:property>
+      <con:property>CostPerPoint</con:property>
+      <con:property>CurrencyCode</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>3</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="d69f0391-8ee1-4aa6-ac25-e5de61178dad" name="GetPointTypes" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="GetPointTypes" resourcePath="/api/v1/referencedata/transactions/pointtypes" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="41d772c9-42ab-4326-8052-f61f2a44d3be" mediaType="application/json" name="GetPointTypes">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes</con:originalUri>
+        <con:assertion id="51b28bae-1e6d-4cb0-991e-1c4dc58d0d5d" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200,404</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="pointTypeCode" value="${PointTypes#PointTypeCode}"/>
+          <con:entry key="redeemableInd" value=""/>
+          <con:entry key="pointTypeShortDescription" value=""/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>pointTypeCode</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>isGiftable</con:entry>
+          <con:entry>redeemableInd</con:entry>
+          <con:entry>pointTypeShortDescription</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="edc2846c-824c-4b32-8fab-853ff61ff920" name="PointTypeCond" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def refPointTypeId = context.expand( '${GetPointTypes#Response#$[0][\'RefPointTypeId\']}' )
+if (refPointTypeId == "" ) 
+    testRunner.gotoStepByName("AddPointType")
+else
+     testRunner.gotoStepByName("PointTypeId")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="7a23ccf8-f609-466e-ad50-9a365d1dc0af" name="AddPointType" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="AddPointType" resourcePath="/api/v1/referencedata/transactions/pointtypes" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="6c6293e5-b8a7-49d6-8d68-c0c2d4059238" mediaType="application/json" name="AddPointType" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "PointSubTypes": [
+    {
+      "PointSubTypeCode": "${PointTypes#SubType1Code}" ,
+      "Desc": "${PointTypes#SubType1Desc}",
+      "ShortDesc": "${PointTypes#SubType1ShortDesc}",
+      "ExpiryInd": "${PointTypes#SubType1ExpiryInd}",
+       "ExpiryTimeValue":${PointTypes#SubType1ExpiryTimeValue} ,
+      "ExpiryTimeUnit": "${PointTypes#SubType1ExpiryTimeUnit}",
+    },
+   {
+      "PointSubTypeCode":  "${PointTypes#SubType2Code}",
+      "Desc": "${PointTypes#SubType2Desc}",
+      "ShortDesc": "${PointTypes#SubType2ShortDesc}",
+      "ExpiryInd": "${PointTypes#SubType2ExpiryInd}",
+      "ExpiryTimeValue":${PointTypes#SubType2ExpiryTimeValue} ,
+      "ExpiryTimeUnit": "${PointTypes#SubType2ExpiryTimeUnit}",
+    }
+  ],
+  "PointTypeCode": "${PointTypes#PointTypeCode}",
+  "PointTypeShortDescription": "${PointTypes#PointTypeShortDescription}",
+  "PointTypeDescription":  "${PointTypes#PointTypeDescription}",
+  "RedeemableInd":"${PointTypes#RedeemableInd}" ,
+  "IsGiftable": "${PointTypes#IsGiftable}",
+   "CostPerPoint":${PointTypes#CostPerPoint},
+   "CurrencyCode":"${PointTypes#CurrencyCode}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes</con:originalUri>
+        <con:assertion id="d85be2f1-eeab-4c67-bd45-79aea8fd8ca7" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="c01e9c94-8fc5-433b-84cd-7b4d5bcd0ed7" name="PointTypeId" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script>def refPointTypeId = context.expand( '${GetPointTypes#Response#$[0][\'RefPointTypeId\']}' )
+def response = context.expand( '${AddPointType#Response}' )
+
+if(response==null || response =="")
+  	return refPointTypeId;
+ else
+ {
+    refPointTypeId = context.expand( '${AddPointType#Response#$[\'RefPointTypeId\']}' )
+    return refPointTypeId;
+ }</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="43be5ba2-21e3-4c9a-8162-7d7866300c66" name="UpdatePointType" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="UpdatePointType" resourcePath="/api/v1/referencedata/transactions/pointtypes/{pointTypeId}" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="d182a8e6-f5f3-4a39-aedf-db34fca7f36d" mediaType="application/json" name="UpdatePointType" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{ 
+  "PointTypeCode": "${PointTypes#PointTypeCode}",
+  "PointTypeShortDescription": "${PointTypes#PointTypeShortDescription}",
+  "PointTypeDescription":  "${PointTypes#PointTypeDescription}",
+  "RedeemableInd": "${PointTypes#RedeemableInd}",
+  "IsGiftable": "${PointTypes#IsGiftable}",
+  "CostPerPoint":${PointTypes#CostPerPoint},
+  "CurrencyCode":"${PointTypes#CurrencyCode}",
+  "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes/pointTypeId</con:originalUri>
+        <con:assertion id="0e725a00-be6b-46d8-a2ab-8f96ed199c99" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="pointTypeId" value="${PointTypeId#result}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>pointTypeId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="d7d04ede-d37b-4a05-ac33-8c52573229cc" name="GetPointTypeById" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="GetPointTypeById" resourcePath="/api/v1/referencedata/transactions/pointtypes/{pointTypeId}" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="cc3cb9aa-fc57-4d56-992d-1bb607297dc8" mediaType="application/json" name="GetPointTypeById">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes/</con:originalUri>
+        <con:assertion id="60890bd2-4586-42d8-b154-d32a625f36b0" name="Valid HTTP Status Codes" type="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="pointTypeId" value="${UpdatePointType#Response#$['RefPointTypeId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>pointTypeId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="a5f2612e-b3a1-4a4d-94e9-4e5421a63a18" name="PointTypeLoop" type="datasourceloop">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>PointTypes</dataSourceStep>
+      <targetStep>GetPointTypes</targetStep>
+      <discardResults>false</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddDefaultSubPoint" id="aa37d603-e620-4b20-b2f1-4bee7dcaa06a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programs" methodName="UpdateProgram" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="bd535db1-3698-4b73-b908-a3a99845318f" mediaType="application/json" name="AddDefaultSubPoint" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"OrgCode": "CLUCK",
+	"ProgramCode": "PP",  
+	"Name": "Poultry Perks",
+     "Description": "Poultry Perks",
+	 "Status": "A",
+	 "PointTypes": [
+		{
+		  "PointTypeCode": "POINTS",
+		  "DefaultIndicator": true,
+            "DefaultSubPointTypeId" : "${GetPointTypeById#Response#$['PointSubTypes'][0]['PointSubTypeId']}"
+		},
+         {
+		  "PointTypeCode": "EGGS",
+		  "DefaultIndicator": false,
+		},
+		{
+		  "PointTypeCode": "CLUCK_CASH",
+		  "DefaultIndicator": false
+		}
+	  ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programs</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b9a11989-b148-48e5-a7ff-7dffe96e7cad" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>fc634ff8-0045-480e-b655-d083f704ec97</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e9627070-03ac-4e7a-81e0-7533a655a67d</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>7482552e-f111-4f9f-b385-bbf34c19f998</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0d3b6453-67ae-4e2c-ad01-c2e975a481ef</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:environmentSpec>
+    <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+    <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+    <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+  </con:environmentSpec>
+</con:testCase>

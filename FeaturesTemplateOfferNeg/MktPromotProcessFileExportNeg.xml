@@ -248,6 +248,134 @@ def id = context.expand( '${#[OffersPrerequisite#GetFileLayouts#GetFileLayouts]#
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="ProcessMarketingEventNeg" id="19b501c0-a775-4ccf-a94a-584cb91fabfe">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessMarketingEventNeg" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MarketingEventId": "${ProcessMarketingEvent#Response#$['MarketingEventId']}",
+	"MarketingEventType": {
+		"MarketingEventTypeId": "${MarketingEventData#MarketingEventTypeId}",
+		"TypeName": "${MarketingEventData#TypeName}"
+	},
+	"MarketingEventChannels": [
+		{
+			"MarketingEventChannelId": "${MarketingEventData#FileExportChannelId}",
+			"Status": "A"
+		}
+	],
+	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}",
+	"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}",
+	"PackagedAudience": {
+		"PackagedAudienceId": "7ae1f987-515e-4669-e053-5ca8e70ad3ee",
+		"AudienceName": "${MarketingEventPkgdAudienceData#AudienceName}",
+		"AudienceDescription": "${MarketingEventPkgdAudienceData#AudienceDescription}",
+		"PackagedAudienceParams": []
+	},
+	"AudienceSource": "${MarketingEventPkgdAudienceData#AudienceSource}",
+	"PackagedOffer": {
+		"PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6",
+		"PackagedOfferCode": "${MarketingEventPkgdAudienceData#PackagedOfferCode}",
+		"PackagedOfferName": "${MarketingEventPkgdAudienceData#PackagedOfferName}",
+		"PackagedOfferParams": [
+			{
+			  "PackagedOfferParamId": "fa7588bf-06ee-4541-b9c5-4d03adcf7c61",
+                "PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6",
+                "ParamName": "Minimum transaction amount",
+                "ParamCode": "MIN_TXN_AMT",
+                "Value": "100"
+			},
+			{
+			  "PackagedOfferParamId": "a1579fd2-2a7c-44e6-88bc-ed7d6319de83",
+                "PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6",
+                "ParamName": "Point amount",
+                "ParamCode": "POINT_AMT_REWARDED",
+                "Value": "150"
+			},
+			{
+			  "PackagedOfferParamId": "54d2ac4f-e01e-4cf0-8f96-5ead9abb7f2d",
+                "PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6",
+                "ParamName": "Maximum offers per member (optional)",
+                "ParamCode": "MAX_OFFERS_PER_MEMBER",
+                "Value": "10"
+			},
+			{
+			  "PackagedOfferParamId": "5f328133-6ad0-4c36-81bd-c3a36cca7492",
+                "PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6",
+                "ParamName": "Maximum points issued per member (optional)",
+                "ParamCode": "MAX_POINTS_PER_MEMBER",
+                "Value": "15"
+			}
+		]
+	},
+	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+	"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
+	"Status": "A",
+	
+    "MarketingEventFileExportSetting": { 
+                   "MarketingFileLayoutId": "${GetFileLayoutbyID#Response#$['MarketingFileLayoutId']}", 
+	   "FileExportSettingName": "${MarketingEventData#FileSettingNameInvalid}",
+                   "MarketingEventFileExportSettingDetail": [${GetFileLayoutbyID#Response#$['MarketingFileOutputSettings'][0]}] 
+    } 
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9ccc6c55-d7b1-40d3-bf5c-5071b6fc0c8f" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>400</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="d2e9ac8f-04de-4039-91d5-e62f197a3a6a" name="ModelStateVal">
+          <con:configuration>
+            <path>$['ErrorCode']</path>
+            <content>"ModelStateValidation"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="5c762ed5-17e7-4604-9b12-e1aa3c147670" name="MaxLenAssert">
+          <con:configuration>
+            <path>$['ModelState'][0]['Message']</path>
+            <content>"Maximum length is 220 character(s)."</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="validateOffer" value="false"/>
+          <con:entry key="validateAudience" value="false"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>validateAudience</con:entry>
+          <con:entry>validateOffer</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
 </con:testCase>

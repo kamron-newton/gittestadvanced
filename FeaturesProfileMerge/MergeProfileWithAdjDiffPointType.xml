@@ -3,6 +3,163 @@
   <con:settings>
     <con:setting id="6f049d2d-8440-44d6-ba17-7781ebddaf80fileName">MergeProfileWithAdjDiffPointType</con:setting>
   </con:settings>
+  <con:testStep type="calltestcase" name="EnableOrDisableProgramSetting" id="5b267898-6101-4902-b262-4aa6bd8cee1e">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>58358ab6-63cb-4437-8821-6fda8375ad78</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Survivor Profile" id="45118600-9833-4766-b037-ae83fb313bf5">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" copyLoadTestProperties="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>c5cf2435-e4da-4ffe-8c13-29ada8cbe867</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Victim Profile" id="fe442c1f-25a2-4ee1-af7a-4a945d42235a">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>f5c457de-a71d-47df-9afc-3385fe3af89a</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Adjustment For Survivor" id="59d679dc-6c35-4f33-a6c5-abafc7602253">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>d3339fb2-45d2-479b-9947-1ea66f3877fa</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Points</con:name>
+          <con:value>100</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AdjustmentReason</con:name>
+          <con:value>PPPOINTS</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Adjustment For Victim" id="f2849935-b717-4263-9459-0495f521763b">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>d3339fb2-45d2-479b-9947-1ea66f3877fa</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Points</con:name>
+          <con:value>10</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${#[Profile#AddVictimProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AdjustmentReason</con:name>
+          <con:value>PPGOODW</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Merge Profiles" id="cb501cbb-73aa-4725-aea6-21e2d80841e2">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>a8cd971b-fab6-43b8-87bd-9544f8860872</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>{   "SecondaryId": "${#[Profile#AddVictimProfileRGR#AddProfileRGR]#Response#$['ProfileId']}" }</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSurvivorAdjustments" id="99c7cf47-4666-4e69-a8cc-181ee5a139c7">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/adjustments" methodName="GetAdjustments" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSurvivorAdjustments" id="1baa8568-77c3-4d35-8018-7a228cd92289" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/2a52c356-654d-4251-90c5-d0f46f6b9772/adjustments</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="af3d58e6-5301-4d92-9ffc-373acb1501c5" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="AdjustmentReasonCode" id="24584020-4527-4acb-b991-47e4f1780810">
+          <con:configuration>
+            <path>$[0]['AdjustmentReasonCode']</path>
+            <content>${Add Adjustment For Victim#AdjustmentReason}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="f5829f1d-1ac9-4d9d-bc23-5e2a0f154064" name="VictimAdjustmentId">
+          <con:configuration>
+            <path>$[0]['AdjustmentId']</path>
+            <content>${#[Transaction#AddAdjustment#AddAdjustment]#Response#$['AdjustmentId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="cf3061ba-1d01-49dc-8011-c6ebe3e66550" name="AdjustmentReasonCodeSurvivor">
+          <con:configuration>
+            <path>$[1]['AdjustmentReasonCode']</path>
+            <content>${Add Adjustment For Survivor#AdjustmentReason}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
 </con:testCase>

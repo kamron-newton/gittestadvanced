@@ -1,0 +1,988 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="2054ce39-3b64-4cc5-a2c9-e6bd7e520450" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ExecuteProfileSysOfferImport" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="2054ce39-3b64-4cc5-a2c9-e6bd7e520450fileName">ExecuteProfileSysOfferImport</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="RunEnableBatchS3DefaultSetting" id="315ca435-0659-4c1a-a2e9-26f9435748b4">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>691913d9-d56f-409d-bc92-80cc04799067</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>BatchS3DefaultSettingId</con:name>
+          <con:value>712a1b34-9c52-db49-8034-6010ab6fe88e</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>BatchS3DefaultSettingId</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunExecuteBatchWorkFlowforProfileSysOfferImport" id="21c92a28-f1b6-42e0-9ac1-7307cae0e6ff">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>493c35b3-7a9e-4c79-a0c4-3423fbf93331</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>DataHubProcessDefinitionKey</con:name>
+          <con:value>Automation_ProfileSysOffer_Import</con:value>
+        </con:property>
+        <con:property>
+          <con:name>DataHubProcessId</con:name>
+          <con:value>7b3779ec-93f0-11ec-b518-1235580c8ebb</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>DataHubProcessId</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetScriptDefaultContent" id="e846b8c6-2b67-4f87-b036-3ef50bcad5f3">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/defaultcontent" methodName="Get Default Content" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetScriptDefaultContent" id="56c8e44c-c91e-4648-b535-a4187cbec73a" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/defaultcontent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b757a871-ebe2-4cf2-ac9f-da48a24684ba" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptName" value="${#TestCase#ScriptName}"/>
+          <con:entry key="Environment" value="PRODUCTION"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>fusionWebApiId</con:entry>
+          <con:entry>scriptName</con:entry>
+          <con:entry>prePostEvent</con:entry>
+          <con:entry>version</con:entry>
+          <con:entry>Environment</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferScriptIDFromGetScriptContent" id="4abfa266-f531-4069-be6e-02ff1452ef19">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>TransferScriptId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetScriptDefaultContent</con:sourceStep>
+        <con:sourcePath>$['ScriptId']</con:sourcePath>
+        <con:targetType>ScriptId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="ConditionalUpdateOrAdd" id="834e3c2b-3428-46da-b9c4-f9fa274b2ee5">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>VerifyScriptId</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>exists(//*:Response/*:ScriptId)</con:expression>
+        <con:targetStep>UpdateScript</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddScript" id="b93892c6-69fe-4bae-89a7-c873db2053c8">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts" methodName="Add Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddScript" id="fb7ff48c-d0bf-4b4e-b695-4721c097882f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{  
+   "IsStandalone":true,
+   "IsPlaceholder":false,
+   "ScriptName": "${#TestCase#ScriptName}", 
+   "Content":"try%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Epsilon.Fusion.Models.Batch.BatchJobModel%20model%20%3D%20JsonConvert.DeserializeObject%3CEpsilon.Fusion.Models.Batch.BatchJobModel%3E(input.ToString())%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(model.JsonExternalData%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dynamic%20xmlJson%20%3D%20verb.AccessExternalData(model)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(xmlJson%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.WriteFile(xmlJson.FileName.ToString()%2C%20JsonConvert.DeserializeObject%3Cdynamic%3E(xmlJson.FileContent.ToString())%2C%20xmlJson.FileLocation.ToString()%2C%20useHeaders%3A%20(bool)xmlJson.UseHeader)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2Fupdate%20Json%20to%20null%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20DbParameterCollection%20parameters%20%3D%20new%20DbParameterCollection()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20parameters.Add(new%20DbParameter(%22BatchJobId%22%2C%20model.BatchJobId%2C%20DbType.Guid))%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.BeginDatabaseTransaction()%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20string%20sql%20%3D%20string.Format(%22UPDATE%20T_SYS_JOB%20SET%20JSON_EXTERNAL_DATA%20%3D%20null%20WHERE%20SYS_JOB_ID%20%3D%20%3ABatchJobId%22)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.ModifyDatabase(sql%2C%20parameters)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.CommitDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20catch%20(Exception%20ex)%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.RollbackDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20throw%20new%20Exception(ex.Message)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D"},
+   "Version":""
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="1108c1fc-c756-40cf-bcca-b60f5951cf72" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertyFromAddScript" id="d2a55400-d7e0-4412-9690-166e932f062a">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>TransferScriptId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>AddScript</con:sourceStep>
+        <con:sourcePath>$['ScriptId']</con:sourcePath>
+        <con:targetType>ScriptId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateScript" id="648218ad-41d1-4d5c-ba7e-d364187993aa">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptId}" methodName="Update Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateScript" id="9e8e04e4-a1f1-43f0-bdfe-9bdabc1de796" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{  
+"Content":"try%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Epsilon.Fusion.Models.Batch.BatchJobModel%20model%20%3D%20JsonConvert.DeserializeObject%3CEpsilon.Fusion.Models.Batch.BatchJobModel%3E(input.ToString())%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(model.JsonExternalData%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dynamic%20xmlJson%20%3D%20verb.AccessExternalData(model)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(xmlJson%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.WriteFile(xmlJson.FileName.ToString()%2C%20JsonConvert.DeserializeObject%3Cdynamic%3E(xmlJson.FileContent.ToString())%2C%20xmlJson.FileLocation.ToString()%2C%20useHeaders%3A%20(bool)xmlJson.UseHeader)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2Fupdate%20Json%20to%20null%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20DbParameterCollection%20parameters%20%3D%20new%20DbParameterCollection()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20parameters.Add(new%20DbParameter(%22BatchJobId%22%2C%20model.BatchJobId%2C%20DbType.Guid))%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.BeginDatabaseTransaction()%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20string%20sql%20%3D%20string.Format(%22UPDATE%20T_SYS_JOB%20SET%20JSON_EXTERNAL_DATA%20%3D%20null%20WHERE%20SYS_JOB_ID%20%3D%20%3ABatchJobId%22)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.ModifyDatabase(sql%2C%20parameters)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.CommitDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20catch%20(Exception%20ex)%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.RollbackDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20throw%20new%20Exception(ex.Message)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D"}
+
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/4e85cbeb-124a-46b2-aa42-33475ea3eba5</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="6f5b04b2-5e8e-4dfd-b0a5-8a9ac6b5a735" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptId" value="${#TestCase#ScriptId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>scriptId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertyScriptIdFromUpdateScript" id="8beb36ec-eb53-410e-956d-ba26851c548c">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>ScriptID</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>UpdateScript</con:sourceStep>
+        <con:sourcePath>$['ScriptId']</con:sourcePath>
+        <con:targetType>ScriptId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="DeployScriptbyScriptId" id="19494ff4-9182-43e8-bbb8-42af8810f30a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptId}/deploy" methodName="Deploy Script by Script Id" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="DeployScriptbyScriptId" id="601ddb8f-c563-453f-a034-55f59a364a6d" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/16428f93-4c0b-4bc6-be64-ec97bd4b59b5/deploy</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="afa8f055-3390-4fd6-a40e-d2af9188174b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptId" value="${#TestCase#ScriptId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>scriptId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ReloadScripts" id="6bf84fb8-48a3-461d-b8f9-faf710e88aaa">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/reload" methodName="Reload Scripts" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ReloadScripts" id="20103559-4d5a-49a1-bb29-ef55cb6e2ddf" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/reload</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="e5f1f48e-aae1-4863-b83f-de6785e84e14" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reloadAllServers" value="true"/>
+          <con:entry key="compile" value="true"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>compile</con:entry>
+          <con:entry>reloadAllServers</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunProcessProfile" id="ebe6e651-4c2f-4972-942e-9fff4ea280b6">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>baad9bb0-ef1d-40cc-ad6c-120db1b5f415</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>c75ea31d-2e22-46f3-980c-44cb8160f2b1</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileById" id="30f65163-b0dd-4c87-9fc2-242fb52b6886">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}" methodName="GetProfileByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="caa82c6c-fb0c-4527-9a62-8abf1c42fa9d" mediaType="application/json" name="GetProfileById">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f28748e7-6e81-4a9e-ab7b-6313884112c7" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileWithPostingKey#AddProfileWithPostingKey]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Sys Offers" id="2bb6f130-f3de-4bb1-ada8-f2af99012bf7">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers" methodName="Get Program Offers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Sys Offers" id="01b55446-a40a-4369-9fab-5cac544244cc" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="60f980c1-e5db-4374-8975-b51055a9c4c8" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="pageNumber" value=";`"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>offerCode</con:entry>
+          <con:entry>offerName</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>shortDescription</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>isCouponOffer</con:entry>
+          <con:entry>offerType</con:entry>
+          <con:entry>isDefaultOffer</con:entry>
+          <con:entry>customDataName</con:entry>
+          <con:entry>customDataValue</con:entry>
+          <con:entry>sortBy</con:entry>
+          <con:entry>numberPerPage</con:entry>
+          <con:entry>pageNumber</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="ProfileSysOfferLayoutDataSource" id="5eeb8c79-5372-41ac-bc39-683047303d9f">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>1</generatedDataCount>
+          <generatorsTotalNumber>2</generatorsTotalNumber>
+          <lastSelectedProperty>1</lastSelectedProperty>
+          <GeneratorType0>GUID</GeneratorType0>
+          <PropertyName0>JobName</PropertyName0>
+          <repetitionCountJobName>0</repetitionCountJobName>
+          <repeatValuesJobName>false</repeatValuesJobName>
+          <GeneratorType1>GUID</GeneratorType1>
+          <PropertyName1>FileName</PropertyName1>
+          <repetitionCountFileName>0</repetitionCountFileName>
+          <repeatValuesFileName>false</repeatValuesFileName>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>JobName</con:property>
+      <con:property>FileName</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertiesToProfileSysOfferLayout" id="6d7e9104-337e-403a-a0bf-19fdc258e30a">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>ProfileId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['ProfileId']</con:sourcePath>
+        <con:targetType>ProfileId</con:targetType>
+        <con:targetStep>ProfileSysOfferLayoutPropertiesRecord1</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>CardNumber</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['CardNumber']</con:sourcePath>
+        <con:targetType>CardNumber</con:targetType>
+        <con:targetStep>ProfileSysOfferLayoutPropertiesRecord2</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>SysOfferCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>Get Sys Offers</con:sourceStep>
+        <con:sourcePath>$[0]['OfferCode']</con:sourcePath>
+        <con:targetType>SysOfferCode</con:targetType>
+        <con:targetStep>ProfileSysOfferLayoutPropertiesRecord1</con:targetStep>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>CustomerKey</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['ProfileId']</con:sourcePath>
+        <con:targetType>CustomerKey</con:targetType>
+        <con:targetStep>ProfileSysOfferLayoutPropertiesRecord1</con:targetStep>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="properties" name="ProfileSysOfferLayoutPropertiesRecord1" id="1f6fb4fb-0bd3-44f2-9840-0aa35e4e223e">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:properties>
+        <con:property>
+          <con:name>ProfileSysOfferId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>ac337975-2fce-41e0-9aa5-0b1c7048494f</con:value>
+        </con:property>
+        <con:property>
+          <con:name>SysOfferId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SysOfferCode</con:name>
+          <con:value>36381104_POINTS</con:value>
+        </con:property>
+        <con:property>
+          <con:name>StartDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>EndDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>PostingKeyCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>PostingKeyValue</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CardNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>PP</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AccountSource</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SourceAccountNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BrandOrgCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CustomAttributeData</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Status</con:name>
+          <con:value>A</con:value>
+        </con:property>
+        <con:property>
+          <con:name>JsonExternalData</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CustomerKey</con:name>
+          <con:value>625d4183-dc4b-4043-a081-5aef8d1e9313</con:value>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="properties" name="ProfileSysOfferLayoutPropertiesRecord2" id="55942f31-a0be-4c70-b1d0-4cd61bbe96c7">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:properties>
+        <con:property>
+          <con:name>ProfileSysOfferId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>57a0bc9e-de5b-4fa5-b6b7-03a6a1ed7308</con:value>
+        </con:property>
+        <con:property>
+          <con:name>SysOfferId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SysOfferCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>StartDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>EndDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>PostingKeyCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>PostingKeyValue</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CardNumber</con:name>
+          <con:value>bb150f65-0d5f-4641-b56f-5972437c4390</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>PP</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AccountSource</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SourceAccountNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BrandOrgCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CustomAttributeData</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Status</con:name>
+          <con:value>A</con:value>
+        </con:property>
+        <con:property>
+          <con:name>JsonExternalData</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CustomerKey</con:name>
+          <con:value>57a0bc9e-de5b-4fa5-b6b7-03a6a1ed7308</con:value>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="properties" name="ProfileSysOfferLayoutPropertiesRecord3" id="0f5851c5-c922-4f29-aada-f7cea778314d">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:properties>
+        <con:property>
+          <con:name>ProfileSysOfferId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>57a0bc9e-de5b-4fa5-b6b7-03a6a1ed7308</con:value>
+        </con:property>
+        <con:property>
+          <con:name>SysOfferId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SysOfferCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>StartDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>EndDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>PostingKeyCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>PostingKeyValue</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CardNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>AccountSource</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SourceAccountNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BrandOrgCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CustomAttributeData</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Status</con:name>
+          <con:value>A</con:value>
+        </con:property>
+        <con:property>
+          <con:name>JsonExternalData</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CustomerKey</con:name>
+          <con:value>57a0bc9e-de5b-4fa5-b6b7-03a6a1ed7308</con:value>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="CreateProfileSysOfferImportFile" id="89bcdb55-2691-4107-a7de-413ee54ca224">
+    <con:settings/>
+    <con:config>
+      <script>import groovy.json.JsonGenerator
+import groovy.json.JsonGenerator.Converter
+
+def profileSysOfferLayoutList1 = testRunner.testCase.getTestSteps().ProfileSysOfferLayoutPropertiesRecord1.getPropertyList();
+def profileSysOfferLayoutList2 = testRunner.testCase.getTestSteps().ProfileSysOfferLayoutPropertiesRecord2.getPropertyList();
+def profileSysOfferLayoutList3 = testRunner.testCase.getTestSteps().ProfileSysOfferLayoutPropertiesRecord3.getPropertyList();
+
+def parseCollection(propertyList){  	
+	def mapClass = [:]
+	for( item in propertyList)
+	{
+		if( item.value == null  ){
+			 item.value= '';
+		}
+	    mapClass[item.name] = item.value;	  
+	}    
+	return mapClass;
+}
+
+def jsonDefaultOutput = new JsonGenerator.Options()
+.dateFormat('MM-dd-yyyy')
+.build(); 
+
+def profileSysOfferString1 = parseCollection(profileSysOfferLayoutList1);
+def profileSysOfferString2 = parseCollection(profileSysOfferLayoutList2);
+def profileSysOfferString3 = parseCollection(profileSysOfferLayoutList3);
+
+def s3Bucket = context.expand( '${#Project#S3Bucket}' )
+def todayDate = new Date().format( 'MM-dd-yyyy' );
+def jobName = context.expand( '${ProfileSysOfferLayoutDataSource#JobName}' )
+def programCode = context.expand( '${#Project#ProgramCode}' )
+def fileContent =  [profileSysOfferString1 ,  profileSysOfferString2 , profileSysOfferString3 ];
+def scriptName = context.expand( '${#TestCase#ScriptName}' )
+
+def jsonExternalDataMap = [:]
+def dataHubProcessId = context.expand( '${RunExecuteBatchWorkFlowforProfileSysOfferImport#DataHubProcessId}' )
+
+
+def fileName = 'ProfileSysOfferImport' + dataHubProcessId  + '.txt';
+jsonExternalDataMap["FileName"]  = fileName;
+jsonExternalDataMap["FileLocation"]  = "s3://" + s3Bucket + "/automation/ProfileSysOfferImportInput";
+jsonExternalDataMap["FileContent"] = fileContent;
+jsonExternalDataMap["UseHeader"] = 'true';
+
+def batchInputJsonMap = [:];
+batchInputJsonMap["JobName"] = 'InvokeScript_' + jobName;
+batchInputJsonMap["FileName"] = fileName;
+batchInputJsonMap["FileInputLocation"] = "s3://" + s3Bucket + "/automation/" + todayDate + "/Input";
+batchInputJsonMap["FileOutputLocation"] = "s3://" + s3Bucket + "/automation/" + todayDate + "/Output";
+batchInputJsonMap["EmailAddresses"]= "";
+batchInputJsonMap["JobTypeId"]= "4923d185-0c86-4c15-9356-67597ab70526";
+batchInputJsonMap["JobType"]= "";
+batchInputJsonMap["ProgramCode"]= programCode;
+batchInputJsonMap["DataOutputType"]= "FULL";
+batchInputJsonMap["MaxThreads"]= 50;
+
+batchInputJsonMap["ScriptName"] =  scriptName;
+batchInputJsonMap["JsonExternalData"]= jsonExternalDataMap;
+batchInputJsonMap["AdditionalRunData"]= "";
+
+def batchInputJson = jsonDefaultOutput.toJson(batchInputJsonMap);
+
+return batchInputJson;</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CreateBatchJob" id="dc02ce80-69bb-4592-9c0b-6787b4a9f37b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/batch/jobs" methodName="Create Batch Job" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="CreateBatchJob" id="0121f0fe-0b53-489c-8475-2dee938e777f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>${CreateProfileSysOfferImportFile#result}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/batch/jobs</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5cdf49cf-a90d-4647-8cd4-0e391fd5e772" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="IfBatchJobIdDoesNotExist" id="422d1295-b689-463e-b300-716b8140bd2e">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>BatchJobId</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>!exists(//*:Response[1]/*:BatchJobId)</con:expression>
+        <con:targetStep>S3ProgramRest</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferSysBatchJobIdAndDatahubProcessId" id="b90b6988-f65a-4c65-a7a6-98512ddb28e8">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" entitize="false" transferToAll="false">
+        <con:name>BatchJobId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>CreateBatchJob</con:sourceStep>
+        <con:sourcePath>$['BatchJobId']</con:sourcePath>
+        <con:targetType>SysJobID</con:targetType>
+        <con:targetStep>RunBatchJobStatusValidation</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>DatahubWorkflowProcessId</con:name>
+        <con:sourceType>DataHubProcessId</con:sourceType>
+        <con:sourceStep>RunExecuteBatchWorkFlowforProfileSysOfferImport</con:sourceStep>
+        <con:sourcePath/>
+        <con:targetType>DatahubProcessId</con:targetType>
+        <con:targetStep>RunDatahubWorkflowValidation</con:targetStep>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunBatchJobStatusValidation" id="39e5e7bf-475a-48ca-88d5-4d36f902643e">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>a2770463-9651-4187-96b0-e0f5fb77f889</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>SysJobID</con:name>
+          <con:value>ff2cd125-02a8-4d9f-b0e7-456c62049b12</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="S3ProgramRest" id="1d7c85a9-4d49-4180-b4cf-76a63dfa7806">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateDefaultSetting" resourcePath="/api/v1/referencedata/programs/defaultsettings/{defaultSettingId}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="S3ProgramRest" id="02982e52-8357-4991-a1c4-561796f8ba25" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+    "ParameterName":  "BATCH_S3_ENABLED",
+    "ParameterValue":  "Y"
+ }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/defaultsettings/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="8d5e1985-d834-4546-99d1-23f6a5a65ae2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="defaultSettingId" value="${RunEnableBatchS3DefaultSetting#BatchS3DefaultSettingId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="content" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="SendDatahubWorkflowResumeMessage" id="36af859f-e2fb-4272-99be-888d9ee948c2">
+    <con:settings/>
+    <con:config service="DatahubAPIs" resourcePath="/orchestration/v1/process-instance/resume" methodName="ResumeWorkFlow" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="SendDatahubWorkflowResumeMessage" id="fbab81a6-bfc0-4489-b4d8-80bf4a5ab419" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "messageName": "Message_Resume",
+  "processInstanceIds": [
+    "${RunExecuteBatchWorkFlowforProfileSysOfferImport#DataHubProcessId}"
+  ]
+}</con:request>
+        <con:originalUri>https://u-acpapi.datahub.epsilon.com/orchestration/v1/process-instance/resume</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="2c8d8994-2b8b-4f33-8e23-1e59af96eb13" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Bearer ${#Project#Datahub Orchestration Token}"/>
+          <con:entry key="X-ADH-Tenant-Code" value="${#Project#Tenant}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+          <con:entry key="accept" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>X-ADH-Tenant-Code</con:entry>
+          <con:entry>accept</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunDatahubWorkflowValidation" id="10c5d778-fe09-4bee-98ca-c3f6b7773c1a">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>281bbad6-502b-44e0-b592-5707e4881889</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>DatahubProcessId</con:name>
+          <con:value>6b7470c0-8b20-11ec-920f-028e85891005</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property userSpecific="true">
+      <con:name>ScriptId</con:name>
+      <con:value>744f7e73-37a5-4a0b-a2fc-dc028c54a27d</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>ScriptName</con:name>
+      <con:value>GenerateFileContentInS3</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

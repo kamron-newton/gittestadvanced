@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="d13658ea-7d7e-46e6-b905-fcb234b75bd4" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="NegValidateOfferConfigWithoutCustActvty" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="f0ce7810-6107-4a03-a56f-f29e90e32a35" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="NegValidateOfferConfigWithoutRwd" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="d13658ea-7d7e-46e6-b905-fcb234b75bd4fileName">NegValidateOfferConfigWithoutCustActvty</con:setting>
+    <con:setting id="f0ce7810-6107-4a03-a56f-f29e90e32a35fileName">NegValidateOfferConfigWithoutRwd</con:setting>
   </con:settings>
-  <con:testStep type="datasource" name="ProcessMarketingEvent" id="1a57e59d-f09e-436c-b0f4-a9b673b31b8c">
+  <con:testStep type="datasource" name="ProcessMarketingEvent" id="402a1c53-c443-4f2c-ad90-5189b10b6040">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -40,10 +40,10 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEventWithoutCustActvty" id="ef2d715b-13c9-4c70-abf8-3953357c1d7f">
+  <con:testStep type="restrequest" name="ProcessMarketingEventWithoutRwd" id="4da52a7f-5af8-4a19-9d4f-19d4ef721410">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ProcessMarketingEventWithoutCustActvty" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="ProcessMarketingEventWithoutRwd" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -59,28 +59,54 @@
 	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
 	"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 
 "PackagedAudience": {
-"AudienceName":"${ProcessMarketingEvent#AudienceName}",
-"PackagedAudienceId": "${ProcessMarketingEvent#PackagedAudienceId}",
+
+		"PackagedAudienceId": "${ProcessMarketingEvent#PackagedAudienceId}"
 	},
-"AudienceSource": "PACKAGED_AUDIENCE",
+"AudienceSource": "${ProcessMarketingEvent#AudienceSource}",
 	"PackagedOffer": {
 		"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
 		"PackagedOfferCode": "CUSTOM_OFFER",
 		"PackagedOfferName": "Custom Offer",
 		"PackagedOfferParams": [
-            {
-				
-				"PackagedOfferParamId":"1d5c8eb6-b8b9-ed4e-e053-5dedef0ac6ca",
+			{
+				"PackagedOfferParamId": "d92dc1a1-8dc5-2d48-b6ea-87ec536a8c8a",
 				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-				"ParamName":"Point amount",
-				"ParamCode":"CUSTOM_POINT_AMT_REWARDED",
-				"Value":10,
-				"PanelId":"${ProcessMarketingEvent#PanelIdCustRew}",
-				"PanelCode":"${ProcessMarketingEvent#PanelCodeCustRew}"
+				"ParamName": "Quantity Threshold",
+				"ParamCode": "CUSTOM_TXN_MIN_QNTY",
+				"Value": "2",
+				"PanelId": "${ProcessMarketingEvent#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEvent#PanelCodeCustAct}",
+				"OfferParamCategoryCode": "TRANSACTIONAL",
+		 	},
+			{
+				
+				"PackagedOfferParamId": "098f30bc-aa8c-6c42-af35-eafa86c7b2bf",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Transaction on",
+				"ParamCode": "CUSTOM_TXN_SPECIFIC_DAYS",
+				"Value": "\"1\", \"2\"",
+				"PanelId": "${ProcessMarketingEvent#PanelIdCustAct}",
+				"PanelCode": "${ProcessMarketingEvent#PanelCodeCustAct}",
 			}
 		],
 		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
-		"PackagedOfferCategoryCode": "CUSTOM_OFFER"
+		"PackagedOfferCategoryCode": "CUSTOM_OFFER",
+		"CustomOfferActivityValue": {
+			"Type": "AND",
+			"GroupType": "GROUP",
+			"Conditions": [
+				{
+					"Type": "ATTRIBUTE",
+					"PackagedOfferParamId": "098f30bc-aa8c-6c42-af35-eafa86c7b2bf",
+					"Value": "\"1\", \"2\""
+				},
+				{
+					"Type": "ATTRIBUTE",
+					"PackagedOfferParamId": "d92dc1a1-8dc5-2d48-b6ea-87ec536a8c8a",
+					"Value": 2
+				}
+			]
+		}
 	},
 	"BusinessUnitTimeZone": "UTC",
   "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
@@ -123,7 +149,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ValidateOfferConfiguration" id="9f84bb6f-ffe5-4f80-b802-bb667489d77e">
+  <con:testStep type="restrequest" name="ValidateOfferConfiguration" id="5d57d929-9460-4a83-90d1-97e03d333878">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/validateofferconfig/{eventCode}" methodName="ValidateOfferConfiguration" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="ValidateOfferConfiguration" id="56fa4c50-559d-4169-bde0-5ebce5604804" mediaType="application/json">
@@ -139,10 +165,10 @@
             <codes>400</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="a1f70fa2-41c5-4a9a-ab9a-bb7a50b6c062" name="JSONPath Match">
+        <con:assertion type="JsonPath Match" id="09a30229-9695-4b8b-a83e-cad29e17502b" name="JSONPath Match">
           <con:configuration>
             <path>$['ErrorCode']</path>
-            <content>"CustomerActivityMissing"</content>
+            <content>"CustomerRewardMissing"</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -155,7 +181,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="eventCode" value="${ProcessMarketingEventWithoutCustActvty#Response#$['EventCode']}"/>
+          <con:entry key="eventCode" value="${ProcessMarketingEventWithoutRwd#Response#$['EventCode']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>

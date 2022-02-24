@@ -73,57 +73,26 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddAdjustmentToSurvivorProfile" id="e47e0be4-e58e-487d-9443-6e28a4a9762b">
+  <con:testStep type="calltestcase" name="Add Adjustment For Survivor" id="bb97ce10-edca-4b0f-8c0c-37611de3d6fb">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/adjustments" methodName="AddAdjustment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="9a3422f2-f90a-4dcd-9195-4f82d76a9c75" mediaType="application/json" name="AddAdjustmentToSurvivorProfile" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "AdjustmentReasonCode": "${ProfileAdjustments#AdjustmentReasonCode}",
-  "AdjustmentComment": "Automated adjustment test",
-  "NumPoints": "${ProfileAdjustments#Points1}"
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/adjustment</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="c5dd9421-25b5-4cf3-99fb-abc407a40fba" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>201</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>profileId</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Program-Code</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>d3339fb2-45d2-479b-9947-1ea66f3877fa</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Points</con:name>
+          <con:value>${ProfileAdjustments#Points1}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AdjustmentReason</con:name>
+          <con:value>${ProfileAdjustments#AdjustmentReasonCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="Merge Profiles" id="51d374fd-25d9-44df-9400-5a73538a6f7f">
@@ -156,7 +125,7 @@
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="b0438586-e386-4a11-8f55-9f12c3b8c7be" name="JSONPath Match">
+        <con:assertion type="JsonPath Match" id="b0438586-e386-4a11-8f55-9f12c3b8c7be" name="AdjustmentReasonCode">
           <con:configuration>
             <path>$['AdjustmentReasonCode']</path>
             <content>${ProfileAdjustments#AdjustmentReasonCode}</content>
@@ -165,10 +134,10 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="f80c6f5f-4fe6-4ad1-8099-6a16006d4f81" name="JSONPath Match 2">
+        <con:assertion type="JsonPath Match" id="f80c6f5f-4fe6-4ad1-8099-6a16006d4f81" name="AdjustmentId">
           <con:configuration>
             <path>$['AdjustmentId']</path>
-            <content>${AddAdjustmentToSurvivorProfile#Response#$['AdjustmentId']}</content>
+            <content>${#[Transaction#AddAdjustment#AddAdjustment]#Response#$['AdjustmentId']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -183,7 +152,7 @@
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
-          <con:entry key="adjustmentId" value="${AddAdjustmentToSurvivorProfile#Response#$['AdjustmentId']}"/>
+          <con:entry key="adjustmentId" value="${#[Transaction#AddAdjustment#AddAdjustment]#Response#$['AdjustmentId']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>

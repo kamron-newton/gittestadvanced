@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="36a041fa-e488-4e8b-9c56-86721d1e47ae" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertProgramOnDemandCert" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="36a041fa-e488-4e8b-9c56-86721d1e47aefileName">UpsertProgramOnDemandCert</con:setting>
+  </con:settings>
+  <con:testStep id="b9bbc70b-829d-4705-8d65-eaf245108f2d" name="Tiers" type="datasource">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Tiers.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>true</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>TierCode</con:property>
+      <con:property>TierName</con:property>
+      <con:property>TierDescription</con:property>
+      <con:property>VipInd</con:property>
+      <con:property>Rank</con:property>
+      <con:property>RequalFlag</con:property>
+      <con:property>MonthsValid</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>20</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="RewardCategories" id="a9f70c19-d4af-4a1c-82e4-7818745ead59">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/RewardCategories.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>CategoryCode</con:property>
+      <con:property>CategoryName</con:property>
+      <con:property>ParentCategoryCode</con:property>
+      <con:property>CategoryDescription</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProgramByCode" id="8195a7d9-47c0-44c1-b0d3-c2c941b7fb6e">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programs/{programCode}" methodName="GetProgramByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="8814a163-f7ab-4aed-b911-546712619285" mediaType="application/json" name="GetProgramByCode">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programs/ZEN</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="7389c319-3209-4e90-b544-6ec4b1eeb0d6" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="programCode" value="${#TestCase#ProgramCode}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#TestCase#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>programCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Program" id="df26e476-c566-4cf6-bbe3-e3d9ff9779f9">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${GetProgramByCode#HarResponse#$[\'status\']}' ).toInteger()
+if (status != 200) testRunner.gotoStepByName("AddProgram")
+ else
+ 	testRunner.gotoStepByName("GetProgramByCode 2")
+def PorgramCode = context.expand( '${GetProgramByCode#Response#$[\'ProgramCode\']}' )</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddProgram" id="5c5e3e05-8348-44a5-ae4b-145099a7cbb9">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programs" methodName="AddProgram" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="750178db-17eb-4f01-a0e1-44e1fa718bab" mediaType="application/json" name="AddProgram" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "defaultsubpointindicatorId": "${#[ActivityCertificate#GetPointTypeById#PointSubTypeId]#result}",
+  "defaultindicatorId": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",
+  "ProgramCode": "ZEN",
+  "OrgCode": "CLUCK",
+  "Name": "Automation Testing",
+  "Description": "Automation Testing",
+  "BusinessAllianceManager": "Steve",
+  "ProgramCodeName": "ZEN${=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date())}",
+  "ProgramCodeAndName": "Pro_${=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date())}",
+  "PointTypes": [
+    {
+      "RefPointTypeId": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",
+      "DefaultIndicator": true,
+      "DefaultSubPointTypeId": "${#[ActivityCertificate#GetPointTypeById#PointSubTypeId]#result}",
+    }
+  ],
+  "DefaultPointType": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",
+  "DefaultSubPointType": "${#[ActivityCertificate#GetPointTypeById#PointSubTypeId]#result}",
+  "PromoteToFusionWeb": false,
+  "IsCrmProgram": false,
+  "StartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date())}",
+  "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programs</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="74465f8f-a701-4916-936e-a4f4f3e50605" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddAdjustmentReason" id="c76d7e64-691b-419e-9fbc-892093eea823">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/adjustmentreasons" methodName="AddAdjustmentReason" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddAdjustmentReason" id="5f5101c6-238d-4a48-9858-c508f008458e" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "AdjustmentReasonCode": "${#TestCase#ProgramCode}W",
+  "DisplayOrder": 1,
+  "StartDate": "${=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date())}",
+  "EndDate": "${=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date()+360)}",
+  "Description": "Good Will Adjustment",
+  "PointTypeId": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",
+  "PointSubtypeId": "${#[ActivityCertificate#GetPointTypeById#PointSubTypeId]#result}",
+  "ProgramCode": "${#TestCase#ProgramCode}",
+  "AdjustmentReasonCodeAdjustmentReasonDescPointTypeShortDescription": "${#TestCase#ProgramCode}GOODW-Good Will Adjustment",
+  "AdjustmentReasonCodeDescription": "${#TestCase#ProgramCode}GOODW-Good Will Adjustment" 
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/adjustmentreasons</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="3e705bc9-da6e-40dd-9ccd-afa92547adc9" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#TestCase#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddPointCap" id="e2ee32ba-45f7-4ad2-92ec-acd88ce12324">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/roles/{rolecode}/pointcaps" methodName="AddPointCap" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddPointCap" id="b1712eb8-0a41-4a82-8271-8575c6e36e01" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "PointCap": 500,
+  "AdjustmentReasonCode": "${#TestCase#ProgramCode}W",
+  "RoleCodeDesc": "All Module Access",
+  "RoleCode": "FULLACCESS_ROLE",
+  "Status":"A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/roles/rolecode/pointcaps</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a4c5b1f8-3db0-44ab-889c-b20e204c8625" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="rolecode" value="FULLACCESS_ROLE"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>rolecode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddTier" id="8be16062-6a5e-44cc-9721-cc8a97d155ab">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/tiers" methodName="AddTier" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="4f6c044d-f055-46fe-9ca6-ffc0b7004bd8" mediaType="application/json" name="AddTier" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "TierCode": "${#TestCase#ProgramCode}D",
+  "TierName": "${Tiers#TierName}",
+  "TierDescription": "${Tiers#TierDescription}",
+  "VipInd": "${Tiers#VipInd}",
+  "Rank": "${Tiers#Rank}",
+  "RequalFlag": "${Tiers#RequalFlag}",
+  "MonthsValid": "${Tiers#MonthsValid}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/api/v1/referencedata/programs/tiers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="93bde86c-7479-4534-bed5-72f33d5689b1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddSourceCode" id="1c5424c0-8cf5-4cc4-8a30-334007402cb2">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sources" methodName="AddSource" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="f39d77f5-33cc-47b3-92ca-c3b4f4a26657" mediaType="application/json" name="AddSourceCode" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SourceCode": "${#TestCase#ProgramCode}_WEB",
+  "CodeTier": "${#TestCase#ProgramCode}D",
+  "SourceDescription": "Source Code Description",
+}</con:request>
+        <con:assertion type="Valid HTTP Status Codes" id="9e9844e8-7b41-4e13-8068-bcd1619d9c45" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddRewardCategory" id="8d4caaf6-b4bd-470d-94bf-16ea1a599cf3">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewardcategories" methodName="AddRewardCategory" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddRewardCategory" id="0afd0471-704c-4e6f-8202-60925e31fd4a" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+"ParentCategoryCode": "${RewardCategories#ParentCategoryCode}",  
+"CategoryCode": "${#TestCase#ProgramCode}CLOTH",  
+  "CategoryName": "${RewardCategories#CategoryName}",  
+  "CategoryDescription": "${RewardCategories#CategoryDescription}",  
+  "Status": "A"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewardcategories</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a6b6cc84-b2ad-4e37-aeff-ddd342e23b5e" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#TestCase#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProgramByCode 2" id="0ba0b7c3-3b09-4ae8-9aea-880805e48acf">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programs/{programCode}" methodName="GetProgramByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="8814a163-f7ab-4aed-b911-546712619285" mediaType="application/json" name="GetProgramByCode 2">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programs/ZEN</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="7389c319-3209-4e90-b544-6ec4b1eeb0d6" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="programCode" value="${#TestCase#ProgramCode}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#TestCase#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>programCode</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>ProgramCode</con:name>
+      <con:value>ZEN</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

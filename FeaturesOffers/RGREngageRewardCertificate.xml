@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="de7feb98-64d8-40f1-989b-566a2bfbce85" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGREngageRewardCertificate" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="de7feb98-64d8-40f1-989b-566a2bfbce85fileName">RGREngageRewardCertificate</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="GetPackagedOffers" id="2203369e-347c-49f8-96e9-5dd7716959f5">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4fdf3c31-c234-433c-bae4-26b9b2937b16</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="EarnCertGroovyScript" id="a4eaaf88-7a35-4a37-a630-e082c732918c">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def result = context.expand( '${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[?(@.PackagedOfferName==\'Earn a Certificate on a Transaction\')].PackagedOfferId[0]}' )</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="GetPackagedOfferById" id="80b8a6b3-f071-4b24-a493-37c4a87674cf">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>30aa904b-427d-4cec-a8b1-8470307527b4</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>offerId</con:name>
+          <con:value>${EarnCertGroovyScript#result}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

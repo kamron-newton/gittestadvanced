@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="66bcea10-f543-4ee1-a7bb-05f82845aef4" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGREnagageProductBonusOffer" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="66bcea10-f543-4ee1-a7bb-05f82845aef4fileName">RGREnagageProductBonusOffer</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="GetPackagedOffers" id="2d078300-698b-44e6-82a9-033fcd27c3da">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4fdf3c31-c234-433c-bae4-26b9b2937b16</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ProdBonGroovyScript" id="10717121-8719-494a-b501-4f3220d3f241">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def result = context.expand( '${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[?(@.PackagedOfferName==\'Product Bonus\')].PackagedOfferId[0]}' )</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPackagedOfferById" id="a2874f86-e435-4612-93bd-12d5889e488a">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/packagedoffer/param/{packagedOfferId}" methodName="GetPackagedOfferById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPackagedOfferById" id="9f48d3f0-af2a-4020-bf6f-df2391688096" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/packagedoffer/param/7d581289-7c77-6f47-e053-5ca8e70aa475</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5671b07e-459c-41f4-89a0-ed3f924aa408" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="1aff7093-2682-42b7-b6af-507d284f4863" name="RewardParamCodeAssert">
+          <con:configuration>
+            <path>$['PackagedOfferParams'][1]['ParamCode']</path>
+            <content>"POINTS_PER_ELIG_DOLLAR"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="35e7d72f-b72b-48ca-81ad-6905fe882b4c" name="ActParamCodeAssert">
+          <con:configuration>
+            <path>$['PackagedOfferParams'][0]['ParamCode']</path>
+            <content>"PRODUCT"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="a6e3462d-9aa4-467c-9ce6-be7ff90f4f41" name="OffLimParamCodeAssert">
+          <con:configuration>
+            <path>$['PackagedOfferParams'][2]['ParamCode']</path>
+            <content>"MAX_OFFERS_PER_MEMBER"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="124bd9d6-f520-4357-96bb-54e1d07f9266" name="ParamReqMsg">
+          <con:configuration>
+            <path>$['PackagedOfferParams'][0]['ParamRequiredMessage']</path>
+            <content>"Please select a product"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="252ff37c-30ee-4c0e-947e-820ffe20c7cf" name="OffLimMaxOffers">
+          <con:configuration>
+            <path>$['PackagedOfferParams'][2]['ParamCode']</path>
+            <content>"MAX_OFFERS_PER_MEMBER"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="bf1fc8ea-6990-4982-b6c6-534aa87491c2" name="OffLimMaxPoints">
+          <con:configuration>
+            <path>$['PackagedOfferParams'][3]['ParamCode']</path>
+            <content>"MAX_POINTS_PER_MEMBER"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value=" OAuth ${#Project#AuthToken} "/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="packagedOfferId" value="${ProdBonGroovyScript#result}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>packagedOfferId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

@@ -113,7 +113,7 @@
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
 
-def PkgAudiId = context.expand( '${#[OffersPrerequisite#GetPackagedAudiences#GetPackagedAudiences]#Response#$[?(@.AudienceCode==\'ACTIVE_MEMBERS\')].AudienceName[0]}' 
+def PkgAudiName= context.expand( '${#[OffersPrerequisite#GetPackagedAudiences#GetPackagedAudiences]#Response#$[?(@.AudienceCode==\'ACTIVE_MEMBERS\')].AudienceName[0]}' 
 )</script>
     </con:config>
   </con:testStep>
@@ -525,6 +525,7 @@ else   testRunner.gotoStepByName("UpsertMktingEventPkgdAudience")</script>
 	"IsOfferSimulationCompleted": "${MarketingEvent#IsOfferSimulationCompleted}",
 	"EmailScheduledDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+1)}"
 }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>
@@ -643,6 +644,22 @@ else   testRunner.gotoStepByName("UpsertMktingEventPkgdAudience")</script>
           </con:entry>
         </con:environmentSpec>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="MktingEvent" id="2e5d02d0-967c-4dab-b40c-51ee4e3ceb67">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>MarketingEvent</dataSourceStep>
+      <targetStep>CheckEventCodeStatus</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="MaktingEvnPkgdAudience" id="a1cf8acf-ef70-4609-b135-51cd995cbffb">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>MarketingEventPkgdAudience</dataSourceStep>
+      <targetStep>CheckEventCodeStatus</targetStep>
+      <discardResults>true</discardResults>
     </con:config>
   </con:testStep>
   <con:properties/>

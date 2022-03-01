@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="853c409d-407e-460b-a949-0f272721ff49" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGREngageTransPoint" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="853c409d-407e-460b-a949-0f272721ff49fileName">RGREngageTransPoint</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="GetPackagedOffers" id="181352a0-9ca9-4f9c-a71a-befb8e9dea37">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4fdf3c31-c234-433c-bae4-26b9b2937b16</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="EarnPtOnTransGroovyScript" id="b250fb99-45e9-4d19-95bd-877d06f11822">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def result = context.expand( '${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[?(@.PackagedOfferName==\'Earn Points on a Transaction\')].PackagedOfferId[0]}' )</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPackagedOfferById" id="11880b8f-6734-4e9b-9548-3e4a17743601">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/packagedoffer/param/{packagedOfferId}" methodName="GetPackagedOfferById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPackagedOfferById" id="9f48d3f0-af2a-4020-bf6f-df2391688096" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/packagedoffer/param/7d581289-7c77-6f47-e053-5ca8e70aa475</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5671b07e-459c-41f4-89a0-ed3f924aa408" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="1aff7093-2682-42b7-b6af-507d284f4863" name="ParamCodeAssert">
+          <con:configuration>
+            <path>$['PackagedOfferCode']</path>
+            <content>"EARN_POINTS_ON_TXN"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="c9ee1e9b-c0ef-4759-8d9e-4fa3ce78615e" name="PkgdOfferID">
+          <con:configuration>
+            <path>$['PackagedOfferId']</path>
+            <content>"327a3e11-59eb-4867-9711-dbf011421ae6"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value=" OAuth ${#Project#AuthToken} "/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="packagedOfferId" value="${EarnPtOnTransGroovyScript#result}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>packagedOfferId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

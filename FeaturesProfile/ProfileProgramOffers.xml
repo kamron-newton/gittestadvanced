@@ -703,111 +703,35 @@ if(basicProgramCode == fileProgramCode)
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetOffers" id="80961116-12f2-432f-a972-234dff7709a4">
+  <con:testStep type="calltestcase" name="GetOffers" id="9a814861-464d-4121-bd77-f1f845548b98">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers" methodName="Get Program Offers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetOffers" id="01b55446-a40a-4369-9fab-5cac544244cc" mediaType="application/json">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="cf076dcf-2b38-4294-945d-e0f75c63450c" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="pageNumber" value=";`"/>
-          <con:entry key="offerCode" value="${ProgramOffers#OfferCode}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Program-Code</con:entry>
-          <con:entry>offerCode</con:entry>
-          <con:entry>offerName</con:entry>
-          <con:entry>status</con:entry>
-          <con:entry>shortDescription</con:entry>
-          <con:entry>startDate</con:entry>
-          <con:entry>endDate</con:entry>
-          <con:entry>isCouponOffer</con:entry>
-          <con:entry>offerType</con:entry>
-          <con:entry>isDefaultOffer</con:entry>
-          <con:entry>customDataName</con:entry>
-          <con:entry>customDataValue</con:entry>
-          <con:entry>sortBy</con:entry>
-          <con:entry>numberPerPage</con:entry>
-          <con:entry>pageNumber</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>fe619a7d-f359-405a-8be8-fd4fe6050630</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>offerCode</con:name>
+          <con:value>${ProgramOffers#OfferCode}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>SysOfferId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AssociateOfferToProfile" id="f92fb816-048f-44f4-92c8-433f174c8cc8">
+  <con:testStep type="calltestcase" name="AddOfferToProfile" id="aa0e3313-44aa-43cf-a6ca-bcb89cf644db">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v2/profiles/sysoffers" methodName="Process Profile Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="AssociateOfferToProfile" id="0896945e-1d87-42cf-9d01-21a267eb9d20" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
-  "SysOfferId": "${GetOffers#Response#$[0]['SysOfferId']}",
-  "StartDate" : "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-1)}",
-  "EndDate" : "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+415)}",
-  "OptInDate" : "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
-  "RedemptionCodeReqInPurchase": ${ProfileOffer#RedemptionCodeReqInPurchase},
- 
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles/sysoffers</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="0366fde2-99af-4d56-933f-1d878d941634" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>201</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>Authorization</con:entry>
-          <con:entry>Program-Code</con:entry>
-          <con:entry>Accept-Language</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>c56889e0-4822-497f-a3b0-ddc0baf4a20c</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>{   "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",   "SysOfferId": "${#[ProfileOffers#GetSysOfferId#Get Offer Details]#Response#$[0]['SysOfferId']}",   "StartDate" : "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-1)}",   "EndDate" : "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+415)}",   "OptInDate" : "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",   "RedemptionCodeReqInPurchase": ${ProfileOffer#RedemptionCodeReqInPurchase},  }</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="datasourceloop" name="AddingOfferToProfile" id="da4396c9-643d-4f28-98a2-82d809235d30">

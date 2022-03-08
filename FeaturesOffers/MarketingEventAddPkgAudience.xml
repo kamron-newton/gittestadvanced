@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="8bb98cf7-4148-430f-8e7c-b72937033db5" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="MarketingEventUpdRetrive" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="feac4e1b-990e-4fe6-bf46-adc80ad92b38" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="MarketingEventAddPkgAudience" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="8bb98cf7-4148-430f-8e7c-b72937033db5fileName">MarketingEventUpdRetrive</con:setting>
+    <con:setting id="feac4e1b-990e-4fe6-bf46-adc80ad92b38fileName">MarketingEventAddPkgAudience</con:setting>
   </con:settings>
-  <con:testStep type="datasource" name="MarketingEventData" id="c02e637e-d795-42fd-91de-1677200f3a1e">
+  <con:testStep type="datasource" name="MarketingEventData" id="1a6754d0-2914-4158-84e9-e62c186aee71">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -62,7 +62,44 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetMarketingEventByCode" id="1f649651-d8cb-47aa-8402-7daf2afa4c07">
+  <con:testStep type="datasource" name="MarketingEventPkgdAudienceData" id="059e17b2-7551-4bc0-a0b7-6b2ca763fd94">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/MarketingEventPkgdAudience.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>EventName</con:property>
+      <con:property>EventCode</con:property>
+      <con:property>AudienceSource</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceName</con:property>
+      <con:property>AudienceDescription</con:property>
+      <con:property>PackagedOfferId</con:property>
+      <con:property>PackagedOfferCode</con:property>
+      <con:property>PackagedOfferName</con:property>
+      <con:property>PackagedOfferCode2</con:property>
+      <con:property>PackagedOfferName2</con:property>
+      <con:property>PackagedOfferCode3</con:property>
+      <con:property>PackagedOfferName3</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetMarketingEventByCode" id="33acc650-ef95-4d60-86a1-9a35b86be449">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" methodName="GetMarketingEventbyEventCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetMarketingEventByCode" id="471c557e-ad15-4e9a-a9f1-2d173dd4c5cf" mediaType="application/json">
@@ -88,7 +125,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="AddMarEventGroovyScript" id="8ea4bb05-d063-46ad-a634-d28bb1f71757">
+  <con:testStep type="groovy" name="AddMarEventGroovyScript" id="84bcef1c-6cff-4840-84cc-dca5f2da38fc">
     <con:settings/>
     <con:config>
       <script>def response = context.expand( '${GetMarketingEventByCode#Response#$[\'EventCode\']}' )
@@ -97,7 +134,7 @@ if (response == "" )  testRunner.gotoStepByName("ProcessMarketingEvent")
 else  testRunner.gotoStepByName("GetMarketingEventByCode 2")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEvent" id="d4b91988-fc43-4fd1-bcd6-057b97999262">
+  <con:testStep type="restrequest" name="ProcessMarketingEvent" id="8a41ef1b-10a5-4e94-aec0-4a3b595efbe9">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="ProcessMarketingEvent" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
@@ -308,7 +345,7 @@ else  testRunner.gotoStepByName("GetMarketingEventByCode 2")</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="GetMarketingEventByCode 2" id="31dfdc05-e804-4d50-9ae8-e0c4ead3ed1c">
+  <con:testStep type="calltestcase" name="GetMarketingEventByCode 2" id="e1012d70-9701-47cd-b463-2a4df14dd783">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>7d952f3f-279f-46d7-9686-d6d535cd4dfd</con:targetTestCase>
@@ -322,7 +359,7 @@ else  testRunner.gotoStepByName("GetMarketingEventByCode 2")</script>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="GetMarketingIdGroovyScript" id="dbfc1891-9d9a-4ef4-ae28-f47b101bd704">
+  <con:testStep type="groovy" name="GetMarketingIdGroovyScript" id="142ee581-8493-4add-aa63-5fd582cc37f7">
     <con:settings/>
     <con:config>
       <script>def response = context.expand( '${GetMarketingEventByCode#Response#$[\'EventCode\']}' )
@@ -338,7 +375,41 @@ else
 }</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEventUpdate" id="67f4fc4e-a1ab-4088-89a6-a22a37ab3f1d">
+  <con:testStep type="calltestcase" name="GetPackagedAudiences" id="f6fbc481-dd01-42fd-920e-f3287abc1c97">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>5d66f0aa-b082-45a3-bfb5-a7be1059712e</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="GetAudienceGroovyScript" id="421cad42-9bb7-43be-ba2d-996b29b0d1c3">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
+
+def response = context.expand( '${#[OffersPrerequisite#GetPackagedAudiences#GetPackagedAudiences]#Response#$[?(@.AudienceName==\'All Members\')].PackagedAudienceId[0]}' )</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="GetPackagedOffers" id="c7815298-1c4a-4ead-9f3d-0e76db7d6d20">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4fdf3c31-c234-433c-bae4-26b9b2937b16</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="GetOfferGroovyScript" id="7e8913f3-de2b-4122-a272-7412f3aa058c">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
+
+def response = context.expand( '${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[?(@.PackagedOfferName==\'Earn a Certificate on a Transaction\')].PackagedOfferId[0]}' )</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessMarketingEventUpdate" id="81409668-b66b-47b1-8392-8124c694913e">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="ProcessMarketingEventUpdate" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
@@ -365,6 +436,17 @@ else
      "PackagedOffer": {
 		"PackagedOfferId": "0625dcba-a576-48d6-9208-cec6f0be9235"
 	},
+	"PackagedAudience": {
+		"PackagedAudienceId": "${GetAudienceGroovyScript#result}",
+		"MarketingEventId": "${GetMarketingIdGroovyScript#result}",
+		"PackagedAudienceParam": []
+	},
+         "PackagedOffer": {
+         "PackagedOfferId": "${GetOfferGroovyScript#result}",
+		"MarketingEventId": "${GetMarketingIdGroovyScript#result}",
+          "PackagedOfferParams": []
+     },
+	"AudienceSource": "${MarketingEventPkgdAudienceData#AudienceSource}",
 	"ProgramCode": "${MarketingEventData#ProgramCode}",
 	"OnlineMessageCode": "${#TestCase#EventCode}",
 	"OnlineMessageBriefDescription": "${MarketingEventData#OnlineMessageBriefDescription}",
@@ -569,7 +651,7 @@ else
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetMarketingEventByEventCode" id="f21709ec-2601-4e1e-896c-581bc03c78dd">
+  <con:testStep type="restrequest" name="GetMarketingEventByEventCode" id="720b2802-ce67-47d7-8bc8-205081560016">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" methodName="GetMarketingEventbyEventCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetMarketingEventByEventCode" id="471c557e-ad15-4e9a-a9f1-2d173dd4c5cf" mediaType="application/json">
@@ -737,8 +819,8 @@ else
         </con:assertion>
         <con:assertion type="JsonPath Match" id="adaa964c-ef0a-4bab-983c-d4bbfa4169b3" name="UpdateAssert">
           <con:configuration>
-            <path>$['OnlineMessageDescription']</path>
-            <content>"MKT OnlineMessage Description 01"</content>
+            <path>$['PackagedAudience']['PackagedAudienceId']</path>
+            <content>"7ae1f987-515e-4669-e053-5ca8e70ad3ee"</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>

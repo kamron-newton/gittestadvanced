@@ -1,0 +1,2478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="9d4d2094-a458-4369-b33e-0466371b3c73" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ExecuteTransactionImport" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="9d4d2094-a458-4369-b33e-0466371b3c73fileName">ExecuteTransactionImport</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="calltestcase" name="RunEnableBatchS3DefaultSetting" id="b40a157b-0bbd-4d99-aacb-1631caa7ba8e">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>691913d9-d56f-409d-bc92-80cc04799067</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>BatchS3DefaultSettingId</con:name>
+          <con:value>712a1b34-9c52-db49-8034-6010ab6fe88e</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>BatchS3DefaultSettingId</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunExecuteBatchWorkFlowforTransactionImport" id="72e6f0a4-d5fa-4f72-ac20-1b6a61692bc2">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>493c35b3-7a9e-4c79-a0c4-3423fbf93331</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>DataHubProcessDefinitionKey</con:name>
+          <con:value>Automation_Transaction_Import</con:value>
+        </con:property>
+        <con:property>
+          <con:name>DataHubProcessId</con:name>
+          <con:value>737e4245-a0bd-11ec-8b43-028e85891005</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>DataHubProcessId</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetScriptDefaultContent" id="125ac6f8-4d52-473c-9b2c-682a1c3ddffc">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/defaultcontent" methodName="Get Default Content" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetScriptDefaultContent" id="56c8e44c-c91e-4648-b535-a4187cbec73a" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/defaultcontent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b757a871-ebe2-4cf2-ac9f-da48a24684ba" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptName" value="${#TestCase#ScriptName}"/>
+          <con:entry key="Environment" value="PRODUCTION"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>fusionWebApiId</con:entry>
+          <con:entry>scriptName</con:entry>
+          <con:entry>prePostEvent</con:entry>
+          <con:entry>version</con:entry>
+          <con:entry>Environment</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferScriptIDFromGetScriptContent" id="c74f50b6-a5ac-45b0-82b5-72714320ceea">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>TransferScriptId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetScriptDefaultContent</con:sourceStep>
+        <con:sourcePath>$['ScriptId']</con:sourcePath>
+        <con:targetType>ScriptId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="ConditionalUpdateOrAdd" id="a191bd65-4664-4365-9a46-7c3cf7cd6a3a">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>VerifyScriptId</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>exists(//*:Response/*:ScriptId)</con:expression>
+        <con:targetStep>UpdateScript</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddScript" id="42a0013f-27ae-44e5-a70b-3a55c2128af1">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts" methodName="Add Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddScript" id="fb7ff48c-d0bf-4b4e-b695-4721c097882f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{  
+   "IsStandalone":true,
+   "IsPlaceholder":false,
+   "ScriptName": "${#TestCase#ScriptName}", 
+   "Content":"try%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Epsilon.Fusion.Models.Batch.BatchJobModel%20model%20%3D%20JsonConvert.DeserializeObject%3CEpsilon.Fusion.Models.Batch.BatchJobModel%3E(input.ToString())%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(model.JsonExternalData%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dynamic%20xmlJson%20%3D%20verb.AccessExternalData(model)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(xmlJson%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.WriteFile(xmlJson.FileName.ToString()%2C%20JsonConvert.DeserializeObject%3Cdynamic%3E(xmlJson.FileContent.ToString())%2C%20xmlJson.FileLocation.ToString()%2C%20useHeaders%3A%20(bool)xmlJson.UseHeader)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2Fupdate%20Json%20to%20null%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20DbParameterCollection%20parameters%20%3D%20new%20DbParameterCollection()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20parameters.Add(new%20DbParameter(%22BatchJobId%22%2C%20model.BatchJobId%2C%20DbType.Guid))%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.BeginDatabaseTransaction()%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20string%20sql%20%3D%20string.Format(%22UPDATE%20T_SYS_JOB%20SET%20JSON_EXTERNAL_DATA%20%3D%20null%20WHERE%20SYS_JOB_ID%20%3D%20%3ABatchJobId%22)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.ModifyDatabase(sql%2C%20parameters)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.CommitDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20catch%20(Exception%20ex)%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.RollbackDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20throw%20new%20Exception(ex.Message)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D"},
+   "Version":""
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="1108c1fc-c756-40cf-bcca-b60f5951cf72" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertyFromAddScript" id="792f26b2-3c7a-4e0d-b52c-b0a8353dc8e5">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>TransferScriptId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>AddScript</con:sourceStep>
+        <con:sourcePath>$['ScriptId']</con:sourcePath>
+        <con:targetType>ScriptId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateScript" id="ebf694d8-7517-4bea-be0b-f26acfaf0beb">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptId}" methodName="Update Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateScript" id="9e8e04e4-a1f1-43f0-bdfe-9bdabc1de796" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{  
+"Content":"try%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Epsilon.Fusion.Models.Batch.BatchJobModel%20model%20%3D%20JsonConvert.DeserializeObject%3CEpsilon.Fusion.Models.Batch.BatchJobModel%3E(input.ToString())%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(model.JsonExternalData%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dynamic%20xmlJson%20%3D%20verb.AccessExternalData(model)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(xmlJson%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.WriteFile(xmlJson.FileName.ToString()%2C%20JsonConvert.DeserializeObject%3Cdynamic%3E(xmlJson.FileContent.ToString())%2C%20xmlJson.FileLocation.ToString()%2C%20useHeaders%3A%20(bool)xmlJson.UseHeader)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2Fupdate%20Json%20to%20null%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20DbParameterCollection%20parameters%20%3D%20new%20DbParameterCollection()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20parameters.Add(new%20DbParameter(%22BatchJobId%22%2C%20model.BatchJobId%2C%20DbType.Guid))%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.BeginDatabaseTransaction()%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20string%20sql%20%3D%20string.Format(%22UPDATE%20T_SYS_JOB%20SET%20JSON_EXTERNAL_DATA%20%3D%20null%20WHERE%20SYS_JOB_ID%20%3D%20%3ABatchJobId%22)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.ModifyDatabase(sql%2C%20parameters)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.CommitDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20catch%20(Exception%20ex)%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.RollbackDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20throw%20new%20Exception(ex.Message)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D"}
+
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/4e85cbeb-124a-46b2-aa42-33475ea3eba5</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="6f5b04b2-5e8e-4dfd-b0a5-8a9ac6b5a735" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptId" value="${#TestCase#ScriptId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>scriptId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertyScriptIdFromUpdateScript" id="f679cebf-4686-417f-9222-9d05f411c4c5">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>ScriptID</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>UpdateScript</con:sourceStep>
+        <con:sourcePath>$['ScriptId']</con:sourcePath>
+        <con:targetType>ScriptId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="DeployScriptbyScriptId" id="f65369ca-b58c-4af1-a84d-efbaea4c6765">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptId}/deploy" methodName="Deploy Script by Script Id" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="DeployScriptbyScriptId" id="601ddb8f-c563-453f-a034-55f59a364a6d" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/16428f93-4c0b-4bc6-be64-ec97bd4b59b5/deploy</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="afa8f055-3390-4fd6-a40e-d2af9188174b" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptId" value="${#TestCase#ScriptId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>scriptId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ReloadScripts" id="7407e44e-fc3c-430c-b6db-2a869332ec03">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/reload" methodName="Reload Scripts" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ReloadScripts" id="20103559-4d5a-49a1-bb29-ef55cb6e2ddf" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/reload</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="e5f1f48e-aae1-4863-b83f-de6785e84e14" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>204</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reloadAllServers" value="true"/>
+          <con:entry key="compile" value="true"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>compile</con:entry>
+          <con:entry>reloadAllServers</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunProcessProfile" id="0d37cd38-f95b-4fc7-8efc-adf72a50e6c2">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>d8179148-a879-432d-b162-61c959eeada8</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileById" id="6a3281ac-fd34-475b-a96e-bea01accbd7b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}" methodName="GetProfileByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="caa82c6c-fb0c-4527-9a62-8abf1c42fa9d" mediaType="application/json" name="GetProfileById">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f28748e7-6e81-4a9e-ab7b-6313884112c7" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${RunProcessProfile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="TransactionLayoutDataSource" id="e6c4a18a-66b4-44df-989d-bf02019bf39d">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>1</generatedDataCount>
+          <generatorsTotalNumber>4</generatorsTotalNumber>
+          <lastSelectedProperty>3</lastSelectedProperty>
+          <GeneratorType0>GUID</GeneratorType0>
+          <PropertyName0>JobName</PropertyName0>
+          <repetitionCountJobName>0</repetitionCountJobName>
+          <repeatValuesJobName>false</repeatValuesJobName>
+          <GeneratorType1>GUID</GeneratorType1>
+          <PropertyName1>FileName</PropertyName1>
+          <repetitionCountFileName>0</repetitionCountFileName>
+          <repeatValuesFileName>false</repeatValuesFileName>
+          <GeneratorType2>GUID</GeneratorType2>
+          <PropertyName2>PostingKeyValue</PropertyName2>
+          <repetitionCountPostingKeyValue>0</repetitionCountPostingKeyValue>
+          <repeatValuesPostingKeyValue>false</repeatValuesPostingKeyValue>
+          <GeneratorType3>INT</GeneratorType3>
+          <PropertyName3>StoreCode</PropertyName3>
+          <repetitionCountStoreCode>0</repetitionCountStoreCode>
+          <repeatValuesStoreCode>false</repeatValuesStoreCode>
+          <IntegerDataGeneratorMinValueStoreCode>1000</IntegerDataGeneratorMinValueStoreCode>
+          <IntegerDataGeneratorMaxValueStoreCode>100000</IntegerDataGeneratorMaxValueStoreCode>
+          <IntegerDataGeneratorStepValueStoreCode>0</IntegerDataGeneratorStepValueStoreCode>
+          <IntegerDataGeneratorConsequentValuesStoreCode>false</IntegerDataGeneratorConsequentValuesStoreCode>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>JobName</con:property>
+      <con:property>FileName</con:property>
+      <con:property>PostingKeyValue</con:property>
+      <con:property>StoreCode</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertiesToProfileLayout" id="5048b5a4-fcfb-4263-bc8f-1914e7605196">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>ProfileId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['ProfileId']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>FirstName</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['FirstName']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceFirstName</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['SourceFirstName']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>LastName</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['LastName']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceLastName</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['SourceLastName']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>GlobalOptOut</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['GlobalOptOut']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>LanguageCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['LanguageCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>MaritalStatus</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['MaritalStatus']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>Gender</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Gender']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceGender</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['SourceGender']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>BirthDate</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['BirthDate']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>CompanyName</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['CompanyName']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>ProgramCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['ProgramCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['SourceCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>EnrollmentStatus</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['EnrollmentStatus']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>JoinDate</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['JoinDate']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>EnrollChannelCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['EnrollChannelCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>TierCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['TierCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>CardNumber</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['CardNumber']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>Status</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Status']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>TermsConditionsAcceptedInd</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['TermsConditionsAcceptedInd']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>AccountSourceCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['AccountSourceCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceAccountNumber</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['SourceAccountNumber']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>BrandOrgCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['BrandOrgCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>OrigActivityDate</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['OrigActivityDate']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>test</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:targetType>RecordType</con:targetType>
+        <con:targetStep>TransactionLayoutProperties</con:targetStep>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertiesToAddressLayout" id="fda4100f-cadc-49b4-87e1-7f1fa9f3ce18">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>AddressId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['AddressId']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceAddressLine1</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['SourceAddressLine1']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>AddressLine1</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['AddressLine1']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:targetTransferType>JSONPATH</con:targetTransferType>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>AddressLine2</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['AddressLine2']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceAddressLine2</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['SourceAddressLine2']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>City</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['City']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceCity</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['SourceCity']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>StateCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['StateCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceStateCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['SourceStateCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>CountryCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['CountryCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceCountryCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['SourceCountryCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>PostalCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['PostalCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourcePostalCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['SourcePostalCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>ChannelCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['ChannelCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>LocationCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['LocationCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>IsPreferred</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['IsPreferred']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>DoNotStandardize</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['DoNotStandardize']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>AccountSourceCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['AccountSourceCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceAccountNumber</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['SourceAccountNumber']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>BrandOrgCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['BrandOrgCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>Status</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Addresses'][0]['Status']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertiesToEmailLayout" id="0daeedc5-fecf-4d1a-960c-59180346bf28">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>EmailId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Emails'][0]['EmailId']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>EmailAddress</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Emails'][0]['EmailAddress']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceEmailAddress</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Emails'][0]['SourceEmailAddress']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>ChannelCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Emails'][0]['ChannelCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>LocationCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Emails'][0]['LocationCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>IsPreferred</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Emails'][0]['IsPreferred']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>DeliveryStatus</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Emails'][0]['DeliveryStatus']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>AccountSourceCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Emails'][0]['AccountSourceCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceAccountNumber</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Emails'][0]['SourceAccountNumber']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>BrandOrgCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Emails'][0]['BrandOrgCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertiesToPhoneLayout" id="ac9e9b1d-7ed7-4a00-aeb4-49ba2437e2d2">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>PhoneId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['PhoneId']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>PhoneNumber</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['PhoneNumber']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourcePhoneNumber</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['SourcePhoneNumber']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>PhoneCountryCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['PhoneCountryCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>AcceptsText</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['AcceptsText']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>Frequency</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['Frequency']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>ChannelCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['ChannelCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>LocationCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['LocationCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>IsPreferred</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['IsPreferred']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>DeliveryStatus</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['DeliveryStatus']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>AccountSourceCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['AccountSourceCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>SourceAccountNumber</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['SourceAccountNumber']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>BrandOrgCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['BrandOrgCode']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true">
+        <con:name>Status</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProfileById</con:sourceStep>
+        <con:sourcePath>$['Phones'][0]['Status']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep xsi:nil="true"/>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="properties" name="TransactionLayoutProperties" id="a6071490-f95e-40a1-872d-cd7d1b34c1e4">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:source>../Users/scheera/OneDrive - Publicis Groupe/Desktop/TransactionLayoutProperties.txt</con:source>
+      <con:properties>
+        <con:property>
+          <con:name>RecordType</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CardNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionTypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDescription</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDateTime</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionEndDateTime</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionNetTotal</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionEligible</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionTotalTax</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>PostSalesAdjustment</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ShippingAndHandlingAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>RecordStatus</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>DeviceId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>DeviceUserid</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>AuthorizationCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>OriginalTransactionNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SkipMomentEngine</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CurrencyCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>AccountSourceCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SourceAccountNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ActivityDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientFileId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientRecordNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BrandOrgCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>AssociateNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>GrossAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>NetAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyGrossAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionSequenceNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionSourceCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionSubtypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Tier</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>StoreCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>NotUsed1</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ExchangeRate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Gratuity</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SourceCustomerId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>DiscountAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionChannelCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionBusinessDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>PromoCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BuyerTypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>RmbMethodCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>RmbVendorCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>RmbDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>NotUsed</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyTransactionTotal</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyTransactionTotalTax</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyPostSalesAdjustment</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyShippingAndHandling</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyEligibleRevenue</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyGratuity</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionQualifierCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>OriginalStoreCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>OriginalTransactionDateTime</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>OriginalTransactionEndDateTime</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SuspendReasonCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SuspendTransaction</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>JsonExternalData</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>PostingKeyCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>PostingKeyValue</con:name>
+          <con:value/>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="properties" name="TransactionDetailLayoutProperties" id="b808b1c3-d958-4bde-b9db-e7b51bce54ca">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:source>../Users/scheera/OneDrive - Publicis Groupe/Desktop/TransactionDetail.txt</con:source>
+      <con:properties>
+        <con:property>
+          <con:name>RecordType</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>LineNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ItemNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ItemNumberTypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>LineItemAmountTypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Quantity</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>DollarValueNet</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>DollarValueGross</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>EligibleRevenue</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TaxAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>OriginalTransactionNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ActivityDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BrandOrgCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientFileId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientRecordNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>DiscountAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ExchangeRate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>NotUsed</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ShippingAndHandlingAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TaxRate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionSourceCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>AllocatedBasePoints</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>AllocatedBonusPoints</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>AllocatedRedeemedPoints</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Uom</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ShipQuantity</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ShipUom</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Sku</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SkuOption1</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SkuOption3</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SkuOption2</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BackOrderQuantity</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SurchargeAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CurrencyCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>FullfillStoreCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDateTime</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>FirstShipDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>LastShipDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ItemFulfillmentTypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ListPrice</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>OfferPrice</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SoldPrice</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Cogs</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ExtendedOffer</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ItemStatusCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BackOrderDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BackOrderExpectedFulfillmentDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BackOrderActualFulfillmentDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ItemGiftFlag</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>GwpFlag</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>MarkDownFlag</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ReturnDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ReturnReasonCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CancelDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CancelReasonCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>GiftWrapFlag</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SurchargeReasonCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>NotUsed1</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyDollarValueNet</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyDollarValueGross</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyTaxAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyEligibleRevenue</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ShipProfileId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>RecordStatus</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ItemTransactionTypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>OriginalStoreCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>OriginalTransactionDateTime</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>OriginalTransactionEndDateTime</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>JsonExternalData</con:name>
+          <con:value/>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="properties" name="TransactionCertLayoutProperties" id="2fdd0d3a-bb3e-4142-93b6-e36015239ad0">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:source>../Users/scheera/OneDrive - Publicis Groupe/Desktop/TransactionCert.txt</con:source>
+      <con:properties>
+        <con:property>
+          <con:name>RecordType</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CertificateNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>RecordStatus</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ActivityDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientFileId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientRecordNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BrandOrgCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionSourceCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>JsonExternalData</con:name>
+          <con:value/>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="properties" name="TransactionCouponLayoutProperties" id="a71b287a-9ce8-4dce-8e25-309df250e9d4">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:source>../Users/scheera/OneDrive - Publicis Groupe/Desktop/TransactionCoupon.txt</con:source>
+      <con:properties>
+        <con:property>
+          <con:name>RecordType</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CouponNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CouponAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>RecordStatus</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ActivityDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientFileId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientRecordNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyCouponAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BrandOrgCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CurrencyCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>DiscountSubTypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ExchangeRate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>LineNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionSourceCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>AdjustmentDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>AdjustmentAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Barcode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>DiscountSequence</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>JsonExternalData</con:name>
+          <con:value/>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="properties" name="TransactionTenderLayoutProperties" id="c6cffec8-3ffa-4535-a140-b899fc7e73bf">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:source>../Users/scheera/OneDrive - Publicis Groupe/Desktop/TransactionTender.txt</con:source>
+      <con:properties>
+        <con:property>
+          <con:name>RecordType</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TenderCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TenderAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>RecordStatus</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ActivityDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BrandOrgCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientFileId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientRecordNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>CurrencyCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ExchangeRate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SurrogateNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SurrogateSwipeZip</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TenderSequenceNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TenderSubTypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionSourceCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SurrogateSwipeFirstName</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SurrogateSwipeLastName</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDateTime</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TenderDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>SubtypeCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCurrencyTenderAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>JsonExternalData</con:name>
+          <con:value/>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="properties" name="TransactionInvoiceLayoutProperties" id="2b56fe94-0719-485b-b4b4-3625ed3fe621">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:source>../Users/scheera/OneDrive - Publicis Groupe/Desktop/TransactionInvoice.txt</con:source>
+      <con:properties>
+        <con:property>
+          <con:name>RecordType</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>InvoiceNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>InvoiceAmount</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>InvoiceQuantity</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>InvoiceDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>InvoiceStatus</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>BrandOrgCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ActivityDate</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>Status</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>TransactionSourceCode</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientFileId</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ClientRecordNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>LineNumber</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>JsonExternalData</con:name>
+          <con:value/>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="CreateTransactionImportFile" id="58d0d606-bb9d-4fdb-98ee-6ca295f5ecb8">
+    <con:settings/>
+    <con:config>
+      <script>import groovy.json.JsonGenerator
+import groovy.json.JsonGenerator.Converter
+
+def txLayoutList = testRunner.testCase.getTestSteps().TransactionLayoutProperties.getPropertyList();
+def txDetailLayoutList = testRunner.testCase.getTestSteps().TransactionDetailLayoutProperties.getPropertyList();
+def txCertLayoutList = testRunner.testCase.getTestSteps().TransactionCertLayoutProperties.getPropertyList();
+def txCouponLayoutList = testRunner.testCase.getTestSteps().TransactionCouponLayoutProperties.getPropertyList();
+def txTenderLayoutList = testRunner.testCase.getTestSteps().TransactionTenderLayoutProperties.getPropertyList();
+def txInvoiceLayoutList = testRunner.testCase.getTestSteps().TransactionInvoiceLayoutProperties.getPropertyList();  
+
+def parseCollection(propertyList){  	
+	def mapClass = [:]
+
+	def RecordNumber = 00;
+	
+	for( item in propertyList)
+	{
+		if( item.value == null  ){
+			 item.value= '';
+		}
+		if(item.name == 'RecordNumber')
+		{
+			RecordNumber =  item.value;
+		}
+		if (item.name == 'InteractionId')
+		{
+			 item.value = '0000';
+		}
+		if(item.name == 'UpdateFileId'){
+			item.value = '1110';
+		}
+		if(item.name == 'UpdateRecordNumber'){
+			item.value = '2220';
+		}
+		def activityDate = context.expand( '${#TestCase#ActivityDate}' )
+
+		if (activityDate  == 'True' &amp;&amp; item.name == 'ActivityDate')
+		{
+			 item.value =new Date().format('yyyy-MM-dd HH:mm:ss.SSS', TimeZone.getTimeZone('UTC'));
+		}
+		else if (activityDate  == 'False' &amp;&amp; item.name == 'ActivityDate')
+		{
+			 item.value = '';
+		}		
+		
+	    mapClass[item.name] = item.value;	  
+	}	
+	return mapClass;
+}
+
+
+def jsonDefaultOutput = new JsonGenerator.Options()
+.dateFormat('MM-dd-yyyy')
+.build(); 
+
+def transactionString = parseCollection(txLayoutList);
+def txDetailString = parseCollection(txDetailLayoutList);
+def txCertString = parseCollection(txCertLayoutList);
+def txCouponString = parseCollection(txCouponLayoutList);
+def txTenderString =parseCollection(txTenderLayoutList);
+def txInvoiceString =parseCollection(txInvoiceLayoutList);
+
+def s3Bucket = context.expand( '${#Project#S3Bucket}' );
+def todayDate = new Date().format( 'MM-dd-yyyy' );
+def jobName = context.expand( '${TransactionLayoutDataSource#JobName}' );
+def programCode = context.expand( '${#Project#ProgramCode}' )
+def fileContent =  [transactionString , txDetailString , txCertString , txCouponString , txTenderString , txInvoiceString  ];
+def scriptName = context.expand( '${#TestCase#ScriptName}' );
+
+def jsonExternalDataMap = [:]
+def dataHubProcessId = context.expand( '${RunExecuteBatchWorkFlowforTransactionImport#DataHubProcessId}' );
+def fileName = 'TransactionImport' + dataHubProcessId  + '.txt';
+jsonExternalDataMap["FileName"]  = fileName;
+jsonExternalDataMap["FileLocation"]  = "s3://" + s3Bucket + "/automation/ProcessTransactionInput";
+jsonExternalDataMap["FileContent"] = fileContent;
+jsonExternalDataMap["UseHeader"] = 'false';
+
+def batchInputJsonMap = [:];
+batchInputJsonMap["JobName"] = 'InvokeScript_' + jobName;
+batchInputJsonMap["FileName"] = fileName;
+batchInputJsonMap["FileInputLocation"] = "s3://" + s3Bucket + "/automation/" + todayDate + "/Input";
+batchInputJsonMap["FileOutputLocation"] = "s3://" + s3Bucket + "/automation/" + todayDate + "/Output";
+batchInputJsonMap["EmailAddresses"]= "";
+batchInputJsonMap["JobTypeId"]= "4923d185-0c86-4c15-9356-67597ab70526";
+batchInputJsonMap["JobType"]= "";
+batchInputJsonMap["ProgramCode"]= programCode;
+batchInputJsonMap["DataOutputType"]= "FULL";
+batchInputJsonMap["MaxThreads"]= 50;
+
+batchInputJsonMap["ScriptName"] =  scriptName;
+batchInputJsonMap["JsonExternalData"]= jsonExternalDataMap;
+batchInputJsonMap["AdditionalRunData"]= "";
+
+def batchInputJson = jsonDefaultOutput.toJson(batchInputJsonMap);
+
+return batchInputJson;</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="CreateBatchJob" id="9035fb86-46b2-4a6e-bb9d-3aa82bf6951c">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/batch/jobs" methodName="Create Batch Job" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="CreateBatchJob" id="0121f0fe-0b53-489c-8475-2dee938e777f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>${CreateTransactionImportFile#result}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/batch/jobs</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="5cdf49cf-a90d-4647-8cd4-0e391fd5e772" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="IfBatchJobIdDoesNotExist" id="b1f27eaa-87fd-4e5a-aa31-00b992d57f90">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>BatchJobId</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>!exists(//*:Response[1]/*:BatchJobId)</con:expression>
+        <con:targetStep>S3ProgramRest</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferSysBatchJobIdAndDatahubProcessId" id="a7c48cb0-342f-4124-9796-a0d10a94523a">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" entitize="false" transferToAll="false" ignoreEmpty="false" transferChildNodes="false">
+        <con:name>BatchJobId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>CreateBatchJob</con:sourceStep>
+        <con:sourcePath>$['BatchJobId']</con:sourcePath>
+        <con:targetType>SysJobID</con:targetType>
+        <con:targetStep>RunBatchJobStatusValidation</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>DatahubWorkflowProcessId</con:name>
+        <con:sourceType>DataHubProcessId</con:sourceType>
+        <con:sourceStep>RunExecuteBatchWorkFlowforTransactionImport</con:sourceStep>
+        <con:targetType>DatahubProcessId</con:targetType>
+        <con:targetStep>RunDatahubWorkflowValidation</con:targetStep>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunBatchJobStatusValidation" id="9ca8d9f5-aa36-46af-b72a-655b7bd9ef47">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>a2770463-9651-4187-96b0-e0f5fb77f889</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>SysJobID</con:name>
+          <con:value>a0b7ce9a-2ce0-4f27-bfce-4b94b017c628</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="S3ProgramRest" id="db110bec-2645-4b13-b07b-3decb3cda379">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateDefaultSetting" resourcePath="/api/v1/referencedata/programs/defaultsettings/{defaultSettingId}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="S3ProgramRest" id="02982e52-8357-4991-a1c4-561796f8ba25" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+    "ParameterName":  "BATCH_S3_ENABLED",
+    "ParameterValue":  "Y"
+ }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/defaultsettings/</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="8d5e1985-d834-4546-99d1-23f6a5a65ae2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="defaultSettingId" value="${RunEnableBatchS3DefaultSetting#BatchS3DefaultSettingId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="content" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="SendDatahubWorkflowResumeMessage" id="35b49760-2167-4170-9214-90c3f5bb951e">
+    <con:settings/>
+    <con:config service="DatahubAPIs" resourcePath="/orchestration/v1/process-instance/resume" methodName="ResumeWorkFlow" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="SendDatahubWorkflowResumeMessage" id="fbab81a6-bfc0-4489-b4d8-80bf4a5ab419" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "messageName": "Message_Resume",
+  "processInstanceIds": [
+    "${RunExecuteBatchWorkFlowforTransactionImport#DataHubProcessId}"
+  ]
+}</con:request>
+        <con:originalUri>https://u-acpapi.datahub.epsilon.com/orchestration/v1/process-instance/resume</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="2c8d8994-2b8b-4f33-8e23-1e59af96eb13" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Bearer ${#Project#Datahub Orchestration Token}"/>
+          <con:entry key="X-ADH-Tenant-Code" value="${#Project#Tenant}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+          <con:entry key="accept" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>X-ADH-Tenant-Code</con:entry>
+          <con:entry>accept</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="RunDatahubWorkflowValidation" id="10a9a686-9e0a-4d0b-8538-1f1329d76a6e">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>281bbad6-502b-44e0-b592-5707e4881889</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>DatahubProcessId</con:name>
+          <con:value>af4860d0-9fd1-11ec-b190-1235580c8ebb</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:setupScript/>
+  <con:properties>
+    <con:property userSpecific="true">
+      <con:name>ScriptId</con:name>
+      <con:value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>ScriptName</con:name>
+      <con:value>GenerateFileContentInS3</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>ActivityDate</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>EnablePostingKey</con:name>
+      <con:value>false</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>e41840c3-1c0c-468a-abf6-13d3f8a8c175</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>951f41d7-fc8c-4aa2-a69a-ed602bd18c1a</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>9955df26-c719-458d-84c0-55e3d4a30090</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>9e5318c5-81c7-4cc4-a194-d6d245b365df</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>163f9d39-ef3d-4e9d-9c14-e667d6e3fcfc</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>9672be87-dbca-4018-9005-b71cd765e4a3</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f122cc6f-3fbb-4b97-aa47-12b2ad47c0b6</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>18fcd37b-7755-454e-bcf7-b7b95cd16e7e</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>219fdad1-5e13-4953-8ebc-9eb65afb069d</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>1ffe8112-1ebd-4bec-a7bf-6f606e8a7d23</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>18c3f6e8-e222-4931-ba0f-884b784e7fa7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e4ae8e13-5f82-4617-a0d2-93239583fef5</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2a767463-d28c-487e-ab56-1767b6d13352</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>365b24a5-012e-429a-97a2-297721c55358</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>8d358366-c259-46e8-8fda-0539fe3c685c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>b9f0c661-3ecd-4ae6-8a38-ba25766d61e4</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+</con:testCase>

@@ -427,18 +427,14 @@ if (CustomDataLinkId=="" || CustomDataLinkId == null )
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
 
-def response = context.expand( '${GetCustomDataLinks#Response}' )
-def CustomDataLinkId
-
-if(response==null || response =="")
+def CustomDataLinkId = context.expand( '${GetCustomDataLinks#Response#$[0][\'CustomDataLinkId\']}' )
+if (CustomDataLinkId=="" || CustomDataLinkId == null )
  {
-    CustomDataLinkId = context.expand( '${AddCustomDataLink#Response#$[0][\'CustomDataLinkId\']}' )
-    return CustomDataLinkId
+   CustomDataLinkId = context.expand( '${AddCustomDataLink#Response#$[\'CustomDataLinkId\']}' )
+   return CustomDataLinkId
  } 	
-
  else
- {
-    CustomDataLinkId = context.expand( '${GetCustomDataLinks#Response#$[0][\'CustomDataLinkId\']}' )
+ {	
     return CustomDataLinkId
  }</script>
     </con:config>

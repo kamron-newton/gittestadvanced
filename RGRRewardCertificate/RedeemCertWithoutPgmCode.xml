@@ -1,32 +1,265 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="e2cbaa3c-29d1-4464-9397-078fbf062a00" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RedeemProfileRewardCertificate" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="8190b1ed-edfd-4673-ab49-3983bf9ac183" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RedeemCertWithoutPgmCode" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="e2cbaa3c-29d1-4464-9397-078fbf062a00fileName">RedeemProfileRewardCertificate</con:setting>
+    <con:setting id="8190b1ed-edfd-4673-ab49-3983bf9ac183fileName">RedeemCertWithoutPgmCode</con:setting>
   </con:settings>
-  <con:testStep type="calltestcase" name="EnableOrDisableProgramSetting" id="6e0bc037-2993-46c4-bf31-b0cb7ccb4628">
+  <con:testStep type="datasource" name="RewardRedemptionDateTypes" id="984a85ac-a805-44a0-b01b-4da883a4a32a">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>58358ab6-63cb-4437-8821-6fda8375ad78</con:targetTestCase>
-      <con:properties/>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/RewardRedemptionDateTypes.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ï»¿Attributes</con:property>
+      <con:property>PointTypeCode</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>RewardCode</con:property>
+      <con:property>CategoryCode</con:property>
+      <con:property>StartDate</con:property>
+      <con:property>EndDate</con:property>
+      <con:property>RewardType</con:property>
+      <con:property>RewardUsage</con:property>
+      <con:property>Title</con:property>
+      <con:property>Description</con:property>
+      <con:property>Manufacturer</con:property>
+      <con:property>ProgramCost</con:property>
+      <con:property>RetailPrice</con:property>
+      <con:property>FixedPoints</con:property>
+      <con:property>ShippingInfoRequired</con:property>
+      <con:property>DisplayInCatalog</con:property>
+      <con:property>RetailPricePerPoint</con:property>
+      <con:property>CertificateInd</con:property>
+      <con:property>IssueDateBasedRTC</con:property>
+      <con:property>DaysValid</con:property>
+      <con:property>FixedDateRangeRTC</con:property>
+      <con:property>RedemptionStartDate</con:property>
+      <con:property>RedemptionEndDate</con:property>
+      <con:property>FlexibleDateRangeRTC</con:property>
+      <con:property>DaysFlexibleDaysValid</con:property>
+      <con:property>DaysFlexibleDaysRedemptionStarts</con:property>
+      <con:property>RewardUsageTypeId</con:property>
+      <con:property>RewardUsageTypeIdVarpoint</con:property>
+      <con:property>MinValue</con:property>
+      <con:property>MaxValue</con:property>
+      <con:property>BurnRatioCurrencyValue</con:property>
+      <con:property>BurnRatioPointValue</con:property>
+      <con:property>RewardUsageTypeIdVarcurrency</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddFixedPointRewCert" id="1d3b17ad-8a5b-4fb8-aab2-9f46a2a8d228">
+  <con:testStep type="calltestcase" name="AddRewardCert" id="2f42c27d-fea2-4fe8-8194-954b680fa32c">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>de335a0a-388a-4cc9-81ef-5594cac5524e</con:targetTestCase>
+      <con:targetTestCase>8028090a-f76a-4729-aa39-c4ce71d5e0e4</con:targetTestCase>
       <con:properties>
         <con:property>
-          <con:name>rewardCode</con:name>
-          <con:value>RDCERTREDEMPTN12</con:value>
+          <con:name>Body</con:name>
+          <con:value>{      "RewardCode":"REW_${=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date())}",      "StartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date() - 1)}",     "EndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd").format(new Date() + 30)}",      "RewardType": "${RewardRedemptionDateTypes#RewardType}",      "PointTypeCode": "${RewardRedemptionDateTypes#PointTypeCode}",      "RewardUsageTypeId": "${RewardRedemptionDateTypes#RewardUsageTypeId}",      "Description": "${RewardRedemptionDateTypes#Description}",     "Title": "${RewardRedemptionDateTypes#Title}",     "Manufacturer": "${RewardRedemptionDateTypes#Manufacturer}",     "RetailPrice": "${RewardRedemptionDateTypes#RetailPrice}" ,     "ProgramCost": "${RewardRedemptionDateTypes#ProgramCost}",     "CategoryCode": "${RewardRedemptionDateTypes#CategoryCode}",     "FixedPoints": "${RewardRedemptionDateTypes#FixedPoints}",      "ShippingInfoRequired": "${RewardRedemptionDateTypes#ShippingInfoRequired}",     "DisplayInCatalog": "${RewardRedemptionDateTypes#DisplayInCatalog}",     "CertificateInd": "${RewardRedemptionDateTypes#CertificateInd}",     "CertificateType" : "IMPORTED",  }</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddProfileRGR" id="8a28d5fd-872c-4928-92d6-3feb8a649724">
+  <con:testStep type="restrequest" name="AddCertificateToReward" id="0cd62a6b-a982-4926-b849-d0ee1ff3856b">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="ProcessUnassignedCertificate" resourcePath="/api/v1/referencedata/rewards/certificates" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddCertificateToReward" id="329cef2b-0588-4deb-83a3-32b026e82a1d" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "CertificateNumber": "${=java.util.UUID.randomUUID()}",
+  "RewardCode": "${#[ActivityCertificate#AddRewardCert#AddReward]#Response#$['RewardCode']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/certificates</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="0352e6f6-ad69-4e29-b5fe-a4b49769245b" name="Smart Assertion - Status code is 200">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Wed, 23 Mar 2022 07:20:02 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>354</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2d495b8c-c042-3de1-4c4f-750cecd0870b</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>29ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMGC9KPK68IQ:0000006A</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Wed, 23 Mar 2022 07:20:02 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"354","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"2d495b8c-c042-3de1-4c4f-750cecd0870b","content-type":"application/json; charset=utf-8","process-time":"29ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGC9KPK68IQ:0000006A"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="31325f12-e3bc-4454-8eff-35f95199c2d0">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
@@ -39,7 +272,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddAdjustment" id="20dfb93c-9aec-456d-a9f7-f337a6867773">
+  <con:testStep type="calltestcase" name="AddAdjustment" id="1947f141-42c6-41ca-89e2-c4e2d46731a5">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>d3339fb2-45d2-479b-9947-1ea66f3877fa</con:targetTestCase>
@@ -63,14 +296,14 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddProfileCart" id="d880e597-480b-4b7e-9313-27eb6ec8d8e1">
+  <con:testStep type="calltestcase" name="AddProfileCart" id="0f90ef8f-adf3-49a5-bae4-02f9382848f3">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>9ebbff1b-7202-4274-8a3f-0c718860cfc0</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>RewardId</con:name>
-          <con:value>${#[ActivityOrder#AddFixPointRwdCert#RewardId]#result}</con:value>
+          <con:value>${#[ActivityCertificate#AddRewardCert#AddReward]#Response#$['RewardId']}</con:value>
         </con:property>
         <con:property>
           <con:name>RewardQuantity</con:name>
@@ -78,20 +311,21 @@
         </con:property>
         <con:property>
           <con:name>ActivityDate</con:name>
+          <con:value/>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="PlaceOrder" id="c84f4af5-88cb-4710-891f-30aa46ef0a20">
+  <con:testStep type="calltestcase" name="PlaceOrder" id="8fd496fa-33a7-4c61-a80e-084cf9bd6473">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>d50486a6-8a0c-480c-975e-03563f000b54</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>RewardId</con:name>
-          <con:value>${#[ActivityOrder#AddFixPointRwdCert#RewardId]#result}</con:value>
+          <con:value>${#[ActivityCertificate#AddRewardCert#AddReward]#Response#$['RewardId']}</con:value>
         </con:property>
         <con:property>
           <con:name>Quantity</con:name>
@@ -102,7 +336,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="RedeemRewardCertificate" id="98fa9b5a-b1eb-4291-9f30-24eea9d1ecac">
+  <con:testStep type="restrequest" name="RedeemRewardCertificate" id="34240f38-ac28-45da-8c5c-3cd76a5e0169">
     <con:settings/>
     <con:config service="RestAPIs" methodName="RedeemRewardCertificate" resourcePath="/api/v1/profiles/rewards/certificates/{certificateNumber}/redeem" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="RedeemRewardCertificate" id="fd71a38d-1af4-4cf0-b8a5-9a986c02fc2a" mediaType="application/json" postQueryString="false">
@@ -112,7 +346,6 @@
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-	"ProfileId" : "${#[ActivityOrder#AddProfileMulCart#AddProfileCart]#Response#$['ProfileId']}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/certificates/f10854ad-cfce-49cd-9c8d-1bce285430be/redeem</con:originalUri>
         <con:assertion type="DataAndMetadataAssertion" id="014dde06-50eb-4684-b454-101b01d2f683" name="Smart Assertion- HTTP Status Code">
@@ -271,37 +504,10 @@
             <con:originalMessage>{"Headers":{"date":"Mon, 21 Mar 2022 08:26:09 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"730","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"52b340cf-d5bc-5917-a25d-2417977e45f1","content-type":"application/json; charset=utf-8","process-time":"29ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMG951H1PD4B:0000002A"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="a24b46b9-f70d-4ac0-b552-6efa29d6484c" name="Certificate status validation">
-          <con:configuration>
-            <path>$.Status</path>
-            <content>R</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="1e19b4ea-1450-4749-a134-eba46adf67ed" name="ProfileId validation">
-          <con:configuration>
-            <path>$.ProfileId</path>
-            <content>${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['ProfileId']}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="7b58eaad-e732-471d-a891-eb8d226bdaf0" name="Reward code validation">
-          <con:configuration>
-            <path>$.RewardCode</path>
-            <content>${#[ActivityOrder#AddFixPointRwdCert]#rewardCode}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
         <con:assertion type="JsonPath Match" id="b3dcff4f-65d3-4033-93a6-5d9eec2cbede" name="Certificate number validation">
           <con:configuration>
             <path>$.CertificateNumber</path>
-            <content>${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['OrderDetails'][0]['CertificateNumber']}</content>
+            <content>${AddCertificateToReward#Response#$['CertificateNumber']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -314,199 +520,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="certificateNumber" value="${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['OrderDetails'][0]['CertificateNumber']}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-        </con:parameters>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="RedeemRewardCertificateNeg" id="a1783ca5-5e2f-4b2e-b7bf-5ebbb1da13c7">
-    <con:settings/>
-    <con:config service="RestAPIs" methodName="RedeemRewardCertificate" resourcePath="/api/v1/profiles/rewards/certificates/{certificateNumber}/redeem" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="RedeemRewardCertificateNeg" id="fd71a38d-1af4-4cf0-b8a5-9a986c02fc2a" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:encoding>UTF-8</con:encoding>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-	"ProfileId" : "${#[ActivityOrder#AddProfileMulCart#AddProfileCart]#Response#$['ProfileId']}"
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/rewards/certificates/addcf8e4-c14e-4f0e-af7d-3beac00b37a6/redeem</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="0a7e623a-8e3d-4501-b127-838db256d610" name="Smart Assertion - Validate HTTP status code">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Metadata</con:mode>
-            <con:elements>
-              <con:path>$['Headers']['date']</con:path>
-              <con:element>date</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Mon, 21 Mar 2022 08:26:09 GMT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['server']</con:path>
-              <con:element>server</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['transfer-encoding']</con:path>
-              <con:element>transfer-encoding</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>chunked</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['language-code']</con:path>
-              <con:element>language-code</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-frame-options']</con:path>
-              <con:element>x-frame-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['pragma']</con:path>
-              <con:element>pragma</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-content-type-options']</con:path>
-              <con:element>x-content-type-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-xss-protection']</con:path>
-              <con:element>x-xss-protection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['connection']</con:path>
-              <con:element>connection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>keep-alive</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['correlationid']</con:path>
-              <con:element>correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>08ce9877-173c-843d-0e5c-1d80049bc32e</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-type']</con:path>
-              <con:element>content-type</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>application/json</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['process-time']</con:path>
-              <con:element>process-time</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>20ms</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['#status#']</con:path>
-              <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 400 Bad Request</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['cache-control']</con:path>
-              <con:element>cache-control</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-store,no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['new-correlationid']</con:path>
-              <con:element>new-correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMG951H1PD4B:0000002B</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Mon, 21 Mar 2022 08:26:09 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","transfer-encoding":"chunked","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"08ce9877-173c-843d-0e5c-1d80049bc32e","content-type":"application/json","process-time":"20ms","#status#":"HTTP/1.1 400 Bad Request","cache-control":"no-store,no-cache","new-correlationid":"0HMG951H1PD4B:0000002B"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="33dab5c3-f7c2-43be-b690-edf00b1bb1b9" name="Error code validation">
-          <con:configuration>
-            <path>$.ErrorCode</path>
-            <content>CertificateHasBeenRedeemed</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="certificateNumber" value="${#[ActivityOrder#PlaceOrder#PlaceOrder]#Response#$['OrderDetails'][0]['CertificateNumber']}"/>
+          <con:entry key="certificateNumber" value="${AddCertificateToReward#Response#$['CertificateNumber']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>

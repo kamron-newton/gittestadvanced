@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="069ca86e-14c7-4da8-8a5b-9b03daf5baa9" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Create Goal with comparison period" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="069ca86e-14c7-4da8-8a5b-9b03daf5baa9fileName">Create-Goal-with-comparison-period</con:setting>
+  </con:settings>
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="properties" name="Defaults" id="80afeb50-082c-40ea-a2d9-743fc77a940d">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:properties>
+        <con:property>
+          <con:name>MetricTypeCode</con:name>
+          <con:value>MEMBER_SALES</con:value>
+        </con:property>
+        <con:property>
+          <con:name>GoalObjectiveCode</con:name>
+          <con:value>INCREASE_BY</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ValueTypeCode</con:name>
+          <con:value>PERCENTAGE</con:value>
+        </con:property>
+        <con:property>
+          <con:name>GoalAmount</con:name>
+          <con:value>10</con:value>
+        </con:property>
+        <con:property>
+          <con:name>CalendarType</con:name>
+          <con:value>Fiscal(4-5-4)</con:value>
+        </con:property>
+        <con:property>
+          <con:name>GoalPeriodUnit</con:name>
+          <con:value>W</con:value>
+        </con:property>
+        <con:property>
+          <con:name>GoalPeriod</con:name>
+          <con:value>2017 03/04</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ComparisonPeriod</con:name>
+          <con:value>2016 03/05</con:value>
+        </con:property>
+        <con:property>
+          <con:name>Status</con:name>
+          <con:value>A</con:value>
+        </con:property>
+        <con:property>
+          <con:name>GoalDescription</con:name>
+          <con:value>Increase Member Sales by 10% for Week 5 of 2017 over Week 5 of 2016</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ExpectedHttpStatus</con:name>
+          <con:value>201</con:value>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Assign defaults" id="2bce8243-ed08-4414-ac4e-f644fd077297">
+    <con:settings/>
+    <con:config>
+      <script>def target = testRunner.testCase
+def source = testRunner.testCase.testSteps["Defaults"]
+for(prop in source.getPropertyList()) {
+	assignDefault(target, source, prop.getName())
+	log.info(prop.getName())
+}
+
+def assignDefault(target, source, propName) {
+def prop = target.getPropertyValue(propName)
+log.info(prop)
+if(prop == "" || prop == null)
+	target.setPropertyValue(propName, source.getPropertyValue(propName))
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Create Goal" id="0ec796cc-12ba-4787-a38f-2c4b495485af">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals" methodName="Create Goal" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Create Goal" id="c174f9d3-44f3-4cbc-8d02-bde2d71079fd" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MetricTypeCode" : "${#TestCase#MetricTypeCode}",
+	"GoalObjectiveCode" : "${#TestCase#GoalObjectiveCode}",
+	"ValueTypeCode" : "${#TestCase#ValueTypeCode}",
+	"GoalAmount" : ${#TestCase#GoalAmount},
+	"CalendarType" : "${#TestCase#CalendarType}",
+	"GoalPeriodUnit" : "${#TestCase#GoalPeriodUnit}",
+	"GoalPeriod" : "${#TestCase#GoalPeriod}",
+	"ComparisonPeriod" : "${#TestCase#ComparisonPeriod}",
+	"Status" : "${#TestCase#Status}",
+	"GoalDescription":"${#TestCase#GoalDescription}"
+}</con:request>
+        <con:originalUri>https://d3aldv-pveapi.skynetlowerenv.com/api/v1/insights/goals</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="db3f3533-ec62-45a1-8456-1d4a9b28d2aa" name="Smart Assertion">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Wed, 23 Mar 2022 14:29:00 GMT</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>813</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>50556e8b-704d-cdb4-ff1b-10b9ba9793a5</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['location']</con:path>
+              <con:element>location</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>http://d3aldv-pveapi.skynetlowerenv.com/api/v1/insights/goals</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>26ms</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>13</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>${#TestCase#ExpectedHttpStatus}</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMGCP2E5R5QR:00000060</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Wed, 23 Mar 2022 14:29:00 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"813","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"50556e8b-704d-cdb4-ff1b-10b9ba9793a5","content-type":"application/json; charset=utf-8","location":"http://d3aldv-pveapi.skynetlowerenv.com/api/v1/insights/goals","process-time":"26ms","#status#":"HTTP/1.1 201 Created","cache-control":"no-store,no-cache","new-correlationid":"0HMGCP2E5R5QR:00000060"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="assertionteststep" name="Ensure expecting success OR correct error is returned" id="82b15006-9b02-4b70-9f22-baef49fad38b">
+    <con:settings/>
+    <con:config xsi:type="con:AssertionTestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:entry>
+        <con:id>9280e492-5966-4ea9-aa12-9c6f5ad143b7</con:id>
+        <con:isGroup>true</con:isGroup>
+        <con:sourceId>82b15006-9b02-4b70-9f22-baef49fad38b</con:sourceId>
+        <con:propertyName>Group</con:propertyName>
+        <con:assertion type="GroupAssertion" name="Group" id="8ba061da-2038-4feb-a964-bab7431d6cfc">
+          <con:configuration xsi:type="con:GroupAssertionList">
+            <con:assertions>
+              <con:id>3786d1e2-ee86-4442-82c1-919a0ee2219b</con:id>
+              <con:isGroup>false</con:isGroup>
+              <con:sourceId>069ca86e-14c7-4da8-8a5b-9b03daf5baa9</con:sourceId>
+              <con:propertyName>ExpectedHttpStatus</con:propertyName>
+              <con:assertion type="Simple Contains" name="Contains" id="1bd1a7ea-16a4-46d6-b39e-535573327b1e">
+                <con:configuration>
+                  <token>200,201</token>
+                  <ignoreCase>false</ignoreCase>
+                  <useRegEx>false</useRegEx>
+                </con:configuration>
+              </con:assertion>
+            </con:assertions>
+            <con:assertions>
+              <con:id>f3db38c0-b9cd-4e6d-a30f-cb26405a9813</con:id>
+              <con:isGroup>false</con:isGroup>
+              <con:sourceId>0ec796cc-12ba-4787-a38f-2c4b495485af</con:sourceId>
+              <con:propertyName>Response</con:propertyName>
+              <con:assertion type="JsonPath Match" name="JSONPath Match" id="8c0edf02-2f19-4701-9b70-648bfa2ffa31">
+                <con:configuration>
+                  <path>$.ErrorCode</path>
+                  <content>${#TestCase#ErrorCode}</content>
+                  <allowWildcards>false</allowWildcards>
+                  <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                  <ignoreComments>false</ignoreComments>
+                </con:configuration>
+              </con:assertion>
+            </con:assertions>
+            <con:operation>OR</con:operation>
+          </con:configuration>
+        </con:assertion>
+      </con:entry>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="Return Id" id="5382fbf1-adc3-43cf-a59f-027e512d1c68">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="false" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>GoalId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>Create Goal</con:sourceStep>
+        <con:sourcePath>$.GoalId</con:sourcePath>
+        <con:targetType>GoalId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property userSpecific="true">
+      <con:name>MetricTypeCode</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>GoalObjectiveCode</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>ValueTypeCode</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>GoalAmount</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>CalendarType</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>GoalPeriodUnit</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>GoalPeriod</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>ComparisonPeriod</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>Status</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>GoalDescription</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>GoalId</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>ExpectedHttpStatus</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>ErrorCode</con:name>
+      <con:value/>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

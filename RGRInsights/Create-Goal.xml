@@ -4,48 +4,57 @@
     <con:setting id="42a657e6-ccf3-4487-8543-a309c9e7461ffileName">Create-Goal</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="restrequest" name="Create Goal" id="1e1c004e-46f8-4f84-b98e-d57277ed555e">
+  <con:testStep type="calltestcase" name="Create Goal" id="1d6c9f47-f100-4825-884f-434fb97fbbd7">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals" methodName="Create Goal" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Create Goal" id="c174f9d3-44f3-4cbc-8d02-bde2d71079fd" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-	"MetricTypeCode" : "MEMBER_SALES",
-	"GoalObjectiveCode" : "INCREASE_BY",
-	"ValueTypeCode" : "PERCENTAGE",
-	"GoalAmount" : 10,
-	"CalendarType" : "Calendar",
-	"GoalPeriodUnit" : "W",
-	"GoalPeriod" : "Week 05 of 2017",
-	"ComparisonPeriod" : "Week 05 of 2016",
-	"Status" : "A"
-}</con:request>
-        <con:originalUri>https://d3aldv-pveapi.skynetlowerenv.com/api/v1/insights/goals</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="c9ac9dec-b920-42c5-b40c-34907de07f82" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>201</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>Authorization</con:entry>
-          <con:entry>Program-Code</con:entry>
-          <con:entry>Accept-Language</con:entry>
-        </con:parameterOrder>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>069ca86e-14c7-4da8-8a5b-9b03daf5baa9</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>MetricTypeCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalObjectiveCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ValueTypeCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalAmount</con:name>
+        </con:property>
+        <con:property>
+          <con:name>CalendarType</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalPeriodUnit</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalPeriod</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ComparisonPeriod</con:name>
+        </con:property>
+        <con:property>
+          <con:name>Status</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalDescription</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalId</con:name>
+          <con:value>910877af-cb09-4bd8-801d-9c4c3b8fe68e</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ExpectedHttpStatus</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ErrorCode</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>GoalId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="Get Goals" id="8eabb6ec-7f2b-415a-b6d0-b5854b500deb">
@@ -64,10 +73,10 @@
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="6cc95685-026c-4549-9592-a9d4e59766c9" name="JSONPath Match">
+        <con:assertion type="JsonPath Existence Match" id="ebf33244-ced9-45a1-ac41-ce006b8ae296" name="Verify that goal id exists in response">
           <con:configuration>
-            <path>$[0].GoalId</path>
-            <content>${Create Goal#Response#$.GoalId}</content>
+            <path>$[?(@.GoalId == '${Create Goal#GoalId}')]</path>
+            <content>true</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -96,50 +105,54 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Update Goal" id="0bc1685e-e4ae-41e6-98c5-d02ab6eaddd6">
+  <con:testStep type="calltestcase" name="Update Goal" id="f1827db0-12de-4670-9a32-65b8e31ea623">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/insights/goals/{goalId}" methodName="Update Goal" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Update Goal" id="66220ac9-027f-461a-8358-7080bb3c5442" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-	"MetricTypeCode" : "MEMBER_SALES",
-	"GoalObjectiveCode" : "INCREASE_BY",
-	"ValueTypeCode" : "PERCENTAGE",
-	"GoalAmount" : 10,
-	"CalendarType" : "Calendar",
-	"GoalPeriodUnit" : "W",
-	"GoalPeriod" : "Week 05 of 2017",
-	"ComparisonPeriod" : "Week 05 of 2016",
-	"Status" : "I"
-}</con:request>
-        <con:originalUri>https://localhost/api/v1/insights/goals/c932ae20-db5c-4953-a368-93de7824d6b1</con:originalUri>
-        <con:assertion type="Valid HTTP Status Codes" id="441cd13b-7247-4b7c-a2c8-502582b1bc62" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="goalId" value="${Create Goal#Response#$['GoalId']}"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>goalId</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>Program-Code</con:entry>
-          <con:entry>Accept-Language</con:entry>
-        </con:parameterOrder>
-      </con:restRequest>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>2b31cf92-79c8-46cf-a1df-1c921479633b</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>MetricTypeCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalObjectiveCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ValueTypeCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalAmount</con:name>
+        </con:property>
+        <con:property>
+          <con:name>CalendarType</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalPeriodUnit</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalPeriod</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ComparisonPeriod</con:name>
+        </con:property>
+        <con:property>
+          <con:name>Status</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalDescription</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalId</con:name>
+          <con:value>${Create Goal#GoalId}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ExpectedHttpStatus</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ErrorCode</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="Get Goal By Id" id="173a1e52-1ecb-409b-8bad-248f23c6d912">
@@ -158,7 +171,7 @@
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="5716ebbc-a6d4-4986-9c87-3dc1e00560a2" name="JSONPath Match">
+        <con:assertion type="JsonPath Match" id="5716ebbc-a6d4-4986-9c87-3dc1e00560a2" name="Verify Inactive Status">
           <con:configuration>
             <path>$.Status</path>
             <content>I</content>
@@ -174,7 +187,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="goalId" value="${Create Goal#Response#$['GoalId']}"/>
+          <con:entry key="goalId" value="${Create Goal#GoalId}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
@@ -185,6 +198,109 @@
           <con:entry>Accept-Language</con:entry>
         </con:parameterOrder>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Recreate deactivated goal" id="6095234e-ba47-4df1-99d5-9325e9a897fc">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>069ca86e-14c7-4da8-8a5b-9b03daf5baa9</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>MetricTypeCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalObjectiveCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ValueTypeCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalAmount</con:name>
+        </con:property>
+        <con:property>
+          <con:name>CalendarType</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalPeriodUnit</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalPeriod</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ComparisonPeriod</con:name>
+        </con:property>
+        <con:property>
+          <con:name>Status</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalDescription</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalId</con:name>
+          <con:value>48f933ad-24a1-4e30-af5b-6ba8151d2c73</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ExpectedHttpStatus</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ErrorCode</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>GoalId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Deactivate Goal again" id="e7737d13-5789-408f-aa05-f48586aaef87">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>2b31cf92-79c8-46cf-a1df-1c921479633b</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>MetricTypeCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalObjectiveCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ValueTypeCode</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalAmount</con:name>
+        </con:property>
+        <con:property>
+          <con:name>CalendarType</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalPeriodUnit</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalPeriod</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ComparisonPeriod</con:name>
+        </con:property>
+        <con:property>
+          <con:name>Status</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalDescription</con:name>
+        </con:property>
+        <con:property>
+          <con:name>GoalId</con:name>
+          <con:value>${Recreate deactivated goal#GoalId}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ExpectedHttpStatus</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ErrorCode</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:properties/>

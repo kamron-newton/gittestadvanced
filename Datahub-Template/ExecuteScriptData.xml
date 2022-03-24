@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="8ab8ee29-e996-497f-8eb6-78c733f3d9c1" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ExecuteScriptData" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="8ab8ee29-e996-497f-8eb6-78c733f3d9c1fileName">ExecuteScriptData</con:setting>
+  </con:settings>
+  <con:testStep type="restrequest" name="GetScriptDefaultContent" id="2e50f2ef-ce35-4eff-b556-0fb2120d48c2">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/defaultcontent" methodName="Get Default Content" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetScriptDefaultContent" id="56c8e44c-c91e-4648-b535-a4187cbec73a" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/defaultcontent</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="b757a871-ebe2-4cf2-ac9f-da48a24684ba" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptName" value="${#TestCase#ScriptName}"/>
+          <con:entry key="Environment" value="PRODUCTION"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>fusionWebApiId</con:entry>
+          <con:entry>scriptName</con:entry>
+          <con:entry>prePostEvent</con:entry>
+          <con:entry>version</con:entry>
+          <con:entry>Environment</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferScriptIDFromGetScriptContent" id="e41840c3-1c0c-468a-abf6-13d3f8a8c175">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>TransferScriptId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetScriptDefaultContent</con:sourceStep>
+        <con:sourcePath>$['ScriptId']</con:sourcePath>
+        <con:targetType>ScriptId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="ConditionalUpdateOrAdd" id="0fcf0686-b082-4c48-bccb-693b976a482e">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>VerifyScriptId</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>exists(//*:Response/*:ScriptId)</con:expression>
+        <con:targetStep>UpdateScript</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddScript" id="437718eb-98c0-463c-a4bf-0ee3a50a0439">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts" methodName="Add Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddScript" id="fb7ff48c-d0bf-4b4e-b695-4721c097882f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{  
+   "IsStandalone":true,
+   "IsPlaceholder":false,
+   "ScriptName": "${#TestCase#ScriptName}", 
+   "Content":"try%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Epsilon.Fusion.Models.Batch.BatchJobModel%20model%20%3D%20JsonConvert.DeserializeObject%3CEpsilon.Fusion.Models.Batch.BatchJobModel%3E(input.ToString())%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(model.JsonExternalData%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dynamic%20xmlJson%20%3D%20verb.AccessExternalData(model)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(xmlJson%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.WriteFile(xmlJson.FileName.ToString()%2C%20JsonConvert.DeserializeObject%3Cdynamic%3E(xmlJson.FileContent.ToString())%2C%20xmlJson.FileLocation.ToString()%2C%20useHeaders%3A%20(bool)xmlJson.UseHeader)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2Fupdate%20Json%20to%20null%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20DbParameterCollection%20parameters%20%3D%20new%20DbParameterCollection()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20parameters.Add(new%20DbParameter(%22BatchJobId%22%2C%20model.BatchJobId%2C%20DbType.Guid))%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.BeginDatabaseTransaction()%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20string%20sql%20%3D%20string.Format(%22UPDATE%20T_SYS_JOB%20SET%20JSON_EXTERNAL_DATA%20%3D%20null%20WHERE%20SYS_JOB_ID%20%3D%20%3ABatchJobId%22)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.ModifyDatabase(sql%2C%20parameters)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.CommitDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20catch%20(Exception%20ex)%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.RollbackDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20throw%20new%20Exception(ex.Message)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D"},
+   "Version":""
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="1108c1fc-c756-40cf-bcca-b60f5951cf72" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertyFromAddScript" id="951f41d7-fc8c-4aa2-a69a-ed602bd18c1a">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>TransferScriptId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>AddScript</con:sourceStep>
+        <con:sourcePath>$['ScriptId']</con:sourcePath>
+        <con:targetType>ScriptId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateScript" id="350b474d-8250-4480-8003-165501811fdd">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptId}" methodName="Update Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateScript" id="9e8e04e4-a1f1-43f0-bdfe-9bdabc1de796" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{  
+"Content":"try%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Epsilon.Fusion.Models.Batch.BatchJobModel%20model%20%3D%20JsonConvert.DeserializeObject%3CEpsilon.Fusion.Models.Batch.BatchJobModel%3E(input.ToString())%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(model.JsonExternalData%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20dynamic%20xmlJson%20%3D%20verb.AccessExternalData(model)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20if%20(xmlJson%20!%3D%20null)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.WriteFile(xmlJson.FileName.ToString()%2C%20JsonConvert.DeserializeObject%3Cdynamic%3E(xmlJson.FileContent.ToString())%2C%20xmlJson.FileLocation.ToString()%2C%20useHeaders%3A%20(bool)xmlJson.UseHeader)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2F%2Fupdate%20Json%20to%20null%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20DbParameterCollection%20parameters%20%3D%20new%20DbParameterCollection()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20parameters.Add(new%20DbParameter(%22BatchJobId%22%2C%20model.BatchJobId%2C%20DbType.Guid))%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.BeginDatabaseTransaction()%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20string%20sql%20%3D%20string.Format(%22UPDATE%20T_SYS_JOB%20SET%20JSON_EXTERNAL_DATA%20%3D%20null%20WHERE%20SYS_JOB_ID%20%3D%20%3ABatchJobId%22)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.ModifyDatabase(sql%2C%20parameters)%3B%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.CommitDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20catch%20(Exception%20ex)%0A%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20verb.RollbackDatabaseTransaction()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20throw%20new%20Exception(ex.Message)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D"}
+
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/4e85cbeb-124a-46b2-aa42-33475ea3eba5</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="6f5b04b2-5e8e-4dfd-b0a5-8a9ac6b5a735" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptId" value="${#TestCase#ScriptId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>scriptId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferPropertyScriptIdFromUpdateScript" id="e4ae8e13-5f82-4617-a0d2-93239583fef5">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>ScriptID</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>UpdateScript</con:sourceStep>
+        <con:sourcePath>$['ScriptId']</con:sourcePath>
+        <con:targetType>ScriptId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>ScriptId</con:name>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

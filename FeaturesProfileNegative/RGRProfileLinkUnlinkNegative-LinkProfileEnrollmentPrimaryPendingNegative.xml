@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="9ab16a7f-ecd4-419a-a340-5cc797752804" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGRProfileLinkUnlinkNegative-LinkProfileEnrollmentPrimaryPendingNegative" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="9ab16a7f-ecd4-419a-a340-5cc797752804fileName">RGRProfileLinkUnlinkNegative-LinkProfileEnrollmentPrimaryPendingNegative</con:setting>
+  </con:settings>
+  <con:testStep type="datasource" name="ProgramSetting" id="15b67973-013b-4390-af34-9f2574c11808">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>FusionWebApiAutomationV2/References/ProgramSetting.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>ParameterName</con:property>
+      <con:property>ParameterValue</con:property>
+      <con:property>ParameterValue1</con:property>
+      <con:property>ParameterName1</con:property>
+      <con:property>ParamNameLinkAnon</con:property>
+      <con:property>ParamValueLinkAnon</con:property>
+      <con:property>ParamNamePointGift</con:property>
+      <con:property>ParamValuePointGift</con:property>
+      <con:property>ParamValuePointGift1</con:property>
+      <con:property>ParamNameGiftHeld</con:property>
+      <con:property>ParamValueGiftHeld</con:property>
+      <con:property>ParamValueGiftHeld1</con:property>
+      <con:property>ParamNameGiftGiverAppvl</con:property>
+      <con:property>ParamValueGiftGiverAppvl</con:property>
+      <con:property>ParamValueGiftGiverAppvl1</con:property>
+      <con:property>ParamNameGiftGiverConfn</con:property>
+      <con:property>ParamValueGiftGiverConfn</con:property>
+      <con:property>ParamValueGiftGiverConfn1</con:property>
+      <con:property>ParamNameGiftRecptAccpt</con:property>
+      <con:property>ParamValueGiftRecptAccpt</con:property>
+      <con:property>ParamValueGiftRecptAccpt1</con:property>
+      <con:property>ParamNameGiftRecptConfn</con:property>
+      <con:property>ParamValueGiftRecptConfn</con:property>
+      <con:property>ParamValueGiftRecptConfn1</con:property>
+      <con:property>ParamNameForPooling</con:property>
+      <con:property>ParamAddStan</con:property>
+      <con:property>StoreAddStan</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="GetEnrollmentActivationSettingValue" id="b605859d-6ac4-46e5-a701-b6f694474fb9">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>2a044aef-ea84-4621-8503-2ed468e7152f</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>parameterName</con:name>
+          <con:value>${ProgramSetting#ParameterName}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="CheckSettingValue" id="cf5a803a-e78b-4cc1-9441-90e4ad0307fe">
+    <con:settings/>
+    <con:config>
+      <script>//checking if enrollment status value needs updation
+
+def enrollmentStatusValue = context.expand( '${#[ProgramSettings#GetProgramSettings#GetProgramSetting]#Response#$[0][\'ParameterValue\']}' )
+
+if(enrollmentStatusValue == "N")
+testRunner.gotoStepByName("UpdateEnrollmentActivationSettingtoY")
+    else 
+        testRunner.gotoStepByName("AddPrimaryProfile")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="UpdateEnrollmentActivationSettingtoY" id="3822c382-e535-4e76-bd43-c1fe4c8bc890">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>[ { "ParameterName": "${ProgramSetting#ParameterName}", "ParameterValue": "Y" } ]</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>${#[ProgramSettings#GetProgramSettings#ProgramSetting]#ProgramCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddPrimaryProfile" id="282763ef-4c34-4b28-8214-5ee91a396151">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="UpdateEnrollmentActivationSettingtoN" id="d123d2db-5114-4fbb-82e7-f1547d7f7a50">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>[ { "ParameterName": "${ProgramSetting#ParameterName}", "ParameterValue": "N"} ]</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>${#[ProgramSettings#GetProgramSettings#ProgramSetting]#ProgramCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddSecondayProfile" id="a9ac7ea7-7441-4032-9e65-46378fb8d5b8">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>f5c457de-a71d-47df-9afc-3385fe3af89a</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AttemptToLinkProfiles" id="9bbf48f3-7c02-44d3-a154-8c988ba52911">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/pool" methodName="AddProfileLink" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AttemptToLinkProfiles" id="60e4153d-0934-4f57-a9c8-6c18d1ee21c6" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SecondaryId": "${#[Profile#AddVictimProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
+  "CanRedeem": true
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/link/pool</con:originalUri>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ValidateNoLinking" id="f771a246-bc5a-418c-a96d-26bc0d43b172">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/pool" methodName="GetLinkedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ValidateNoLinking" id="3eb5d30a-22f0-4a99-8583-1c3854f4823d" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/fa34b8ba-a2b9-4bfc-8a73-c635b70eb7a5/link/pool</con:originalUri>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

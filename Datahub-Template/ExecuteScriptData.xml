@@ -3,6 +3,48 @@
   <con:settings>
     <con:setting id="8ab8ee29-e996-497f-8eb6-78c733f3d9c1fileName">ExecuteScriptData</con:setting>
   </con:settings>
+  <con:testStep type="properties" name="ScriptContentAndFlag" id="5be96e3f-fadf-4f32-87ac-b6b41617e05d">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:properties>
+        <con:property>
+          <con:name>ScriptContent</con:name>
+          <con:value>try
+            {
+                Epsilon.Fusion.Models.Batch.BatchJobModel model = JsonConvert.DeserializeObject&lt;Epsilon.Fusion.Models.Batch.BatchJobModel>(input.ToString());
+                if (model.JsonExternalData != null)
+                {
+                    dynamic xmlJson = verb.AccessExternalData(model);
+                    if (xmlJson != null)
+                    {
+                        verb.WriteFile(xmlJson.FileName.ToString(), JsonConvert.DeserializeObject&lt;dynamic>(xmlJson.FileContent.ToString()), xmlJson.FileLocation.ToString(), useHeaders: (bool)xmlJson.UseHeader);
+                    }
+                }
+
+                //update Json to null
+                DbParameterCollection parameters = new DbParameterCollection();
+                parameters.Add(new DbParameter("BatchJobId", model.BatchJobId, DbType.Guid));
+
+                verb.BeginDatabaseTransaction();
+
+                string sql = string.Format("UPDATE T_SYS_JOB SET JSON_EXTERNAL_DATA = null WHERE SYS_JOB_ID = :BatchJobId");
+                verb.ModifyDatabase(sql, parameters);
+
+                verb.CommitDatabaseTransaction();
+            }
+            catch (Exception ex)
+            {
+                verb.RollbackDatabaseTransaction();
+                throw new Exception(ex.Message);
+            }</con:value>
+        </con:property>
+        <con:property>
+          <con:name>FlagForAssertion</con:name>
+          <con:value>true</con:value>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetScriptDefaultContent" id="2e50f2ef-ce35-4eff-b556-0fb2120d48c2">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/defaultcontent" methodName="Get Default Content" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -47,6 +89,18 @@
           </con:entry>
         </con:environmentSpec>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="VerifyScriptContent" id="8764bda2-d211-459e-a67b-fb1924c67b7c">
+    <con:settings/>
+    <con:config>
+      <script>def scriptContent = context.expand( '${ScriptContentAndFlag#ScriptContent}' );
+def response = context.expand( '${GetScriptDefaultContent#Response#$[\'Content\']}' );
+
+if(scriptContent == response)
+{
+	testRunner.gotoStepByName("ValidateExecuteScriptData");	
+}</script>
     </con:config>
   </con:testStep>
   <con:testStep type="transfer" name="TransferScriptIDFromGetScriptContent" id="e41840c3-1c0c-468a-abf6-13d3f8a8c175">
@@ -133,6 +187,15 @@
         <con:type>JSONPATH</con:type>
         <con:upgraded>true</con:upgraded>
       </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>TransferScriptContent</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>AddScript</con:sourceStep>
+        <con:sourcePath>$['Content']</con:sourcePath>
+        <con:targetType>ScriptContent</con:targetType>
+        <con:targetStep>ScriptContentAndFlag</con:targetStep>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="UpdateScript" id="350b474d-8250-4480-8003-165501811fdd">
@@ -185,9 +248,19 @@
         <con:sourceType>Response</con:sourceType>
         <con:sourceStep>UpdateScript</con:sourceStep>
         <con:sourcePath>$['ScriptId']</con:sourcePath>
-        <con:targetType>ScriptId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep>ScriptContentAndFlag</con:targetStep>
         <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>TransferScriptContent</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>UpdateScript</con:sourceStep>
+        <con:sourcePath>$['Content']</con:sourcePath>
+        <con:targetType xsi:nil="true"/>
+        <con:targetStep>#TestCase#</con:targetStep>
         <con:type>JSONPATH</con:type>
         <con:upgraded>true</con:upgraded>
       </con:transfers>
@@ -273,6 +346,23 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="assertionteststep" name="ValidateExecuteScriptData" id="69ffaa3b-b0c8-42c6-b798-2e46875d9b01">
+    <con:settings/>
+    <con:config xsi:type="con:AssertionTestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:entry>
+        <con:id>0756239f-9eef-4ce6-83f6-469594b32d42</con:id>
+        <con:isGroup>false</con:isGroup>
+        <con:sourceId>5be96e3f-fadf-4f32-87ac-b6b41617e05d</con:sourceId>
+        <con:propertyName>FlagForAssertion</con:propertyName>
+        <con:assertion type="Simple Equals" name="Equals" id="5ec62338-1f48-4e61-a883-acad5055dcd4">
+          <con:configuration>
+            <patternText>true</patternText>
+            <caseSensitive>false</caseSensitive>
+          </con:configuration>
+        </con:assertion>
+      </con:entry>
+    </con:config>
+  </con:testStep>
   <con:properties>
     <con:property userSpecific="true">
       <con:name>ScriptId</con:name>
@@ -282,4 +372,59 @@
     </con:property>
   </con:properties>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>2e50f2ef-ce35-4eff-b556-0fb2120d48c2</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>8764bda2-d211-459e-a67b-fb1924c67b7c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e41840c3-1c0c-468a-abf6-13d3f8a8c175</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>0fcf0686-b082-4c48-bccb-693b976a482e</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>437718eb-98c0-463c-a4bf-0ee3a50a0439</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>951f41d7-fc8c-4aa2-a69a-ed602bd18c1a</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>350b474d-8250-4480-8003-165501811fdd</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>e4ae8e13-5f82-4617-a0d2-93239583fef5</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>cdc2567f-f4a0-4782-8811-3cf0a915f7fb</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>edba00aa-adde-4022-99cb-51cc6aa8ac11</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>69ffaa3b-b0c8-42c6-b798-2e46875d9b01</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
 </con:testCase>

@@ -150,6 +150,23 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
+  <con:testStep type="calltestcase" name="GetPackagedAudiences" id="cb8387f4-4628-4ee0-ac64-9a9ffa48f5e7">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>5d66f0aa-b082-45a3-bfb5-a7be1059712e</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="GetAudienceGroovyScript" id="57ab18c3-97eb-4cdc-aa12-ec2403db40ff">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
+
+def response = context.expand( '${#[OffersPrerequisite#GetPackagedAudiences#GetPackagedAudiences]#Response#$[?(@.AudienceName==\'Member Tier\')].PackagedAudienceId[0]}' )</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetMarketingEventByCode" id="e98f4f0c-e90d-4511-ae46-9b4ebf31ab97">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" methodName="GetMarketingEventbyEventCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -435,23 +452,6 @@ else
 {
 	def id = context.expand( '${GetMarketingEventByCode#Response#$[\'MarketingEventId\']}' )
 }</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="GetPackagedAudiences" id="cb8387f4-4628-4ee0-ac64-9a9ffa48f5e7">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>5d66f0aa-b082-45a3-bfb5-a7be1059712e</con:targetTestCase>
-      <con:properties/>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="GetAudienceGroovyScript" id="57ab18c3-97eb-4cdc-aa12-ec2403db40ff">
-    <con:settings/>
-    <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
-
-def response = context.expand( '${#[OffersPrerequisite#GetPackagedAudiences#GetPackagedAudiences]#Response#$[?(@.AudienceName==\'Member Tier\')].PackagedAudienceId[0]}' )</script>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="GetPackagedOffers" id="b6299e60-6978-43be-abe6-15dabbc4cc02">

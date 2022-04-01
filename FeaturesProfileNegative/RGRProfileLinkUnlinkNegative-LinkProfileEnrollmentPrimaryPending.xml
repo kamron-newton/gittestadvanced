@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="3b51799e-0c7c-49fd-9dad-53e8a38830d1" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGRProfileLinkUnlinkNegative-LinkProfileEnrollmentSecondaryPendingNegative" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="9ab16a7f-ecd4-419a-a340-5cc797752804" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGRProfileLinkUnlinkNegative-LinkProfileEnrollmentPrimaryPending" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="3b51799e-0c7c-49fd-9dad-53e8a38830d1fileName">RGRProfileLinkUnlinkNegative-LinkProfileEnrollmentSecondaryPendingNegative</con:setting>
+    <con:setting id="9ab16a7f-ecd4-419a-a340-5cc797752804fileName">RGRProfileLinkUnlinkNegative-LinkProfileEnrollmentPrimaryPending</con:setting>
   </con:settings>
-  <con:testStep type="datasource" name="ProgramSetting" id="fa36c0b8-5af4-442a-bc80-88b73ec24e6e">
+  <con:testStep type="datasource" name="ProgramSetting" id="15b67973-013b-4390-af34-9f2574c11808">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -55,20 +55,34 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddPrimaryProfile" id="b4f96bd7-3af9-4cd8-a1fd-33f4aa9fd3ca">
+  <con:testStep type="calltestcase" name="GetEnrollmentActivationSettingValue" id="b605859d-6ac4-46e5-a701-b6f694474fb9">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:targetTestCase>2a044aef-ea84-4621-8503-2ed468e7152f</con:targetTestCase>
       <con:properties>
         <con:property>
-          <con:name>ProfileId</con:name>
+          <con:name>parameterName</con:name>
+          <con:value>${ProgramSetting#ParameterName}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="UpdateEnrollmentActivationSettingtoY" id="3bb10c6f-440e-49af-b47d-40e5b29e3bd7">
+  <con:testStep type="groovy" name="CheckSettingValue" id="cf5a803a-e78b-4cc1-9441-90e4ad0307fe">
+    <con:settings/>
+    <con:config>
+      <script>//checking if enrollment status value needs updation
+
+def enrollmentStatusValue = context.expand( '${#[ProgramSettings#GetProgramSettings#GetProgramSetting]#Response#$[0][\'ParameterValue\']}' )
+
+if(enrollmentStatusValue == "N")
+testRunner.gotoStepByName("UpdateEnrollmentActivationSettingtoY")
+    else 
+        testRunner.gotoStepByName("AddPrimaryProfile")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="UpdateEnrollmentActivationSettingtoY" id="3822c382-e535-4e76-bd43-c1fe4c8bc890">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
@@ -86,7 +100,38 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddSecondayProfile" id="1534399c-4138-41e8-9e02-c799a7046e1e">
+  <con:testStep type="calltestcase" name="AddPrimaryProfile" id="282763ef-4c34-4b28-8214-5ee91a396151">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="UpdateEnrollmentActivationSettingtoN" id="d123d2db-5114-4fbb-82e7-f1547d7f7a50">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>[ { "ParameterName": "${ProgramSetting#ParameterName}", "ParameterValue": "N"} ]</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>${#[ProgramSettings#GetProgramSettings#ProgramSetting]#ProgramCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddSecondaryProfile" id="a9ac7ea7-7441-4032-9e65-46378fb8d5b8">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>f5c457de-a71d-47df-9afc-3385fe3af89a</con:targetTestCase>
@@ -99,7 +144,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AttemptToLinkProfiles" id="11876259-deee-48d5-919f-1b2ae91c4d33">
+  <con:testStep type="restrequest" name="AttemptToLinkProfiles" id="9bbf48f3-7c02-44d3-a154-8c988ba52911">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/pool" methodName="AddProfileLink" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="AttemptToLinkProfiles" id="60e4153d-0934-4f57-a9c8-6c18d1ee21c6" mediaType="application/json" postQueryString="false">
@@ -112,7 +157,7 @@
   "CanRedeem": true
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/link/pool</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" name="Smart Assertion for HTTP Status Codes" id="d0480f0e-58aa-4ca9-8d60-138118f7ffd7">
+        <con:assertion type="DataAndMetadataAssertion" id="26b579aa-e5b3-4237-ad7a-df7f8138f485" name="Smart Assertion for HTTP Status Codes">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -268,7 +313,7 @@
             <con:originalMessage>{"Headers":{"date":"Thu, 31 Mar 2022 11:25:55 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","transfer-encoding":"chunked","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"43e6f694-452c-5471-c42d-e24297b507a8","content-type":"application/json","process-time":"32ms","#status#":"HTTP/1.1 400 Bad Request","cache-control":"no-store,no-cache","new-correlationid":"0HMGJ0PM0AE1P:00000062"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" name="ErrorCode" id="90b51fe3-b093-43b6-a6e6-da3a074405e7">
+        <con:assertion type="JsonPath Match" id="cebda490-2586-49c3-af35-839c6c3f0430" name="ErrorCode">
           <con:configuration>
             <path>$['ErrorCode']</path>
             <content>"ProfileNotActive"</content>
@@ -299,7 +344,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ValidateNoLinking" id="bec49815-9e5e-4121-9dde-3335754dfa53">
+  <con:testStep type="restrequest" name="ValidateNoLinking" id="f771a246-bc5a-418c-a96d-26bc0d43b172">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/link/pool" methodName="GetLinkedProfilesByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="ValidateNoLinking" id="3eb5d30a-22f0-4a99-8583-1c3854f4823d" mediaType="application/json">
@@ -308,8 +353,8 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/af21b166-c077-4cb4-8435-11e7db8fcdef/link/pool</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" name="Smart Assertion for HTTP Status Codes" id="181b62c8-a6ff-4479-bbdc-e068602fe0c8">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/fa34b8ba-a2b9-4bfc-8a73-c635b70eb7a5/link/pool</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="99b7558c-f144-4c87-b59e-6ddb4359c916" name="Smart Assertion for HTTP Status Codes">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -465,7 +510,7 @@
             <con:originalMessage>{"Headers":{"date":"Thu, 31 Mar 2022 12:13:16 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"4","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"9a49d0b9-8642-3395-35fe-cc92ec62f47b","content-type":"application/json; charset=utf-8","process-time":"16ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGJ0PM0AE26:0000005F"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" name="JSONPath Match" id="64826bf0-0af4-4151-94b5-a4cdc09f1a47">
+        <con:assertion type="JsonPath Match" id="f9730cb2-0110-4f35-a58f-c039c4004481" name="JSONPath Match">
           <con:configuration>
             <path>$</path>
             <content>null</content>
@@ -502,24 +547,6 @@
           </con:entry>
         </con:environmentSpec>
       </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="UpdateEnrollmentActivationSettingtoN" id="54f34ccf-84e0-4d9b-b7ff-e252d888acae">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>Body</con:name>
-          <con:value>[ { "ParameterName": "${ProgramSetting#ParameterName}", "ParameterValue": "${#[ProgramSettings#GetProgramSettings#GetProgramSetting]#Response#$[0]['ParameterValue']}"} ]</con:value>
-        </con:property>
-        <con:property>
-          <con:name>ProgramCode</con:name>
-          <con:value>${#[ProgramSettings#GetProgramSettings#ProgramSetting]#ProgramCode}</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:properties/>

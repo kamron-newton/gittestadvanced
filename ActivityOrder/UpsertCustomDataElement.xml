@@ -297,41 +297,6 @@ else
    testRunner.gotoStepByName("CustomDataId")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="CustomDataId" id="1aa436be-49af-4528-8998-0d0264bf9794">
-    <con:settings/>
-    <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse
-
-//Get the parsed json of GetSources test step response
-def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetCustomDataElements#Response}'))
-
-//datasource
-def CustomDataNameDatasource =context.expand( '${RewardProviderCustomAttributes#CustomAttribute}')
-//CustomDataId
-def getCustomDataIdByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
-def getCustomDataNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
-def getCustomDataEntityNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
-
-def CustomDataId= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
-def CustomDataName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
-def CustomDataEntityName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
-
-
-def response = context.expand( '${AddCustomData#Response}' )
-if(response==null || response =="")
-  return CustomDataId;
-  //return CustomDataName;
-  //	return CustomDataEntityName;
-  	
-  	
-
-//else
-// {
-  // CustomDataId = context.expand( '${AddCustomData#Response#$[\'CustomDataId']}' )
-   //return CustomDataId;
-//}</script>
-    </con:config>
-  </con:testStep>
   <con:testStep type="restrequest" name="AddCustomData" id="83465589-9157-47de-b3b0-9876a69c14f8">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/customdata" methodName="AddCustomDataElement" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -538,6 +503,41 @@ if(response==null || response =="")
           </con:entry>
         </con:environmentSpec>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="CustomDataId" id="1aa436be-49af-4528-8998-0d0264bf9794">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetCustomDataElements#Response}'))
+
+//datasource
+def CustomDataNameDatasource =context.expand( '${RewardProviderCustomAttributes#CustomAttribute}')
+//CustomDataId
+def getCustomDataIdByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
+def getCustomDataNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
+def getCustomDataEntityNameByCustomAttribute = { code ->  json.find {it?.CustomDataName == CustomDataNameDatasource}?.CustomDataId }
+
+def CustomDataId= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+def CustomDataName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+def CustomDataEntityName= (getCustomDataIdByCustomAttribute('CustomDataNameDatasource'))
+
+
+def response = context.expand( '${AddCustomData#Response}' )
+if(response==null || response =="")
+  return CustomDataId;
+  //return CustomDataName;
+  //	return CustomDataEntityName;
+  	
+  	
+
+//else
+// {
+  // CustomDataId = context.expand( '${AddCustomData#Response#$[\'CustomDataId']}' )
+   //return CustomDataId;
+//}</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="UpdateCustomDataElement" id="5e6a94b4-f574-4f38-8c02-ec2f6d33b0f7">

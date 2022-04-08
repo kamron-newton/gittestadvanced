@@ -220,12 +220,47 @@ def response = context.expand( '${#[OffersPrerequisite#GetPackagedAudiences#GetP
 def earnCerTrxnPkgdId = context.expand( '${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[?(@.PackagedOfferName==\'Product Bonus\')].PackagedOfferId[0]}' )</script>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="GetPackagedOfferbyId" id="e737bba5-d82f-4950-89f5-435e6354710b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/packagedoffer/param/{packagedOfferId}" methodName="GetPackagedOfferById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetPackagedOfferbyId" id="9f48d3f0-af2a-4020-bf6f-df2391688096" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/packagedoffer/param/0625dcba-a576-48d6-9208-cec6f0be9235</con:originalUri>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value=" OAuth ${#Project#AuthToken} "/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="packagedOfferId" value="${PackagedOfferId#result}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>packagedOfferId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:testStep type="groovy" name="ProductParamId" id="4bf2fd2c-6326-456d-81b9-708ca019937b">
     <con:settings/>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
 
-def earnCerTrxnPkgdId = context.expand( '${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[?(@.PackagedOfferName==\'Product Bonus\')].PackagedOfferId[0]}' )</script>
+def response = context.expand( '${GetPackagedOfferbyId#Response#$[\'PackagedOfferParams\'][0][\'PackagedOfferParamId\']}' );</script>
     </con:config>
   </con:testStep>
   <con:testStep type="groovy" name="PtsEligibleDollarParamId" id="f23bd68c-d9c7-45dc-abab-4d27e6b317c3">
@@ -233,7 +268,7 @@ def earnCerTrxnPkgdId = context.expand( '${#[OffersPrerequisite#GetPackagedOffer
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
 
-def earnCerTrxnPkgdId = context.expand( '${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[?(@.PackagedOfferName==\'Product Bonus\')].PackagedOfferId[0]}' )</script>
+def response = context.expand( '${GetPackagedOfferbyId#Response#$[\'PackagedOfferParams\'][1][\'PackagedOfferParamId\']}' )</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="ProcessMarketingEvent" id="b07d5aa9-ce3f-4131-a96b-13c49f3a44f9">
@@ -569,17 +604,17 @@ def earnCerTrxnPkgdId = context.expand( '${#[OffersPrerequisite#GetPackagedOffer
 		"PackagedOfferParams": [
 		{
 			"MarketingEventId": "${GetMarketingEventByCode 2#Response#$['MarketingEventId']}",
-			"PackagedOfferParamId": "${#[OffersPrerequisite#GetPackagedOfferById#GetPackagedOfferById]#Response#$['PackagedOfferParams'][0]['PackagedOfferParamId']}",
+			"PackagedOfferParamId": "${PtsEligibleDollarParamId#result}",
 			"PackagedOfferId": "${PackagedOfferId#result}",
-			"ParamName":"${MarketingEventPkgOfferParams#ParamName1}",
-			"Value": "${MarketingEventPkgOfferParams#Value1}"
+			"ParamName":"${MarketingEventPkgOfferParams#ParamName7}",
+			"Value": "${MarketingEventPkgOfferParams#Value7}"
 		},
 		{
 			"MarketingEventId": "${GetMarketingEventByCode 2#Response#$['MarketingEventId']}",
-			"PackagedOfferParamId": "${#[OffersPrerequisite#GetPackagedOfferById#GetPackagedOfferById]#Response#$['PackagedOfferParams'][1]['PackagedOfferParamId']}",
+			"PackagedOfferParamId": "${ProductParamId#result}",
 			"PackagedOfferId": "${PackagedOfferId#result}",
-			"ParamName":"${MarketingEventPkgOfferParams#ParamName2}",
-			"Value": "${AddFlexibleDateRew#rewardCode}"
+			"ParamName":"${MarketingEventPkgOfferParams#ParamName8}",
+			"Value": "ItemNumber in (\"${MarketingEventPkgOfferParams#Value8a}\",\"${MarketingEventPkgOfferParams#Value8b}\",\"${MarketingEventPkgOfferParams#Value8c}\")"
 		}
 	         ]
                    },
@@ -787,6 +822,34 @@ def earnCerTrxnPkgdId = context.expand( '${#[OffersPrerequisite#GetPackagedOffer
           </con:entry>
         </con:environmentSpec>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="4104ba52-d8b4-4a3c-a1be-346c6bb720cb">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEventUpdate#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="26d332c4-ccb5-49a5-a30e-f6bd587635c6">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4e31c31c-5e5f-4dab-8caf-7c5cf7fef68f</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ApproveMarketingEvent#EventCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:properties/>

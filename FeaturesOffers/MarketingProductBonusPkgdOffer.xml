@@ -220,326 +220,6 @@ def response = context.expand( '${#[OffersPrerequisite#GetPackagedAudiences#GetP
 def earnCerTrxnPkgdId = context.expand( '${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[?(@.PackagedOfferName==\'Product Bonus\')].PackagedOfferId[0]}' )</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetPackagedOfferbyId" id="e737bba5-d82f-4950-89f5-435e6354710b">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/engage/packagedoffer/param/{packagedOfferId}" methodName="GetPackagedOfferById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetPackagedOfferbyId" id="9f48d3f0-af2a-4020-bf6f-df2391688096" mediaType="application/json">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/packagedoffer/param/0625dcba-a576-48d6-9208-cec6f0be9235</con:originalUri>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value=" OAuth ${#Project#AuthToken} "/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="packagedOfferId" value="${PackagedOfferId#result}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>packagedOfferId</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="ProductParamId" id="4bf2fd2c-6326-456d-81b9-708ca019937b">
-    <con:settings/>
-    <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
-
-def response = context.expand( '${GetPackagedOfferbyId#Response#$[\'PackagedOfferParams\'][0][\'PackagedOfferParamId\']}' );</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="PtsEligibleDollarParamId" id="f23bd68c-d9c7-45dc-abab-4d27e6b317c3">
-    <con:settings/>
-    <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
-
-def response = context.expand( '${GetPackagedOfferbyId#Response#$[\'PackagedOfferParams\'][1][\'PackagedOfferParamId\']}' )</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEvent" id="b07d5aa9-ce3f-4131-a96b-13c49f3a44f9">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ProcessMarketingEvent" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-	"MarketingEventType": {
-		"MarketingEventTypeId": "${MarketingEvent#MarketingEventTypeId}",
-		"TypeName": "${MarketingEvent#TypeName}"
-	},
-	"MarketingEventChannels": [
-		{
-			"MarketingEventChannelId": "${MarketingEvent#OnlineMsgMarketingEventChannelId}",
-			"Status": "A"
-		},
-		{
-			"MarketingEventChannelId": "${MarketingEvent#EmailMarketingEventChannelId}",
-			"Status": "A"
-		}
-	],
-	"EventName": "${MarketingEventPkgdAudience#EventName}",
-	"EventCode": "${MarketingEventPkgdAudience#EventCode}",
-	"ProgramCode": "${#Project#ProgramCode}",
-	"PackagedAudience": {
-		"PackagedAudienceId": "${MarketingEventPkgdAudience#PackagedAudienceId}",
-		"AudienceName": "${MarketingEventPkgdAudience#AudienceName}",
-		"AudienceDescription": "${MarketingEventPkgdAudience#AudienceDescription}",
-		"PackagedAudienceParam": []
-	},
-                  "PackagedOffer": {
-                                      "PackagedOfferId": "${MarketingEventPkgdAudience#PackagedOfferId}",
-                                      "PackagedOfferCode": "${MarketingEventPkgdAudience#PackagedOfferCode}",
-                                      "PackagedOfferName": "${MarketingEventPkgdAudience#PackagedOfferName}",
-                                      "PackagedOfferParams": []
-                   },
-	"AudienceSource": "${MarketingEventPkgdAudience#AudienceSource}",
-	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+1)}",
-	"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+5)}",
-	"OnlineMessageCode": "${MarketingEvent#EventCode}",
-	"OnlineMessageBriefDescription": "${MarketingEvent#OnlineMessageBriefDescription}",
-	"OptInStatus": "${MarketingEvent#OptInStatus}",
-	"OnlineMessageStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+1)}",
-	"OnlineMessageEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+5)}",
-	"OnlineMessageDescription": "${MarketingEvent#OnlineMessageDescription}",
-	"OnlineMessageTermsAndConditions": "${MarketingEvent#OnlineMessageTermsAndConditions}",
-	"DesktopImageName": "${MarketingEvent#ImageName}",
-	"MobileImageName": "${MarketingEvent#ImageName}",
-	"ThumbnailImageName": "${MarketingEvent#ImageName}",
-	"AddOnlineMessageToEmail": "${MarketingEvent#AddOnlineMessageToEmail}",
-	"CampaignId": "${MarketingEvent#CampaignId}",
-	"IsAudienceCountCompleted": "${MarketingEvent#IsAudienceCountCompleted}",
-	"IsOfferSimulationCompleted": "${MarketingEvent#IsOfferSimulationCompleted}",
-	"EmailScheduledDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+1)}"
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="validateOffer" value="false"/>
-          <con:entry key="validateAudience" value="false"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>validateAudience</con:entry>
-          <con:entry>validateOffer</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Program-Code</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="GetMarketingEventByCode 2" id="5c2a6264-69f9-47ec-90e9-22867c7c8c1e">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" methodName="GetMarketingEventbyEventCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetMarketingEventByCode 2" id="471c557e-ad15-4e9a-a9f1-2d173dd4c5cf" mediaType="application/json">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent/eventdetails/MKTEVTPKGAUDTEST01SH</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="5fad0872-1606-47e7-9198-346ff90dbf74" name="Smart Assertion">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Metadata</con:mode>
-            <con:elements>
-              <con:path>$['Headers']['date']</con:path>
-              <con:element>date</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Mon, 07 Mar 2022 09:41:02 GMT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['server']</con:path>
-              <con:element>server</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-length']</con:path>
-              <con:element>content-length</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>7129</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['language-code']</con:path>
-              <con:element>language-code</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-frame-options']</con:path>
-              <con:element>x-frame-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['pragma']</con:path>
-              <con:element>pragma</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-content-type-options']</con:path>
-              <con:element>x-content-type-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-xss-protection']</con:path>
-              <con:element>x-xss-protection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['connection']</con:path>
-              <con:element>connection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Keep-Alive</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['correlationid']</con:path>
-              <con:element>correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>4a95c5fe-a092-5127-65d1-356ae6b2be7b</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-type']</con:path>
-              <con:element>content-type</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['process-time']</con:path>
-              <con:element>process-time</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>24ms</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['#status#']</con:path>
-              <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['cache-control']</con:path>
-              <con:element>cache-control</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-store, no-cache, proxy-revalidate</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['new-correlationid']</con:path>
-              <con:element>new-correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMFU61MRSMG2:0000010B</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Mon, 07 Mar 2022 09:41:02 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"7129","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"Keep-Alive","correlationid":"4a95c5fe-a092-5127-65d1-356ae6b2be7b","content-type":"application/json; charset=utf-8","process-time":"24ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store, no-cache, proxy-revalidate","new-correlationid":"0HMFU61MRSMG2:0000010B"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="eventCode" value="${ProcessMktEvent#EventCode}"/>
-        </con:parameters>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
   <con:testStep type="calltestcase" name="GetPackagedOfferById" id="f7ac3ddc-36d5-453b-aedf-a32be8728613">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -547,25 +227,27 @@ def response = context.expand( '${GetPackagedOfferbyId#Response#$[\'PackagedOffe
       <con:properties>
         <con:property>
           <con:name>offerId</con:name>
-          <con:value>${#[OffersPrerequisite#GetPackagedOffers#GetPackagedOffers]#Response#$[5]['PackagedOfferId']}</con:value>
+          <con:value>${PackagedOfferId#result}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddFlexibleDateRew" id="a5a3926a-e88a-4a5a-9b2f-de1b6912fce9">
+  <con:testStep type="groovy" name="ProductParamId" id="4bf2fd2c-6326-456d-81b9-708ca019937b">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>0e0d967b-f1f8-4be8-96cb-b0a0f31a6bcb</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>rewardCode</con:name>
-          <con:value>RD_EARN_TRANS</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
+
+def response = context.expand( '${#[OffersPrerequisite#GetPackagedOfferById#GetPackagedOfferById]#Response#$[\'PackagedOfferParams\'][0][\'PackagedOfferParamId\']}' )</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="PtsEligibleDollarParamId" id="f23bd68c-d9c7-45dc-abab-4d27e6b317c3">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
+
+def response = context.expand( '${#[OffersPrerequisite#GetPackagedOfferById#GetPackagedOfferById]#Response#$[\'PackagedOfferParams\'][1][\'PackagedOfferParamId\']}' )</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="ProcessMarketingEventUpdate" id="37f92f48-0894-4146-8e70-370c79c00362">
@@ -590,8 +272,8 @@ def response = context.expand( '${GetPackagedOfferbyId#Response#$[\'PackagedOffe
 			"Status": "A"
 		}
 	],
-	"EventName": "${ProcessMktEvent#UpdEventName}",
-	"EventCode": "${ProcessMktEvent#EventCode}",
+	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
+		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}",
 	"ProgramCode": "${#Project#ProgramCode}",
 	"PackagedAudience": {
 		"PackagedAudienceId": "${AudienceId#result}",

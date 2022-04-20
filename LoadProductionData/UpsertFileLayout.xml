@@ -3,6 +3,55 @@
   <con:settings>
     <con:setting id="2d980e2e-fe83-46ad-932a-999b286ce5d8fileName">UpsertFileLayout</con:setting>
   </con:settings>
+  <con:testStep type="datasource" name="FileOutputSettings" id="28573ad4-f8f9-4ee8-b6fc-22f6f282230e">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>ReadyAPI/References/FileOutputSettings.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>MktFileLayoutName</con:property>
+      <con:property>MktFileLayoutCode</con:property>
+      <con:property>ActiveStatus</con:property>
+      <con:property>InactiveStatus</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>InvalidProgramCode</con:property>
+      <con:property>ReferenceName1</con:property>
+      <con:property>DisplayName1</con:property>
+      <con:property>DisplayOrder1</con:property>
+      <con:property>FileOutputDataType1</con:property>
+      <con:property>FileOutputFieldWidth1</con:property>
+      <con:property>VisibilityIndicator1</con:property>
+      <con:property>RequiredIndicator1</con:property>
+      <con:property>ReferenceName2</con:property>
+      <con:property>DisplayName2</con:property>
+      <con:property>DisplayOrder2</con:property>
+      <con:property>FileOutputDataType2</con:property>
+      <con:property>FileOutputFieldWidth2</con:property>
+      <con:property>VisibilityIndicator2</con:property>
+      <con:property>RequiredIndicator2</con:property>
+      <con:property>UpdatedDisplayName</con:property>
+      <con:property>UpdatedVisibilityIndicator</con:property>
+      <con:property>UpdatedRequiredIndicator</con:property>
+      <con:property>ProgramCode2</con:property>
+      <con:property>UpdateFileLayoutName</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetFileLayouts" id="7b0a270d-5942-4872-9305-7a536d2152b1">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/filelayouts" methodName="GetFileLayouts" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -31,6 +80,54 @@
       <script>def MarketingFileLayoutCode = context.expand( '${GetFileLayouts#Response#$[0][\'MarketingFileLayoutCode\']}' )
 if (MarketingFileLayoutCode == "" )  testRunner.gotoStepByName("ProcessMarketingEvent")
 else  testRunner.gotoStepByName("GetMarketingEventByEventCode")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessFileLayout" id="020414da-07a1-4db7-8bd0-bdb8a4822294">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="ProcessFileLayout" resourcePath="/api/v1/referencedata/programs/filelayouts" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessFileLayout" id="2c5fc621-2079-4ef0-9ad0-a51f779bae21" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+	"MarketingFileLayoutName": "${FileOutputSettings#MktFileLayoutName}",
+	"MarketingFileLayoutCode": "${FileOutputSettings#MktFileLayoutCode}",
+	"MarketingFileOutputSettings": [
+		{			
+			"ReferenceName": "${FileOutputSettings#ReferenceName1}",
+			"DisplayName": "${FileOutputSettings#DisplayName1}",
+			"DisplayOrder": "${FileOutputSettings#DisplayOrder1}",
+			"VisibilityIndicator": "${FileOutputSettings#VisibilityIndicator1}",
+			"RequiredIndicator": "${FileOutputSettings#RequiredIndicator1}",
+			"FileOutputDataType": "${FileOutputSettings#FileOutputDataType1}",
+			"FileOutputFieldWidth": "${FileOutputSettings#FileOutputFieldWidth1}"
+		},
+		{
+			"ReferenceName": "${FileOutputSettings#ReferenceName2}",
+			"DisplayName": "${FileOutputSettings#DisplayName2}",
+			"DisplayOrder": "${FileOutputSettings#DisplayOrder2}",
+			"VisibilityIndicator": "${FileOutputSettings#VisibilityIndicator2}",
+			"RequiredIndicator": "${FileOutputSettings#RequiredIndicator2}",
+			"FileOutputDataType": "${FileOutputSettings#FileOutputDataType2}",
+			"FileOutputFieldWidth": "${FileOutputSettings#FileOutputFieldWidth2}"
+		}
+	]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/filelayouts</con:originalUri>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:properties/>

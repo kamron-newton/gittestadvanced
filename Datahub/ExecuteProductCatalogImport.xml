@@ -20,6 +20,102 @@
       <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="GetProductCatalogImportDefaultSetting" id="90650330-52ac-46dc-ac39-0526748d7ba8">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/defaultsettings" methodName="GetDefaultSettings" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProductCatalogImportDefaultSetting" id="ec493b39-d6ca-453b-9e51-8b882c300aea" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/defaultsettings</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="fae9b36f-94e3-42b5-9c1f-7ab095f67378" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="parameterName" value="PRODUCT_HIERACHY_IMPORT"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>category</con:entry>
+          <con:entry>parameterName</con:entry>
+          <con:entry>parameterDescription</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="GOTOUpdateProductRefreshSettingIfFull" id="29c72a42-6b49-446a-89bd-431aeb4100c8">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>CheckProductImportRefreshFlag</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>//Response/e/ParameterValue != "FULL"</con:expression>
+        <con:targetStep>RunExecuteBatchWorkFlowforProductCatalogImport</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="SetProductCatalogImportDefaultSettingToDelta" id="d3ce7ff3-6150-499a-b74a-80f528ff2614">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/defaultsettings/{defaultSettingId}" methodName="UpdateDefaultSetting" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="SetProductCatalogImportDefaultSettingToDelta" id="e70d197f-6146-4370-a3fe-e6b5f7e7bd0e" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+    "ParameterName":  "PRODUCT_HIERACHY_IMPORT",
+    "ParameterValue":  "DELTA"
+  }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/defaultsettings/defaultSettingId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="c46b9c2d-8a7b-4b1c-a1de-3aef6f92eadc" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="defaultSettingId" value="${GetProductCatalogImportDefaultSetting#Response#$[0]['DefaultSettingId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="content" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>defaultSettingId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="RunExecuteBatchWorkFlowforProductCatalogImport" id="988b5be4-ecd8-4065-ab29-4e815c1b4dfd">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -27,11 +123,11 @@
       <con:properties>
         <con:property>
           <con:name>DataHubProcessDefinitionKey</con:name>
-          <con:value>Automation_ProductCatalog_Import</con:value>
+          <con:value>Automation_Product_Catalog_Import</con:value>
         </con:property>
         <con:property>
           <con:name>DataHubProcessId</con:name>
-          <con:value/>
+          <con:value>f2d619ce-c198-11ec-8017-028e85891005</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -47,7 +143,7 @@
       <con:properties>
         <con:property>
           <con:name>ScriptId</con:name>
-          <con:value>f9826156-7fbb-4ef2-9d4c-07dea2ab6f59</con:value>
+          <con:value>1132ac81-43ea-410d-ab5b-af3defd18e64</con:value>
         </con:property>
         <con:property>
           <con:name>ScriptName</con:name>
@@ -60,229 +156,14 @@
       <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="RunProcessProfile" id="94f1c705-b6db-41bb-8647-4e3e85d76fb1">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>ProfileId</con:name>
-          <con:value>c93796d5-ecaf-47be-8459-23cdefe67cf7</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties>
-        <con:entry>ProfileId</con:entry>
-      </con:returnProperties>
-      <con:runMode>PARALLELL</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileById" id="3b2e772f-a8a6-446d-900a-f20ed74013aa">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}" methodName="GetProfileByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="caa82c6c-fb0c-4527-9a62-8abf1c42fa9d" mediaType="application/json" name="GetProfileById">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="db58f97f-88cc-4f47-b004-eec02b8dc0e7" name="Smart Assertion - Validating HTTP Status Code 200 ">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Metadata</con:mode>
-            <con:elements>
-              <con:path>$['Headers']['date']</con:path>
-              <con:element>date</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Thu, 24 Mar 2022 21:08:53 GMT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['server']</con:path>
-              <con:element>server</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-length']</con:path>
-              <con:element>content-length</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>3976</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['language-code']</con:path>
-              <con:element>language-code</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-frame-options']</con:path>
-              <con:element>x-frame-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['pragma']</con:path>
-              <con:element>pragma</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-content-type-options']</con:path>
-              <con:element>x-content-type-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-xss-protection']</con:path>
-              <con:element>x-xss-protection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['connection']</con:path>
-              <con:element>connection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>keep-alive</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['correlationid']</con:path>
-              <con:element>correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>33012cd8-a369-c342-a97c-81ba22140c6a</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-type']</con:path>
-              <con:element>content-type</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['process-time']</con:path>
-              <con:element>process-time</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>20ms</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['#status#']</con:path>
-              <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['cache-control']</con:path>
-              <con:element>cache-control</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-store,no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['new-correlationid']</con:path>
-              <con:element>new-correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMGDIK40OADM:0000014B</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Thu, 24 Mar 2022 21:08:53 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"3976","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"33012cd8-a369-c342-a97c-81ba22140c6a","content-type":"application/json; charset=utf-8","process-time":"20ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGDIK40OADM:0000014B"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${RunProcessProfile#ProfileId}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>profileId</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>Program-Code</con:entry>
-          <con:entry>content-type</con:entry>
-          <con:entry>Accept-Language</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
   <con:testStep type="datasource" name="ProductCatalogLayoutDataSource" id="b9bc1dae-f3ba-4517-bb9c-cfa3ebae2210">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="Data Generator">
         <con:configuration>
           <generatedDataCount>1</generatedDataCount>
-          <generatorsTotalNumber>3</generatorsTotalNumber>
-          <lastSelectedProperty>0</lastSelectedProperty>
+          <generatorsTotalNumber>2</generatorsTotalNumber>
+          <lastSelectedProperty>1</lastSelectedProperty>
           <GeneratorType0>GUID</GeneratorType0>
           <PropertyName0>JobName</PropertyName0>
           <repetitionCountJobName>0</repetitionCountJobName>
@@ -291,14 +172,6 @@
           <PropertyName1>FileName</PropertyName1>
           <repetitionCountFileName>0</repetitionCountFileName>
           <repeatValuesFileName>false</repeatValuesFileName>
-          <GeneratorType2>INT</GeneratorType2>
-          <PropertyName2>StoreCode</PropertyName2>
-          <repetitionCountStoreCode>0</repetitionCountStoreCode>
-          <repeatValuesStoreCode>false</repeatValuesStoreCode>
-          <IntegerDataGeneratorMinValueStoreCode>1000</IntegerDataGeneratorMinValueStoreCode>
-          <IntegerDataGeneratorMaxValueStoreCode>100000</IntegerDataGeneratorMaxValueStoreCode>
-          <IntegerDataGeneratorStepValueStoreCode>0</IntegerDataGeneratorStepValueStoreCode>
-          <IntegerDataGeneratorConsequentValuesStoreCode>false</IntegerDataGeneratorConsequentValuesStoreCode>
           <escapeSpaceSequence/>
         </con:configuration>
       </con:dataSource>
@@ -306,125 +179,8 @@
       <con:restartShared>true</con:restartShared>
       <con:property>JobName</con:property>
       <con:property>FileName</con:property>
-      <con:property>StoreCode</con:property>
       <con:completeLastOperation>true</con:completeLastOperation>
       <con:restartOnRun>true</con:restartOnRun>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="transfer" name="TransferPropertiesToTransactionLayout" id="f152d196-c601-4ab6-8afb-f8535695705c">
-    <con:settings/>
-    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>TransactionNumber01</con:name>
-        <con:sourceType xsi:nil="true"/>
-        <con:sourceStep>ProductCatalogLayoutDataSource</con:sourceStep>
-        <con:sourcePath/>
-        <con:targetType xsi:nil="true"/>
-        <con:targetStep>ProductCatalogLayoutProperties</con:targetStep>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>ProfileId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetProfileById</con:sourceStep>
-        <con:sourcePath>$['ProfileId']</con:sourcePath>
-        <con:targetType>ProfileId</con:targetType>
-        <con:targetStep>ProductCatalogLayoutProperties</con:targetStep>
-        <con:targetPath/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>TransactionDateTime</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetProfileById</con:sourceStep>
-        <con:sourcePath>$['CreateDate']</con:sourcePath>
-        <con:targetType>TransactionDateTime</con:targetType>
-        <con:targetStep>ProductCatalogLayoutProperties</con:targetStep>
-        <con:targetPath/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>TransactionEndDateTime</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetProfileById</con:sourceStep>
-        <con:sourcePath>$['CreateDate']</con:sourcePath>
-        <con:targetType>TransactionEndDateTime</con:targetType>
-        <con:targetStep>ProductCatalogLayoutProperties</con:targetStep>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>ActivityDate</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetProfileById</con:sourceStep>
-        <con:sourcePath>$['ActivityDate']</con:sourcePath>
-        <con:targetType>ActivityDate</con:targetType>
-        <con:targetStep>ProductCatalogLayoutProperties</con:targetStep>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>TransactionNumber02</con:name>
-        <con:sourceType xsi:nil="true"/>
-        <con:sourceStep>ProductCatalogLayoutDataSource</con:sourceStep>
-        <con:targetType xsi:nil="true"/>
-        <con:targetStep xsi:nil="true"/>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>TransactionNumber03</con:name>
-        <con:sourceType xsi:nil="true"/>
-        <con:sourceStep>ProductCatalogLayoutDataSource</con:sourceStep>
-        <con:targetType xsi:nil="true"/>
-        <con:targetStep xsi:nil="true"/>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>TransactionNumber04</con:name>
-        <con:sourceType xsi:nil="true"/>
-        <con:sourceStep>ProductCatalogLayoutDataSource</con:sourceStep>
-        <con:targetType xsi:nil="true"/>
-        <con:targetStep xsi:nil="true"/>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>TransactionNumber05</con:name>
-        <con:sourceType xsi:nil="true"/>
-        <con:sourceStep>ProductCatalogLayoutDataSource</con:sourceStep>
-        <con:targetType xsi:nil="true"/>
-        <con:targetStep xsi:nil="true"/>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>TransactionNumber08</con:name>
-        <con:sourceType xsi:nil="true"/>
-        <con:sourceStep>ProductCatalogLayoutDataSource</con:sourceStep>
-        <con:targetType xsi:nil="true"/>
-        <con:targetStep xsi:nil="true"/>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>SourceAccountNumber</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetProfileById</con:sourceStep>
-        <con:sourcePath>$['SourceAccountNumber']</con:sourcePath>
-        <con:targetType>SourceAccountNumber</con:targetType>
-        <con:targetStep>ProductCatalogLayoutProperties</con:targetStep>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>InvoiceDateTime</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetProfileById</con:sourceStep>
-        <con:sourcePath>$['CreateDate']</con:sourcePath>
-        <con:targetType xsi:nil="true"/>
-        <con:targetStep xsi:nil="true"/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
     </con:config>
   </con:testStep>
   <con:testStep type="properties" name="ProductCatalogLayoutProperties" id="909526db-7b64-4086-b75b-17ac561c2d84">
@@ -433,263 +189,147 @@
       <con:source/>
       <con:properties>
         <con:property>
-          <con:name>RecordType</con:name>
-          <con:value>01</con:value>
-        </con:property>
-        <con:property>
-          <con:name>TransactionNumber</con:name>
-          <con:value>mA1dA5rMOP</con:value>
-        </con:property>
-        <con:property>
-          <con:name>TransactionId</con:name>
+          <con:name>ProductId</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>ProfileId</con:name>
-          <con:value>c93796d5-ecaf-47be-8459-23cdefe67cf7</con:value>
-        </con:property>
-        <con:property>
-          <con:name>CardNumber</con:name>
+          <con:name>BrandCode</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>TransactionTypeCode</con:name>
-          <con:value>PR</con:value>
-        </con:property>
-        <con:property>
-          <con:name>TransactionDescription</con:name>
-          <con:value>Automation_PR_Transaction</con:value>
-        </con:property>
-        <con:property>
-          <con:name>TransactionDateTime</con:name>
-          <con:value>2022-03-24T21:08:52.988121Z</con:value>
-        </con:property>
-        <con:property>
-          <con:name>TransactionEndDateTime</con:name>
-          <con:value>2022-03-24T21:08:52.988121Z</con:value>
-        </con:property>
-        <con:property>
-          <con:name>TransactionNetTotal</con:name>
-          <con:value>5</con:value>
-        </con:property>
-        <con:property>
-          <con:name>TransactionEligible</con:name>
-          <con:value/>
-        </con:property>
-        <con:property>
-          <con:name>TransactionTotalTax</con:name>
-          <con:value>2</con:value>
-        </con:property>
-        <con:property>
-          <con:name>PostSalesAdjustment</con:name>
-          <con:value>0</con:value>
-        </con:property>
-        <con:property>
-          <con:name>ShippingAndHandlingAmount</con:name>
-          <con:value>0</con:value>
-        </con:property>
-        <con:property>
-          <con:name>RecordStatus</con:name>
-          <con:value/>
-        </con:property>
-        <con:property>
-          <con:name>DeviceId</con:name>
-          <con:value>DEVICE</con:value>
-        </con:property>
-        <con:property>
-          <con:name>DeviceUserid</con:name>
-          <con:value>USER</con:value>
-        </con:property>
-        <con:property>
-          <con:name>AuthorizationCode</con:name>
-          <con:value>AUTH</con:value>
-        </con:property>
-        <con:property>
-          <con:name>OriginalTransactionNumber</con:name>
-          <con:value/>
-        </con:property>
-        <con:property>
-          <con:name>SkipMomentEngine</con:name>
-          <con:value/>
-        </con:property>
-        <con:property>
-          <con:name>CurrencyCode</con:name>
-          <con:value>USD</con:value>
-        </con:property>
-        <con:property>
-          <con:name>AccountSourceCode</con:name>
-          <con:value>ALMACCT</con:value>
-        </con:property>
-        <con:property>
-          <con:name>SourceAccountNumber</con:name>
-          <con:value>c93796d5-ecaf-47be-8459-23cdefe67cf7</con:value>
-        </con:property>
-        <con:property>
-          <con:name>ActivityDate</con:name>
-          <con:value>2022-03-24T21:08:52Z</con:value>
-        </con:property>
-        <con:property>
-          <con:name>ClientFileId</con:name>
-          <con:value>1</con:value>
-        </con:property>
-        <con:property>
-          <con:name>ClientRecordNumber</con:name>
-          <con:value>1</con:value>
-        </con:property>
-        <con:property>
-          <con:name>BrandOrgCode</con:name>
-          <con:value>ALM_BRAND</con:value>
-        </con:property>
-        <con:property>
-          <con:name>AssociateNumber</con:name>
-          <con:value>1</con:value>
-        </con:property>
-        <con:property>
-          <con:name>GrossAmount</con:name>
-          <con:value>7</con:value>
-        </con:property>
-        <con:property>
-          <con:name>NetAmount</con:name>
-          <con:value>0</con:value>
-        </con:property>
-        <con:property>
-          <con:name>ProgramCurrencyGrossAmount</con:name>
-          <con:value/>
-        </con:property>
-        <con:property>
-          <con:name>TransactionSequenceNumber</con:name>
-          <con:value>1</con:value>
-        </con:property>
-        <con:property>
-          <con:name>TransactionSourceCode</con:name>
-          <con:value/>
-        </con:property>
-        <con:property>
-          <con:name>TransactionSubtypeCode</con:name>
-          <con:value>SUB</con:value>
-        </con:property>
-        <con:property>
-          <con:name>Tier</con:name>
-          <con:value>BARN</con:value>
-        </con:property>
-        <con:property>
-          <con:name>StoreCode</con:name>
-          <con:value>PP15001</con:value>
-        </con:property>
-        <con:property>
-          <con:name>NotUsed1</con:name>
+          <con:name>BrandDescription</con:name>
           <con:value/>
         </con:property>
         <con:property>
           <con:name>ProgramCode</con:name>
-          <con:value>PP</con:value>
-        </con:property>
-        <con:property>
-          <con:name>ExchangeRate</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>Gratuity</con:name>
+          <con:name>SKU</con:name>
+          <con:value>SKU-0007</con:value>
+        </con:property>
+        <con:property>
+          <con:name>UPC</con:name>
+          <con:value>UPC-0007</con:value>
+        </con:property>
+        <con:property>
+          <con:name>CustomProductCode</con:name>
+          <con:value>PC-0007</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ChainName</con:name>
+          <con:value>CHICKEN-SHACK</con:value>
+        </con:property>
+        <con:property>
+          <con:name>Description</con:name>
+          <con:value>SWEET Basket</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ExcludeFromBaseInd</con:name>
+          <con:value>N</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProductLevelCode1</con:name>
+          <con:value>SWEETS</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProductLevelDescription1</con:name>
+          <con:value>SWEET DISH</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProductLevelCode2</con:name>
+          <con:value>DESERT</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProductLevelDescription2</con:name>
+          <con:value>ICE CREAM</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProductLevelCode3</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>SourceCustomerId</con:name>
+          <con:name>ProductLevelDescription3</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>DiscountAmount</con:name>
-          <con:value>0</con:value>
-        </con:property>
-        <con:property>
-          <con:name>TransactionChannelCode</con:name>
+          <con:name>ProductLevelCode4</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>TransactionBusinessDate</con:name>
+          <con:name>ProductLevelDescription4</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>PromoCode</con:name>
-          <con:value>PROMO</con:value>
-        </con:property>
-        <con:property>
-          <con:name>BuyerTypeCode</con:name>
-          <con:value>BU</con:value>
-        </con:property>
-        <con:property>
-          <con:name>RmbMethodCode</con:name>
-          <con:value>RMB</con:value>
-        </con:property>
-        <con:property>
-          <con:name>RmbVendorCode</con:name>
-          <con:value>RMBV</con:value>
-        </con:property>
-        <con:property>
-          <con:name>RmbDate</con:name>
+          <con:name>ProductLevelCode5</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>NotUsed</con:name>
+          <con:name>ProductLevelDescription5</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>ProgramCurrencyTransactionTotal</con:name>
+          <con:name>ProductLevelCode6</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>ProgramCurrencyTransactionTotalTax</con:name>
+          <con:name>ProductLevelDescription6</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>ProgramCurrencyPostSalesAdjustment</con:name>
+          <con:name>ProductLevelCode7</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>ProgramCurrencyShippingAndHandling</con:name>
+          <con:name>ProductLevelDescription7</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>ProgramCurrencyEligibleRevenue</con:name>
+          <con:name>ProductLevelCode8</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>ProgramCurrencyGratuity</con:name>
+          <con:name>ProductLevelDescription8</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>TransactionQualifierCode</con:name>
+          <con:name>ProductLevelCode9</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>OriginalStoreCode</con:name>
+          <con:name>ProductLevelDescription9</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>OriginalTransactionDateTime</con:name>
+          <con:name>ProductLevelCode10</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>OriginalTransactionEndDateTime</con:name>
+          <con:name>ProductLevelDescription10</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>SuspendReasonCode</con:name>
+          <con:name>Status</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>SuspendTransaction</con:name>
+          <con:name>ActivityDate</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>JsonExternalData</con:name>
+          <con:name>ProductImage</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>PostingKeyCode</con:name>
+          <con:name>ProductSmallImage</con:name>
           <con:value/>
         </con:property>
         <con:property>
-          <con:name>PostingKeyValue</con:name>
+          <con:name>ProductLargeImage</con:name>
+          <con:value/>
+        </con:property>
+        <con:property>
+          <con:name>ProductLongDescription</con:name>
           <con:value/>
         </con:property>
       </con:properties>
@@ -698,7 +338,68 @@
   <con:testStep type="groovy" name="CreateProductCatalogImportFile" id="f05f6ff1-e4d7-4739-9fa1-5d776df2b1f7">
     <con:settings/>
     <con:config>
-      <script/>
+      <script>import groovy.json.JsonGenerator
+import groovy.json.JsonGenerator.Converter
+
+def ProductCatalogImportLayoutList = testRunner.testCase.getTestSteps().ProductCatalogLayoutProperties.getPropertyList();
+
+def parseCollection(propertyList){  	
+	def mapClass = [:]
+	for( item in propertyList)
+	{
+		if( item.value == null  ){
+			 item.value= '';
+		}
+	    mapClass[item.name] = item.value;	  
+	}    
+	return mapClass;
+}
+
+def jsonDefaultOutput = new JsonGenerator.Options()
+.dateFormat('MM-dd-yyyy')
+.build(); 
+
+def ProductCatalogImportString = parseCollection(ProductCatalogImportLayoutList);
+
+
+def s3Bucket = context.expand( '${#Project#S3Bucket}' )
+def todayDate = new Date().format( 'MM-dd-yyyy' );
+def jobName = context.expand( '${ProductCatalogLayoutDataSource#JobName}' )
+
+def programCode = context.expand( '${#Project#ProgramCode}' )
+def fileContent =  [ProductCatalogImportString ];
+def scriptName = context.expand( '${#TestCase#ScriptName}' )
+
+def jsonExternalDataMap = [:]
+def dataHubProcessId = context.expand( '${RunExecuteBatchWorkFlowforProductCatalogImport#DataHubProcessId}' )
+
+
+
+def fileName = 'ProductCatalogImport' + dataHubProcessId  + '.txt';
+jsonExternalDataMap["FileName"]  = fileName;
+jsonExternalDataMap["FileLocation"]  = "s3://" + s3Bucket + "/automation/ProductCatalogImportInput";
+jsonExternalDataMap["FileContent"] = fileContent;
+jsonExternalDataMap["UseHeader"] = 'true';
+
+def batchInputJsonMap = [:];
+batchInputJsonMap["JobName"] = 'InvokeScript_' + jobName;
+batchInputJsonMap["FileName"] = fileName;
+batchInputJsonMap["FileInputLocation"] = "s3://" + s3Bucket + "/automation/" + todayDate + "/Input";
+batchInputJsonMap["FileOutputLocation"] = "s3://" + s3Bucket + "/automation/" + todayDate + "/Output";
+batchInputJsonMap["EmailAddresses"]= "";
+batchInputJsonMap["JobTypeId"]= "4923d185-0c86-4c15-9356-67597ab70526";
+batchInputJsonMap["JobType"]= "";
+batchInputJsonMap["ProgramCode"]= programCode;
+batchInputJsonMap["DataOutputType"]= "FULL";
+batchInputJsonMap["MaxThreads"]= 50;
+
+batchInputJsonMap["ScriptName"] =  scriptName;
+batchInputJsonMap["JsonExternalData"]= jsonExternalDataMap;
+batchInputJsonMap["AdditionalRunData"]= "";
+
+def batchInputJson = jsonDefaultOutput.toJson(batchInputJsonMap);
+
+return batchInputJson;</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="CreateBatchJob" id="101ee088-61dc-46de-a770-368af25e6200">
@@ -942,7 +643,7 @@
       <con:properties>
         <con:property>
           <con:name>SysJobID</con:name>
-          <con:value>e1e46c17-dcfc-412a-967f-cf913c204038</con:value>
+          <con:value>d21a65dd-3039-4b4d-87bc-e8352a9c425f</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -1300,11 +1001,55 @@
       <con:properties>
         <con:property>
           <con:name>DatahubProcessId</con:name>
-          <con:value>9aa4c5c9-abb6-11ec-8915-028e85891005</con:value>
+          <con:value>f2d619ce-c198-11ec-8017-028e85891005</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ResetProductCatalogImportDefaultSettingToFULL" id="f8b73e7f-da48-4fec-a16e-09898370adc1">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/defaultsettings/{defaultSettingId}" methodName="UpdateDefaultSetting" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ResetProductCatalogImportDefaultSettingToFULL" id="e70d197f-6146-4370-a3fe-e6b5f7e7bd0e" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+    "ParameterName":  "PRODUCT_HIERACHY_IMPORT",
+    "ParameterValue":  "FULL"
+  }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/defaultsettings/defaultSettingId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="c46b9c2d-8a7b-4b1c-a1de-3aef6f92eadc" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="defaultSettingId" value="${GetProductCatalogImportDefaultSetting#Response#$[0]['DefaultSettingId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="content" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>defaultSettingId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:setupScript/>

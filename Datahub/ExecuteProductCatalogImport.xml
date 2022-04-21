@@ -61,7 +61,23 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="goto" name="GOTOUpdateProductRefreshSettingIfFull" id="29c72a42-6b49-446a-89bd-431aeb4100c8">
+  <con:testStep type="transfer" name="TransferProductCatalogImportFlagToProperties" id="e9cd3d62-bd82-41db-a9cb-50502eccb61e">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>ProductCatalogImportFlag</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetProductCatalogImportDefaultSetting</con:sourceStep>
+        <con:sourcePath>$[0]['ParameterValue']</con:sourcePath>
+        <con:targetType>SaveProductCatalogImportFlag</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="GotoUpdateProductRefreshSettingIfFull" id="29c72a42-6b49-446a-89bd-431aeb4100c8">
     <con:settings/>
     <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:condition>
@@ -127,7 +143,7 @@
         </con:property>
         <con:property>
           <con:name>DataHubProcessId</con:name>
-          <con:value>f2d619ce-c198-11ec-8017-028e85891005</con:value>
+          <con:value>5504ff57-c1a8-11ec-8017-028e85891005</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -643,7 +659,7 @@ return batchInputJson;</script>
       <con:properties>
         <con:property>
           <con:name>SysJobID</con:name>
-          <con:value>d21a65dd-3039-4b4d-87bc-e8352a9c425f</con:value>
+          <con:value>d3c5a5e9-fc4d-49ba-81fc-731bba7ece75</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -1001,24 +1017,24 @@ return batchInputJson;</script>
       <con:properties>
         <con:property>
           <con:name>DatahubProcessId</con:name>
-          <con:value>f2d619ce-c198-11ec-8017-028e85891005</con:value>
+          <con:value>5504ff57-c1a8-11ec-8017-028e85891005</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ResetProductCatalogImportDefaultSettingToFULL" id="f8b73e7f-da48-4fec-a16e-09898370adc1">
+  <con:testStep type="restrequest" name="ResetProductCatalogImportDefaultSettingToFull" id="f8b73e7f-da48-4fec-a16e-09898370adc1">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/defaultsettings/{defaultSettingId}" methodName="UpdateDefaultSetting" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ResetProductCatalogImportDefaultSettingToFULL" id="e70d197f-6146-4370-a3fe-e6b5f7e7bd0e" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="ResetProductCatalogImportDefaultSettingToFull" id="e70d197f-6146-4370-a3fe-e6b5f7e7bd0e" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
     "ParameterName":  "PRODUCT_HIERACHY_IMPORT",
-    "ParameterValue":  "FULL"
+    "ParameterValue":  "${#TestCase#SaveProductCatalogImportFlag}"
   }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/defaultsettings/defaultSettingId</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="c46b9c2d-8a7b-4b1c-a1de-3aef6f92eadc" name="Valid HTTP Status Codes">
@@ -1069,6 +1085,10 @@ return batchInputJson;</script>
     <con:property userSpecific="true">
       <con:name>EnablePostingKey</con:name>
       <con:value>false</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>SaveProductCatalogImportFlag</con:name>
+      <con:value/>
     </con:property>
   </con:properties>
   <con:reportParameters/>

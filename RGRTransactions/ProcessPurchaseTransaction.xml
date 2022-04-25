@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="37419203-0c05-4237-a511-ca281b014796" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ProcessPurchaseTransaction" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="37419203-0c05-4237-a511-ca281b014796fileName">ProcessPurchaseTransaction</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="Add Profile With Posting Key" id="00bf3645-fbca-4623-a977-0504a70ca3c9">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>baad9bb0-ef1d-40cc-ad6c-120db1b5f415</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>374d5844-8b6c-472b-bf56-6c2b0547302c</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Initialize Program Settings" id="713cfce7-c208-4a41-997c-ddfe80d798ef">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>266f81f9-6a14-47ea-856a-76d79c3e73e9</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Add Full Purchase Transaction" id="af0c47ec-eee1-4905-bd70-675c386f7978">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>7e46ce40-8567-441d-9993-719fb6280391</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>RawTransactionId</con:name>
+          <con:value>9b38b727-5d23-4260-91ba-ed4ef83802ff</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>RawTransactionId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Transaction By Id" id="3e70fb0a-5d07-426c-b5af-0f68f8eb6c5e">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/transaction/rawtransactions/{rawtransactionid}" methodName="GetTransactionById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Transaction By Id" id="d866248f-9e10-4bc6-824e-b2fc2f226a21" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction/rawtransactions/rawtransactionid</con:originalUri>
+        <con:assertion type="JsonPath Match" id="4a5ab5c2-f826-44d4-bcf9-1e4490283927" name="Verify Point Amount">
+          <con:configuration>
+            <path>$.Moments[?(@.MomentCode=="PPBASE")].PointAmount</path>
+            <content>[
+   90.0
+]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileid" value="${Add Profile With Posting Key#ProfileId}"/>
+          <con:entry key="rawtransactionid" value="${Add Full Purchase Transaction#RawTransactionId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>rawtransactionid</con:entry>
+          <con:entry>profileid</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Points Summary" id="00113ee6-ab6e-4d7b-a8dc-bd627d83e50d">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Points Summary" id="90aa5f43-a530-41eb-9446-2dde6c33780e" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/1ca43cf3-1a74-4a8d-8560-75e834f05daf/points/summary</con:originalUri>
+        <con:assertion type="JsonPath Match" id="bf12f2fd-b23d-46df-931b-8e2f11a0efee" name="JSONPath Match">
+          <con:configuration>
+            <path>$.[?(@.TransactionId == "${Get Transaction By Id#Response#$['TransactionId']}")].PointsAmount</path>
+            <content>[
+   90.0
+]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${Add Profile With Posting Key#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

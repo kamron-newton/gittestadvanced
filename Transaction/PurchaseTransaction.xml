@@ -4,6 +4,33 @@
     <con:setting id="721c9d8e-bdd9-4288-a701-c671b71b71effileName">PurchaseTransaction</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="properties" name="Defaults" id="d7798df9-8112-4736-a667-2334ba246f0b">
+    <con:settings/>
+    <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:properties>
+        <con:property>
+          <con:name>SkipMomentEngine</con:name>
+          <con:value>false</con:value>
+        </con:property>
+      </con:properties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="AssignDefaults" id="e0bd90a4-5b80-40f1-acfd-07f0b8a98b33">
+    <con:settings/>
+    <con:config>
+      <script>def target = testRunner.testCase
+def source = testRunner.testCase.testSteps["Defaults"]
+for(prop in source.getPropertyList()) {
+	assignDefault(target, source, prop.getName())
+}
+
+def assignDefault(target, source, propName) {
+	def prop = target.getPropertyValue(propName)
+	if(prop == "" || prop == null)
+		target.setPropertyValue(propName, source.getPropertyValue(propName))
+}</script>
+    </con:config>
+  </con:testStep>
   <con:testStep id="899c0e48-0bd0-4a39-bb17-212acb60524e" name="PurchaseTransaction" type="restrequest">
     <con:settings/>
     <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -26,6 +53,7 @@
    "TransactionDateTime":"${#TestCase#TransactionDate}",
    "StoreCode":"PP1501",
    "CurrencyCode":"USD",
+   "SkipMomentEngine":"${#TestCase#SkipMomentEngine}",
    "TransactionDescription":"PR Transaction",
    "TransactionDetails":[  
       {  
@@ -269,6 +297,10 @@
     </con:property>
     <con:property userSpecific="true">
       <con:name>RawTransactionId</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>SkipMomentEngine</con:name>
       <con:value/>
     </con:property>
   </con:properties>

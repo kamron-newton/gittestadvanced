@@ -13,10 +13,8 @@
           <con:value>fcdeea80-d587-4b6d-a0b5-4871eb30db88</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties>
-        <con:entry>ProfileId</con:entry>
-      </con:returnProperties>
-      <con:runMode>PARALLELL</con:runMode>
+      <con:returnProperties></con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="Add Victim Profile" id="6d8aaef8-43ed-413d-8d33-c46e6813f958">
@@ -29,23 +27,8 @@
           <con:value>fa3feccf-26cb-408f-857f-2046210f21c5</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties>
-        <con:entry>ProfileId</con:entry>
-      </con:returnProperties>
-      <con:runMode>PARALLELL</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="Date Generator" id="61005021-7e35-41c6-b48e-3ef36a552596">
-    <con:settings/>
-    <con:config>
-      <script>import java.time.LocalDateTime;    
-LocalDateTime current = LocalDateTime.now();</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="GUID Generator" id="54e1ff13-d9a7-43e1-b10a-8b15f5a0d81a">
-    <con:settings/>
-    <con:config>
-      <script>java.util.UUID.randomUUID();</script>
+      <con:returnProperties></con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="Merge Survivor and Victim Profile" id="979a9c53-039f-4520-a6d5-ed13e3ec0d3a">
@@ -272,16 +255,16 @@ netValue = Math.floor(Math.random() * 100)</script>
    "TransactionEligible":45,
    "DiscountAmount":3.00,
    "TransactionNumber":"${${GUID Generator#result}}_PR",
-   "TransactionDateTime":"${Date Generator#result}",
+   "TransactionDateTime":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
    "StoreCode":"PP1501",
    "CurrencyCode":"USD",
    "TransactionDescription":"PR Transaction",
-   "CardNumber":"${GUID Generator#result}",
+   "CardNumber":"${=java.util.UUID.randomUUID()}",
    "TransactionDetails":[  
       {  
          "DollarValueGross":44.0,
          "TaxAmount":4.0,
-         "DollarValueNet":"${Generate DollarValueNet#result}",
+         "DollarValueNet":"${=Math.floor(Math.random() * 100)}",
          "EligibleRevenue":null,
          "DiscountAmount":2.0,
          "Quantity":1,
@@ -705,18 +688,6 @@ netValue = Math.floor(Math.random() * 100)</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Get TransactionId" id="c1860b06-f902-45b0-885b-72407596200a">
-    <con:settings/>
-    <con:config>
-      <script>def TransactionId = context.expand( '${Add Transaction For Victim ProfileId#Response#$[\'TransactionId\']}' )</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="Get MomentId" id="c6c33be1-f87e-4275-b2ca-d1335c12225f">
-    <con:settings/>
-    <con:config>
-      <script>def MomentId = context.expand( '${Get Moment By Code#Response#$[\'MomentId\']}' )</script>
-    </con:config>
-  </con:testStep>
   <con:testStep type="restrequest" name="Verify Points for Survivor Profile Id" id="a17dfd23-3b9f-409f-b7d5-8d1669b21bf7">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -990,7 +961,7 @@ netValue = Math.floor(Math.random() * 100)</script>
         </con:assertion>
         <con:assertion type="JsonPath Match" id="ff1f2658-9adf-4402-ab7e-971bca3e10d2" name="PointsAmount Match">
           <con:configuration>
-            <path>$.[?(@.ActTransactionId == "${Get TransactionId#result}"  &amp;&amp; @.MomentId == "${Get MomentId#result}")].PointsAmount</path>
+            <path>$.[?(@.ActTransactionId == "${Add Transaction For Victim ProfileId#Response#$['TransactionId']}" &amp;&amp; @.MomentId == "${Get Moment By Code#Response#$['MomentId']}")].PointsAmount</path>
             <content>[45.0]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>

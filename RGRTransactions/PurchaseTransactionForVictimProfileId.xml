@@ -701,18 +701,6 @@ netValue = Math.floor(Math.random() * 100)</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Get TransactionId" id="c1860b06-f902-45b0-885b-72407596200a">
-    <con:settings/>
-    <con:config>
-      <script>def TransactionId = context.expand( '${Add Transaction For Victim ProfileId#Response#$[\'TransactionId\']}' )</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="Get MomentId" id="c6c33be1-f87e-4275-b2ca-d1335c12225f">
-    <con:settings/>
-    <con:config>
-      <script>def MomentId = context.expand( '${Get Moment By Code#Response#$[\'MomentId\']}' )</script>
-    </con:config>
-  </con:testStep>
   <con:testStep type="restrequest" name="Verify Points for Survivor Profile Id" id="a17dfd23-3b9f-409f-b7d5-8d1669b21bf7">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -986,7 +974,7 @@ netValue = Math.floor(Math.random() * 100)</script>
         </con:assertion>
         <con:assertion type="JsonPath Match" id="ff1f2658-9adf-4402-ab7e-971bca3e10d2" name="PointsAmount Match">
           <con:configuration>
-            <path>$.[?(@.ActTransactionId == "${Get TransactionId#result}"  &amp;&amp; @.MomentId == "${Get MomentId#result}")].PointsAmount</path>
+            <path>$.[?(@.ActTransactionId == "${Add Transaction For Victim ProfileId#Response#$['TransactionId']}" &amp;&amp; @.MomentId == "${Get Moment By Code#Response#$['MomentId']}")].PointsAmount</path>
             <content>[45.0]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>

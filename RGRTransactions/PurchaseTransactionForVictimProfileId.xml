@@ -10,7 +10,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>2d70a707-cc21-4fe4-9404-0d7bce2dfd61</con:value>
+          <con:value>fcdeea80-d587-4b6d-a0b5-4871eb30db88</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -26,7 +26,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>f38e6239-6728-457b-8274-92ddf69c037d</con:value>
+          <con:value>fa3feccf-26cb-408f-857f-2046210f21c5</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -246,13 +246,11 @@ LocalDateTime current = LocalDateTime.now();</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Set Initial Program Settings" id="fb519ce0-a391-4813-abc8-0f5100a2b2a6">
+  <con:testStep type="groovy" name="Generate DollarValueNet" id="2966d42b-4cec-444d-89e0-c7b84c806314">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>266f81f9-6a14-47ea-856a-76d79c3e73e9</con:targetTestCase>
-      <con:properties/>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    <con:config>
+      <script>import java.util.*;
+netValue = Math.floor(Math.random() * 100)</script>
     </con:config>
   </con:testStep>
   <con:testStep id="73d60811-6ea9-41d5-a507-c4493b41fec5" name="Add Transaction For Victim ProfileId" type="restrequest">
@@ -266,7 +264,7 @@ LocalDateTime current = LocalDateTime.now();</script>
    "TransactionTypeCode":"PR",
    "ProfileId":"${Add Victim Profile#ProfileId}",
    "GrossAmount":65.00,
-   "TransactionTotalTax":6.00,
+   "TransactionTotalTax":5.00,
    "ShippingAndHandling":0.0,
    "Gratuity":0.0,
    "PostSalesAdjustment":0.0,
@@ -275,7 +273,7 @@ LocalDateTime current = LocalDateTime.now();</script>
    "DiscountAmount":3.00,
    "TransactionNumber":"${${GUID Generator#result}}_PR",
    "TransactionDateTime":"${Date Generator#result}",
-   "StoreCode":"PP1502",
+   "StoreCode":"PP1501",
    "CurrencyCode":"USD",
    "TransactionDescription":"PR Transaction",
    "CardNumber":"${GUID Generator#result}",
@@ -283,11 +281,11 @@ LocalDateTime current = LocalDateTime.now();</script>
       {  
          "DollarValueGross":44.0,
          "TaxAmount":4.0,
-         "DollarValueNet":40.0,
+         "DollarValueNet":"${Generate DollarValueNet#result}",
          "EligibleRevenue":null,
          "DiscountAmount":2.0,
          "Quantity":1,
-         "ItemNumber":"100100",
+         "ItemNumber":"10018",
          "ItemNumberTypeCode":"S",
          "LineNumber":1         
       },
@@ -298,7 +296,7 @@ LocalDateTime current = LocalDateTime.now();</script>
          "EligibleRevenue":null,
          "DiscountAmount":1.0,
          "Quantity":1,
-         "ItemNumber":"100200",
+         "ItemNumber":"1200",
          "ItemNumberTypeCode":"S",
          "LineNumber":2         
       }
@@ -497,6 +495,15 @@ LocalDateTime current = LocalDateTime.now();</script>
           </con:entry>
         </con:environmentSpec>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Set Initial Program Settings" id="fb519ce0-a391-4813-abc8-0f5100a2b2a6">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>266f81f9-6a14-47ea-856a-76d79c3e73e9</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="Get Moment By Code" id="b42d136f-c617-440d-91da-61eca8036b5b">
@@ -698,6 +705,18 @@ LocalDateTime current = LocalDateTime.now();</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="Get TransactionId" id="c1860b06-f902-45b0-885b-72407596200a">
+    <con:settings/>
+    <con:config>
+      <script>def TransactionId = context.expand( '${Add Transaction For Victim ProfileId#Response#$[\'TransactionId\']}' )</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Get MomentId" id="c6c33be1-f87e-4275-b2ca-d1335c12225f">
+    <con:settings/>
+    <con:config>
+      <script>def MomentId = context.expand( '${Get Moment By Code#Response#$[\'MomentId\']}' )</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="Verify Points for Survivor Profile Id" id="a17dfd23-3b9f-409f-b7d5-8d1669b21bf7">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -706,7 +725,112 @@ LocalDateTime current = LocalDateTime.now();</script>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
+        <con:request>[
+  {
+    "ProfileId": "7cd92a65-cb66-4751-8182-bc334f6075ba",
+    "ActPointId": "d20dc3b0-9dec-4fc1-b9cf-34564d23a5c0",
+    "PointType": "Eggs",
+    "PointsAmount": 45.0,
+    "SupposedToEarnPoints": 45.0,
+    "BonusDescription": "Get an egg for every dollar spent for Chicken Shack",
+    "ActivityType": "BASE",
+    "ActivityTypeDescription": "Base Offer",
+    "Status": "A",
+    "TransactionId": "36eb1308-dfe9-40e6-aca1-090e722c6b67",
+    "ActTransactionId": "d066011c-db29-4651-8411-a488571133cd",
+    "MomentId": "8f15f79a-fa98-4647-bb45-c513e9df9ce6",
+    "PointSubTypeId": "90e32f74-b5f1-44cb-ac28-91ddeea8a2cb",
+    "BalancePoints": 45.0,
+    "AccountSourceCode": "ALMACCT",
+    "SourceAccountNumber": "7cd92a65-cb66-4751-8182-bc334f6075ba",
+    "BrandOrgCode": "ALM_BRAND",
+    "PointTypeShortDescription": "Eggs",
+    "TransactionNumber": "_PR",
+    "SecuredPostingKey": false,
+    "CreateUser": "AUTO_USER",
+    "CreateDate": "2022-04-29T17:50:55.541123Z",
+    "UpdateUser": "AUTO_USER",
+    "UpdateDate": "2022-04-29T17:50:55.541124Z"
+  },
+  {
+    "ProfileId": "7cd92a65-cb66-4751-8182-bc334f6075ba",
+    "ActPointId": "41139423-5f08-4314-92a0-304bb15e762a",
+    "PointType": "Eggs",
+    "PointsAmount": 60.0,
+    "SupposedToEarnPoints": 60.0,
+    "BonusDescription": "Get an egg for every dollar spent for Chicken Shack",
+    "ActivityType": "BASE",
+    "ActivityTypeDescription": "Base Offer",
+    "Status": "A",
+    "TransactionId": "36eb1308-dfe9-40e6-aca1-090e722c6b67",
+    "ActTransactionId": "d066011c-db29-4651-8411-a488571133cd",
+    "MomentId": "06438c63-d21e-4c3c-ad76-703471972699",
+    "PointSubTypeId": "90e32f74-b5f1-44cb-ac28-91ddeea8a2cb",
+    "BalancePoints": 60.0,
+    "AccountSourceCode": "ALMACCT",
+    "SourceAccountNumber": "7cd92a65-cb66-4751-8182-bc334f6075ba",
+    "BrandOrgCode": "ALM_BRAND",
+    "PointTypeShortDescription": "Eggs",
+    "TransactionNumber": "_PR",
+    "SecuredPostingKey": false,
+    "CreateUser": "AUTO_USER",
+    "CreateDate": "2022-04-29T17:50:55.541123Z",
+    "UpdateUser": "AUTO_USER",
+    "UpdateDate": "2022-04-29T17:50:55.541124Z"
+  },
+  {
+    "ProfileId": "7cd92a65-cb66-4751-8182-bc334f6075ba",
+    "ActPointId": "3b5c861b-07e9-45b4-8556-b9f0f89c0f16",
+    "PointType": "Eggs",
+    "PointsAmount": 100.0,
+    "SupposedToEarnPoints": 100.0,
+    "BonusDescription": "Get an egg for every dollar spent for Chicken Shack",
+    "ActivityType": "BASE",
+    "ActivityTypeDescription": "Base Offer",
+    "Status": "A",
+    "TransactionId": "36eb1308-dfe9-40e6-aca1-090e722c6b67",
+    "ActTransactionId": "d066011c-db29-4651-8411-a488571133cd",
+    "MomentId": "9bbc16ae-1dd9-4ffd-a852-afa84b0b98f0",
+    "PointSubTypeId": "90e32f74-b5f1-44cb-ac28-91ddeea8a2cb",
+    "BalancePoints": 100.0,
+    "AccountSourceCode": "ALMACCT",
+    "SourceAccountNumber": "7cd92a65-cb66-4751-8182-bc334f6075ba",
+    "BrandOrgCode": "ALM_BRAND",
+    "PointTypeShortDescription": "Eggs",
+    "TransactionNumber": "_PR",
+    "SecuredPostingKey": false,
+    "CreateUser": "AUTO_USER",
+    "CreateDate": "2022-04-29T17:50:55.541123Z",
+    "UpdateUser": "AUTO_USER",
+    "UpdateDate": "2022-04-29T17:50:55.541124Z"
+  },
+  {
+    "ProfileId": "7cd92a65-cb66-4751-8182-bc334f6075ba",
+    "ActPointId": "248009a2-d225-4ed7-bdec-6971f1978b5c",
+    "PointType": "Eggs",
+    "PointsAmount": 225.0,
+    "SupposedToEarnPoints": 225.0,
+    "BonusDescription": "Moment with Negative Outcome Indicator as True",
+    "ActivityType": "BASE",
+    "ActivityTypeDescription": "Base Offer",
+    "Status": "A",
+    "TransactionId": "36eb1308-dfe9-40e6-aca1-090e722c6b67",
+    "ActTransactionId": "d066011c-db29-4651-8411-a488571133cd",
+    "MomentId": "7aec410e-0f4e-4529-b3a9-cbb2f7c802e3",
+    "PointSubTypeId": "90e32f74-b5f1-44cb-ac28-91ddeea8a2cb",
+    "BalancePoints": 225.0,
+    "AccountSourceCode": "ALMACCT",
+    "SourceAccountNumber": "7cd92a65-cb66-4751-8182-bc334f6075ba",
+    "BrandOrgCode": "ALM_BRAND",
+    "PointTypeShortDescription": "Eggs",
+    "TransactionNumber": "_PR",
+    "SecuredPostingKey": false,
+    "CreateUser": "AUTO_USER",
+    "CreateDate": "2022-04-29T17:50:55.541123Z",
+    "UpdateUser": "AUTO_USER",
+    "UpdateDate": "2022-04-29T17:50:55.541124Z"
+  }
+]</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/42184d29-c311-44e2-af40-12710a34e07f/points/summary</con:originalUri>
         <con:assertion type="DataAndMetadataAssertion" id="e9410a33-e8c3-4296-9df2-ee2b8e037659" name="HTTP Status Code">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
@@ -862,6 +986,15 @@ LocalDateTime current = LocalDateTime.now();</script>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
             <con:originalMessage>{"Headers":{"date":"Thu, 28 Apr 2022 21:30:24 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"6319","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"44d9320d-36ca-ffb2-370a-64c2e8970824","content-type":"application/json; charset=utf-8","process-time":"23ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMH90T3K0S9M:00000340"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="ff1f2658-9adf-4402-ab7e-971bca3e10d2" name="PointsAmount Match">
+          <con:configuration>
+            <path>$.[?(@.ActTransactionId == "${Get TransactionId#result}"  &amp;&amp; @.MomentId == "${Get MomentId#result}")].PointsAmount</path>
+            <content>[45.0]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
         <con:credentials>

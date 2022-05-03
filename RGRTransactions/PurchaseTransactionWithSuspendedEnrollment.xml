@@ -12,20 +12,6 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Initialize Profile" id="09e395ee-0289-43af-a049-66efeb68f019">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>ProfileId</con:name>
-          <con:value>c0d2f225-ea28-4f48-91d6-6f46e6ebd3cb</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties></con:returnProperties>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
   <con:testStep id="245e16fc-5361-4e61-88ce-342dec73745d" name="PurchaseTransaction" type="datasource">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -145,6 +131,22 @@
       <con:entitizeValues>false</con:entitizeValues>
       <con:restartOnRun>true</con:restartOnRun>
       <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Initialize Profile" id="13251f93-d1ac-4473-9e2f-acd0ebf7e962">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>268bc542-bc29-44b3-9275-8cbc75b90efc</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="Update Profile Enrollment to Suspended" id="44b72f13-044e-46cb-9622-51a2c952dd3b">
@@ -502,7 +504,7 @@
             <con:originalMessage>{"Headers":{"date":"Tue, 03 May 2022 14:26:06 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"3952","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"8880454c-f9ff-5aec-80df-a51ef4f87e39","content-type":"application/json; charset=utf-8","process-time":"25ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHD1P6PQ6FN:000000B7"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="ee3cd855-f383-4926-a9ff-56231c190df2" name="Enrollemnt Status is Suspended">
+        <con:assertion type="JsonPath Match" id="0d15efe9-5192-4363-ba4e-b8ce1d287879" name="JSONPath Match">
           <con:configuration>
             <path>$.EnrollmentStatus</path>
             <content>S</content>
@@ -551,111 +553,47 @@
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:request>{
-  "ProfileId":"${Get Profile By Id#Response#$['ProfileId']}",
-  "TransactionTypeCode": "${PurchaseTransaction#TransactionTypeCode}",
-  "TransactionNetTotal": "${PurchaseTransaction#TransactionNetTotal}",
-  "ShippingAndHandling": "${PurchaseTransaction#ShippingAndHandling}",
-  "TransactionTotalTax": "${PurchaseTransaction#TransactionTotalTax}",
-  "TransactionNumber": "${=java.util.UUID.randomUUID()}",
-  "CurrencyCode": "${PurchaseTransaction#CurrencyCode}",
-  "PostingDateTime": "${PurchaseTransaction#PostingDateTime}",
-  "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
-  "TransactionEndDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
-  "TransactionDescription": "${PurchaseTransaction#TransactionDescription}",
-  "StoreCode": "${PurchaseTransaction#StoreCode}",
-  "ProgramCode": "${#Project#ProgramCode}",
-  "GrossAmount": "${PurchaseTransaction#GrossAmount}",
-  "Certificates": [
-    {
-      "CertificateNumber": "CERT1"
-    },
-    {
-      "CertificateNumber": "CERT2"
-    }
-  ],
-  "TransactionDetails": [
-    {
-      "TaxAmount": "${PurchaseTransaction#TaxAmount}",
-      "DollarValueGross": "${PurchaseTransaction#DollarValueGross}",
-      "DollarValueNet": "${PurchaseTransaction#DollarValueNet}",
-      "ItemNumber": "${PurchaseTransaction#ItemNumber1}",
-      "ItemNumberTypeCode": "${PurchaseTransaction#ItemNumberTypeCode}",
-      "Quantity": "${PurchaseTransaction#Quantity}",
-      "LineNumber": 1,
-      "ItemTransactionTypeCode": "${PurchaseTransaction#TransactionTypeCode}",
-      "Coupons": [
-        {
-          "CouponAmount": "${PurchaseTransaction#CouponAmount1}",
-          "CouponNumber": "${PurchaseTransaction#CouponNumber1}"
-        },
-        {
-          "CouponAmount": "${PurchaseTransaction#CouponAmount2}",
-          "CouponNumber": "${PurchaseTransaction#CouponNumber2}"
-        }
-      ]
-    },
-    {
-      "TaxAmount": "${PurchaseTransaction#TaxAmount}",
-      "DollarValueGross": "${PurchaseTransaction#DollarValueGross}",
-      "DollarValueNet": "${PurchaseTransaction#DollarValueNet}",
-      "ItemNumber": "${PurchaseTransaction#ItemNumber2}",
-      "ItemNumberTypeCode": "${PurchaseTransaction#ItemNumberTypeCode}",
-      "Quantity": "${PurchaseTransaction#Quantity}",
-      "LineNumber": 2,
-      "ItemTransactionTypeCode": "${PurchaseTransaction#TransactionTypeCode}",
-      "Coupons": [
-        {
-          "CouponAmount": "${PurchaseTransaction#CouponAmount1}",
-          "CouponNumber": "${PurchaseTransaction#CouponNumber3}"
-        },
-        {
-          "CouponAmount": "${PurchaseTransaction#CouponAmount2}",
-          "CouponNumber": "${PurchaseTransaction#CouponNumber4}"
-        }
-      ]
-    }
-  ],
-  "Coupons": [
-    {
-      "CouponAmount": "${PurchaseTransaction#CouponAmount1}",
-      "CouponNumber": "${PurchaseTransaction#CouponNumber5}"
-    },
-    {
-      "CouponAmount": "${PurchaseTransaction#CouponAmount2}",
-      "CouponNumber": "${PurchaseTransaction#CouponNumber6}"
-    }
-  ],
-  "Tenders": [
-    {
-      "TenderCode": "${PurchaseTransaction#TenderCode1}",
-      "TenderAmount": "${PurchaseTransaction#TenderAmount1}"
-    },
-    {
-      "TenderCode": "${PurchaseTransaction#TenderCode2}",
-      "TenderAmount": "${PurchaseTransaction#TenderAmount2}"
-    }
-  ],
-  "TransactionCustomDataGroup": {
-    "EntityName": "TRANSACTION",
-    "CustomData": [
-      {
-        "CustomDataName": "${PurchaseTransaction#CustomDataName1}",
-        "CustomDataDescription": "${PurchaseTransaction#CustomDataDescription1}",
-        "CustomDataValue": "${PurchaseTransaction#CustomDataValue1}"
+        <con:request>{  
+   "TransactionTypeCode":"PR",
+   "ProfileId":"${Initialize Profile#ProfileId}",
+   "GrossAmount":65.00,
+   "TransactionTotalTax":5.00,
+   "ShippingAndHandling":0.0,
+   "Gratuity":0.0,
+   "PostSalesAdjustment":0.0,
+   "TransactionNetTotal":50.00,
+   "TransactionEligible":40,
+   "DiscountAmount":3.00,
+   "TransactionNumber":"${${GUID Generator#result}}_PR",
+   "TransactionDateTime":"${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
+   "StoreCode":"PP1501",
+   "CurrencyCode":"USD",
+   "TransactionDescription":"PR Transaction",
+   "CardNumber":"${=java.util.UUID.randomUUID()}",
+   "TransactionDetails":[  
+      {  
+         "DollarValueGross":44.0,
+         "TaxAmount":4.0,
+         "DollarValueNet":"${=Math.floor(Math.random() * 100)}",
+         "EligibleRevenue":null,
+         "DiscountAmount":2.0,
+         "Quantity":1,
+         "ItemNumber":"10018",
+         "ItemNumberTypeCode":"S",
+         "LineNumber":1         
       },
-      {
-        "CustomDataName": "${PurchaseTransaction#CustomDataName2}",
-        "CustomDataDescription": "${PurchaseTransaction#CustomDataDescription2}",
-        "CustomDataValue": "${PurchaseTransaction#CustomDataValue2}"
+      {  
+         "DollarValueGross":22.0,
+         "TaxAmount":2.0,
+         "DollarValueNet":20.0,
+         "EligibleRevenue":null,
+         "DiscountAmount":1.0,
+         "Quantity":1,
+         "ItemNumber":"1200",
+         "ItemNumberTypeCode":"S",
+         "LineNumber":2         
       }
-    ]
-  },
-  "PostingKey": {
-    "PostingKeyValue": "${#[Profile#AddProfileWithPostingKey#AddProfileWithPostingKey]#Response#$['PostingKeys'][0]['PostingKeyValue']}",
-    "PostingKeyCode": "${#[Profile#AddProfileWithPostingKey#AddProfileWithPostingKey]#Response#$['PostingKeys'][0]['PostingKeyCode']}",
-    "Status": "A"
-  }
+   ]
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
         <con:assertion type="DataAndMetadataAssertion" id="843eae6e-3470-42d6-aa25-d50ee61fdd2d" name="HTTP Status Code Smart Assertion">
@@ -1034,7 +972,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${Get Profile By Id#Response#$['ProfileId']}"/>
+          <con:entry key="profileId" value="${Initialize Profile#ProfileId}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
@@ -1412,6 +1350,13 @@
             <con:originalMessage>{"Headers":{"date":"Tue, 03 May 2022 16:10:47 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"4","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"70db30a4-6a0e-851f-2fd6-426c715e9dd4","content-type":"application/json; charset=utf-8","process-time":"20ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHD1P6PQ6FT:000005B9"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
+        <con:assertion type="Simple NotContains" id="785a925f-5d9c-4937-846d-a9d029be1d55" name="Not Contains">
+          <con:configuration>
+            <token>MomentId</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>
@@ -1419,7 +1364,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${Get Suspended Profile By ID#Response#$[0]['ProfileId']}"/>
+          <con:entry key="profileId" value="${Initialize Profile#ProfileId}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="status" value="A"/>

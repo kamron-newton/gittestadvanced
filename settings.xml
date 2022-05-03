@@ -487,7 +487,29 @@
     <con:property>
       <con:name>SystemUserPasswordOrchestration</con:name>
     </con:property>
+    <con:property>
+      <con:name>CLEAN_PROPERTIES</con:name>
+    </con:property>
   </con:properties>
+  <con:beforeSaveScript>/**
+* Project level's Save Script
+* Cleans up all the custom properties 
+* If CLEAN_PROPERTIES value of project property is set to true
+* And save the project
+*
+*/
+
+def ignoreTestCaseProperties = [ ] 
+def ignoreTestSuiteProperties = [ ] 
+def ignoreProjectProperties = ['CLEAN_PROPERTIES'] 
+def cleanProperties = 
+{ model, list -> model.properties.keySet().findAll{ !(it in list) 
+} each { tProp -> model.setPropertyValue(tProp,'') } }
+if ('true' == project.getPropertyValue('CLEAN_PROPERTIES'))
+ {
+	cleanProperties(project, ignoreProjectProperties)	
+	project.setPropertyValue('CLEAN_PROPERTIES', 'false') 
+}</con:beforeSaveScript>
   <con:wssContainer/>
   <con:databaseConnectionContainer/>
   <con:jmsConnectionContainer/>
@@ -658,6 +680,10 @@
       <con:name>SystemUserPasswordOrchestration</con:name>
       <con:value/>
     </con:property>
+    <con:property>
+      <con:name>CLEAN_PROPERTIES</con:name>
+      <con:value/>
+    </con:property>
     <con:databaseConnectionContainer/>
     <con:jmsConnectionContainer/>
   </con:environment>
@@ -751,6 +777,10 @@
     </con:property>
     <con:property>
       <con:name>SystemUserPasswordOrchestration</con:name>
+      <con:value/>
+    </con:property>
+    <con:property>
+      <con:name>CLEAN_PROPERTIES</con:name>
       <con:value/>
     </con:property>
     <con:databaseConnectionContainer/>
@@ -848,6 +878,10 @@
       <con:name>SystemUserPasswordOrchestration</con:name>
       <con:value/>
     </con:property>
+    <con:property>
+      <con:name>CLEAN_PROPERTIES</con:name>
+      <con:value/>
+    </con:property>
     <con:databaseConnectionContainer/>
     <con:jmsConnectionContainer/>
   </con:environment>
@@ -863,91 +897,95 @@
     </con:service>
     <con:property>
       <con:name>BasicAuthorization</con:name>
-      <con:value>V0VCQVBJX0tFWTp1S2dCRDhfX2E5</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>SystemUser</con:name>
-      <con:value>AUTO_USER</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>SystemUserPassword</con:name>
-      <con:value>Admin.1234</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>ProgramCode</con:name>
-      <con:value>PP</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>AuthToken</con:name>
-      <con:value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">ae26d6a2-bcf9-4feb-9240-a1492c1a0335</con:value>
+      <con:value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
     </con:property>
     <con:property>
       <con:name>AccessTokenExpiration</con:name>
-      <con:value>2022-04-06T03:46:12.4082322Z</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>ProjectPath</con:name>
-      <con:value>C:\Git\FusionWebApiAutomationV2</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>NextYearDate</con:name>
-      <con:value>02/01/2023</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>NextDayDate</con:name>
-      <con:value>02/01/2022</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>YesterdaysDate</con:name>
-      <con:value>01/30/2022</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>CrmProgramCode</con:name>
-      <con:value>CRM</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>S3Bucket</con:name>
-      <con:value>q3alin-al-files</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>Datahub Token</con:name>
-      <con:value>eyJraWQiOiJxVDB0SnZRcklHdkpqZjRMR21oeGcwNXlIRFZfZTdxSW05bnEtY204Uk1jIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULmpaOWc4YjU2OGUyd19KbVJCRWsyNnhKUWZlWndGM0tKcGFWVGdiZUV1QUEub2FyMWtubTdwdnE2VFZXZUowaDciLCJpc3MiOiJodHRwczovL3ByZXZpZXcucGVvcGxlY2xvdWQuZXBzaWxvbi5jb20vb2F1dGgyL2F1c3cwZnRoMW16SEJOdTdkMGg3IiwiYXVkIjoiZGF0YWh1YmFkbWluIiwiaWF0IjoxNjQ5MTkyNzczLCJleHAiOjE2NDkxOTYzNzMsImNpZCI6IkFESC1TVEdfU1ZOX09QRU5BTS1MRUdBQ1lfREhBRE1JTl9MT1lBTFRZX1VTRVIiLCJ1aWQiOiIwMHV6YjNncjFpMnZOeGNKMjBoNyIsInNjcCI6WyJvZmZsaW5lX2FjY2VzcyIsIm9wZW5hbUxlZ2FjeS5naXZlbm5hbWUiLCJvcGVuYW1MZWdhY3kuZW1wbG95ZWVOdW1iZXIiLCJvcGVuYW1MZWdhY3kuY24iLCJvcGVuYW1MZWdhY3kuc24iLCJvcGVuYW1MZWdhY3kudWlkIiwib3BlbmFtTGVnYWN5Lm1haWwiXSwiYXV0aF90aW1lIjoxNjQ5MTkyNzczLCJvcGVuYW1MZWdhY3kubWFpbCI6Ikhhcm1vbnlfRVNfQXBwbGljYXRpb25AZXBzaWxvbi5jb20iLCJzdWIiOiJhZGhfbG95YWx0eV91c2VyQHN0Zy5lcHNpbG9uLnNlcnZpY2UuYWNjb3VudHMiLCJvcGVuYW1MZWdhY3kuY24iOiJhZGhfbG95YWx0eV91c2VyIGFkaF9sb3lhbHR5X3VzZXIiLCJvcGVuYW1MZWdhY3kuc24iOiJhZGhfbG95YWx0eV91c2VyIiwib3BlbmFtTGVnYWN5LmdpdmVubmFtZSI6ImFkaF9sb3lhbHR5X3VzZXIiLCJvcGVuYW1MZWdhY3kudWlkIjoiYWRoX2xveWFsdHlfdXNlciJ9.gDMShGzeaNVoEzMRCmP4lpSG7dc8aOkH8lpOkPFTlJW3jbqsuMSueG4bmTX1ArTqkAKc4d5NsGQOBRGnKFPtlqexlNvJvgTTKhmQ-1N5c3Iog_N7seJz-mjFHsKHHmcvdgHfw2IVcmVf4jwTtlpxb2T2wE3tLV7xO9vMkU406VPQcH6wPiQH5b8wNtoXW96VuOwHwKDEIUkAyKqrH5zyxqeJDs9NEJNIo0JGUTvmVIfF1tE4X8c_Yk7VDJdsos05YWrTkNz8gHk_9Flffx4US9PXeEGfRh_DcTk74OyneuulFhG9TPN45fwN2G9u27bz9tvcRYSzRD-QnWT2elkywg</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>Datahub BasicAuthorizationTenant</con:name>
-      <con:value>Basic ZGF0YWh1Yl9wY2xfcTNhbGluOjVnQnMlQUlL</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>Tenant</con:name>
-      <con:value>Q3ALIN</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>Datahub Orchestration Token</con:name>
-      <con:value>eyJraWQiOiJoaktQR09RNVlJUG95LU55UDZxaU9IT0RDOGY0czFwS1RuNVZpdzlUTFVBIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULkFrNG1TNE03Ym5UY3M1aFV6VmFLZWNCeFU4WDltQ053cDJ1V1NmamE4cXcub2FyMWtubWc0OUdwUEx2RHIwaDciLCJpc3MiOiJodHRwczovL3ByZXZpZXcucGVvcGxlY2xvdWQuZXBzaWxvbi5jb20vb2F1dGgyL2F1c3Z4anNpcHZWQnJLdVJUMGg3IiwiYXVkIjoiZGF0YWh1YiIsImlhdCI6MTY0OTE5Mjc3MywiZXhwIjoxNjQ5MTk2MzczLCJjaWQiOiJBREgtU1RHX1NWTl9PUEVOQU0tTEVHQUNZX0RBVEFIVUJfUENMX1EzQUxJTiIsInVpZCI6IjAwdTExYmtmY3N0Q0p2SEx5MGg4Iiwic2NwIjpbIm9mZmxpbmVfYWNjZXNzIiwib3BlbmFtTGVnYWN5LmdpdmVubmFtZSIsIm9wZW5hbUxlZ2FjeS5lbXBsb3llZU51bWJlciIsIm9wZW5hbUxlZ2FjeS5jbiIsIm9wZW5hbUxlZ2FjeS5zbiIsIm9wZW5hbUxlZ2FjeS51aWQiLCJvcGVuYW1MZWdhY3kubWFpbCJdLCJhdXRoX3RpbWUiOjE2NDkxOTI3NzMsIm9wZW5hbUxlZ2FjeS5tYWlsIjoiYWdpbGl0eWxveWFsdHlzZXJ2aWNlbm90aWZpY2F0aW9uQGVwc2lsb24uY29tIiwic3ViIjoic3ZjX3BjbF9xM2FsaW5Ac3RnLmVwc2lsb24uc2VydmljZS5hY2NvdW50cyIsIm9wZW5hbUxlZ2FjeS5zbiI6IlEzQUxJTiIsIm9wZW5hbUxlZ2FjeS5jbiI6IlEzQUxJTiIsIm9wZW5hbUxlZ2FjeS5naXZlbm5hbWUiOiJzdmNfcGNsX3EzYWxpbiIsIm9wZW5hbUxlZ2FjeS51aWQiOiJzdmNfcGNsX3EzYWxpbiJ9.bv7F1-bV4puUpcrS2_N_CBnApZPWp_t7tj1kzrpw1FwZQUKfxFTf-Qokz85EL28irVv2Im0h47a1JTYDJka3qhF7IEJjVxZuRNoDxuHLshbe1VfEyhoCHhGidPSH_ZoCL5wxPxZp3fZxea3KhhpP9YsXqGVQD4ymhOZo48HGydxTmG2xXh6_z4HRG2idICsc3caHuPLrTOgf8ZYRkJU8lzkIpsPBu5etzu_Gyrw5s-lPi-ss0AmRR1GGfPMuR5K623glx-lkuDMjHNoZAxEzZM8GCWYNmDTuL-eQwAx6xDytmDFPy61Vvr56ebCuLtY1B8lh6OJqkdSeshJ2dEvSPw</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>BasicAuthorizationTenant</con:name>
-      <con:value>Basic ZGhhZG1pbl9sb3lhbHR5X3VzZXI6RXA1QGRINkBkaGEx</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>SystemUserTenant</con:name>
-      <con:value>adh_loyalty_user</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>SystemUserPasswordTenant</con:name>
-      <con:value>Ep5@dH6@ly7</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>BasicAuthorizationOrchestration</con:name>
-      <con:value>Basic ZGF0YWh1Yl9wY2xfcTNhbGluOjVnQnMlQUlL</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>SystemUserOrchestration</con:name>
-      <con:value>svc_pcl_q3alin</con:value>
+      <con:value/>
     </con:property>
     <con:property>
       <con:name>SystemUserPasswordOrchestration</con:name>
-      <con:value>sBoI_Ba9</con:value>
+      <con:value/>
+    </con:property>
+    <con:property>
+      <con:name>CLEAN_PROPERTIES</con:name>
+      <con:value>false</con:value>
     </con:property>
     <con:databaseConnectionContainer/>
     <con:jmsConnectionContainer/>

@@ -195,6 +195,22 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="eventAttributeId" id="a4a0b0b8-cf80-4a5d-b960-483e8f1b5bb4">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'ItemNumber\')].EventAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ParentAttributeId" id="b3b66b23-ab57-4849-ba65-12911e344198">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def ParentAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'ItemNumber\')].ParentAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="UpdateEventAttribute" id="49838b6a-9493-4ec3-826a-7a6bc248606c">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" methodName="UpdateEventAttribute" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -666,20 +682,19 @@
             <con:originalMessage>{"Headers":{"date":"Mon, 04 Apr 2022 15:21:38 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"41899","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"8911c4a5-bf91-72e3-1c22-4c8808bb7ccf","content-type":"application/json; charset=utf-8","process-time":"528ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGM5CF41RMJ:0000044F"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="70258633-6e32-4cea-b539-8cd72e12a735" name="qualifiedAttributes Validation">
+        <con:assertion type="JsonPath Match" id="b7c767cd-f747-4b69-abd4-0c988b6423ed" name="PointsAffected Validation">
           <con:configuration>
-            <path>$.MomentResults[?(@.MomentCode=='${UpsertMoment#MomentName}')].QualifiedAttributes[0
-]</path>
-            <content>[SKU-00089]</content>
+            <path>$.MomentResults[?(@.MomentCode=='${UpsertMoment#MomentName}')].PointsAffected</path>
+            <content>[18]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="b7c767cd-f747-4b69-abd4-0c988b6423ed" name="PointsAffected Validation">
+        <con:assertion type="JsonPath Match" id="49037006-01a8-44c7-be3e-bc75a95481d6" name="QualifiedAttributes Validation">
           <con:configuration>
-            <path>$.MomentResults[?(@.MomentCode=='${UpsertMoment#MomentName}')].PointsAffected</path>
-            <content>[18]</content>
+            <path>$.MomentResults[?(@.MomentCode=='${PurchaseTransaction#Response#$['MomentResults'][0]['MomentCode']}')].QualifiedAttributes[0]</path>
+            <content>[SKU-00089]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -693,7 +708,7 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#TestCase#Program-Code}"/>
+          <con:entry key="Program-Code" value="PP"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>

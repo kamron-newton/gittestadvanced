@@ -195,6 +195,22 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="eventAttributeId" id="498eb75c-1d77-4ce5-8719-df6c96320766">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'ItemNumber\')].EventAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ParentAttributeId" id="56790729-f7cc-4cf0-bfe9-308254c5b214">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def ParentAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'ItemNumber\')].ParentAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="UpdateEventAttribute" id="94bc7ca3-12fb-40ce-88d7-24cc3af169eb">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" methodName="UpdateEventAttribute" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -204,8 +220,8 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-  "EventAttributeId": "93eb4271-192a-4d95-9804-42b64fa5b0a4",
-  "ParentAttributeId": "f6a425ee-5ba7-4d3b-9a53-611a5327aeba",
+  "EventAttributeId": "${eventAttributeId#result}",
+  "ParentAttributeId": "${ParentAttributeId#result}",
   "AttributeName": "ItemNumber",
   "OriginalAttributeName": null,
   "ValueGroup": null,
@@ -411,7 +427,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="UpsertMoment" id="07dc3189-9834-4c1f-9b65-4f86dd032007">
+  <con:testStep type="calltestcase" name="UpsertMoment" id="106dfed2-4772-404c-8954-8c2162a88b25">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>58a85117-5558-4be0-b68f-214c9fbde4c3</con:targetTestCase>
@@ -430,7 +446,6 @@
         </con:property>
         <con:property>
           <con:name>MomentId</con:name>
-          <con:value/>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -669,7 +684,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="70258633-6e32-4cea-b539-8cd72e12a735" name="qualifiedAttributes Validation">
           <con:configuration>
-            <path>$.MomentResults[?(@.MomentCode=='${UpsertMoment#MomentName}')].QualifiedAttributes[0]</path>
+            <path>$.MomentResults[?(@.MomentCode=='${PurchaseTransaction#Response#$['MomentResults'][0]['MomentCode']}')].QualifiedAttributes[0]</path>
             <content>[SKU-00089]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -678,7 +693,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="b7c767cd-f747-4b69-abd4-0c988b6423ed" name="PointsAffected Validation">
           <con:configuration>
-            <path>$.MomentResults[?(@.MomentCode=='${UpsertMoment#MomentName}')].PointsAffected</path>
+            <path>$.MomentResults[?(@.MomentCode=='${PurchaseTransaction#Response#$['MomentResults'][0]['MomentCode']}')].PointsAffected</path>
             <content>[18]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -693,7 +708,7 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#TestCase#Program-Code}"/>
+          <con:entry key="Program-Code" value="PP"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>

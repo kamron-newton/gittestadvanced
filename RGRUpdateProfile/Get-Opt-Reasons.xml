@@ -3,6 +3,33 @@
   <con:settings>
     <con:setting id="6180a56f-24af-42be-b3cb-5bc773279c46fileName">Get-Opt-Reasons</con:setting>
   </con:settings>
+  <con:testStep type="datasource" name="OptReason" id="ae2187bf-d62a-4316-b74a-077e0a5766ce">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/OptReason.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>OptReasonCode</con:property>
+      <con:property>Description</con:property>
+      <con:property>Status</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetOptReasons" id="2b031a10-8b15-4c98-ae23-be3ce1cf9a6b">
     <con:settings/>
     <con:config service="RestAPIs" methodName="GetOptReasons" resourcePath="/api/v1/referencedata/optreason" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -32,6 +59,28 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties/>
+  <con:testStep type="transfer" name="Extract Reason Code" id="1b852cc1-edce-4de8-bdd1-f503f143509e">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>OptReasonCode</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetOptReasons</con:sourceStep>
+        <con:sourcePath>[?(@.OptReasonCode=='${OptReason#OptReasonCode}')].OptReasonCode[0]</con:sourcePath>
+        <con:targetType>OptReasonCode</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:targetTransferType>XPATH</con:targetTransferType>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>OptReasonCode</con:name>
+      <con:value>RSN10</con:value>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
 </con:testCase>

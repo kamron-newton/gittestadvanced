@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="6bcb64a2-4a7c-4595-9acc-12556ae559d1" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpdateProfileAddBusinessAddressAsPreffered" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="6bcb64a2-4a7c-4595-9acc-12556ae559d1fileName">UpdateProfileAddBusinessAddressAsPreffered</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="UpdateProfileSettings" id="78934d1b-1425-4cd4-b751-837241957984">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>[   {     "ParameterName": "${#TestCase#ParameterName}",     "ParameterValue": "Y"   } ]</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>${#Project#ProgramCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfile" id="49287a15-b532-42d6-87da-b3f2e5b5b0a7">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Profile Channels" id="36cadbd6-90de-407f-9e64-88d5ad19692f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/channels" methodName="GetProfileChannels" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Profile Channels" id="84eeb9f2-f276-4eaf-88e5-ce3c0688df4f" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          <con:setting id="com.eviware.soapui.support.editor.views.xml.form2.FormEditorView@ViewType">All</con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/channels</con:originalUri>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR]#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>channelCode</con:entry>
+          <con:entry>includeOpts</con:entry>
+          <con:entry>communicationMediumId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>emailId</con:entry>
+          <con:entry>phoneId</con:entry>
+          <con:entry>addressId</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="UpdateProfileChannels" id="c0aa7d9c-99e9-411e-a330-6451a24acff7">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Update Profile Address" id="2072520c-bdeb-4e0c-8f89-a28ee4d226f8">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateProfileAddress" resourcePath="/api/v1/profiles/{profileId}/channels/addresses" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Update Profile Address" id="496e1649-4b97-4de3-8e86-ad1eec861982" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Updated Profile Channels" id="3b6adfd6-81ca-4ea9-b5b2-4a852a4186ad">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetProfileChannels" resourcePath="/api/v1/profiles/{profileId}/channels" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Updated Profile Channels" id="646f6ac5-2557-48fb-aee4-6a4bac9fdcf4" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Profile By ID" id="ff1e4125-1cc9-4222-96ca-097888ca3e14">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetProfileByID" resourcePath="/api/v1/profiles/{profileId}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Profile By ID" id="9e460ac8-8d2e-485b-ba64-b93c52e2dbef" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>ParameterName</con:name>
+      <con:value>PROFILE_AUDIT_HIS_ENABLE</con:value>
+    </con:property>
+    <con:property>
+      <con:name>DeploymentSubject</con:name>
+      <con:value>Programs</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

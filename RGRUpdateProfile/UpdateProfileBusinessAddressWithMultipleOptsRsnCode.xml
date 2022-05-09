@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="5ec71923-3682-4acd-8789-769379e2c99d" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpdateProfileBusinessAddressWithOptsRsnCode" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="c60569c6-401f-461d-8eb1-7ce6ad5db369" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpdateProfileBusinessAddressWithMultipleOptsRsnCode" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="5ec71923-3682-4acd-8789-769379e2c99dfileName">UpdateProfileBusinessAddressWithOptsRsnCode</con:setting>
+    <con:setting id="c60569c6-401f-461d-8eb1-7ce6ad5db369fileName">UpdateProfileBusinessAddressWithMultipleOptsRsnCode</con:setting>
   </con:settings>
-  <con:testStep type="datasource" name="UpdateProfileChannels" id="8b06bccb-9e99-43bd-9596-4269a78d245e">
+  <con:testStep type="datasource" name="Opts" id="e2b7810d-9b76-4e15-9447-bb1ef1059940">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Opts.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>OptType</con:property>
+      <con:property>OptName</con:property>
+      <con:property>ChannelCode</con:property>
+      <con:property>ProgramCode1</con:property>
+      <con:property>ProgramCode2</con:property>
+      <con:property>Status</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="UpdateProfileChannels" id="07ce840d-50cc-43a7-92ac-235082c3fb61">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -89,7 +119,7 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Call update profile settings API and enable audit history" id="68b896a6-348c-4f52-9a17-c38129b4f963">
+  <con:testStep type="calltestcase" name="Call update profile settings API and enable audit history" id="b7e17cb7-0a91-495d-a0d0-740077dbca81">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
@@ -107,7 +137,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Run AddProfile(Create a new profile)" id="bdc37d95-64ef-46ef-b455-d927326a2ab7">
+  <con:testStep type="calltestcase" name="Run AddProfile(Create a new profile)" id="c14848a0-434d-416b-950e-3375495f3e9d">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
@@ -120,7 +150,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Call to get Profile Channels specific to Profile" id="182acfd8-0f88-41dc-bcba-a7cf00ad1d45">
+  <con:testStep type="restrequest" name="Call to get Profile Channels specific to Profile" id="37249240-ec75-442f-b2a9-0c6993c62380">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/channels" methodName="GetProfileChannels" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="Call to get Profile Channels specific to Profile" id="84eeb9f2-f276-4eaf-88e5-ce3c0688df4f" mediaType="application/json">
@@ -320,43 +350,43 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Call to Update Profile Address" id="6907e078-89a7-40c3-b38f-67bc19b846be">
+  <con:testStep type="calltestcase" name="Run GetOptReasons" id="32a398a5-0f16-4b9e-a394-9c4d1972215c">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/channels/addresses" methodName="UpdateProfileAddress" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Call to Update Profile Address" id="92696cb3-6a05-4646-98aa-ac342b19fcb5" mediaType="application/json" postQueryString="false">
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>6180a56f-24af-42be-b3cb-5bc773279c46</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>OptReasonCode</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Create a new opt Type" id="f495a57f-d13c-42a2-b025-6c3410e29bb5">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/opts/processopt" methodName="AddOpts" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Create a new opt Type" id="7852c585-5d8d-4e85-9ce4-212ae6918ca2" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{\r
-   "Addresses" : [\r
-      {\r
-         "AddressId" : "${Call to get Profile Channels specific to Profile#Response#$['Addresses'][0]['AddressId']}",\r
-         "AddressLine1" : "${UpdateProfileChannels#NewAddressLine1}",\r
-         "AddressLine2" : "${UpdateProfileChannels#NewAddressLine2}",\r
-         "AddressLine3" : "Bangalore",\r
-         "City" : "${UpdateProfileChannels#NewCity}",\r
-         "StateCode" : "${UpdateProfileChannels#NewStateCode}",\r
-         "CountryCode" : "${UpdateProfileChannels#NewCountryCode}",\r
-         "PostalCode" : "${UpdateProfileChannels#PostalCode}",\r
-         "ChannelCode" : "${UpdateProfileChannels#AddressChannelCode}",\r
-         "LocationCode" : "${UpdateProfileChannels#AddressLocationCode}",\r
-         "IsPreferred" : "${UpdateProfileChannels#AddressIsPreferred}",\r
-         "DeliveryStatus" : "${UpdateProfileChannels#AddressDeliveryStatus}",\r
-         "DoNotStandardize" : "${UpdateProfileChannels#DoNotStandardize}",\r
-         "Status" : "A",\r
-         "ProfileOpt": [
-            {
-               "OptRsnCode" : "${#[RGRUpdateProfile#Get Opt Reasons]#OptReasonCode}",\r
-               "OptType" : "PGM_ADDRSS",\r
-               "OptValue" : "I"\r
-            }
-         ]
-      }\r
-   ]\r
+        <con:request>{
+  "OptType": "${Opts#OptType}",
+  "OptName": "${Opts#OptName}",
+  "ChannelCode": "${Opts#ChannelCode}",
+  "ProgramCode": [
+    {
+      "ProgramCode": "${Opts#ProgramCode1}"
+    },
+    {
+      "ProgramCode": "${Opts#ProgramCode2}"
+    }
+  ],
+  "Status": "${Opts#Status}"
 }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/7ce49bc7-ac9a-4636-9ec1-8efd603f5d56/channels/addresses</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="0dc4c6ea-cb23-47ff-8b44-9c0299b95c70" name="Smart Assertion">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/opts/processopt</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="81672ea4-e092-4d71-962b-a81dd98d30e9" name="Smart Assertion">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -364,7 +394,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Thu, 05 May 2022 12:54:47 GMT</con:expectedValue>
+              <con:expectedValue>Mon, 09 May 2022 08:06:30 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -384,7 +414,7 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>1410</con:expectedValue>
+              <con:expectedValue>353</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -454,7 +484,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>e74e9302-b0a2-2a31-af27-b0d759addfca</con:expectedValue>
+              <con:expectedValue>5f6b4689-a170-ca78-6fb0-0d5b910de3fe</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -474,7 +504,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>1485ms</con:expectedValue>
+              <con:expectedValue>55ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -504,12 +534,225 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMHEHBGIHS3F:00000054</con:expectedValue>
+              <con:expectedValue>0HMHG079QJNNI:0000006E</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Thu, 05 May 2022 12:54:47 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1410","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"e74e9302-b0a2-2a31-af27-b0d759addfca","content-type":"application/json; charset=utf-8","process-time":"1485ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHEHBGIHS3F:00000054"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Mon, 09 May 2022 08:06:30 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"353","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"5f6b4689-a170-ca78-6fb0-0d5b910de3fe","content-type":"application/json; charset=utf-8","process-time":"55ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHG079QJNNI:0000006E"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Call to Update Profile Address" id="a8d54f05-ad70-4232-8a7e-e7a7d740e14b">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/channels/addresses" methodName="UpdateProfileAddress" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Call to Update Profile Address" id="92696cb3-6a05-4646-98aa-ac342b19fcb5" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{\r
+   "Addresses" : [\r
+      {\r
+         "AddressId" : "${Call to get Profile Channels specific to Profile#Response#$['Addresses'][0]['AddressId']}",\r
+         "AddressLine1" : "${UpdateProfileChannels#NewAddressLine1}",\r
+         "AddressLine2" : "${UpdateProfileChannels#NewAddressLine2}",\r
+         "AddressLine3" : "",\r
+         "City" : "${UpdateProfileChannels#NewCity}",\r
+         "StateCode" : "${UpdateProfileChannels#NewStateCode}",\r
+         "CountryCode" : "${UpdateProfileChannels#NewCountryCode}",\r
+         "PostalCode" : "${UpdateProfileChannels#PostalCode}",\r
+         "ChannelCode" : "${UpdateProfileChannels#AddressChannelCode}",\r
+         "LocationCode" : "${UpdateProfileChannels#AddressLocationCode}",\r
+         "IsPreferred" : "${UpdateProfileChannels#AddressIsPreferred}",\r
+         "DeliveryStatus" : "${UpdateProfileChannels#AddressDeliveryStatus}",\r
+         "DoNotStandardize" : "${UpdateProfileChannels#DoNotStandardize}",\r
+         "Status" : "A",\r
+         "ProfileOpt": [
+            {
+               "OptRsnCode" : "${#[RGRUpdateProfile#Get Opt Reasons]#OptReasonCode}",\r
+               "OptType" : "PGM_ADDRSS",\r
+               "OptValue" : "I"\r
+            },
+            {
+               "OptRsnCode" : "${#[RGRUpdateProfile#Get Opt Reasons]#OptReasonCode}",
+               "OptType" : "${Create a new opt Type#Response#$['OptType']}",
+               "OptValue" : "O"
+            }
+         ]
+      }\r
+   ]\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/7ce49bc7-ac9a-4636-9ec1-8efd603f5d56/channels/addresses</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="4b515f0a-b75b-4abc-a600-78a1186df010" name="Smart Assertion">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Mon, 09 May 2022 08:08:42 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2531</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>b120dd98-28e1-3e1f-d018-e64e3ec4e994</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>64ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMHG079QJNNI:00000079</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Mon, 09 May 2022 08:08:42 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"2531","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"b120dd98-28e1-3e1f-d018-e64e3ec4e994","content-type":"application/json; charset=utf-8","process-time":"64ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHG079QJNNI:00000079"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -539,20 +782,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Run GetOptReasons" id="0b32ced8-87d2-4087-ab8e-c661ec64cd36">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>6180a56f-24af-42be-b3cb-5bc773279c46</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>OptReasonCode</con:name>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="Run Get Profile Channels specific to Profile" id="254a4c27-4947-4de3-889b-6fabc168ff7c">
+  <con:testStep type="restrequest" name="Run Get Profile Channels specific to Profile" id="ddb7b9ee-a286-4d5b-b787-1ea140e58b10">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/channels" methodName="GetProfileChannels" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="Run Get Profile Channels specific to Profile" id="84eeb9f2-f276-4eaf-88e5-ce3c0688df4f" mediaType="application/json">
@@ -562,7 +792,7 @@
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/1bd35328-61ea-4bd5-8134-954f96459423/channels</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="33484ca5-e3db-4de8-90b0-c0650a49ff4d" name="Smart Assertion">
+        <con:assertion type="DataAndMetadataAssertion" id="61620b09-357a-4bc6-a8d7-fabd359d59b9" name="Smart Assertion">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -570,7 +800,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Thu, 05 May 2022 13:48:18 GMT</con:expectedValue>
+              <con:expectedValue>Mon, 09 May 2022 08:22:59 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -590,7 +820,7 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>2958</con:expectedValue>
+              <con:expectedValue>2881</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -660,7 +890,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>dfc1f418-4198-3f72-8e6a-0b7e9b6c56f5</con:expectedValue>
+              <con:expectedValue>138ec19b-6723-a7bf-5736-63ecde4433ac</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -680,7 +910,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>182ms</con:expectedValue>
+              <con:expectedValue>19ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -710,12 +940,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMHEHBGIHS39:00000965</con:expectedValue>
+              <con:expectedValue>0HMHG079QJNNI:000000AE</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Thu, 05 May 2022 13:48:18 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"2958","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"dfc1f418-4198-3f72-8e6a-0b7e9b6c56f5","content-type":"application/json; charset=utf-8","process-time":"182ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHEHBGIHS39:00000965"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Mon, 09 May 2022 08:22:59 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"2881","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"138ec19b-6723-a7bf-5736-63ecde4433ac","content-type":"application/json; charset=utf-8","process-time":"19ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHG079QJNNI:000000AE"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -752,7 +982,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Call to get Profile By Id" id="a22c27ba-66dc-44bb-bd36-e97a5c0722a0">
+  <con:testStep type="restrequest" name="Call to get Profile By Id" id="44031a3b-02f0-41f7-83b5-8e203ff3e9ff">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}" methodName="GetProfileByID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest id="caa82c6c-fb0c-4527-9a62-8abf1c42fa9d" mediaType="application/json" name="Call to get Profile By Id">
@@ -951,7 +1181,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Call to get Profile Audit History" id="d7b779ff-c2c2-4fe1-8d39-89d2ebaec12e">
+  <con:testStep type="restrequest" name="Call to get Profile Audit History" id="afce3513-6336-40f5-ad48-2c214ecf6c84">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/audithistory/{profileId}" methodName="Get Profile Audit History" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="Call to get Profile Audit History" id="56a7fc65-ae8e-49eb-a39d-5eb62d8e165b" mediaType="application/json">
@@ -1139,10 +1369,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="transfer" name="Extract Audit History ProfileId" id="983d0225-0d26-42ca-abc1-462d6d6b0423">
+  <con:testStep type="transfer" name="Extract Audit History ProfileId" id="a76efcd9-37e8-489b-b983-4cad07890990">
     <con:settings/>
     <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false" disabled="false">
         <con:name>SetAuditHistoryProfileId</con:name>
         <con:sourceType>Response</con:sourceType>
         <con:sourceStep>Call to get Profile Audit History</con:sourceStep>
@@ -1155,7 +1385,7 @@
       </con:transfers>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Check AuditHistoryProfileId Exist" id="444f05ac-b32b-4f62-9abe-15aee278b85e">
+  <con:testStep type="groovy" name="Check AuditHistoryProfileId Exist" id="df371ab1-3f91-46d2-b095-297c5cba2d1a">
     <con:settings/>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
@@ -1170,7 +1400,7 @@ if (statusCode == 200 &amp;&amp; auditHistoryProfileId != "")
 	testRunner.gotoStepByName("Call to Get Profile Audit History by ProfileId")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Call to Get Profile Audit History by ProfileId" id="9f88dede-75bd-4ed4-9f72-7c3397734ba6">
+  <con:testStep type="restrequest" name="Call to Get Profile Audit History by ProfileId" id="eacf10f7-2405-457d-a5df-9181cd724188">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/audithistory/{profileId}" methodName="Get Profile Audit History" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="Call to Get Profile Audit History by ProfileId" id="56a7fc65-ae8e-49eb-a39d-5eb62d8e165b" mediaType="application/json">
@@ -1358,7 +1588,7 @@ if (statusCode == 200 &amp;&amp; auditHistoryProfileId != "")
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Call update profile settings API and disable audit history" id="4a7871b4-6ca5-4833-a807-020ec65f5cb0">
+  <con:testStep type="calltestcase" name="Call update profile settings API and disable audit history" id="eca11f31-4bdf-49b1-aeee-1c608543c161">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
@@ -1377,7 +1607,7 @@ if (statusCode == 200 &amp;&amp; auditHistoryProfileId != "")
     </con:config>
   </con:testStep>
   <con:properties>
-    <con:property userSpecific="true">
+    <con:property>
       <con:name>ParameterName</con:name>
       <con:value>PROFILE_AUDIT_HIS_ENABLE</con:value>
     </con:property>
@@ -1387,7 +1617,7 @@ if (statusCode == 200 &amp;&amp; auditHistoryProfileId != "")
     </con:property>
     <con:property>
       <con:name>AuditHistoryProfileId</con:name>
-      <con:value>7adfe3ef-18f0-4fb9-9947-f43687c1bcf2</con:value>
+      <con:value>522ac82e-878d-4aa3-9aa3-e80af649c382</con:value>
     </con:property>
     <con:property>
       <con:name>ParameterValueNo</con:name>
@@ -1395,24 +1625,4 @@ if (statusCode == 200 &amp;&amp; auditHistoryProfileId != "")
     </con:property>
   </con:properties>
   <con:reportParameters/>
-  <con:breakPoints>
-    <con:testStepId>68b896a6-348c-4f52-9a17-c38129b4f963</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>0b32ced8-87d2-4087-ab8e-c661ec64cd36</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>bdc37d95-64ef-46ef-b455-d927326a2ab7</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>182acfd8-0f88-41dc-bcba-a7cf00ad1d45</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
 </con:testCase>

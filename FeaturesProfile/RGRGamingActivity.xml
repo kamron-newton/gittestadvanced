@@ -238,27 +238,16 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="CheckResponseCode" id="70135968-c7e9-4ecd-aad8-59cce56ad216">
+  <con:testStep type="groovy" name="CheckResponse" id="70135968-c7e9-4ecd-aad8-59cce56ad216">
     <con:settings/>
     <con:config>
-      <script>def status = context.expand( '${GetAllProcessActivities#HarResponse#$[\'status\']}' )
+      <script>def response = context.expand( '${GetAllProcessActivities#Response}' )
+def status = context.expand( '${GetAllProcessActivities#HarResponse#$[\'status\']}' )
 
-if (status == 200)
-testRunner.gotoStepByName("ProcActivityType")
- else
- testRunner.gotoStepByName("MomentEngineReload")</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="ProcActivityType" id="30fedb78-b202-41e1-a802-f8d0f29f07ff">
-    <con:settings/>
-    <con:config>
-      <script>def procActivityType = context.expand( '${GetAllProcessActivities#Response#$[0][\'ProcActivityType\']}' )
-
-
-if(procActivityType == "")
-testRunner.gotoStepByName("CreateProcActivityType")
- else
- testRunner.gotoStepByName("MomentEngineReload")</script>
+if((status == '200') &amp;&amp;  (response == 'null'))
+	{testRunner.gotoStepByName("CreateProcessActivityType")}
+else
+	{ testRunner.gotoStepByName("MomentEngineReload")}</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="CreateProcessActivityType" id="baa573ce-6262-4113-bab7-286a512e30e0">
@@ -1748,7 +1737,7 @@ testRunner.gotoStepByName("CreateProcActivityType")
       <con:properties>
         <con:property>
           <con:name>MomentId</con:name>
-          <con:value>${#[Moment#UpsertMoment#GetMomentByMomentCode]#Response#$['MomentId']}</con:value>
+          <con:value>${#[Moment#UpsertMoment#MomentId]#result}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>

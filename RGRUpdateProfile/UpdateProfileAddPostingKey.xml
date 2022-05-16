@@ -284,9 +284,9 @@
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
 
-def randomNum =new java.text.SimpleDateFormat("yyyyMMddHHmmssFFFF").format(new Date())
+				def randomNum =new java.text.SimpleDateFormat("yyyyMMddHHmmssFFFF").format(new Date())
 
-return randomNum;</script>
+				return randomNum;</script>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="UpdateProfile" id="58d07e04-a5c7-4ddc-8baa-ed7df92d0a85">
@@ -699,6 +699,15 @@ return randomNum;</script>
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
+        <con:assertion type="JsonPath Match" id="8aaccb9b-d3e0-42a4-b705-4d952015dc8e" name="Validate Posting Key Name">
+          <con:configuration>
+            <path>$.[?(@.Attribute == "${PostingKeys#PostingKeyName}")].Attribute</path>
+            <content>[${PostingKeys#PostingKeyName}]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>
@@ -712,6 +721,24 @@ return randomNum;</script>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="DisableAuditHistorySetting" id="b74d6452-d7bf-4de7-aeac-f8569874d005">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>[   {     "ParameterName": "PROFILE_AUDIT_HIS_ENABLE",     "ParameterValue": "N"   } ]</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>${#Project#ProgramCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
   <con:properties>

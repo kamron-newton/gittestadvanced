@@ -626,6 +626,22 @@ def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="ParentAttributeId" id="48ec35d3-95bc-4e35-be40-60bcd6d29250">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def ParentAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'Quantity\')].ParentAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="eventAttributeIdQuantity" id="9e8f89c5-f7ab-4e72-95df-9217bae7d1a1">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'Quantity\')].EventAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="UpdEntAtrByEvntNameQuantity" id="1181d55a-d4c7-4c2b-b42f-3415b7d93cf4">
     <con:settings/>
     <con:config service="RestAPIs" methodName="UpdateEventAttribute" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -637,7 +653,7 @@ def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
   "EventAttributeId": "${eventAttributeIdQuantity#result}",
-  "ParentAttributeId": "{{QuantParentAttrId}}",
+  "ParentAttributeId": "${ParentAttributeId#result}",
   "AttributeName": "Quantity",
   "CyclicIndicator": true,
   "CapIndicator": false,

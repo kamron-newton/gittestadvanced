@@ -653,7 +653,7 @@ def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
   "EventAttributeId": "${eventAttributeIdQuantity#result}",
-  "ParentAttributeId": "${ParentAttributeId#result}",
+  "ParentAttributeId": "${ParentAttributeIdQuantity#result}",
   "AttributeName": "Quantity",
   "CyclicIndicator": true,
   "CapIndicator": false,
@@ -692,20 +692,64 @@ def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="attributeName" value="Quantity"/>
+          <con:entry key="content-type" value="application/json"/>
           <con:entry key="eventType" value="${#TestCase#eventType}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ParentAttributeId 2" id="3a60b520-a0bf-43b3-89ed-8bd802cb894e">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def ParentAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'BonusIssuedCount\')].ParentAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="eventAttributeIdBonusIssuedCount" id="7e475dd0-757b-4614-abe0-187f3633c820">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'BonusIssuedCount\')].EventAttributeId[0]}')</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="UpdEntAtrByEvntNameBonusIssuedCount" id="17e7f2f8-4f2e-4345-a347-6222d71f9468">
     <con:settings/>
     <con:config service="RestAPIs" methodName="UpdateEventAttribute" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="UpdEntAtrByEvntNameBonusIssuedCount" id="4c807fad-bd44-4148-983a-e796394d8a16" mediaType="application/json" postQueryString="false">
-        <con:settings/>
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
+        <con:request>{
+  
+  "EventAttributeId": "${eventAttributeIdBonusIssuedCount#result}",
+  "AttributeName": "BonusIssuedCount",
+  "ParentAttributeId": "${ParentAttributeIdBonusIssuedCount#result}",
+  "CyclicIndicator": false,
+  "CapIndicator": true,
+  "IsLineItem": false,
+  "CollectionIndicator": false,
+  "DataTypeDrl": "Double",
+  "DataTypeUi": "Number",
+  "EventType": "PurchaseTxn",
+  "AttributeFqn": "PurchaseTxn.CyclicsAndCaps.Caps.BonusIssuedCount",
+  "DroolsVariableName": "$PurchaseTxnCyclicsAndCaps",
+  "CapType": "OUTCOMEISSUED",
+  "CollectionAttribute": false,
+  "UsedAsCyclic": false,
+  "ReturnAttribute": false,
+  "IsValueGroupHierarchy": false,
+  "IsEnrichmentLinkedAttribute": false,
+  "IsEnrichmentAttribute": false,
+  "Status": "A",
+ 
+}</con:request>
         <con:assertion type="Valid HTTP Status Codes" id="47264dc6-2cc0-483f-b4e7-381d51b0afa6" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
@@ -723,11 +767,29 @@ def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="eventType" value="eventType"/>
-          <con:entry key="eventType" value="eventType"/>
-          <con:entry key="attributeName" value="attributeName"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="attributeName" value="BonusIssuedCount"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="eventType" value="${#TestCase#eventType}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ParentAttributeId 3" id="ee106ef3-c414-4851-84fb-47313ebde600">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def ParentAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'PointsLifetime\')].ParentAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="eventAttributeIdPointsLifetime" id="9fe20861-4134-4df7-9b0b-07fe48a0bd28">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'PointsLifetime\')].EventAttributeId[0]}')</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="UpdEntAtrByEvntNamePointsLifetime" id="6bead00d-e1c9-486f-bdb4-877892d297ae">
@@ -740,8 +802,8 @@ def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-  "EventAttributeId": "${eventAttributeIdPointsLifeTimeAttrId#result}",
-  "ParentAttributeId": "{{PointsLifeTimeParentAttId}}",
+  "EventAttributeId": "${eventAttributeIdPointsLifetime#result}",
+  "ParentAttributeId": "${ParentAttributeIdPointsLifetime#result}",
   "AttributeName": "PointsLifetime",
   "ValueGroup": "AGGREGATE",
   "LevelNumber": 11,
@@ -781,9 +843,11 @@ def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="eventType" value="eventType"/>
-          <con:entry key="eventType" value="eventType"/>
-          <con:entry key="attributeName" value="attributeName"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="attributeName" value="PointsLifetime"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="eventType" value="${#TestCase#eventType}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
       </con:restRequest>
     </con:config>
@@ -1177,11 +1241,11 @@ def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#
         </con:property>
         <con:property>
           <con:name>CreateBody</con:name>
-          <con:value/>
+          <con:value>{   "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",   "Description": "cyclic for transaction eligible revenue and cyclci threshold= $50\r\nTransaction max points = 400",   "MomentResponseValues": [     {       "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "A",           },     {       "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "a93c6f50-0540-48b5-8af4-40c63411ae43",       "Status": "A",           },     {       "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "85e1f0f6-8da7-4aab-8469-9dd6038602cc",       "Status": "A",          }   ],   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-05-01T00:00:00Z",   "StartDateString": "05/01/2018 12:00:00 AM",   "EndDate": "2030-12-31T23:59:59Z",   "EndDateString": "12/31/2030 11:59:59 PM",   "MomentStatus": "A",   "MomentEvent": {     "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",     "EventType": "PurchaseTxn",     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$PurchaseTxn:PurchaseTxnC(IsItBetween( new Date() ,\"5/1/2018 12:00:00 AM\",\"12/31/2020 11:59:59 PM\"))",     "MomentOffers": [       {          "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",         "EventType": "PurchaseTxn",         "OfferName": "RGRCYCLICPOINTTISSUEDCAP",         "Description": "cyclic for transaction eligible revenue and cyclci threshold= $50\r\nTransaction max points = 400",         "MomentOutcome": {           "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICPOINTTISSUEDCAP",           "OutcomeEquationUi": "200",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22200%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(200)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRCYCLICPOINTTISSUEDCAP\"),new MomentParam(\"CyclicValue\",String.valueOf($cyclicValue)),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRCYCLICPOINTTISSUEDCAP\",String.valueOf(200),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "A",                   },         "MomentQualifyingRule": {           "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICPOINTTISSUEDCAP",           "RuleEquationUI": "PurchaseTxn.ProgramCode==\"PP\" ",           "RuleEquationDrools": "PurchaseTxnC(ProgramCode == \"PP\")\nPurchaseTxnC($cyclicValue:TransactionEligible)",           "CyclicAttribute": "PurchaseTxn.TransactionEligible",           "CyclicThreshold": 50.00,                      "MomentCap": [             {               "CapId": null,               "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",               "EventType": "PurchaseTxn",               "OfferName": "RGRCYCLICPOINTTISSUEDCAP",               "CapName": "TransactionMaxPoints",               "CapValue": 400.00,               "CapType": "OUTCOMERESULT",               "Status": "A",                           }           ],           "Status": "A",                  },                 "Status": "A",                }     ],          "Status": "A",        },      "BestOfferIndicator": false,   "AdvancedModeIndicator": false,   "ReleaseState": "P",   "IsTestUser": false   }</con:value>
         </con:property>
         <con:property>
           <con:name>UpdateBody</con:name>
-          <con:value/>
+          <con:value>{   "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",   "Description": "cyclic for transaction eligible revenue and cyclci threshold= $50\r\nTransaction max points = 400",   "MomentResponseValues": [     {       "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "A",           },     {       "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "a93c6f50-0540-48b5-8af4-40c63411ae43",       "Status": "A",           },     {       "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "85e1f0f6-8da7-4aab-8469-9dd6038602cc",       "Status": "A",          }   ],   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-05-01T00:00:00Z",   "StartDateString": "05/01/2018 12:00:00 AM",   "EndDate": "2030-12-31T23:59:59Z",   "EndDateString": "12/31/2030 11:59:59 PM",   "MomentStatus": "A",   "MomentEvent": {     "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",     "EventType": "PurchaseTxn",     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$PurchaseTxn:PurchaseTxnC(IsItBetween( new Date() ,\"5/1/2018 12:00:00 AM\",\"12/31/2020 11:59:59 PM\"))",     "MomentOffers": [       {          "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",         "EventType": "PurchaseTxn",         "OfferName": "RGRCYCLICPOINTTISSUEDCAP",         "Description": "cyclic for transaction eligible revenue and cyclci threshold= $50\r\nTransaction max points = 400",         "MomentOutcome": {           "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICPOINTTISSUEDCAP",           "OutcomeEquationUi": "200",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22200%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(200)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRCYCLICPOINTTISSUEDCAP\"),new MomentParam(\"CyclicValue\",String.valueOf($cyclicValue)),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRCYCLICPOINTTISSUEDCAP\",String.valueOf(200),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "A",                   },         "MomentQualifyingRule": {           "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICPOINTTISSUEDCAP",           "RuleEquationUI": "PurchaseTxn.ProgramCode==\"PP\" ",           "RuleEquationDrools": "PurchaseTxnC(ProgramCode == \"PP\")\nPurchaseTxnC($cyclicValue:TransactionEligible)",           "CyclicAttribute": "PurchaseTxn.TransactionEligible",           "CyclicThreshold": 50.00,                      "MomentCap": [             {               "CapId": null,               "MomentCode": "RGRCYCLICPOINTTISSUEDCAP",               "EventType": "PurchaseTxn",               "OfferName": "RGRCYCLICPOINTTISSUEDCAP",               "CapName": "TransactionMaxPoints",               "CapValue": 400.00,               "CapType": "OUTCOMERESULT",               "Status": "A",                           }           ],           "Status": "A",                  },                 "Status": "A",                }     ],          "Status": "A",        },      "BestOfferIndicator": false,   "AdvancedModeIndicator": false,   "ReleaseState": "P",   "IsTestUser": false,   "Status": "A",   }</con:value>
         </con:property>
         <con:property>
           <con:name>MomentId</con:name>

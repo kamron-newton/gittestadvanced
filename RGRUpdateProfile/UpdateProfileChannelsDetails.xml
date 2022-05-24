@@ -10,7 +10,7 @@
       <con:properties>
         <con:property>
           <con:name>Body</con:name>
-          <con:value>[   {     "ParameterName": "PROFILE_AUDIT_HIS_ENABLE",     "ParameterValue": "Y"   } ]</con:value>
+          <con:value>[   {     "ParameterName": "${#TestCase#AuditHistoryParameterName}",     "ParameterValue": "${#TestCase#EnableValue}"   } ]</con:value>
         </con:property>
         <con:property>
           <con:name>ProgramCode</con:name>
@@ -46,16 +46,18 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Groovy Script" id="5750b21a-6037-4403-a199-8fd55e5b46d3">
+  <con:testStep type="groovy" name="CheckGetAddressStandardization" id="5750b21a-6037-4403-a199-8fd55e5b46d3">
     <con:settings/>
     <con:config>
       <script>import groovy.json.*
 import groovy.util.*
+import groovy.lang.*
 
-def parameterName = context.expand( '${#TestCase#SpecificParameterName}' )
-def filteredResponse = context.expand( '${GetAddressStandardizationProgramSetting#Response#$[?(@.ParameterName=="'+parameterName+'")]}' )
+def parameterName = context.expand( '${#TestCase#AddressStandardizationParameterName}' )
+def filteredResponse = context.expand( '${GetAddressStandardizationProgramSetting#Response#$[?(@.ParameterName=="'+parameterName+'")][0]}' )
 def jsonFilteredResponse = new JsonSlurper().parseText(filteredResponse)
 def parameterValue = jsonFilteredResponse.ParameterValue
+testRunner.testCase.setPropertyValue('AddressStandardizationOriginalValue', parameterValue)
 
 if(parameterValue=='Y')
 {
@@ -70,7 +72,7 @@ if(parameterValue=='Y')
       <con:properties>
         <con:property>
           <con:name>Body</con:name>
-          <con:value>[   {     "ParameterName": "ADDRESS_STANDARDIZATION",     "ParameterValue": "N"   } ]</con:value>
+          <con:value>[   {     "ParameterName": "${#TestCase#AddressStandardizationParameterName}",     "ParameterValue": "${#TestCase#DisableValue}"   } ]</con:value>
         </con:property>
         <con:property>
           <con:name>ProgramCode</con:name>
@@ -318,7 +320,7 @@ if(parameterValue=='Y')
         <con:assertion type="JsonPath Match" id="b07ed995-86da-4f88-9a95-eaaea6ea3a9a" name="JSONPath Match">
           <con:configuration>
             <path>$['Addresses'][?(@.AddressLine3 == 'New')]['ProfileId']</path>
-            <content>${#[Profile#UpdateProfileRGR#UpdateProfileRGR]#Response#$['ProfileId']}</content>
+            <content>[${#[Profile#UpdateProfileRGR#UpdateProfileRGR]#Response#$['ProfileId']}]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -528,7 +530,7 @@ if(parameterValue=='Y')
       <con:properties>
         <con:property>
           <con:name>Body</con:name>
-          <con:value>[   {     "ParameterName": "PROFILE_AUDIT_HIS_ENABLE",     "ParameterValue": "N"   } ]</con:value>
+          <con:value>[   {     "ParameterName": "${#TestCase#AuditHistoryParameterName}",     "ParameterValue": "${#TestCase#DisableValue}"   } ]</con:value>
         </con:property>
         <con:property>
           <con:name>ProgramCode</con:name>
@@ -539,24 +541,43 @@ if(parameterValue=='Y')
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="CheckAddressStandardization" id="93139c01-31f5-4f3b-8df1-e8df1f2e8cbd" disabled="true">
+  <con:testStep type="calltestcase" name="UpdateAddressStarnardizationToOriginal" id="1e722d1d-7680-4a0f-91a7-4975f9987965">
     <con:settings/>
-    <con:config>
-      <script>import groovy.json.*
-import groovy.util.*
-
-def addressStandardizationResponse = context.expand( '${GetAddressStandardizationProgramSetting#Response#$[?(@.ParameterName=="ADDRESS_STANDARDIZATION")][0]}' )
-def addressStandardization = new JsonSlurper().parseText(addressStandardizationResponse)
-def addressStandardizationValue = addressStandardization.ParameterValue
-
-if(addressStandardizationValue=='Y')
-	testRunner.gotoStepByName("")</script>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>[   {     "ParameterName": "${#TestCase#AddressStandardizationParameterName}",     "ParameterValue": "${#TestCase#AddressStandardizationOriginalValue}"   } ]</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>${#Project#ProgramCode}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:properties>
     <con:property userSpecific="true">
-      <con:name>SpecificParameterName</con:name>
+      <con:name>EnableValue</con:name>
+      <con:value>Y</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>DisableValue</con:name>
+      <con:value>N</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>AuditHistoryParameterName</con:name>
+      <con:value>PROFILE_AUDIT_HIS_ENABLE</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>AddressStandardizationParameterName</con:name>
       <con:value>ADDRESS_STANDARDIZATION</con:value>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>AddressStandardizationOriginalValue</con:name>
     </con:property>
   </con:properties>
   <con:reportParameters/>

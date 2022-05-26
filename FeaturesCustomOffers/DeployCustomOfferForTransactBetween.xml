@@ -397,7 +397,7 @@ return EventStatus</script>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessTransactionAt30Clock" id="bca4b3a5-a492-44b2-a52e-458bca66c0d9" disabled="true">
+  <con:testStep type="restrequest" name="ProcessTransactionAt30Clock" id="bca4b3a5-a492-44b2-a52e-458bca66c0d9">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/transaction" methodName="ProcessTransaction" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="ProcessTransactionAt30Clock" postQueryString="false">
@@ -413,9 +413,9 @@ return EventStatus</script>
   "TransactionTotalTax": "100",
   "TransactionNumber": "${=java.util.UUID.randomUUID()}",
   "CurrencyCode": "USD",
-  "PostingDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'03:00:00").format(new Date()+1)}",
-  "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'03:00:00").format(new Date()+1)}",
-  "TransactionEndDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'03:00:00").format(new Date()+1)}",
+  "PostingDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'03:00").format(new Date()+1)}",
+  "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'03:00").format(new Date()+1)}",
+  "TransactionEndDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'03:00").format(new Date()+1)}",
   "OnlyAddTransData": "FALSE",
   "SuspendTransaction": "FALSE",
   "TransactionDescription": "TestTrans${=java.util.UUID.randomUUID()}",
@@ -609,7 +609,25 @@ return EventStatus</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="GetMomentByCode" id="e9735fc3-627a-468e-b9fc-ccd227a1a1bb" disabled="true">
+  <con:testStep type="calltestcase" name="PurchaseTransactionAt3" id="a729f39c-b504-4c56-9014-6df447f1a157">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>020fa426-82b4-435d-b482-aebd7f200c61</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>{   "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",   "TransactionTypeCode": "PR",   "TransactionNetTotal": "100",   "ShippingAndHandling": "100",   "TransactionTotalTax": "100",   "TransactionNumber": "${=java.util.UUID.randomUUID()}",   "CurrencyCode": "USD",   "PostingDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'03:00").format(new Date()+1)}",   "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'03:00").format(new Date()+1)}",   "TransactionEndDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'03:00").format(new Date()+1)}",   "OnlyAddTransData": "FALSE",   "SuspendTransaction": "FALSE",   "TransactionDescription": "TestTrans${=java.util.UUID.randomUUID()}",   "StoreCode": "FR1502",   "ProgramCode":"FR",   "GrossAmount": "100" }</con:value>
+        </con:property>
+        <con:property>
+          <con:name>Program-Code</con:name>
+          <con:value>PP</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="GetMomentByCode" id="e9735fc3-627a-468e-b9fc-ccd227a1a1bb">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>f4019890-b4bf-40e5-b64c-59b6bbe7b94d</con:targetTestCase>
@@ -629,7 +647,7 @@ return EventStatus</script>
       <delay>10000</delay>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetPointsSummary to get MomentId" id="7f3a5096-b196-453f-ac3c-ed141cff32fe" disabled="true">
+  <con:testStep type="restrequest" name="GetPointsSummary to get MomentId" id="7f3a5096-b196-453f-ac3c-ed141cff32fe">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetPointsSummary to get MomentId" id="90aa5f43-a530-41eb-9446-2dde6c33780e" mediaType="application/json">
@@ -795,6 +813,15 @@ return EventStatus</script>
             <con:originalMessage>{"Headers":{"date":"Mon, 04 Apr 2022 13:05:49 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"9762","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"20e53b9e-fb3c-257b-5658-d498efba4ad5","content-type":"application/json; charset=utf-8","process-time":"22ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGM5CF41RM5:0000017A"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
+        <con:assertion type="JsonPath Existence Match" id="60dd5924-93bc-489d-974d-9659aa0ba46b" name="JSONPath Existence Match">
+          <con:configuration>
+            <path>$.MomentId</path>
+            <content>false</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>
@@ -822,7 +849,7 @@ return EventStatus</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessTransactionAt2:58" id="cd8a308b-fb93-461e-855f-a4f9f9dfa303">
+  <con:testStep type="restrequest" name="ProcessTransactionAt2:58" id="cd8a308b-fb93-461e-855f-a4f9f9dfa303" disabled="true">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/transaction" methodName="ProcessTransaction" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="ProcessTransactionAt2:58" postQueryString="false">
@@ -836,8 +863,8 @@ return EventStatus</script>
   "TransactionNetTotal": "100",
   "TransactionNumber": "${=java.util.UUID.randomUUID()}",
   "CurrencyCode": "USD",
-  "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd 02:50:32").format(new Date()+2)}",
-  "TransactionEndDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd 02:50:32").format(new Date()+2)}",
+  "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd 02:50").format(new Date()+2)}",
+  "TransactionEndDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd 02:50").format(new Date()+2)}",
   "TransactionDescription": "TestTrans${=java.util.UUID.randomUUID()}",
   "TransactionEligible": "100",
   "StoreCode": "PP1502",
@@ -1030,7 +1057,25 @@ return EventStatus</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="delay" name="Delay 2" id="fdd62165-6273-45ee-9f86-9b79a2cb4a9d">
+  <con:testStep type="calltestcase" name="ProcessTransactionAt2:50" id="61f33e77-f72f-4c35-b96e-4f9d00fecc0e">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>020fa426-82b4-435d-b482-aebd7f200c61</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>{   "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",   "TransactionTypeCode": "PR",   "TransactionNetTotal": "100",   "TransactionNumber": "${=java.util.UUID.randomUUID()}",   "CurrencyCode": "USD",   "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd 02:50").format(new Date()+2)}",   "TransactionEndDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd 02:50").format(new Date()+2)}",   "TransactionDescription": "TestTrans${=java.util.UUID.randomUUID()}",   "TransactionEligible": "100",   "StoreCode": "PP1502",   "ProgramCode":"PP",   "GrossAmount": "100" }</con:value>
+        </con:property>
+        <con:property>
+          <con:name>Program-Code</con:name>
+          <con:value>PP</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="delay" name="Delay 2" id="fdd62165-6273-45ee-9f86-9b79a2cb4a9d" disabled="true">
     <con:settings/>
     <con:config>
       <delay>8000</delay>
@@ -1048,7 +1093,7 @@ return EventStatus</script>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/%7B%20%20%20%22Prefix%22%3A%22%22%2C%20%20%20%22FirstName%22%3A%20%22%22%2C%20%20%20%22MiddleInit%22%3A%22%22%2C%20%20%20%22LastName%22%3A%22%22%2C%20%20%20%22CardNumber%22%3A%22c62c3524-f4bd-4b58-ab51-8984747839a8%22%2C%20%20%20%22Suffix%22%3A%20%22%22%2C%20%20%20%22GlobalOptOut%22%3A%20%22%22%2C%20%20%20%22GlobalOptDate%22%3A%20%20%22%22%2C%20%20%20%22GlobalOptSource%22%3A%20%22%22%2C%20%20%20%22LanguageCode%22%3A%20%20%22%22%2C%20%20%20%22MaritalStatus%22%3A%20%22%22%2C%20%20%20%22Gender%22%3A%20%22%22%2C%20%20%20%22BirthDate%22%3A%20%22%22%2C%20%20%20%22CompanyName%22%3A%20%22%22%2C%20%20%20%22Addresses%22%3A%20%5B%20%20%20%20%20%7B%20%20%20%20%20%20%20%22AddressLine1%22%3A%22%22%2C%20%20%20%20%20%20%20%22AddressLine2%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22AddressLine3%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22City%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22StateCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22CountryCode%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22PostalCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22ChannelCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22LocationCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22IsPreferred%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22DeliveryStatus%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22DoNotStandardize%22%3A%20%20%22%22%20%20%20%20%20%7D%20%20%20%5D%2C%20%20%20%22Emails%22%3A%20%5B%20%20%20%20%20%7B%20%20%20%20%20%20%20%22EmailAddress%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22ChannelCode%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22LocationCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22IsPreferred%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22DeliveryStatus%22%3A%20%22%22%20%20%20%20%20%7D%20%20%20%5D%2C%20%20%20%22Phones%22%3A%20%5B%20%20%20%20%20%7B%20%20%20%20%20%20%20%22PhoneNumber%22%3A%20%20%22%22%2C%20%20%20%20%20%20%20%22PhoneCountryCode%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22AcceptsText%22%3A%22%22%2C%20%20%20%20%20%20%20%22Frequency%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22ChannelCode%22%3A%22%22%2C%20%20%20%20%20%20%20%22LocationCode%22%3A%22%22%2C%20%20%20%20%20%20%20%22IsPreferred%22%3A%20%22%22%2C%20%20%20%20%20%20%20%22DeliveryStatus%22%3A%22%22%20%20%20%20%20%7D%20%20%20%5D%2C%20%20%20%22SourceCode%22%3A%20%22%22%2C%20%20%20%22EnrollChannelCode%22%3A%20%22%22%2C%20%20%20%22AutoRewardOptInInd%22%3A%20%20%22%22%2C%20%20%20%22TermsConditionsAcceptedInd%22%3A%20%22%22%20%20%7D/points/summary</con:originalUri>
         <con:assertion type="JsonPath Match" id="d718b76f-6e63-422d-9479-043918f3d753" name="ValidationForPointsAmount">
           <con:configuration>
-            <path>$.[?(@.ActTransactionId == '${ProcessTransactionAt2:58#Response#$['RawTransactionId']}' &amp;&amp; @.MomentId == '${#[OffersPrerequisite#GetMomentByCode#GetMomentByCode]#Response#$['MomentId']}')].PointsAmount</path>
+            <path>$.[?(@.ActTransactionId == '${#[ActivityCertificate#PurchaseTransaction#PurchaseTransaction]#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${#[OffersPrerequisite#GetMomentByCode#GetMomentByCode]#Response#$['MomentId']}')].PointsAmount</path>
             <content>[10.0]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>

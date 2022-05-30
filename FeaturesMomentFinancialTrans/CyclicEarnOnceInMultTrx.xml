@@ -311,10 +311,10 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetEventAttributes" id="64933705-e34f-4a99-adb5-f34d221be1df">
+  <con:testStep type="restrequest" name="GetEventAttributesByEventName" id="64933705-e34f-4a99-adb5-f34d221be1df">
     <con:settings/>
     <con:config service="RestAPIs" methodName="GetEventAttributesByEventType" resourcePath="/api/v1/event/attributes/eventtype/{eventType}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetEventAttributes" id="58185f1a-b5c5-4fcf-a0b5-eab1f29b2abb" mediaType="application/json">
+      <con:restRequest name="GetEventAttributesByEventName" id="58185f1a-b5c5-4fcf-a0b5-eab1f29b2abb" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -491,30 +491,12 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="transfer" name="EventAttribute" id="f5c63e52-cfb9-4bc7-a078-492b77f137fd">
+  <con:testStep type="groovy" name="eventAttributeIdTransactionEligible" id="f6684aa6-d03b-4980-a75d-04ccb1951a57">
     <con:settings/>
-    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>EventAttributeId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetEventAttributes</con:sourceStep>
-        <con:sourcePath>$.[?(@.AttributeName == 'TransactionEligible')].EventAttributeId[0]</con:sourcePath>
-        <con:targetType>EventAttributeId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:targetPath/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>VisitAttributeId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetEventAttributes</con:sourceStep>
-        <con:sourcePath>$.[?(@.AttributeName == 'Visits')].EventAttributeId[0]</con:sourcePath>
-        <con:targetType>VisitAttributeId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def eventAttributeId = context.expand( '${GetEventAttributesByEventName#Response#$[?(@.AttributeName==\'TransactionEligible\')].EventAttributeId[0]}')</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="UpdateEventAttribute (Transaction Eligible)" id="327f0c0e-fa08-41a2-9f77-f21be66b16cd">
@@ -527,7 +509,7 @@
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
- "EventAttributeId": "${#TestCase#EventAttributeId}",  
+ "EventAttributeId": "${eventAttributeIdTransactionEligible#result}",  
  "AttributeName": "TransactionEligible",
   "CyclicIndicator": true,
   "CapIndicator": false,
@@ -720,6 +702,14 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="eventAttributeIdVisits" id="62eea434-0848-429a-8a56-ae177c403f98">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def eventAttributeId = context.expand( '${GetEventAttributesByEventName#Response#$[?(@.AttributeName==\'Visits\')].EventAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="UpdateEventAttribute (Visits)" id="62285258-8dea-4220-b5b7-29b4e044ea5c">
     <con:settings/>
     <con:config service="RestAPIs" methodName="UpdateEventAttribute" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -730,7 +720,7 @@
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-    "EventAttributeId": "${#TestCase#VisitAttributeId}",
+    "EventAttributeId": "${eventAttributeIdVisits#result}",
     "AttributeName": "Visits",
     "CyclicIndicator": true,
     "CapIndicator": false,
@@ -1836,20 +1826,12 @@
       <con:value>PurchaseTxn</con:value>
     </con:property>
     <con:property>
-      <con:name>EventAttributeId</con:name>
-      <con:value>4dfb18a4-f26c-43c6-a423-e7f80885563b</con:value>
-    </con:property>
-    <con:property>
-      <con:name>VisitAttributeId</con:name>
-      <con:value>10b50893-a6f4-4f93-a230-3c6c2fb1d6d2</con:value>
-    </con:property>
-    <con:property>
       <con:name>PointTypeId</con:name>
-      <con:value>85e1f0f6-8da7-4aab-8469-9dd6038602cc</con:value>
+      <con:value>27b8017a-dba2-480e-a020-552c12ee1b1a</con:value>
     </con:property>
     <con:property>
       <con:name>PointSubTypeId</con:name>
-      <con:value>a93c6f50-0540-48b5-8af4-40c63411ae43</con:value>
+      <con:value>2ff58549-b36c-4e87-91bb-e9b8edc71523</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>
@@ -1880,11 +1862,6 @@
   </con:breakPoints>
   <con:breakPoints>
     <con:testStepId>64933705-e34f-4a99-adb5-f34d221be1df</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
-  <con:breakPoints>
-    <con:testStepId>f5c63e52-cfb9-4bc7-a078-492b77f137fd</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>

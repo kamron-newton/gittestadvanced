@@ -10,9 +10,11 @@
       <con:properties>
         <con:property>
           <con:name>ENABLE_PENDING_TRANSACTIONS</con:name>
+          <con:value>Y</con:value>
         </con:property>
         <con:property>
           <con:name>MAX_DAYS_PENDING_POINTS</con:name>
+          <con:value>0</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -26,10 +28,13 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
+          <con:value>1b3e4a6b-8192-4872-9f20-a8ebce409274</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties/>
-      <con:runMode>PARALLELL</con:runMode>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="groovy" name="Generate Guid" id="0a6d4575-6c39-409d-bb9f-c57e95abdf48">
@@ -51,19 +56,28 @@
       <con:properties>
         <con:property>
           <con:name>TransactionNumber</con:name>
+          <con:value>${Generate Guid#result}</con:value>
         </con:property>
         <con:property>
           <con:name>ProfileId</con:name>
+          <con:value>${AddProfileRGR#ProfileId}</con:value>
         </con:property>
         <con:property>
           <con:name>TransactionDate</con:name>
+          <con:value>${Generate Date#result}</con:value>
         </con:property>
         <con:property>
           <con:name>RawTransactionId</con:name>
         </con:property>
+        <con:property>
+          <con:name>TransactionId</con:name>
+          <con:value>7903d980-81ae-4cc3-8e21-8f37a2f1320b</con:value>
+        </con:property>
       </con:properties>
-      <con:returnProperties/>
-      <con:runMode>PARALLELL</con:runMode>
+      <con:returnProperties>
+        <con:entry>TransactionId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="Finalize Transaction" id="2153576a-2152-4567-ba80-fcc2f4deed31">
@@ -78,15 +92,161 @@
   "ProfileId":"${AddProfileRGR#ProfileId}",
   "TransactionId":"${PR Transaction#TransactionId}"
 }</con:request>
-        <con:assertion type="Valid HTTP Status Codes" id="b255b0ca-19e3-4a93-8a25-1a4d6d019f9c" name="Valid HTTP Status Codes">
-          <con:settings/>
-          <con:configuration>
-            <codes>200</codes>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="Response SLA Assertion" id="57c968ca-de90-4f42-a75f-4e00d4fe9263" name="Response SLA">
-          <con:configuration>
-            <SLA>200</SLA>
+        <con:originalUri>https://d9alqa-pveapi.epsilonagilityloyalty.com/api/v2/transaction/finalize</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="5f708acd-0c48-4e5b-9d64-74e3811edcf9" name="Status code 200">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Wed, 01 Jun 2022 06:18:49 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>13461</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>fe654e5f-0050-d586-643d-b991138131bb</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>190ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMI36LIE6OH9:00000262</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Wed, 01 Jun 2022 06:18:49 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"13461","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"fe654e5f-0050-d586-643d-b991138131bb","content-type":"application/json; charset=utf-8","process-time":"190ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMI36LIE6OH9:00000262"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -117,6 +277,7 @@
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
+        <con:originalUri>https://d9alqa-pveapi.epsilonagilityloyalty.com/api/v2/transaction/rawtransactions/</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="f44849f5-14b3-4594-8360-702f2d147ad9" name="Valid HTTP Status Codes">
           <con:settings/>
           <con:configuration>
@@ -154,6 +315,7 @@
         </con:property>
         <con:property>
           <con:name>MAX_DAYS_PENDING_POINTS</con:name>
+          <con:value>30</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="ed970623-84b4-42ef-b835-5828ced9fc2c" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="FinalizeProcessTransactionZeroPendingDay" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="ed970623-84b4-42ef-b835-5828ced9fc2cfileName">FinalizeProcessTransactionZeroPendingDay</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="Pending Transaction Y and Max day 0" id="bff27642-3323-4fa2-b511-d1c4122f032b">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>eb68a78e-d58d-43c0-bbda-5bf7995ee577</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ENABLE_PENDING_TRANSACTIONS</con:name>
+        </con:property>
+        <con:property>
+          <con:name>MAX_DAYS_PENDING_POINTS</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfileRGR" id="57e718dd-0ac3-4e31-8203-47369b555fdc">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Generate Guid" id="0a6d4575-6c39-409d-bb9f-c57e95abdf48">
+    <con:settings/>
+    <con:config>
+      <script>java.util.UUID.randomUUID()</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="Generate Date" id="30aa9e5d-4357-4bbb-be3d-70617282f43b">
+    <con:settings/>
+    <con:config>
+      <script>new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="PR Transaction" id="922e20fc-926f-49a3-960c-437d6d4a0b7c">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>721c9d8e-bdd9-4288-a701-c671b71b71ef</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TransactionNumber</con:name>
+        </con:property>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+        <con:property>
+          <con:name>TransactionDate</con:name>
+        </con:property>
+        <con:property>
+          <con:name>RawTransactionId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Finalize Transaction" id="2153576a-2152-4567-ba80-fcc2f4deed31">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/transaction/finalize" methodName="FinalizeProcessTransaction" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Finalize Transaction" id="538c0183-422a-4096-bde9-4ce9e993c773" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ProfileId":"${AddProfileRGR#ProfileId}",
+  "TransactionId":"${PR Transaction#TransactionId}"
+}</con:request>
+        <con:assertion type="Valid HTTP Status Codes" id="b255b0ca-19e3-4a93-8a25-1a4d6d019f9c" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Response SLA Assertion" id="57c968ca-de90-4f42-a75f-4e00d4fe9263" name="Response SLA">
+          <con:configuration>
+            <SLA>200</SLA>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Get Transaction By ID (Receipt View)" id="b87ade34-46b2-4322-9a55-f04b71078e74">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetTransactionById" resourcePath="/api/v2/transaction/rawtransactions/{rawtransactionid}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Transaction By ID (Receipt View)" id="28adfd8e-212c-4e14-bc87-7d6dc55efd62" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:assertion type="Valid HTTP Status Codes" id="f44849f5-14b3-4594-8360-702f2d147ad9" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Response SLA Assertion" id="425b5629-66f5-422e-ad6f-ddda11aad2aa" name="Response SLA">
+          <con:configuration>
+            <SLA>200</SLA>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileid" value="${AddProfileRGR#ProfileId}"/>
+          <con:entry key="rawtransactionid" value="${Finalize Transaction#Res}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Pending Transaction N and Max day 30" id="20fedfe8-3476-4668-add5-a4fed2398ced">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>eb68a78e-d58d-43c0-bbda-5bf7995ee577</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ENABLE_PENDING_TRANSACTIONS</con:name>
+          <con:value>N</con:value>
+        </con:property>
+        <con:property>
+          <con:name>MAX_DAYS_PENDING_POINTS</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

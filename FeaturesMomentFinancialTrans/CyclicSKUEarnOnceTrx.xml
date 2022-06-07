@@ -311,10 +311,10 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetEventAttribute" id="d7d2aa3b-8eae-41e8-9171-a5a37ab605eb">
+  <con:testStep type="restrequest" name="GetEventAttributeByEventName" id="d7d2aa3b-8eae-41e8-9171-a5a37ab605eb">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/event/attributes/eventtype/{eventType}" methodName="GetEventAttributesByEventType" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetEventAttribute" id="da222284-ba0b-4969-9bde-b8b22e6ce3d2" mediaType="application/json">
+      <con:restRequest name="GetEventAttributeByEventName" id="da222284-ba0b-4969-9bde-b8b22e6ce3d2" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -503,85 +503,66 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="transfer" name="AttributeId" id="b85e269c-0352-411d-bff8-64980bd3d8d3">
+  <con:testStep type="groovy" name="ParentAttributeIdQuantity" id="b79436e5-5421-4adf-af00-f9f64561c7c2">
     <con:settings/>
-    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>QuantityAttributeId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetEventAttribute</con:sourceStep>
-        <con:sourcePath>$.[?(@.AttributeName == 'Quantity')].EventAttributeId[0]</con:sourcePath>
-        <con:targetType>QuantityAttributeId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" disabled="false" entitize="false" ignoreEmpty="false" transferChildNodes="false" transferToAll="false" useXQuery="false">
-        <con:name>QuantityParentAttributeId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetEventAttribute</con:sourceStep>
-        <con:sourcePath>$.[?(@.AttributeName == 'Quantity')].ParentAttributeId[0]</con:sourcePath>
-        <con:targetType>QuantityParentAttributeId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:targetPath xsi:nil="true"/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>BonusIssuedCountAttributeId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetEventAttribute</con:sourceStep>
-        <con:sourcePath>$.[?(@.AttributeName == 'BonusIssuedCount')].EventAttributeId[0]</con:sourcePath>
-        <con:targetType>BonusIssuedCountAttributeId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" disabled="false" entitize="false" ignoreEmpty="false" transferChildNodes="false" transferToAll="false" useXQuery="false">
-        <con:name>BonusIssuedCountParentAttributeId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetEventAttribute</con:sourceStep>
-        <con:sourcePath>$.[?(@.AttributeName == 'BonusIssuedCount')].ParentAttributeId[0]</con:sourcePath>
-        <con:targetType>BonusIssuedCountParentAttributeId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:targetPath xsi:nil="true"/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>PointsLifetimeAttributeId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetEventAttribute</con:sourceStep>
-        <con:sourcePath>$.[?(@.AttributeName == 'PointsLifetime')].EventAttributeId[0]</con:sourcePath>
-        <con:targetType>PointsLifetimeAttributeId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" disabled="false" entitize="false" ignoreEmpty="false" transferChildNodes="false" transferToAll="false" useXQuery="false">
-        <con:name>PointsLifetimeParentAttributeId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetEventAttribute</con:sourceStep>
-        <con:sourcePath>$.[?(@.AttributeName == 'PointsLifetime')].ParentAttributeId[0]</con:sourcePath>
-        <con:targetType>PointsLifetimeParentAttributeId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:targetPath xsi:nil="true"/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def ParentAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'Quantity\')].ParentAttributeId[0]}')</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateQuantityAttribute" id="6a9d3165-e943-4793-84cd-d62b07d983b5">
+  <con:testStep type="groovy" name="eventAttributeIdQuantity" id="0ecd8a0e-e9f9-4cde-82b1-4a09601d4952">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" methodName="UpdateEventAttribute" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateQuantityAttribute" id="097cbf80-81c4-4591-a216-a1aa2bb5b1ed" mediaType="application/json" postQueryString="false">
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'Quantity\')].EventAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ParentAttributeIdBonusIssued" id="e4bbd770-0ada-447a-a4b4-9261918a775b">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def ParentAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'BonusIssuedCount\')].ParentAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="eventAttributeIdBonusIssued" id="23dc49a3-1e5a-4ab2-aa5b-ca44298c8c20">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'BonusIssuedCount\')].EventAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="ParentAttributeIdPointsLifeTime" id="071d4afb-faa9-4b19-8d94-115800f43e6a">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def ParentAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'PointsLifetime\')].ParentAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="eventAttributeIdPointsLifetime" id="56abe823-c26a-4b02-b6fb-2b88790c9902">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def eventAttributeId = context.expand( '${GetEventAttributeByEventName#Response#$[?(@.AttributeName==\'PointsLifetime\')].EventAttributeId[0]}')</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateEventAttributeByEventName" id="0d1cbd58-94ed-46d0-9f93-90ff5ab261d5">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateEventAttribute" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateEventAttributeByEventName" id="c871772e-109d-460e-a54b-c557b3908d7d" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
+        <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-  "EventAttributeId": "${#TestCase#QuantityAttributeId}",
-  "ParentAttributeId": "${#TestCase#QuantityParentAttributeId}",
+  "EventAttributeId": "${eventAttributeIdQuantity#result}",
+  "ParentAttributeId": "${ParentAttributeIdQuantity#result}",
   "AttributeName": "Quantity",
   "CyclicIndicator": true,
   "CapIndicator": false,
@@ -603,7 +584,7 @@
  
  }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/event/PurchaseTxn/attributes/Quantity</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="8f319b8f-1bb7-4a3e-9052-232adcb3e761" name="Smart Assertion Status code">
+        <con:assertion type="DataAndMetadataAssertion" id="e440c133-a3e9-4ba5-bf74-500234055b60" name="Smart Assertion - Valid HTTP status code">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -611,7 +592,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Mon, 06 Jun 2022 06:39:41 GMT</con:expectedValue>
+              <con:expectedValue>Wed, 04 May 2022 03:50:56 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -701,7 +682,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>f04daea3-23a6-d7a2-1b97-6e7f51953a87</con:expectedValue>
+              <con:expectedValue>940f837e-05a6-2490-bf05-5b555ed89a57</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -721,7 +702,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>44ms</con:expectedValue>
+              <con:expectedValue>23ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -751,12 +732,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMI5VS1KUF1P:0000000F</con:expectedValue>
+              <con:expectedValue>0HMHD9OJHHUTS:000004CA</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Mon, 06 Jun 2022 06:39:41 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"552","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"f04daea3-23a6-d7a2-1b97-6e7f51953a87","content-type":"application/json; charset=utf-8","process-time":"44ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMI5VS1KUF1P:0000000F"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Wed, 04 May 2022 03:50:56 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"552","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"940f837e-05a6-2490-bf05-5b555ed89a57","content-type":"application/json; charset=utf-8","process-time":"23ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHD9OJHHUTS:000004CA"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -766,55 +747,48 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="attributeName" value="${#TestCase#attributeName}"/>
           <con:entry key="content-type" value="application/json"/>
-          <con:entry key="attributeName" value="Quantity"/>
+          <con:entry key="eventType" value="${#TestCase#eventType}"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="eventType" value="PurchaseTxn"/>
         </con:parameters>
-        <con:parameterOrder>
-          <con:entry>eventType</con:entry>
-          <con:entry>attributeName</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-        </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateBonusIssuedCountAttribute" id="b86c466e-98fd-4eab-966e-601d1a1810bd">
+  <con:testStep type="restrequest" name="UpdateEventAttributeByEventNameBonusIssued" id="2558d0bb-112d-49ce-86b5-15e2682a07b5">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" methodName="UpdateEventAttribute" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateBonusIssuedCountAttribute" id="097cbf80-81c4-4591-a216-a1aa2bb5b1ed" mediaType="application/json" postQueryString="false">
+    <con:config service="RestAPIs" methodName="UpdateEventAttribute" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateEventAttributeByEventNameBonusIssued" id="c871772e-109d-460e-a54b-c557b3908d7d" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
+        <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  
-    "EventAttributeId": "${#TestCase#BonusIssuedCountAttributeId}",
-    "AttributeName": "BonusIssuedCount",
-    "ParentAttributeId": "${#TestCase#BonusIssuedCountParentAttributeId}",
-    "CyclicIndicator": false,
-    "CapIndicator": true,
-    "IsLineItem": false,
-    "CollectionIndicator": false,
-    "DataTypeDrl": "Double",
-    "DataTypeUi": "Number",
-    "EventType": "PurchaseTxn",
-    "AttributeFqn": "PurchaseTxn.CyclicsAndCaps.Caps.BonusIssuedCount",
-    "DroolsVariableName": "$PurchaseTxnCyclicsAndCaps",
-    "CapType": "OUTCOMEISSUED",
-    "CollectionAttribute": false,
-    "UsedAsCyclic": false,
-    "ReturnAttribute": false,
-    "IsValueGroupHierarchy": false,
-    "IsEnrichmentLinkedAttribute": false,
-    "IsEnrichmentAttribute": false,
-    "Status": "A",
-   
-  }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/event/PurchaseTxn/attributes/BonusIssuedCount</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="fb6a0fa5-5241-48e5-a568-5cc471eff18c" name="Smart Assertion Status code">
+        <con:request>{ 
+  "EventAttributeId": "${eventAttributeIdBonusIssued#result}",
+  "AttributeName": "BonusIssuedCount",
+  "ParentAttributeId": "${ParentAttributeIdBonusIssued#result}",
+  "CyclicIndicator": false,
+  "CapIndicator": true,
+  "IsLineItem": false,
+  "CollectionIndicator": false,
+  "DataTypeDrl": "Double",
+  "DataTypeUi": "Number",
+  "EventType": "PurchaseTxn",
+  "AttributeFqn": "PurchaseTxn.CyclicsAndCaps.Caps.BonusIssuedCount",
+  "DroolsVariableName": "$PurchaseTxnCyclicsAndCaps",
+  "CapType": "OUTCOMEISSUED",
+  "CollectionAttribute": false,
+  "UsedAsCyclic": false,
+  "ReturnAttribute": false,
+  "IsValueGroupHierarchy": false,
+  "IsEnrichmentLinkedAttribute": false,
+  "IsEnrichmentAttribute": false,
+  "Status": "A",
+ 
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/event/PurchaseTxn/attributes/Quantity</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="ee44370a-ca51-4fa5-b287-40e3534c0595" name="Smart Assertion - Valid HTTP status code">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -822,7 +796,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Mon, 06 Jun 2022 06:39:42 GMT</con:expectedValue>
+              <con:expectedValue>Wed, 04 May 2022 03:50:57 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -912,7 +886,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>4b9b5923-ce79-7583-fe0d-609e42e148e4</con:expectedValue>
+              <con:expectedValue>599b3a8f-b91e-1627-98a2-f0796a98e0de</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -932,7 +906,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>20ms</con:expectedValue>
+              <con:expectedValue>14ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -962,12 +936,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMI5VS1KUF1P:00000010</con:expectedValue>
+              <con:expectedValue>0HMHD9OJHHUTS:000004CB</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Mon, 06 Jun 2022 06:39:42 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"521","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"4b9b5923-ce79-7583-fe0d-609e42e148e4","content-type":"application/json; charset=utf-8","process-time":"20ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMI5VS1KUF1P:00000010"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Wed, 04 May 2022 03:50:57 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"521","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"599b3a8f-b91e-1627-98a2-f0796a98e0de","content-type":"application/json; charset=utf-8","process-time":"14ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHD9OJHHUTS:000004CB"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -977,56 +951,50 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
           <con:entry key="attributeName" value="BonusIssuedCount"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="eventType" value="${#TestCase#eventType}"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="eventType" value="PurchaseTxn"/>
         </con:parameters>
-        <con:parameterOrder>
-          <con:entry>eventType</con:entry>
-          <con:entry>attributeName</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-        </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdatePointsLifetimeAttribute" id="1d92028b-4568-40c8-8f1b-8af7e07913df">
+  <con:testStep type="restrequest" name="UpdateEventAttributeByEventNamePointsLifeTime" id="e7b77f69-de93-4f88-8d42-a3a5205e67c3">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" methodName="UpdateEventAttribute" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdatePointsLifetimeAttribute" id="097cbf80-81c4-4591-a216-a1aa2bb5b1ed" mediaType="application/json" postQueryString="false">
+    <con:config service="RestAPIs" methodName="UpdateEventAttribute" resourcePath="/api/v1/event/{eventType}/attributes/{attributeName}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateEventAttributeByEventNamePointsLifeTime" id="c871772e-109d-460e-a54b-c557b3908d7d" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
+        <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-    "EventAttributeId": "${#TestCase#PointsLifetimeAttributeId}",
-    "ParentAttributeId": "${#TestCase#PointsLifetimeParentAttributeId}",
-    "AttributeName": "PointsLifetime",
-    "ValueGroup": "AGGREGATE",
-    "LevelNumber": 11,
-    "CyclicIndicator": false,
-    "CapIndicator": true,
-    "IsLineItem": false,
-    "CollectionIndicator": false,
-    "DataTypeDrl": "Double",
-    "DataTypeUi": "Number",
-    "EventType": "PurchaseTxn",
-    "AttributeFqn": "PurchaseTxn.CyclicsAndCaps.Caps.PointsLifetime",
-    "DroolsVariableName": "$PurchaseTxnCyclicsAndCaps",
-    "CapType": "OUTCOMERESULT",
-    "CollectionAttribute": false,
-    "UsedAsCyclic": false,
-    "ReturnAttribute": false,
-    "IsValueGroupHierarchy": false,
-    "IsEnrichmentLinkedAttribute": false,
-    "IsEnrichmentAttribute": false,
-    "Status": "A"
-    
-  }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/event/PurchaseTxn/attributes/PointsLifetime</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="2c67c749-9b56-48ad-9ff8-c3d9d2cce257" name="Smart Assertion Status code">
+  "EventAttributeId": "${eventAttributeIdPointsLifetime#result}",
+  "ParentAttributeId": "${ParentAttributeIdPointsLifeTime#result}",
+  "AttributeName": "PointsLifetime",
+  "ValueGroup": "AGGREGATE",
+  "LevelNumber": 11,
+  "CyclicIndicator": false,
+  "CapIndicator": true,
+  "IsLineItem": false,
+  "CollectionIndicator": false,
+  "DataTypeDrl": "Double",
+  "DataTypeUi": "Number",
+  "EventType": "PurchaseTxn",
+  "AttributeFqn": "PurchaseTxn.CyclicsAndCaps.Caps.PointsLifetime",
+  "DroolsVariableName": "$PurchaseTxnCyclicsAndCaps",
+  "CapType": "OUTCOMERESULT",
+  "CollectionAttribute": false,
+  "UsedAsCyclic": false,
+  "ReturnAttribute": false,
+  "IsValueGroupHierarchy": false,
+  "IsEnrichmentLinkedAttribute": false,
+  "IsEnrichmentAttribute": false,
+  "Status": "A"
+  
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/event/PurchaseTxn/attributes/Quantity</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="4b3b787b-e08a-4438-aa3e-2b447434d5ed" name="Smart Assertion - Valid HTTP status code">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -1034,7 +1002,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Mon, 06 Jun 2022 06:39:42 GMT</con:expectedValue>
+              <con:expectedValue>Wed, 04 May 2022 03:50:57 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1054,7 +1022,7 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>567</con:expectedValue>
+              <con:expectedValue>565</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1124,7 +1092,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>57e01706-8fb1-afee-de4b-9a1d55d250e9</con:expectedValue>
+              <con:expectedValue>96c19955-6bfb-bdf3-c141-d94151aae1b4</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1144,7 +1112,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>22ms</con:expectedValue>
+              <con:expectedValue>15ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1174,12 +1142,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMI5VS1KUF1P:00000011</con:expectedValue>
+              <con:expectedValue>0HMHD9OJHHUTS:000004CC</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Mon, 06 Jun 2022 06:39:42 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"567","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"57e01706-8fb1-afee-de4b-9a1d55d250e9","content-type":"application/json; charset=utf-8","process-time":"22ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMI5VS1KUF1P:00000011"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Wed, 04 May 2022 03:50:57 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"565","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"96c19955-6bfb-bdf3-c141-d94151aae1b4","content-type":"application/json; charset=utf-8","process-time":"15ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHD9OJHHUTS:000004CC"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -1189,18 +1157,11 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
           <con:entry key="attributeName" value="PointsLifetime"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="eventType" value="${#TestCase#eventType}"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="eventType" value="PurchaseTxn"/>
         </con:parameters>
-        <con:parameterOrder>
-          <con:entry>eventType</con:entry>
-          <con:entry>attributeName</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>content-type</con:entry>
-        </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>
@@ -1399,22 +1360,6 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="transfer" name="PointSubTypeId" id="4a087975-5c0b-426d-a04c-d13a657e1516">
-    <con:settings/>
-    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>PointSubTypeId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetPointSubType</con:sourceStep>
-        <con:sourcePath>$.[?(@.Description=='${MomentsUpdate#PointSubTypeVal}')].Value[0]</con:sourcePath>
-        <con:targetType>PointSubTypeId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:targetPath/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-    </con:config>
-  </con:testStep>
   <con:testStep type="calltestcase" name="UpsertMoment" id="ebf476bb-255e-4c79-859e-643e953fa298">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1426,11 +1371,11 @@
         </con:property>
         <con:property>
           <con:name>CreateBody</con:name>
-          <con:value>{   "Description": "SKU WITH QTY OF 5",   "MomentCode": "RGRCYCLICSKUMINQTY5",   "MomentResponseValues": [     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "P"          },     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "${#TestCase#PointSubTypeId}",       "Status": "P"           },     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",       "Status": "P"            }   ],   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-07-01T00:00:00Z",   "StartDateString": "07/01/2018 12:00:00 AM",   "EndDate": "2030-07-31T23:59:59Z",   "EndDateString": "07/31/2030 11:59:59 PM",   "MomentStatus": "A",   "MomentEvent": {     "MomentCode": "RGRCYCLICSKUMINQTY5",     "EventType": "PurchaseTxn",     "MomentEventId": null,     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$PurchaseTxn:PurchaseTxnC(IsItBetween( new Date() ,\"7/1/2018 12:00:00 AM\",\"7/31/2020 11:59:59 PM\"))",     "MomentOffers": [       {         "MomentCode": "RGRCYCLICSKUMINQTY5",         "EventType": "PurchaseTxn",         "OfferName": "RGRCYCLICSKUMINQTY5",         "Description": "RGRCYCLICSKUMINQTY5",         "MomentOutcome": {           "MomentCode": "RGRCYCLICSKUMINQTY5",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICSKUMINQTY5",           "OutcomeEquationUi": "100",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22100%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(100)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRCYCLICSKUMINQTY5\"),new MomentParam(\"CyclicValue\",String.valueOf($cyclicValue)),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRCYCLICSKUMINQTY5\",String.valueOf(100),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "P"                   },         "MomentQualifyingRule": {           "MomentCode": "RGRCYCLICSKUMINQTY5",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICSKUMINQTY5",           "RuleEquationUI": "PurchaseTxn.ProgramCode==\"PP\" &amp;&amp; PurchaseTxn.TransactionDetails.ItemNumber in (\"SKU-00070\", \"SKU-00069\")",           "RuleEquationDrools": "PurchaseTxnC(ProgramCode == \"PP\") &amp;&amp;  ($PurchaseTxnTransactionDetails : PurchaseTxn.TransactionDetailsC(ItemNumber in (\"SKU-00070\", \"SKU-00069\")) from $PurchaseTxn.TransactionDetails)\n accumulate($item : PurchaseTxn.TransactionDetailsC(ItemNumber in (\"SKU-00070\", \"SKU-00069\")) from $PurchaseTxn.TransactionDetails, $cyclicValue : sum($item.getQuantity()))",           "CyclicAttribute": "PurchaseTxn.TransactionDetails.Quantity",           "CyclicThreshold": 5.0,           "Status": "P"                   },                  "Status": "A"                }     ],        "Status": "P"       },     "BestOfferIndicator": false,   "AdvancedModeIndicator": false,   "ReleaseState": "P",   "IsTestUser": false,   "Status": "A"   }</con:value>
+          <con:value>{   "Description": "SKU WITH QTY OF 5",   "MomentCode": "RGRCYCLICSKUMINQTY5",   "MomentResponseValues": [     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "P"     },     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "${GetPointSubType#Response#$[1]['Value']}",       "Status": "P"     },     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",       "Status": "P"     }   ],   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-07-01T00:00:00Z",   "StartDateString": "07/01/2018 12:00:00 AM",   "EndDate": "2030-07-31T23:59:59Z",   "EndDateString": "07/31/2030 11:59:59 PM",   "MomentStatus": "A",   "MomentEvent": {     "MomentCode": "RGRCYCLICSKUMINQTY5",     "EventType": "PurchaseTxn",     "MomentEventId": null,     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$PurchaseTxn:PurchaseTxnC(IsItBetween( new Date() ,\"7/1/2018 12:00:00 AM\",\"7/31/2020 11:59:59 PM\"))",     "MomentOffers": [       {         "MomentCode": "RGRCYCLICSKUMINQTY5",         "EventType": "PurchaseTxn",         "OfferName": "RGRCYCLICSKUMINQTY5",         "Description": "RGRCYCLICSKUMINQTY5",         "MomentOutcome": {           "MomentCode": "RGRCYCLICSKUMINQTY5",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICSKUMINQTY5",           "OutcomeEquationUi": "100",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22100%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(100)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRCYCLICSKUMINQTY5\"),new MomentParam(\"CyclicValue\",String.valueOf($cyclicValue)),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRCYCLICSKUMINQTY5\",String.valueOf(100),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "P"         },         "MomentQualifyingRule": {           "MomentCode": "RGRCYCLICSKUMINQTY5",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICSKUMINQTY5",           "RuleEquationUI": "PurchaseTxn.ProgramCode==\"PP\" &amp;&amp; PurchaseTxn.TransactionDetails.ItemNumber in (\"SKU-00070\", \"SKU-00069\")",           "RuleEquationDrools": "PurchaseTxnC(ProgramCode == \"PP\") &amp;&amp;  ($PurchaseTxnTransactionDetails : PurchaseTxn.TransactionDetailsC(ItemNumber in (\"SKU-00070\", \"SKU-00069\")) from $PurchaseTxn.TransactionDetails)\n accumulate($item : PurchaseTxn.TransactionDetailsC(ItemNumber in (\"SKU-00070\", \"SKU-00069\")) from $PurchaseTxn.TransactionDetails, $cyclicValue : sum($item.getQuantity()))",           "CyclicAttribute": "PurchaseTxn.TransactionDetails.Quantity",           "CyclicThreshold": 5.0,           "Status": "P"         },         "Status": "A"       }     ],     "Status": "P"   },   "BestOfferIndicator": false,   "AdvancedModeIndicator": false,   "ReleaseState": "P",   "IsTestUser": false }</con:value>
         </con:property>
         <con:property>
           <con:name>UpdateBody</con:name>
-          <con:value>{   "Description": "SKU WITH QTY OF 5",   "MomentCode": "RGRCYCLICSKUMINQTY5",   "MomentResponseValues": [     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "A"          },     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "${#TestCase#PointSubTypeId}",       "Status": "A"           },     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",       "Status": "A"            }   ],   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-07-01T00:00:00Z",   "StartDateString": "07/01/2018 12:00:00 AM",   "EndDate": "2030-07-31T23:59:59Z",   "EndDateString": "07/31/2030 11:59:59 PM",   "MomentStatus": "A",   "MomentEvent": {     "MomentCode": "RGRCYCLICSKUMINQTY5",     "EventType": "PurchaseTxn",     "MomentEventId": null,     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$PurchaseTxn:PurchaseTxnC(IsItBetween( new Date() ,\"7/1/2018 12:00:00 AM\",\"7/31/2020 11:59:59 PM\"))",     "MomentOffers": [       {         "MomentCode": "RGRCYCLICSKUMINQTY5",         "EventType": "PurchaseTxn",         "OfferName": "RGRCYCLICSKUMINQTY5",         "Description": "RGRCYCLICSKUMINQTY5",         "MomentOutcome": {           "MomentCode": "RGRCYCLICSKUMINQTY5",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICSKUMINQTY5",           "OutcomeEquationUi": "100",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22100%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(100)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRCYCLICSKUMINQTY5\"),new MomentParam(\"CyclicValue\",String.valueOf($cyclicValue)),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRCYCLICSKUMINQTY5\",String.valueOf(100),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "A"                   },         "MomentQualifyingRule": {           "MomentCode": "RGRCYCLICSKUMINQTY5",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICSKUMINQTY5",           "RuleEquationUI": "PurchaseTxn.ProgramCode==\"PP\" &amp;&amp; PurchaseTxn.TransactionDetails.ItemNumber in (\"SKU-00070\", \"SKU-00069\")",           "RuleEquationDrools": "PurchaseTxnC(ProgramCode == \"PP\") &amp;&amp;  ($PurchaseTxnTransactionDetails : PurchaseTxn.TransactionDetailsC(ItemNumber in (\"SKU-00070\", \"SKU-00069\")) from $PurchaseTxn.TransactionDetails)\n accumulate($item : PurchaseTxn.TransactionDetailsC(ItemNumber in (\"SKU-00070\", \"SKU-00069\")) from $PurchaseTxn.TransactionDetails, $cyclicValue : sum($item.getQuantity()))",           "CyclicAttribute": "PurchaseTxn.TransactionDetails.Quantity",           "CyclicThreshold": 5.0,           "Status": "A"                   },                  "Status": "A"                }     ],        "Status": "A"       },     "BestOfferIndicator": false,   "AdvancedModeIndicator": false,   "ReleaseState": "P",   "IsTestUser": false,   "Status": "A"   }</con:value>
+          <con:value>{   "Description": "SKU WITH QTY OF 5",   "MomentCode": "RGRCYCLICSKUMINQTY5",   "MomentResponseValues": [     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "P"     },     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "${GetPointSubType#Response#$[1]['Value']}",       "Status": "P"     },     {       "MomentCode": "RGRCYCLICSKUMINQTY5",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",       "Status": "P"     }   ],   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-07-01T00:00:00Z",   "StartDateString": "07/01/2018 12:00:00 AM",   "EndDate": "2030-07-31T23:59:59Z",   "EndDateString": "07/31/2030 11:59:59 PM",   "MomentStatus": "A",   "MomentEvent": {     "MomentCode": "RGRCYCLICSKUMINQTY5",     "EventType": "PurchaseTxn",     "MomentEventId": null,     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$PurchaseTxn:PurchaseTxnC(IsItBetween( new Date() ,\"7/1/2018 12:00:00 AM\",\"7/31/2020 11:59:59 PM\"))",     "MomentOffers": [       {         "MomentCode": "RGRCYCLICSKUMINQTY5",         "EventType": "PurchaseTxn",         "OfferName": "RGRCYCLICSKUMINQTY5",         "Description": "RGRCYCLICSKUMINQTY5",         "MomentOutcome": {           "MomentCode": "RGRCYCLICSKUMINQTY5",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICSKUMINQTY5",           "OutcomeEquationUi": "100",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%22100%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(100)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRCYCLICSKUMINQTY5\"),new MomentParam(\"CyclicValue\",String.valueOf($cyclicValue)),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRCYCLICSKUMINQTY5\",String.valueOf(100),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "P"         },         "MomentQualifyingRule": {           "MomentCode": "RGRCYCLICSKUMINQTY5",           "EventType": "PurchaseTxn",           "OfferName": "RGRCYCLICSKUMINQTY5",           "RuleEquationUI": "PurchaseTxn.ProgramCode==\"PP\" &amp;&amp; PurchaseTxn.TransactionDetails.ItemNumber in (\"SKU-00070\", \"SKU-00069\")",           "RuleEquationDrools": "PurchaseTxnC(ProgramCode == \"PP\") &amp;&amp;  ($PurchaseTxnTransactionDetails : PurchaseTxn.TransactionDetailsC(ItemNumber in (\"SKU-00070\", \"SKU-00069\")) from $PurchaseTxn.TransactionDetails)\n accumulate($item : PurchaseTxn.TransactionDetailsC(ItemNumber in (\"SKU-00070\", \"SKU-00069\")) from $PurchaseTxn.TransactionDetails, $cyclicValue : sum($item.getQuantity()))",           "CyclicAttribute": "PurchaseTxn.TransactionDetails.Quantity",           "CyclicThreshold": 5.0,           "Status": "P"         },         "Status": "A"       }     ],     "Status": "P"   },   "BestOfferIndicator": false,   "AdvancedModeIndicator": false,   "ReleaseState": "P",   "IsTestUser": false,   "Status": "A" }</con:value>
         </con:property>
         <con:property>
           <con:name>MomentId</con:name>
@@ -1708,32 +1653,12 @@
   </con:testStep>
   <con:properties>
     <con:property>
-      <con:name>QuantityAttributeId</con:name>
-      <con:value>c2151ab3-6151-4bdd-9912-4dcda83ac7fb</con:value>
+      <con:name>eventType</con:name>
+      <con:value>PurchaseTxn</con:value>
     </con:property>
     <con:property>
-      <con:name>QuantityParentAttributeId</con:name>
-      <con:value>f6a425ee-5ba7-4d3b-9a53-611a5327aeba</con:value>
-    </con:property>
-    <con:property>
-      <con:name>BonusIssuedCountAttributeId</con:name>
-      <con:value>db68ebed-6ada-4c50-b34d-0a3213e257d9</con:value>
-    </con:property>
-    <con:property>
-      <con:name>BonusIssuedCountParentAttributeId</con:name>
-      <con:value>9994e450-0cca-416f-b9aa-327aad9c8cce</con:value>
-    </con:property>
-    <con:property>
-      <con:name>PointsLifetimeAttributeId</con:name>
-      <con:value>15af5ad0-76d2-4e6f-ab26-874277540b54</con:value>
-    </con:property>
-    <con:property>
-      <con:name>PointsLifetimeParentAttributeId</con:name>
-      <con:value>9994e450-0cca-416f-b9aa-327aad9c8cce</con:value>
-    </con:property>
-    <con:property>
-      <con:name>PointSubTypeId</con:name>
-      <con:value>2ff58549-b36c-4e87-91bb-e9b8edc71523</con:value>
+      <con:name>attributeName</con:name>
+      <con:value>Quantity</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>

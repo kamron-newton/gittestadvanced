@@ -114,6 +114,7 @@
       <con:properties>
         <con:property>
           <con:name>parameterName</con:name>
+          <con:value/>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -124,7 +125,6 @@
     <con:settings/>
     <con:config>
       <script>def SpecificParameterValue = context.expand( '${#[ProgramSettings#UpdateProgramSettings#UpdateProgramSettings]#Response#$[?(@.ParameterName=="${#TestCase#SpecificParameterName}")][\'ParameterValue\']}' )
-
 if( SpecificParameterValue=="Y")
 {
 testRunner.gotoStepByName("UpdateProgramSettings");
@@ -132,7 +132,7 @@ testRunner.testCase.setPropertyValue("UpdateAddressStandardization","Y");
 }</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="UpdateProgramSettings" id="38edb4a4-0755-45c9-bb34-4a79442a56b4">
+  <con:testStep type="calltestcase" name="DisableAddressStandardization" id="412dcb62-193f-46db-8a76-5e2cc55732a9">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
@@ -143,14 +143,11 @@ testRunner.testCase.setPropertyValue("UpdateAddressStandardization","Y");
         </con:property>
         <con:property>
           <con:name>ProgramCode</con:name>
-          <con:value>PP</con:value>
+          <con:value>${#Project#ProgramCode}</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties>
-        <con:entry>Body</con:entry>
-        <con:entry>ProgramCode</con:entry>
-      </con:returnProperties>
-      <con:runMode>SINGLETON_AND_FAIL</con:runMode>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="AddProfile" id="f6c60e24-2d65-4a1d-9db6-12db3e2e2116">
@@ -160,7 +157,7 @@ testRunner.testCase.setPropertyValue("UpdateAddressStandardization","Y");
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>c1b9474e-faca-4892-bb8d-f90a995e982e</con:value>
+          <con:value>06a9628a-fccc-46f3-8c95-750d9d0350a7</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -169,22 +166,295 @@ testRunner.testCase.setPropertyValue("UpdateAddressStandardization","Y");
       <con:runMode>SINGLETON_AND_FAIL</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="UpdateProfile" id="c7ed453c-ab0c-46f6-bd6e-4742d558b49c">
+  <con:testStep type="restrequest" name="UpdateProfile" id="5aa204bb-f22c-4406-a43c-c1afbfd2aaa1">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>942220e4-d4f4-4613-89c2-85d0e561538e</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>ProfileId</con:name>
-          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
-        </con:property>
-        <con:property>
-          <con:name>inputJSON</con:name>
-          <con:value>{   "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",   "Prefix":"${UpdateProfileChannels#NewPrefix}",   "FirstName":"${UpdateProfileChannels#NewFirstName}",   "MiddleName":"${UpdateProfileChannels#NewMiddleName}",   "LastName":"${UpdateProfileChannels#NewLastName}",   "Suffix": "${UpdateProfileChannels#NewSuffix}",   "LanguageCode":  "${UpdateProfileChannels#NewLanguageCode}",   "MaritalStatus": "${UpdateProfileChannels#NewMaritalStatus}",   "Gender": "${UpdateProfileChannels#NewGender}",   "BirthDate": "${UpdateProfileChannels#NewBirthDate}",   "TermsConditionsAcceptedInd": "${UpdateProfileChannels#NewTermsConditionsAcceptedInd}",   "Status" : "A" }</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_FAIL</con:runMode>
+    <con:config service="RestAPIs" resourcePath="/api/v2/profiles" methodName="ProcessProfile" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" name="UpdateProfile" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
+  "Prefix":"${UpdateProfileChannels#NewPrefix}",
+  "FirstName":"${UpdateProfileChannels#NewFirstName}",
+  "MiddleName":"${UpdateProfileChannels#NewMiddleName}",
+  "LastName":"${UpdateProfileChannels#NewLastName}",
+  "Suffix": "${UpdateProfileChannels#NewSuffix}",
+  "LanguageCode":  "${UpdateProfileChannels#NewLanguageCode}",
+  "MaritalStatus": "${UpdateProfileChannels#NewMaritalStatus}",
+  "Gender": "${UpdateProfileChannels#NewGender}",
+  "BirthDate": "${UpdateProfileChannels#NewBirthDate}",
+  "TermsConditionsAcceptedInd": "${UpdateProfileChannels#NewTermsConditionsAcceptedInd}",
+  "Status" : "A"
+}</con:request>
+        <con:originalUri>https://d3aldv-pveapi.skynetlowerenv.com/api/v2/profiles</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="d8360489-ee1c-4252-93cb-b896a34fc9fb" name="Smart Assertion for HTTP Status Code">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Fri, 01 Apr 2022 14:27:17 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>3711</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>511bf57d-59bc-6611-8772-aa21a3a41ac8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>155ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMGJQCKGEA5C:00000562</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Fri, 01 Apr 2022 14:27:17 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"3711","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"511bf57d-59bc-6611-8772-aa21a3a41ac8","content-type":"application/json; charset=utf-8","process-time":"155ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGJQCKGEA5C:00000562"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="24499c9c-26ae-4da0-9f7c-69d592876354" name="JSONPath Match ProfileId">
+          <con:configuration>
+            <path>$['ProfileId']</path>
+            <content>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match FirstName" id="2b964444-5177-42d5-806a-ac13a961127a">
+          <con:configuration>
+            <path>$['FirstName']</path>
+            <content>${UpdateProfileChannels#NewFirstName}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match Gender" id="279a79f4-80d4-40c6-be7c-56fbf7f200cb">
+          <con:configuration>
+            <path>$['Gender']</path>
+            <content>${UpdateProfileChannels#NewGender}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match MaritalStatus" id="89905c0a-d9db-4034-9dac-7c1effee55b6">
+          <con:configuration>
+            <path>$['MaritalStatus']</path>
+            <content>${UpdateProfileChannels#NewMaritalStatus}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match MiddleName" id="e265f0d5-cfa1-4196-b79b-ce9b0da71809">
+          <con:configuration>
+            <path>$['MiddleName']</path>
+            <content>${UpdateProfileChannels#NewMiddleName}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match Birthdate" id="d1c5d760-31ac-40f7-9f33-5b258d3b2837">
+          <con:configuration>
+            <path>$['BirthDate']</path>
+            <content>${UpdateProfileChannels#NewBirthDate}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match LanguageCode" id="a5543a2d-2a58-4d86-a1d8-ac718a9ee849">
+          <con:configuration>
+            <path>$['LanguageCode']</path>
+            <content>${UpdateProfileChannels#NewLanguageCode}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match Suffix" id="20c2358b-1e79-42ce-9861-eaa7615090a0">
+          <con:configuration>
+            <path>$['Suffix']</path>
+            <content>${UpdateProfileChannels#NewSuffix}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match Prefix" id="0fb456ad-2f5f-4c12-b562-1980291717a1">
+          <con:configuration>
+            <path>$['Prefix']</path>
+            <content>${UpdateProfileChannels#NewPrefix}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="GetProfileByID" id="65b3e0c6-f6f3-4a7f-8c2c-177c40f98b80">
@@ -352,15 +622,6 @@ testRunner.testCase.setPropertyValue("UpdateAddressStandardization","Y");
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
             <con:originalMessage>{"Headers":{"date":"Fri, 06 May 2022 12:49:39 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"6665","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"14853596-68ea-f6bf-720c-75a0ec699182","content-type":"application/json; charset=utf-8","process-time":"41ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHFA1C0POQ2:00000030"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="91019b47-a33d-4c11-a269-c8c634372fec" name="JSONPath Match ProfileId">
-          <con:configuration>
-            <path>$['ProfileId']</path>
-            <content>${#[Profile#UpdateProfileRGR#UpdateProfileRGR]#Response#$['ProfileId']}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
         <con:assertion type="JsonPath Match" id="46a9192d-4668-4020-92e3-45d994932d6a" name="JSONPath Match FirstName">
@@ -690,23 +951,23 @@ testRunner.gotoStepByName("EnableAddressStandardization");
   </con:testStep>
   <con:setupScript/>
   <con:properties>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>ParameterName</con:name>
       <con:value>PROFILE_AUDIT_HIS_ENABLE</con:value>
     </con:property>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>ParameterValue</con:name>
       <con:value>Y</con:value>
     </con:property>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>AddressStandardizationParam</con:name>
       <con:value>ADDRESS_STANDARDIZATION</con:value>
     </con:property>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>SpecificParameterName</con:name>
       <con:value>ADDRESS_STANDARDIZATION</con:value>
     </con:property>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>UpdateAddressStandardization</con:name>
       <con:value>N</con:value>
     </con:property>

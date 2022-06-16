@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="2ab36ae1-27e5-4347-bcd4-3fd2a17fb539" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ReferrerAndReferralWithBonus" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="31c8b919-a52c-487c-a0be-0f31abfe42e4" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ReferralAndReferrerBonus" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="2ab36ae1-27e5-4347-bcd4-3fd2a17fb539fileName">ReferrerAndReferralWithBonus</con:setting>
+    <con:setting id="31c8b919-a52c-487c-a0be-0f31abfe42e4fileName">ReferralAndReferrerBonus-1</con:setting>
   </con:settings>
-  <con:testStep type="calltestcase" name="UpdPrgmSetgEnableRefrlBns" id="544b2e98-c395-4331-b0fb-b598d3ee193b">
+  <con:testStep type="calltestcase" name="UpdateMomentumSettingForReferralBonus" id="c36913aa-95bc-4510-8d10-c8a8097b83fc">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
@@ -21,79 +21,49 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep id="e5d2b181-1070-4b1f-92f6-301769f6ef42" name="AddProfileRGR" type="restrequest">
+  <con:testStep type="calltestcase" name="AddReferrerProfile" id="ce3b0259-d59f-4275-868d-ca67e69b21a3">
     <con:settings/>
-    <con:config xsi:type="con:RestRequestStep" methodName="ProcessProfile" resourcePath="/api/v2/profiles" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" name="AddProfileRGR" postQueryString="false">
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="GenerateReferrelCodeForReferrer" id="0e3abf8b-064e-4e55-95d7-9e22f7e8d37f">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>4316fae0-404a-4226-ae31-e3078cc658e3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>profileId</con:name>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ProgramCode</con:name>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProgramCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetPointTypes" id="2c87dc5a-0f5a-44f7-a48f-87274a517fba">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes" methodName="GetPointTypes" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="41d772c9-42ab-4326-8052-f61f2a44d3be" mediaType="application/json" name="GetPointTypes">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:request>{
-  "Prefix":"Mr.",
-  "FirstName":"Rick",
-  "MiddleInit":"",
-  "LastName":"Legas",
-   "CardNumber":"${=java.util.UUID.randomUUID()}",
-  "Suffix": "",
-  "GlobalOptOut": "FALSE",
-  "GlobalOptDate":  "6/26/2017 12:00:00 AM",
-  "GlobalOptSource": "",
-  "LanguageCode":  "EN_US",
-  "MaritalStatus": "S",
-  "Gender": "M",
-  "BirthDate": "1/22/1982 12:00:00 AM",
-  "CompanyName": "Epsilon",
-  "Addresses": [
-    {
-      "AddressLine1":"123 THE RD",
-      "AddressLine2": "# 3333",
-      "AddressLine3": "",
-      "City": "IRVING",
-      "StateCode": "TX",
-      "CountryCode":  "USA",
-      "PostalCode": "75080",
-      "ChannelCode": "DM",
-      "LocationCode": "H",
-      "IsPreferred": "TRUE",
-      "DeliveryStatus": "G",
-      "DoNotStandardize":  "FALSE"
-    }
-  ],
-  "Emails": [
-    {
-      "EmailAddress": "Test@dx2mail.co",
-      "ChannelCode":  "EM",
-      "LocationCode": "B",
-      "IsPreferred":  "TRUE",
-      "DeliveryStatus": "G"
-    }
-  ],
-  "Phones": [
-    {
-      "PhoneNumber":  "5025101947",
-      "PhoneCountryCode":  "USA",
-      "AcceptsText":"TRUE",
-      "Frequency": "7",
-      "ChannelCode":"SM",
-      "LocationCode":"H",
-      "IsPreferred": "TRUE",
-      "DeliveryStatus":"G"
-    }
-  ],
-  "SourceCode": "PP_WEB",
-  "JoinDate":"6/26/2017 12:00:00 AM",
-  "EnrollChannelCode": "WEB",
-  "Username": "user_${=new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date())}",
-  "Password": "Admin.123",
-  "TermsConditionsAcceptedInd": "FALSE",
-  "CreateFileId":  "4546546",
-  "CreateRecordNumber": "987654325",
-  "UpdateFileId": 987654323,
-  "UpdateRecordNumber": 987654324,
-  "AutoRewardOptInInd":  "TRUE"
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="2cac9c50-457f-4410-8b11-70f99c7945e2" name="Smart Assertion for HTTP Status Code">
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="d4241542-0d65-415c-8a56-3da05fcc6dae" name="Smart Assertion Status code">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -101,7 +71,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Wed, 30 Mar 2022 12:58:21 GMT</con:expectedValue>
+              <con:expectedValue>Thu, 12 May 2022 04:59:42 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -121,7 +91,7 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>3907</con:expectedValue>
+              <con:expectedValue>460</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -191,7 +161,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>24683f56-debe-31cb-8682-0bce4c910e49</con:expectedValue>
+              <con:expectedValue>da2be905-a26d-066f-4ebe-f3a3f8e86a89</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -211,7 +181,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>52ms</con:expectedValue>
+              <con:expectedValue>18ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -241,12 +211,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMGI829KUD6C:00000214</con:expectedValue>
+              <con:expectedValue>0HMHJJCEEKUO3:00000159</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Wed, 30 Mar 2022 12:58:21 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"3907","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"24683f56-debe-31cb-8682-0bce4c910e49","content-type":"application/json; charset=utf-8","process-time":"52ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGI829KUD6C:00000214"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Thu, 12 May 2022 04:59:42 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"460","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"da2be905-a26d-066f-4ebe-f3a3f8e86a89","content-type":"application/json; charset=utf-8","process-time":"18ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMHJJCEEKUO3:00000159"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -256,15 +226,18 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="pointTypeCode" value="EGGS"/>
+          <con:entry key="status" value="A"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>
-          <con:entry>Program-Code</con:entry>
           <con:entry>Accept-Language</con:entry>
-          <con:entry>content-type</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>isGiftable</con:entry>
+          <con:entry>redeemableInd</con:entry>
+          <con:entry>pointTypeCode</con:entry>
+          <con:entry>pointTypeShortDescription</con:entry>
         </con:parameterOrder>
         <con:environmentSpec>
           <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
@@ -280,80 +253,17 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GenerateReferralCode" id="356c739c-be10-48b8-9f4f-d1664572cb4c">
+  <con:testStep type="restrequest" name="GetPointSubType" id="1c2fc762-6ac7-442f-9f96-414ee8a16c30">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/referral/code" methodName="GenerateProfileReferralCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GenerateReferralCode" id="13da636e-f13a-4d28-bb9f-3a63472f38c2" mediaType="application/json" postQueryString="false">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes/{pointTypeId}" methodName="GetPointTypeById" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="cc3cb9aa-fc57-4d56-992d-1bb607297dc8" mediaType="application/json" name="GetPointSubType">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "Prefix":"Mr.",
-  "FirstName":"Rick",
-  "MiddleInit":"",
-  "LastName":"Legas",
-  "CardNumber":"af086a8b-70ef-4f46-8930-91cab940c055",
-  "Suffix": "",
-  "GlobalOptOut": "FALSE",
-  "GlobalOptDate":  "6/26/2017 12:00:00 AM",
-  "GlobalOptSource": "",
-  "LanguageCode":  "EN_US",
-  "MaritalStatus": "S",
-  "Gender": "M",
-  "BirthDate": "1/22/1982 12:00:00 AM",
-  "CompanyName": "Epsilon",
-  "Addresses": [
-    {
-      "AddressLine1":"123 THE RD",
-      "AddressLine2": "# 3333",
-      "AddressLine3": "",
-      "City": "IRVING",
-      "StateCode": "TX",
-      "CountryCode":  "USA",
-      "PostalCode": "75080",
-      "ChannelCode": "DM",
-      "LocationCode": "H",
-      "IsPreferred": "TRUE",
-      "DeliveryStatus": "G",
-      "DoNotStandardize":  "FALSE"
-    }
-  ],
-  "Emails": [
-    {
-      "EmailAddress": "Test@dx2mail.co",
-      "ChannelCode":  "EM",
-      "LocationCode": "B",
-      "IsPreferred":  "TRUE",
-      "DeliveryStatus": "G"
-    }
-  ],
-  "Phones": [
-    {
-      "PhoneNumber":  "5025101947",
-      "PhoneCountryCode":  "USA",
-      "AcceptsText":"TRUE",
-      "Frequency": "7",
-      "ChannelCode":"SM",
-      "LocationCode":"H",
-      "IsPreferred": "TRUE",
-      "DeliveryStatus":"G"
-    }
-  ],
-  "SourceCode": "PP_WEB",
-  "JoinDate":"6/26/2017 12:00:00 AM",
-  "EnrollChannelCode": "WEB",
-   "Username":  "RickLega1af086a8b-70ef-4f46-8930-91cab940c055",
-  "Password": "Admin.123",
-  "TermsConditionsAcceptedInd": "FALSE",
-  "CreateFileId":  "4546546",
-  "CreateRecordNumber": "987654325",
-  "UpdateFileId": 987654323,
-  "UpdateRecordNumber": 987654324,
-  "AutoRewardOptInInd":  "TRUE"
-}</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/74d4076e-f392-4b67-a202-9d1b9f3435e4/referral/code</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="75e99a46-74f0-4b0b-8a25-ba29fcec722f" name="Smart Assertion">
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes/d05fdefc-01fb-4a80-ae8c-17d4a77ff4c9</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="26c3d3a3-d4b1-43fc-b3cc-85fbd84234c0" name="Smart Assertion Status code">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -361,7 +271,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Wed, 15 Jun 2022 08:16:06 GMT</con:expectedValue>
+              <con:expectedValue>Tue, 31 May 2022 04:32:08 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -381,7 +291,7 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>350</con:expectedValue>
+              <con:expectedValue>1103</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -451,7 +361,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>b244d858-cdd4-4148-b00d-fa93b3a4605b</con:expectedValue>
+              <con:expectedValue>068266cc-37e3-c0fe-c38f-4dab84a5856f</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -467,21 +377,11 @@
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
             <con:elements>
-              <con:path>$['Headers']['location']</con:path>
-              <con:element>location</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>http://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/74d4076e-f392-4b67-a202-9d1b9f3435e4/referral/code</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
               <con:path>$['Headers']['process-time']</con:path>
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>43ms</con:expectedValue>
+              <con:expectedValue>20ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -491,7 +391,7 @@
               <con:element>#status#</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 201 Created</con:expectedValue>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -511,12 +411,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMIE9T6NFN0I:0000009D</con:expectedValue>
+              <con:expectedValue>0HMI239QCBFSS:000000EA</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Wed, 15 Jun 2022 08:16:06 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"350","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"b244d858-cdd4-4148-b00d-fa93b3a4605b","content-type":"application/json; charset=utf-8","location":"http://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/74d4076e-f392-4b67-a202-9d1b9f3435e4/referral/code","process-time":"43ms","#status#":"HTTP/1.1 201 Created","cache-control":"no-store,no-cache","new-correlationid":"0HMIE9T6NFN0I:0000009D"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Tue, 31 May 2022 04:32:08 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1103","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"068266cc-37e3-c0fe-c38f-4dab84a5856f","content-type":"application/json; charset=utf-8","process-time":"20ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMI239QCBFSS:000000EA"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -526,116 +426,58 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${AddProfileRGR#Response#$['ProfileId']}"/>
+          <con:entry key="pointTypeId" value="${GetPointTypes#Response#$[0]['RefPointTypeId']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>profileId</con:entry>
+          <con:entry>pointTypeId</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Accept-Language</con:entry>
-          <con:entry>Program-Code</con:entry>
         </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="Getpointtypes" id="6d4b0cda-cd87-4020-851f-13752441fea2">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>ee4c5b9c-633e-4381-ab74-bcb3af64baee</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>pointTypeCode</con:name>
-          <con:value>Eggs</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="Getsubpointtypes" id="d6c9dafb-bc8a-411c-97e3-59765313e450">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>64baf0f6-f2b9-48ce-bd4f-695aea81038c</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>pointTypeId</con:name>
-          <con:value>${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="UpsertReferralMoment" id="44e0ac26-3e43-435d-bafc-1bd31cbbf3dd">
+  <con:testStep type="calltestcase" name="UpsertReferrerMom" id="e5bb372f-cc09-4a0a-91c8-855dae160df1">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>58a85117-5558-4be0-b68f-214c9fbde4c3</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>MomentName</con:name>
-          <con:value>RGRREFERRALBONUS</con:value>
+          <con:value>RGRREFERRERBONUSMOM</con:value>
         </con:property>
         <con:property>
           <con:name>CreateBody</con:name>
-          <con:value>{   "MomentCode": "RGRREFERRALBONUS",   "Description": "RGRREFERRALBONUS",   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-01-01T00:00:00Z",   "StartDateString": "01/01/2018 12:00:00 AM",   "EndDate": "2028-12-31T23:59:59Z",   "EndDateString": "12/31/2028 11:59:59 PM",   "MomentStatus": "A",   "MomentResponseValues": [     {       "MomentCode": "RGRREFERRALBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "P"     },         {       "MomentCode": "RGRREFERRALBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "ENGAGE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "P"     },         {       "MomentCode": "RGRREFERRALBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "NEGATE OUTCOME",       "ResponsePropertyValue": "N",       "Status": "P"     },     {       "MomentCode": "RGRREFERRALBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "${#[ActivityCertificate#GetPointSubType#GetPointSubType]#Response#$['PointSubTypes'][0]['PointSubTypeId']}",       "Status": "P"     },     {       "MomentCode": "RGRREFERRALBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",       "Status": "P"     }   ],   "MomentEvent": {     "MomentCode": "RGRREFERRALBONUS",     "EventType": "Add_Profile",     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$Add_Profile:Add_ProfileC(isItBetween( new Date() ,\"12/01/2019 12:00:00 AM\",\"12/31/2019 11:59:59 PM\"))",     "MomentOffers": [       {         "MomentCode": "RGRREFERRALBONUS",         "EventType": "Add_Profile",         "OfferName": "RGRREFERRALBONUS",         "MomentOutcome": {           "MomentCode": "RGRREFERRALBONUS",           "EventType": "Add_Profile",           "OfferName": "RGRREFERRALBONUS",           "OutcomeEquationUi": "10",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%2210%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(10)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRREFERRALBONUS\"),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRREFERRALBONUS\",String.valueOf(10),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "P"         },         "MomentQualifyingRule":  		{           "MomentCode": "RGRREFERRALBONUS",           "EventType": "Add_Profile",           "OfferName": "RGRREFERRALBONUS",           "RuleEquationUI": "Add_Profile.Addresses.PostalCode==\"75080\"",           "RuleEquationDrools": "Add_ProfileC(Addresses!.PostalCode == \"75080\")",           "Status": "P"         },         "Status": "A"       }     ],     "Status": "P"    },   "ReleaseState": "P",    }</con:value>
+          <con:value>{   "MomentCode": "RGRREFERRERBONUSMOM",   "Description": "RGRREFERRERBONUSMOM",   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-01-01T00:00:00Z",   "StartDateString": "01/01/2018 12:00:00 AM",   "EndDate": "2028-12-31T23:59:59Z",   "EndDateString": "12/31/2028 11:59:59 PM",   "MomentStatus": "A",   "MomentResponseValues": [     {       "MomentCode": "RGRREFERRERBONUSMOM",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "A"     },     {       "MomentCode": "RGRREFERRERBONUSMOM",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "ENGAGE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "A"     },     {       "MomentCode": "RGRREFERRERBONUSMOM",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "NEGATE OUTCOME",       "ResponsePropertyValue": "N",       "Status": "A"     },     {       "MomentCode": "RGRREFERRERBONUSMOM",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "${GetPointSubType#Response#$['PointSubTypes'][0]['PointSubTypeId']}",       "Status": "A"     },     {       "MomentCode": "RGRREFERRERBONUSMOM",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "${GetPointTypes#Response#$[0]['RefPointTypeId']}",       "Status": "A"     }   ],   "MomentEvent": {     "MomentCode": "RGRREFERRERBONUSMOM",     "EventType": "Referral",     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$Referral:ReferralC(isItBetween( new Date() ,\"12/01/2019 12:00:00 AM\",\"12/31/2019 11:59:59 PM\"))",     "MomentOffers": [       {         "MomentCode": "RGRREFERRERBONUSMOM",         "EventType": "Referral",         "OfferName": "RGRREFERRERBONUSMOM",         "MomentOutcome": {           "MomentCode": "RGRREFERRERBONUSMOM",           "EventType": "Referral",           "OfferName": "RGRREFERRERBONUSMOM",           "OutcomeEquationUi": "20",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%2210%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(20)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRREFERRERBONUSMOM\"),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRREFERRERBONUSMOM\",String.valueOf(20),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "A"         },         "MomentQualifyingRule": {           "MomentCode": "RGRREFERRERBONUSMOM",           "EventType": "Referral",           "OfferName": "RGRREFERRERBONUSMOM",           "RuleEquationUI": "Referral.Addresses.StateCode==\"TX\"",           "RuleEquationDrools": "ReferralC(Addresses!.StateCode == \"TX\")",           "Status": "A"         }                }     ]        },   "ReleaseState": "P",    }</con:value>
         </con:property>
         <con:property>
           <con:name>UpdateBody</con:name>
-          <con:value>{   "MomentCode": "RGRREFERRALBONUS",   "Description": "RGRREFERRALBONUS",   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-01-01T00:00:00Z",   "StartDateString": "01/01/2018 12:00:00 AM",   "EndDate": "2028-12-31T23:59:59Z",   "EndDateString": "12/31/2028 11:59:59 PM",   "MomentStatus": "A",   "MomentResponseValues": [     {       "MomentCode": "RGRREFERRALBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "P"     },         {       "MomentCode": "RGRREFERRALBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "ENGAGE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "P"     },         {       "MomentCode": "RGRREFERRALBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "NEGATE OUTCOME",       "ResponsePropertyValue": "N",       "Status": "P"     },     {       "MomentCode": "RGRREFERRALBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "${#[ActivityCertificate#GetPointSubType#GetPointSubType]#Response#$['PointSubTypes'][0]['PointSubTypeId']}",       "Status": "P"     },     {       "MomentCode": "RGRREFERRALBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",       "Status": "P"     }   ],   "MomentEvent": {     "MomentCode": "RGRREFERRALBONUS",     "EventType": "Add_Profile",     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$Add_Profile:Add_ProfileC(isItBetween( new Date() ,\"12/01/2019 12:00:00 AM\",\"12/31/2019 11:59:59 PM\"))",     "MomentOffers": [       {         "MomentCode": "RGRREFERRALBONUS",         "EventType": "Add_Profile",         "OfferName": "RGRREFERRALBONUS",         "MomentOutcome": {           "MomentCode": "RGRREFERRALBONUS",           "EventType": "Add_Profile",           "OfferName": "RGRREFERRALBONUS",           "OutcomeEquationUi": "10",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%2210%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(10)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRREFERRALBONUS\"),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRREFERRALBONUS\",String.valueOf(10),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "P"         },         "MomentQualifyingRule":  		{           "MomentCode": "RGRREFERRALBONUS",           "EventType": "Add_Profile",           "OfferName": "RGRREFERRALBONUS",           "RuleEquationUI": "Add_Profile.Addresses.PostalCode==\"75080\"",           "RuleEquationDrools": "Add_ProfileC(Addresses!.PostalCode == \"75080\")",           "Status": "P"         },         "Status": "A"       }     ],     "Status": "P"    },   "ReleaseState": "P", "Status":"A"    }</con:value>
+          <con:value>{   "MomentCode": "RGRREFERRERBONUSMOM",   "Description": "RGRREFERRERBONUSMOM",   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-01-01T00:00:00Z",   "StartDateString": "01/01/2018 12:00:00 AM",   "EndDate": "2028-12-31T23:59:59Z",   "EndDateString": "12/31/2028 11:59:59 PM",   "MomentStatus": "A",   "MomentResponseValues": [     {       "MomentCode": "RGRREFERRERBONUSMOM",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "A"     },     {       "MomentCode": "RGRREFERRERBONUSMOM",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "ENGAGE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "A"     },     {       "MomentCode": "RGRREFERRERBONUSMOM",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "NEGATE OUTCOME",       "ResponsePropertyValue": "N",       "Status": "A"     },     {       "MomentCode": "RGRREFERRERBONUSMOM",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "${GetPointSubType#Response#$['PointSubTypes'][0]['PointSubTypeId']}",       "Status": "A"     },     {       "MomentCode": "RGRREFERRERBONUSMOM",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "${GetPointTypes#Response#$[0]['RefPointTypeId']}",       "Status": "A"     }   ],   "MomentEvent": {     "MomentCode": "RGRREFERRERBONUSMOM",     "EventType": "Referral",     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$Referral:ReferralC(isItBetween( new Date() ,\"12/01/2019 12:00:00 AM\",\"12/31/2019 11:59:59 PM\"))",     "MomentOffers": [       {         "MomentCode": "RGRREFERRERBONUSMOM",         "EventType": "Referral",         "OfferName": "RGRREFERRERBONUSMOM",         "MomentOutcome": {           "MomentCode": "RGRREFERRERBONUSMOM",           "EventType": "Referral",           "OfferName": "RGRREFERRERBONUSMOM",           "OutcomeEquationUi": "20",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%2210%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(20)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRREFERRERBONUSMOM\"),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRREFERRERBONUSMOM\",String.valueOf(20),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "A"         },         "MomentQualifyingRule": {           "MomentCode": "RGRREFERRERBONUSMOM",           "EventType": "Referral",           "OfferName": "RGRREFERRERBONUSMOM",           "RuleEquationUI": "Referral.Addresses.StateCode==\"TX\"",           "RuleEquationDrools": "ReferralC(Addresses!.StateCode == \"TX\")",           "Status": "A"         }                }     ]        },   "ReleaseState": "P",   "Status": "A" }</con:value>
         </con:property>
         <con:property>
           <con:name>MomentId</con:name>
+          <con:value/>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetpointsReferralprofile" id="01dbffd0-430f-44aa-9603-a3ecf0f52d40">
-    <con:settings/>
-    <con:config service="RestAPIs" methodName="GetPointsSummary" resourcePath="/api/v1/profiles/{profileId}/points/summary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetpointsReferralprofile" id="e9da807d-058d-4966-b1f8-f00d4dcbdd02" mediaType="application/json">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:encoding>UTF-8</con:encoding>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/927c97f2-affb-4327-a678-fba99bcf6428/points/summary</con:originalUri>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${AddProfileRGR#Response#$['ProfileId']}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="status" value="A"/>
-        </con:parameters>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="DeactivateMomentReferrer" id="373533dd-8f9d-4d92-b87d-d752d2dbcd2b">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>c903534c-32ad-44dc-9cb6-a72fc8de1482</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>MomentId</con:name>
-          <con:value>${#[Moment#UpsertMoment#MomentId]#result}</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep id="e9bc5df2-a68f-439b-88b4-9bb214b054f8" name="AddProfileRGR 2" type="restrequest">
+  <con:testStep id="1e2e8aa4-c9fe-40e6-ba8e-b2544d8596cf" name="AddReferralProfile" type="restrequest">
     <con:settings/>
     <con:config xsi:type="con:RestRequestStep" methodName="ProcessProfile" resourcePath="/api/v2/profiles" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" name="AddProfileRGR 2" postQueryString="false">
+      <con:restRequest id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" name="AddReferralProfile" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -702,7 +544,7 @@
   "UpdateFileId": 987654323,
   "UpdateRecordNumber": 987654324,
   "AutoRewardOptInInd":  "TRUE",
- "ReferralCode":"0KRao91VSY"
+ "ReferralCode":"${#[Enrollment#GenerateReferrelCode#GenerateReferrelCode]#Response#$['ReferralCode']}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles</con:originalUri>
         <con:assertion type="DataAndMetadataAssertion" id="2cac9c50-457f-4410-8b11-70f99c7945e2" name="Smart Assertion for HTTP Status Code">
@@ -892,32 +734,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="UpsertReferrerMoment" id="4c6549db-a896-4a31-a036-bdc712ab8673">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>58a85117-5558-4be0-b68f-214c9fbde4c3</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>MomentName</con:name>
-          <con:value>RGRREFERRERBONUS</con:value>
-        </con:property>
-        <con:property>
-          <con:name>CreateBody</con:name>
-          <con:value>{   "MomentCode": "RGRREFERRERBONUS",   "Description": "RGRREFERRERBONUS",   "MomentType": "PROMOTIONAL_CURRENCY",   "StartDate": "2018-01-01T00:00:00Z",   "StartDateString": "01/01/2018 12:00:00 AM",   "EndDate": "2028-12-31T23:59:59Z",   "EndDateString": "12/31/2028 11:59:59 PM",   "MomentStatus": "A",   "MomentResponseValues": [     {       "MomentCode": "RGRREFERRERBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "BASE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "P"     },         {       "MomentCode": "RGRREFERRERBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "ENGAGE INDICATOR",       "ResponsePropertyValue": "N",       "Status": "P"     },         {       "MomentCode": "RGRREFERRERBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "NEGATE OUTCOME",       "ResponsePropertyValue": "N",       "Status": "P"     },     {       "MomentCode": "RGRREFERRERBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT SUBTYPE",       "ResponsePropertyValue": "0cc34e96-86a9-4dc6-9330-5dbe4f4892b6",       "Status": "P"     },     {       "MomentCode": "RGRREFERRERBONUS",       "MomentType": "PROMOTIONAL_CURRENCY",       "ResponsePropertyName": "POINT TYPE",       "ResponsePropertyValue": "80359b1b-9b26-434e-ae39-110d9dcdfe93",       "Status": "P"     }   ],   "MomentEvent": {     "MomentCode": "RGRREFERRERBONUS",     "EventType": "Referral",     "MomentQualifyingDateAttribute": "CurrentDateTime",     "MomentQualifyingDateAttributeDrools": "$Referral:ReferralC(isItBetween( new Date() ,\"12/01/2019 12:00:00 AM\",\"12/31/2019 11:59:59 PM\"))",     "MomentOffers": [       {         "MomentCode": "RGRREFERRERBONUS",         "EventType": "Referral",         "OfferName": "RGRREFERRERBONUS",         "MomentOutcome": {           "MomentCode": "RGRREFERRERBONUS",           "EventType": "Referral",           "OfferName": "RGRREFERRERBONUS",           "OutcomeEquationUi": "20",           "CalculationTemplate": "&lt;fixedpoints,[Number]>",           "OutcomeEquationTemplate": "%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%2210%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(20)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",           "OutcomeEquationDrools": "MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRREFERRERBONUS\"),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRREFERRERBONUS\",String.valueOf(20),params, outcomeValues));\r\n",           "FormulaName": "FIXEDAMT",           "Status": "P"         },         "MomentQualifyingRule":  		{           "MomentCode": "RGRREFERRERBONUS",           "EventType": "Referral",           "OfferName": "RGRREFERRERBONUS",           "RuleEquationUI": "Referral.Addresses.StateCode==\"TX\"",           "RuleEquationDrools": "ReferralC(Addresses!.StateCode == \"TX\")",           "Status": "P"         },         "Status": "A"       }     ],     "Status": "P"    },   "ReleaseState": "P",    }</con:value>
-        </con:property>
-        <con:property>
-          <con:name>UpdateBody</con:name>
-          <con:value>{    "MomentCode":"RGRREFERRERBONUS",    "Description":"RGRREFERRERBONUS",    "MomentType":"PROMOTIONAL_CURRENCY",    "StartDate":"2018-01-01T00:00:00Z",    "StartDateString":"01/01/2018 12:00:00 AM",    "EndDate":"2028-12-31T23:59:59Z",    "EndDateString":"12/31/2028 11:59:59 PM",    "MomentStatus":"A",    "MomentResponseValues":[       {          "MomentCode":"RGRREFERRERBONUS",          "MomentType":"PROMOTIONAL_CURRENCY",          "ResponsePropertyName":"BASE INDICATOR",          "ResponsePropertyValue":"N",          "Status":"P"       },       {          "MomentCode":"RGRREFERRERBONUS",          "MomentType":"PROMOTIONAL_CURRENCY",          "ResponsePropertyName":"ENGAGE INDICATOR",          "ResponsePropertyValue":"N",          "Status":"P"       },       {          "MomentCode":"RGRREFERRERBONUS",          "MomentType":"PROMOTIONAL_CURRENCY",          "ResponsePropertyName":"NEGATE OUTCOME",          "ResponsePropertyValue":"N",          "Status":"P"       },       {          "MomentCode":"RGRREFERRERBONUS",          "MomentType":"PROMOTIONAL_CURRENCY",          "ResponsePropertyName":"POINT SUBTYPE",          "ResponsePropertyValue": "${#[ActivityCertificate#GetPointSubType#GetPointSubType]#Response#$['PointSubTypes'][0]['PointSubTypeId']}",          "Status":"P"       },       {          "MomentCode":"RGRREFERRERBONUS",          "MomentType":"PROMOTIONAL_CURRENCY",          "ResponsePropertyName":"POINT TYPE", 		 "ResponsePropertyValue": "${#[ActivityCertificate#GetPointTypes#GetPointTypes]#Response#$[0]['RefPointTypeId']}",          "Status":"P"       }    ],    "MomentEvent":{       "MomentCode":"RGRREFERRERBONUS",       "EventType":"Referral",       "MomentQualifyingDateAttribute":"CurrentDateTime",       "MomentQualifyingDateAttributeDrools":"$Referral:ReferralC(isItBetween( new Date() ,\"12/01/2019 12:00:00 AM\",\"12/31/2019 11:59:59 PM\"))",       "MomentOffers":[          {             "MomentCode":"RGRREFERRERBONUS",             "EventType":"Referral",             "OfferName":"RGRREFERRERBONUS",             "MomentOutcome":{                "MomentCode":"RGRREFERRERBONUS",                "EventType":"Referral",                "OfferName":"RGRREFERRERBONUS",                "OutcomeEquationUi":"20",                "CalculationTemplate":"&lt;fixedpoints,[Number]>",                "OutcomeEquationTemplate":"%5B%7B%22name%22%3A%22fixedpoints%22%2C%22type%22%3A%22Number%22%2C%22objType%22%3A%22var%22%2C%22id%22%3A%22variable_0%22%2C%22value%22%3A%2210%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%2C%7B%22name%22%3A%22%22%2C%22type%22%3A%22%22%2C%22objType%22%3A%22drools%22%2C%22id%22%3A%22%22%2C%22value%22%3A%22String.valueOf(20)%22%2C%22isSelect%22%3Afalse%2C%22funcName%22%3A%22%22%2C%22filterType%22%3A%22%22%2C%22drools%22%3A%22%22%2C%22collectionAttribute%22%3Afalse%2C%22refId%22%3A%22%22%7D%5D",                "OutcomeEquationDrools":"MomentParam[] params = new MomentParam[] {new MomentParam(\"OfferName\",\"RGRREFERRERBONUS\"),new MomentParam(\"QualifyingDateAttributeValue\", new Date() )};\r\nMomentParam[] outcomeValues = null;\r\nmo.add(new MomentOutcome(\"RGRREFERRERBONUS\",String.valueOf(20),params, outcomeValues));\r\n",                "FormulaName":"FIXEDAMT",                "Status":"P"             },             "MomentQualifyingRule":{                "MomentCode":"RGRREFERRERBONUS",                "EventType":"Referral",                "OfferName":"RGRREFERRERBONUS",                "RuleEquationUI":"Referral.Addresses.StateCode==\"TX\"",                "RuleEquationDrools":"ReferralC(Addresses!.StateCode == \"TX\")",                "Status":"P"             },             "Status":"A"          }       ],       "Status":"P"    },    "ReleaseState":"P",    "Status":"A" }</con:value>
-        </con:property>
-        <con:property>
-          <con:name>MomentId</con:name>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="GetpointsReferrerprofile" id="211f9933-88c5-49bc-86a2-e4713466d81e">
+  <con:testStep type="restrequest" name="GetpointsReferrerprofile" id="be67b346-355e-4c6e-aaa3-431371ccba21">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetpointsReferrerprofile" id="90aa5f43-a530-41eb-9446-2dde6c33780e" mediaType="application/json">
@@ -934,7 +751,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${AddProfileRGR 2#Response#$['ProfileId']}"/>
+          <con:entry key="profileId" value="${AddReferrerProfile#ProfileId}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="status" value="A"/>
@@ -954,7 +771,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="DeactivateMomentReferral" id="8971805c-da84-4128-8328-48e45e7e3193">
+  <con:testStep type="calltestcase" name="DeactivateMoment" id="cad44a1d-b363-4e44-b55f-33b55e591771">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>c903534c-32ad-44dc-9cb6-a72fc8de1482</con:targetTestCase>
@@ -962,24 +779,6 @@
         <con:property>
           <con:name>MomentId</con:name>
           <con:value>${#[Moment#UpsertMoment#MomentId]#result}</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="UpdPrgmSetgEnableRefrlBns1" id="3a347d58-73cc-4781-b496-40eda4e4e2ff">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>15f7caaf-fe10-4503-a23b-2a97fc80a63c</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>Body</con:name>
-          <con:value>[     {       "ParameterName": "MOMENT_REFERRAL_BYPASS",       "ParameterValue": "Y"     } ]</con:value>
-        </con:property>
-        <con:property>
-          <con:name>ProgramCode</con:name>
-          <con:value>PP</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>

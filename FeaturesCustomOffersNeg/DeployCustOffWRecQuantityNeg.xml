@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="3ffb52fb-ad22-48fc-9d62-2f55a78939a6" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="DeployCustOffWRecVisitsNeg" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="608c7e78-f98f-4f3b-8017-cbff6fdf5a8c" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="DeployCustOffWRecQuantityNeg" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="3ffb52fb-ad22-48fc-9d62-2f55a78939a6fileName">DeployCustOffWRecVisitsNeg</con:setting>
+    <con:setting id="608c7e78-f98f-4f3b-8017-cbff6fdf5a8cfileName">DeployCustOffWRecQuantityNeg</con:setting>
   </con:settings>
-  <con:testStep type="calltestcase" name="GetEventAttributesByEvent" id="d2352d9b-09d1-4fcb-87ba-a39c0ee17e30">
+  <con:testStep type="calltestcase" name="GetEventAttributesByEvent" id="347670bc-1674-4042-bc57-fdc19dce9aad">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>bd77f049-74f7-4fd6-9df5-554d9e08bff9</con:targetTestCase>
@@ -17,20 +17,20 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="visitsEventId" id="022aa879-e1d0-441a-8823-3e659ae90d20">
+  <con:testStep type="groovy" name="quantityEventId" id="59373250-9225-42d3-abb9-e45ed79a9ea2">
     <con:settings/>
     <con:config>
-      <script>def visitsEventId = context.expand( '${#[OffersPrerequisite#GetEventAttributesByEventType#GetEventAttributesByEventType]#Response#$[?(@.AttributeName==\'Visits\')].EventAttributeId[0]}' )</script>
+      <script>def quantityEventId = context.expand( '${#[OffersPrerequisite#GetEventAttributesByEventType#GetEventAttributesByEventType]#Response#$[?(@.AttributeName==\'Quantity\')].EventAttributeId[0]}' )</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="UpdateEventAttributes" id="5a960af5-f5ee-41b9-bf6f-41a0e7643f96">
+  <con:testStep type="calltestcase" name="UpdateEventAttributes(Quantity)" id="c51e285b-db88-411f-935a-aef5cb3e4848">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>73646b48-d758-4ca3-82ee-3a8ec2812b9b</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>AttributeJSON</con:name>
-          <con:value>{ 		"EventAttributeId": "${visitsEventId#result}", 		"EventType": "PurchaseTxn", 		"AttributeName": "Visits", 		"DataTypeUi": "Number", 		"DataTypeDrl": "Double", 		"AttributeFqn": "PurchaseTxn.Visits", 		"DroolsVariableName": "$PurchaseTxn", 		"CyclicIndicator": true, 		"CyclicMapField": "Visits", 		"Status": "A", }</con:value>
+          <con:value>{ 		"EventAttributeId": "${quantityEventId#result}", 		"EventType": "PurchaseTxn", 		"AttributeName": "Quantity", 		"DataTypeUi": "Number", 		"DataTypeDrl": "Double", 		"AttributeFqn": "PurchaseTxn.TransactionDetails.Quantity", 		"DroolsVariableName": "$PurchaseTxnTransactionDetails", 		"CyclicIndicator": true, 		"CyclicMapField": "LineItemQuantity", 		"Status": "A", }</con:value>
         </con:property>
         <con:property>
           <con:name>eventType</con:name>
@@ -38,17 +38,17 @@
         </con:property>
         <con:property>
           <con:name>attributeName</con:name>
-          <con:value>Visits</con:value>
+          <con:value>Quantity</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEventWithNegativeVisitsValue" id="9e1d0255-d0ac-49c7-8044-342d44a50d01">
+  <con:testStep type="restrequest" name="ProcessMarketingEventWithNegativeQuantityValue" id="2788b8a1-a095-40e6-8bc1-d49f9ab18c55">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ProcessMarketingEventWithNegativeVisitsValue" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="ProcessMarketingEventWithNegativeQuantityValue" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -64,6 +64,7 @@
 	"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}",
 	"PackagedAudience": {
 		"PackagedAudienceId": "7ae1f987-5b5e-4669-e053-5ca8e70ad3ee",
+		"MarketingEventId": "461565f7-e6cf-4a43-8792-e6cb9686d44f",
 		"AudienceName": "New Members",
 		"AudienceDescription": "Members who have enrolled on or after a specific date",
 		"PackagedAudienceParams": [
@@ -72,7 +73,6 @@
 				"PackagedAudienceId": "7ae1f987-5b5e-4669-e053-5ca8e70ad3ee",
 				"ParamName": "New members who have enrolled on or after",
 				"ParamCode": "MEMBERSENROLLED",
-				"ParamDescription": "Select a date",
 				"Value": "2021-06-01 00:00"
 			}
 		],
@@ -93,7 +93,6 @@
 				"PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
 				"PanelCode": "CUSTOMER_ACTIVITY",
 				"OfferParamCategoryCode": "TRANSACTIONAL",
-				"DisplayParamName": "Spend an amount"
 			},
 			{
 				"PackagedOfferParamId": "1d5c8eb6-b8b9-ed4e-e053-5dedef0ac6ca",
@@ -103,18 +102,16 @@
 				"Value": "10",
 				"PanelId": "e0e698ac-4291-d25d-e053-5dedef0ac6ef",
 				"PanelCode": "CUSTOMER_REWARD",
-				"DisplayParamName": "Fixed point amount"
 			},
 			{
-				"PackagedOfferParamId": "faa383c5-f32c-c34b-e053-5dedef0ac234",
+				"PackagedOfferParamId": "a370cfc5-6187-f742-e053-5dedef0a35e2",
 				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-				"ParamName": "Number of Visits",
-				"ParamCode": "CUSTOM_VISITS",
-				"Value": "-1",
+				"ParamName": "Minimum quantity across transactions",
+				"ParamCode": "CUSTOM_QUANTITY",
+				"Value": "-5",
 				"PanelId": "e3856cc4-2a4f-1061-e053-5dedef0a16bd",
 				"PanelCode": "RECURRING_OPTIONS",
 				"OfferParamCategoryCode": "TRANSACTIONAL",
-				"DisplayParamName": "Visits"
 			}
 		],
 		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
@@ -288,7 +285,7 @@
         <con:assertion type="JsonPath Match" id="8057a4f5-8298-4152-96e7-41eb963e7aba" name="ValidateErrorMessage">
           <con:configuration>
             <path>$['ErrorCode']</path>
-            <content>"Visits must be a positive, numeric value."</content>
+            <content>"Quantity must be a positive, numeric value."</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -323,7 +320,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEventWithIinvalid/charVisitsValue" id="efd25507-3ae7-4473-a543-69e03bf79f50">
+  <con:testStep type="restrequest" name="ProcessMarketingEventWithIinvalid/charVisitsValue" id="fd8dc29b-bbc5-4231-ba09-0e520d369c46">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="ProcessMarketingEventWithIinvalid/charVisitsValue" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
@@ -338,10 +335,11 @@
 			"ChannelName": "No Channel"
 		}
 	],
-	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
+		"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
 	"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}",
 	"PackagedAudience": {
 		"PackagedAudienceId": "7ae1f987-5b5e-4669-e053-5ca8e70ad3ee",
+		"MarketingEventId": "461565f7-e6cf-4a43-8792-e6cb9686d44f",
 		"AudienceName": "New Members",
 		"AudienceDescription": "Members who have enrolled on or after a specific date",
 		"PackagedAudienceParams": [
@@ -350,7 +348,6 @@
 				"PackagedAudienceId": "7ae1f987-5b5e-4669-e053-5ca8e70ad3ee",
 				"ParamName": "New members who have enrolled on or after",
 				"ParamCode": "MEMBERSENROLLED",
-				"ParamDescription": "Select a date",
 				"Value": "2021-06-01 00:00"
 			}
 		],
@@ -371,7 +368,6 @@
 				"PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
 				"PanelCode": "CUSTOMER_ACTIVITY",
 				"OfferParamCategoryCode": "TRANSACTIONAL",
-				"DisplayParamName": "Spend an amount"
 			},
 			{
 				"PackagedOfferParamId": "1d5c8eb6-b8b9-ed4e-e053-5dedef0ac6ca",
@@ -381,18 +377,16 @@
 				"Value": "10",
 				"PanelId": "e0e698ac-4291-d25d-e053-5dedef0ac6ef",
 				"PanelCode": "CUSTOMER_REWARD",
-				"DisplayParamName": "Fixed point amount"
 			},
 			{
-				"PackagedOfferParamId": "faa383c5-f32c-c34b-e053-5dedef0ac234",
+				"PackagedOfferParamId": "a370cfc5-6187-f742-e053-5dedef0a35e2",
 				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-				"ParamName": "Number of Visits",
-				"ParamCode": "CUSTOM_VISITS",
+				"ParamName": "Minimum quantity across transactions",
+				"ParamCode": "CUSTOM_QUANTITY",
 				"Value": "c",
 				"PanelId": "e3856cc4-2a4f-1061-e053-5dedef0a16bd",
 				"PanelCode": "RECURRING_OPTIONS",
 				"OfferParamCategoryCode": "TRANSACTIONAL",
-				"DisplayParamName": "Visits"
 			}
 		],
 		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
@@ -565,8 +559,8 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="446a45e5-3c67-4fbf-9a61-75fed2a78254" name="ValidateErrorMessage">
           <con:configuration>
-            <path>$['Message']</path>
-            <content>"Visits must be a positive, numeric value."</content>
+            <path>$['ErrorCode']</path>
+            <content>"Quantity must be a positive, numeric value."</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -601,10 +595,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEventWith10DigitsInVisitsValue" id="938b1da8-56f7-4331-971a-bc48bfa88122">
+  <con:testStep type="restrequest" name="ProcessMarketingEventWithPointPerDollarReward" id="30b1e801-1c04-4651-a8ed-c46c0a172c1a">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ProcessMarketingEventWith10DigitsInVisitsValue" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="ProcessMarketingEventWithPointPerDollarReward" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -620,6 +614,7 @@
 	"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}",
 	"PackagedAudience": {
 		"PackagedAudienceId": "7ae1f987-5b5e-4669-e053-5ca8e70ad3ee",
+		"MarketingEventId": "461565f7-e6cf-4a43-8792-e6cb9686d44f",
 		"AudienceName": "New Members",
 		"AudienceDescription": "Members who have enrolled on or after a specific date",
 		"PackagedAudienceParams": [
@@ -628,7 +623,6 @@
 				"PackagedAudienceId": "7ae1f987-5b5e-4669-e053-5ca8e70ad3ee",
 				"ParamName": "New members who have enrolled on or after",
 				"ParamCode": "MEMBERSENROLLED",
-				"ParamDescription": "Select a date",
 				"Value": "2021-06-01 00:00"
 			}
 		],
@@ -649,28 +643,25 @@
 				"PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
 				"PanelCode": "CUSTOMER_ACTIVITY",
 				"OfferParamCategoryCode": "TRANSACTIONAL",
-				"DisplayParamName": "Spend an amount"
 			},
 			{
-				"PackagedOfferParamId": "1d5c8eb6-b8b9-ed4e-e053-5dedef0ac6ca",
+				"PackagedOfferParamId": "1d5c8eb6-b4b9-ed4e-e053-5dedef0ac6ca",
 				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-				"ParamName": "Point amount",
-				"ParamCode": "CUSTOM_POINT_AMT_REWARDED",
+				"ParamName": "Points per eligible dollar",
+				"ParamCode": "CUSTOM_POINT_AMT_PER_ELIG_DOLLAR",
 				"Value": "10",
 				"PanelId": "e0e698ac-4291-d25d-e053-5dedef0ac6ef",
 				"PanelCode": "CUSTOMER_REWARD",
-				"DisplayParamName": "Fixed point amount"
 			},
 			{
-				"PackagedOfferParamId": "faa383c5-f32c-c34b-e053-5dedef0ac234",
+				"PackagedOfferParamId": "a370cfc5-6187-f742-e053-5dedef0a35e2",
 				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-				"ParamName": "Number of Visits",
-				"ParamCode": "CUSTOM_VISITS",
-				"Value": "c",
+				"ParamName": "Minimum quantity across transactions",
+				"ParamCode": "CUSTOM_QUANTITY",
+				"Value": "5",
 				"PanelId": "e3856cc4-2a4f-1061-e053-5dedef0a16bd",
 				"PanelCode": "RECURRING_OPTIONS",
 				"OfferParamCategoryCode": "TRANSACTIONAL",
-				"DisplayParamName": "Visits"
 			}
 		],
 		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
@@ -681,8 +672,8 @@
 			"Value": 10
 		}
 	},
-	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
-  "OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}", 
+		"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+  "OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}",
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
         <con:assertion type="DataAndMetadataAssertion" id="c88f8972-8767-4721-83c6-73a5aff81a88" name="Smart Assertion for HTTP status code">
@@ -844,7 +835,7 @@
         <con:assertion type="JsonPath Match" id="0eda4d50-efc0-440a-8e05-43546d7fee28" name="ValidateErrorMessage">
           <con:configuration>
             <path>$['ErrorCode']</path>
-            <content>"Visits must be a positive, numeric value."</content>
+            <content>"CannotCombineQuantityAndPtsPerDollarParams"</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -879,10 +870,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEventWithPointsPerDollarReward" id="bb6b77b0-c20f-4e59-92bf-d80590d374e8">
+  <con:testStep type="restrequest" name="ProcessMarketingEventWithQuantityMoreThan10Digits" id="939981fb-1cc5-482d-8de0-5dd1eaf5c7c7">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ProcessMarketingEventWithPointsPerDollarReward" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="ProcessMarketingEventWithQuantityMoreThan10Digits" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -894,10 +885,11 @@
 			"ChannelName": "No Channel"
 		}
 	],
-	"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
+		"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}", 	
 	"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}",
 	"PackagedAudience": {
 		"PackagedAudienceId": "7ae1f987-5b5e-4669-e053-5ca8e70ad3ee",
+		"MarketingEventId": "461565f7-e6cf-4a43-8792-e6cb9686d44f",
 		"AudienceName": "New Members",
 		"AudienceDescription": "Members who have enrolled on or after a specific date",
 		"PackagedAudienceParams": [
@@ -906,7 +898,6 @@
 				"PackagedAudienceId": "7ae1f987-5b5e-4669-e053-5ca8e70ad3ee",
 				"ParamName": "New members who have enrolled on or after",
 				"ParamCode": "MEMBERSENROLLED",
-				"ParamDescription": "Select a date",
 				"Value": "2021-06-01 00:00"
 			}
 		],
@@ -927,28 +918,25 @@
 				"PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
 				"PanelCode": "CUSTOMER_ACTIVITY",
 				"OfferParamCategoryCode": "TRANSACTIONAL",
-				"DisplayParamName": "Spend an amount"
 			},
 			{
-				"PackagedOfferParamId": "1d5c8eb6-b4b9-ed4e-e053-5dedef0ac6ca",
-			                "PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-			                "ParamName": "Points per eligible dollar",
-			                "ParamCode": "CUSTOM_POINT_AMT_PER_ELIG_DOLLAR",
+				"PackagedOfferParamId": "1d5c8eb6-b8b9-ed4e-e053-5dedef0ac6ca",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Point amount",
+				"ParamCode": "CUSTOM_POINT_AMT_REWARDED",
 				"Value": "10",
 				"PanelId": "e0e698ac-4291-d25d-e053-5dedef0ac6ef",
-			                "PanelCode": "CUSTOMER_REWARD",
-			                "DisplayParamName": "Points per eligible dollar"
+				"PanelCode": "CUSTOMER_REWARD",
 			},
 			{
-				"PackagedOfferParamId": "faa383c5-f32c-c34b-e053-5dedef0ac234",
+				"PackagedOfferParamId": "a370cfc5-6187-f742-e053-5dedef0a35e2",
 				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-				"ParamName": "Number of Visits",
-				"ParamCode": "CUSTOM_VISITS",
-				"Value": "c",
+				"ParamName": "Minimum quantity across transactions",
+				"ParamCode": "CUSTOM_QUANTITY",
+				"Value": "10000000000",
 				"PanelId": "e3856cc4-2a4f-1061-e053-5dedef0a16bd",
 				"PanelCode": "RECURRING_OPTIONS",
 				"OfferParamCategoryCode": "TRANSACTIONAL",
-				"DisplayParamName": "Visits"
 			}
 		],
 		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
@@ -959,8 +947,8 @@
 			"Value": 10
 		}
 	},
-	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
-  "OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}", 
+"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+  "OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+15)}",
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
         <con:assertion type="DataAndMetadataAssertion" id="c88f8972-8767-4721-83c6-73a5aff81a88" name="Smart Assertion for HTTP status code">
@@ -1122,7 +1110,7 @@
         <con:assertion type="JsonPath Match" id="95bd4e66-978f-4e3a-ba03-c6c59a36e5b4" name="ValidateErrorMessage">
           <con:configuration>
             <path>$['ErrorCode']</path>
-            <content>"CannotCombineVisitsAndPtsPerDollarParams"</content>
+            <content>"Quantity must be a positive, numeric value."</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -1157,14 +1145,14 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="UpdateEventAttributesUnSetVisitsCyclicAttribute&quot;" id="cefb80eb-c105-446a-b762-ab5537cad399">
+  <con:testStep type="calltestcase" name="UpdateEventAttributesUnSetQuantityCyclicAttribute&quot;" id="9538ed5e-e108-4662-bda9-57ddc41c67e5">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>73646b48-d758-4ca3-82ee-3a8ec2812b9b</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>AttributeJSON</con:name>
-          <con:value>{ 		"EventAttributeId": "${visitsEventId#result}", 		"EventType": "PurchaseTxn", 		"AttributeName": "Visits", 		"DataTypeUi": "Number", 		"DataTypeDrl": "Double", 		"AttributeFqn": "PurchaseTxn.Visits", 		"DroolsVariableName": "$PurchaseTxn", 		"CyclicIndicator": false, 		"CyclicMapField": "Visits", 		"Status": "A", }</con:value>
+          <con:value>{ 		"EventAttributeId": "${quantityEventId#result}", 		"EventType": "PurchaseTxn", 		"AttributeName": "Quantity", 		"DataTypeUi": "Number", 		"DataTypeDrl": "Double", 		"AttributeFqn": "PurchaseTxn.TransactionDetails.Quantity", 		"DroolsVariableName": "$PurchaseTxnTransactionDetails", 		"CyclicIndicator": false, 		"CyclicMapField": "LineItemQuantity", 		"Status": "A", }</con:value>
         </con:property>
         <con:property>
           <con:name>eventType</con:name>
@@ -1172,7 +1160,7 @@
         </con:property>
         <con:property>
           <con:name>attributeName</con:name>
-          <con:value>Visits</con:value>
+          <con:value>Quantity</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>

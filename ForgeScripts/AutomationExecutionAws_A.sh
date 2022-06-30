@@ -14,6 +14,11 @@ aws s3 cp /home/ec2-user/testEngine/reports/Newton.pdf s3://#{S3BucketName}#/#{T
 sudo /usr/local/bin/testengine -u "#{TestEngineUsername}#" -p "#{TestEnginePassword}#" -H "http://localhost:8080" run project tags Synergy environment=#{TenantCode}# reportFileName Synergy output=/home/ec2-user/testEngine/reports format pdf printReport /home/ec2-user/testEngine/FusionWebApiAutomationReadyv2.zip
 aws s3 cp /home/ec2-user/testEngine/reports/Synergy.pdf s3://#{S3BucketName}#/#{TenantCode}#/TestResultsV2/#{Release.ReleaseName}#/Synergy.pdf
 
-sleep 30
+#shutdown the license server instance
+aws ec2 stop-instances --region "us-east-1" --instance-ids "#{LicenseServerInstanceId}"
 
+#wait for last upload to finish
+sleep 300
+
+#shutdown instance
 sudo shutdown now

@@ -25,7 +25,7 @@ aws s3 cp /home/ec2-user/testEngine/reports/Synergy.pdf s3://#{S3BucketName}#/#{
 
 #shutdown the license server instance
 echo "Shutting down license server `date +%T`" >> /home/ec2-user/testEngine/log.txt
-aws ec2 stop-instances --region "us-east-1" --instance-ids "#{LicenseServerInstanceId}"
+aws ec2 stop-instances --region "us-east-1" --instance-ids "#{LicenseServerInstanceId}#"
 echo "Shutdown command complete, result of it is `$?` `date +%T`" >> /home/ec2-user/testEngine/log.txt
 
 #wait for last upload to finish

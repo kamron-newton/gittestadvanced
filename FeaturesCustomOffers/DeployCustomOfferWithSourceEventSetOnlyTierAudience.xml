@@ -445,7 +445,7 @@ else testRunner.gotoStepByName("ProcessMktEventForAddStore")</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="AddStoreFunc" id="fa5eb5b8-6e73-4525-a035-385d70090085">
+  <con:testStep type="groovy" name="AddStoreFunc" id="fa5eb5b8-6e73-4525-a035-385d70090085" disabled="true">
     <con:settings/>
     <con:config>
       <script>def validValueDesc = context.expand( '${GetValidValuesForStore#Response#$[0][\'Description\']}' )
@@ -454,7 +454,7 @@ if (validValueDesc != "Store Code Offer Test" ) testRunner.gotoStepByName("AddSt
 else testRunner.gotoStepByName("GetTierForProgramCode")</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddStore" id="3ffb29cc-a8e1-43ec-8dcb-6599de96a97b">
+  <con:testStep type="restrequest" name="AddStore" id="3ffb29cc-a8e1-43ec-8dcb-6599de96a97b" disabled="true">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/chains/stores" methodName="AddStore" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest id="2ea7f730-2333-4f02-b1aa-dd8119a5fb79" mediaType="application/json" name="AddStore" postQueryString="false">
@@ -664,10 +664,10 @@ else testRunner.gotoStepByName("GetTierForProgramCode")</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMktEventForAddStore" id="19a4299b-099b-4e3d-8102-749194531f2a">
+  <con:testStep type="restrequest" name="ProcessMktEventForTireAudience" id="19a4299b-099b-4e3d-8102-749194531f2a">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ProcessMktEventForAddStore" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="ProcessMktEventForTireAudience" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -689,34 +689,24 @@ else testRunner.gotoStepByName("GetTierForProgramCode")</script>
 		"AudienceName":"Member Tier",
 		"PackagedAudienceParams":[{"PackagedAudienceParamId":"ee8ea189-ecfb-c208-e053-5ca8e70a5b0b",
 		"PackagedAudienceId":"7ae1f987-575e-4669-e053-5ca8e70ad3ee",
-		"Value":"\"NEST\",\"FR-GOLD\""}]},
+		"Value":"\"The Nest\"",
+		"MarketingEventAudienceParamId":null,
+		"MarketingEventId":null}]},
 "AudienceSource": "PACKAGED_AUDIENCE",
 	"PackagedOffer": {
 		"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
 		"PackagedOfferCode": "CUSTOM_OFFER",
 		"PackagedOfferParams": [
 			{
-
-				"PackagedOfferParamId": "1d5c8eb6-afb9-ed4e-e053-5dedef0ac6ca",
+				"PackagedOfferParamId": "1d5c8eb6-b0b9-ed4e-e053-5dedef0ac6ca",
 				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
-				"ParamName": "Transact at",
-				"ParamCode": "CUSTOM_LOCATION",
-				"Value": "StoreCode in (\"STORECODETEST1101\")",
-				"ParamCustomValue": {
-					"StoreCode": [
-						"STORECODETEST1101"
-					],
-					"DisplayStoreCode": [
-						"STORECODETEST1101 - Store Code Offer Test"
-					],
-					"LocationSelectType": 0,
-					"Chain": "FALL_RIVER"
-				},
+				"ParamName": "Minimum transaction amount",
+				"ParamCode": "CUSTOM_TXN_AMT",
+				"Value": "100",
 				"PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
 				"PanelCode": "CUSTOMER_ACTIVITY",
 				"OfferParamCategoryCode": "TRANSACTIONAL",
-				"DisplayParamName": "Transact at a location",
-				"MarketingOfferParamCategoryId":"1d5c8eb6-adb9-ed4e-e053-5dedef0ac6ca",
+                                                                "ParamOperatorId": "05905269-d4c5-4124-9ab4-da12272b86f6",
 			},
 			{
 				
@@ -731,15 +721,15 @@ else testRunner.gotoStepByName("GetTierForProgramCode")</script>
 		],
 		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
 		"PackagedOfferCategoryCode": "CUSTOM_OFFER",
-		"CustomOfferActivityValue":"{\"Type\":\"ATTRIBUTE\",
-		\"PackagedOfferParamId\":\"1d5c8eb6-afb9-ed4e-e053-5dedef0ac6ca\",
-		\"Value\":\"StoreCode in (\\\"STORECODETEST1101\\\")\"
-		}"
+		"CustomOfferActivityValue": {
+			"Type": "ATTRIBUTE",
+			"PackagedOfferParamId": "1d5c8eb6-b0b9-ed4e-e053-5dedef0ac6ca",
+			"Value": "100"
+		}
 	},
-	
-  "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+1)}",
+	"BusinessUnitTimeZone": "UTC",
+ "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+1)}",
    "OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+10)}",
-"BusinessUnitTimeZone": "UTC",
 	"Status": "A",
 }</con:request>
         <con:originalUri>https://d2aldv-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
@@ -935,7 +925,7 @@ else testRunner.gotoStepByName("GetTierForProgramCode")</script>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMktEventForAddStore#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMktEventForTireAudience#Response#$['EventCode']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -1002,7 +992,7 @@ return EventStatus</script>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMktEventForAddStore#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMktEventForTireAudience#Response#$['EventCode']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
@@ -1015,14 +1005,14 @@ return EventStatus</script>
       <delay>15000</delay>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="PurchaseTrxnForStore" id="4f6293b4-7428-4f5b-93ea-63f16da4dece">
+  <con:testStep type="calltestcase" name="PurchaseTrxnForTier" id="4f6293b4-7428-4f5b-93ea-63f16da4dece">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>020fa426-82b4-435d-b482-aebd7f200c61</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>Body</con:name>
-          <con:value>{   "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",   "TransactionTypeCode": "PR",   "TransactionNetTotal": "100",   "ShippingAndHandling": "100",   "TransactionTotalTax": "100",   "TransactionNumber": "${=java.util.UUID.randomUUID()}",   "CurrencyCode": "USD",   "PostingDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",   "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",   "TransactionEndDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",   "OnlyAddTransData": "FALSE",   "SuspendTransaction": "FALSE",   "TransactionDescription": "${=java.util.UUID.randomUUID()}",   "StoreCode": "STORECODETEST1101",   "ProgramCode":"FR",   "GrossAmount": "100" }</con:value>
+          <con:value>{   "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",   "TransactionTypeCode": "PR",   "TransactionNetTotal": "100",   "ShippingAndHandling": "100",   "TransactionTotalTax": "100",   "TransactionNumber": "${=java.util.UUID.randomUUID()}",   "CurrencyCode": "USD",   "PostingDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+1)}",   "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+1)}",   "TransactionEndDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+1)}",   "OnlyAddTransData": "FALSE",   "SuspendTransaction": "FALSE",   "TransactionDescription": "TestTrans${=java.util.UUID.randomUUID()}",   "StoreCode": "FR1502",   "ProgramCode":"FR",   "GrossAmount": "100",   "TransactionDetails": [     {       "TaxAmount": "100",       "DollarValueGross": "100",       "DollarValueNet": "100",       "ItemNumber": "SKU-00004",       "ItemNumberTypeCode": "S",       "Quantity": "1",       "LineNumber": 1,       "ItemTransactionTypeCode": "PR",         }   ] }</con:value>
         </con:property>
         <con:property>
           <con:name>Program-Code</con:name>
@@ -1256,7 +1246,7 @@ return EventStatus</script>
       <con:properties>
         <con:property>
           <con:name>EventCode</con:name>
-          <con:value>${ProcessMktEventForAddStore#Response#$['EventCode']}</con:value>
+          <con:value>${ProcessMktEventForTireAudience#Response#$['EventCode']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>

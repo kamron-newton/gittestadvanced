@@ -11,7 +11,7 @@ sudo /usr/local/bin/testengine -u "#{TestEngineUsername}#" -p "#{TestEnginePassw
 aws s3 cp /home/ec2-user/testEngine/reports/Delta.pdf s3://#{S3BucketName}#/#{TenantCode}#/TestResultsV2/#{Release.ReleaseName}#/Delta.pdf
 
 #shutdown the license server instance
-aws ec2 stop-instances --region "us-east-1" --instance-ids "#{LicenseServerInstanceId}"
+aws ec2 stop-instances --region "us-east-1" --instance-ids "#{LicenseServerInstanceId}#"
 
 #wait for last upload to finish
 sleep 300

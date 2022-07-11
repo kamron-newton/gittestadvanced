@@ -221,9 +221,9 @@
             <con:elements>
               <con:path>$['Headers']['#status#']</con:path>
               <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
+              <con:operatorId>3</con:operatorId>
               <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:expectedValue>HTTP/1.1 200 OK,HTTP/1.1 404 Not Found</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -281,26 +281,26 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="RoleId" id="a0984437-63b9-41ce-bcdc-ee90bffaa8b3">
-    <con:settings/>
-    <con:config>
-      <script>//def RoleId = context.expand( '${GetSystemRoles#Response#$[0][\'RoleId\']}' )
-
-def RoleId = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'RGRCUSTOM_ROLE\')].RoleId[0]}' )
-
-//def roleCode = context.expand( '${Roles#$[?(@.RoleCode==\'RGRCUSTOM_ROLE\')].RoleId[0]}' )</script>
-    </con:config>
-  </con:testStep>
   <con:testStep type="groovy" name="CheckCondition" id="2b1d7abe-a54f-4035-be39-fc14819883b3">
     <con:settings/>
     <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse//Get the parsed json of GetSources test step response
+      <script>import static com.jayway.jsonpath.JsonPath.parse
 
-def RoleId = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'RGRCUSTOM_ROLE\')].RoleId[0]}' )
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetSystemRoles#Response}'))
 
+//datasource
+def RolesDatasource =context.expand( '${Roles#RoleCode}')
 
-if (RoleId == null)  testRunner.gotoStepByName("AddSystemRole")
-else  testRunner.gotoStepByName("UpdateSystemRole")</script>
+def getRoleIdByRoleCode = { code ->  json.find {it?.RoleCode == RolesDatasource}?.RoleId }
+
+def RoleId= (getRoleIdByRoleCode('RolesDatasource'))
+
+if ( RoleId == "" || RoleId== null ) 
+    testRunner.gotoStepByName("AddSystemRole")
+else{
+	testRunner.gotoStepByName("RoleId")
+}</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="AddSystemRole" id="8b18fb7c-b519-42e7-95ea-30f35a0180a1">
@@ -569,7 +569,7 @@ else  testRunner.gotoStepByName("UpdateSystemRole")</script>
               <con:element>#status#</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:expectedValue>HTTP/1.1 201 Created</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -621,6 +621,33 @@ else  testRunner.gotoStepByName("UpdateSystemRole")</script>
           </con:entry>
         </con:environmentSpec>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="RoleId" id="a0984437-63b9-41ce-bcdc-ee90bffaa8b3">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetSystemRoles#Response}'))
+
+//datasource
+def RolesDatasource =context.expand( '${Roles#RoleCode}')
+
+def getRoleIdByRoleCode = { code ->  json.find {it?.RoleCode == RolesDatasource}?.RoleId }
+
+def RoleId= (getRoleIdByRoleCode('RolesDatasource'))
+
+def response = context.expand( '${AddSytemRole#Response}' )
+
+if(response==null || response =="")
+  	return RoleId;
+
+ else
+ {
+    RoleId = context.expand( '${AddSystemRole#Response#$[\'RoleId\']}' )
+    return RoleId;
+ }</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="UpdateSystemRole" id="25590b3c-09ac-47a1-8b13-c9ba732aa1e8">
@@ -943,6 +970,192 @@ else  testRunner.gotoStepByName("UpdateSystemRole")</script>
             <con:authProfile>Inherit From Parent</con:authProfile>
           </con:entry>
         </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSystemRolebyID" id="1af7f0eb-b311-4174-8354-c804e55f1552">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/roles/{roleId}" methodName="GetSystemRolebyID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSystemRolebyID" id="4437299f-72c7-4ad2-9c72-54678b75d452" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/security/roles/roleId</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="4717d050-d4b1-4555-89bb-8646347f6b9c" name="Smart Assertion for HTTP Status Code">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Mon, 11 Jul 2022 02:43:05 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>8568</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>29989f6b-5eee-d47c-fbd2-82806d50b870</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>13ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMJ15DHIKO8S:000006E7</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Mon, 11 Jul 2022 02:43:05 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"8568","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"29989f6b-5eee-d47c-fbd2-82806d50b870","content-type":"application/json; charset=utf-8","process-time":"13ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMJ15DHIKO8S:000006E7"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="roleId" value="${RoleId#result}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>roleId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>

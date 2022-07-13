@@ -9,5 +9,6 @@ rm -rf *
 #clean the log file
 truncate -s 0 /home/ec2-user/testEngine/log.txt
 
-#get license from license server
+#remove and get license from license server
+sudo /usr/local/bin/testengine license uninstall type=floating #{LicenseServerIp}#:443 -u "#{TestEngineUsername}#" -p "#{TestEnginePassword}#" -H "http://localhost:8080"
 sudo /usr/local/bin/testengine license install type=floating #{LicenseServerIp}#:443 -u "#{TestEngineUsername}#" -p "#{TestEnginePassword}#" -H "http://localhost:8080"

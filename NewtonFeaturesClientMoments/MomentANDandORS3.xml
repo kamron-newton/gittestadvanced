@@ -1404,332 +1404,30 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProgramOffers" id="84ee284c-e5ef-4f94-b324-6879dcf0c124">
+  <con:testStep type="calltestcase" name="UpsertOffer" id="9d958660-6563-4d16-8c86-99ff6bc0db3d">
     <con:settings/>
-    <con:config service="RestAPIs" methodName="Get Program Offers" resourcePath="/api/v1/referencedata/programs/sysoffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProgramOffers" id="98811629-e7f7-4283-a6e2-33752ad50ead" mediaType="application/json">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:encoding>UTF-8</con:encoding>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="offerCode" value="${ClientMomentData#AROfferCode}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="transfer" name="Offer" id="84538dba-a855-432e-8e88-396f796f58e6">
-    <con:settings/>
-    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>SysOfferId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetProgramOffers</con:sourceStep>
-        <con:sourcePath>[?(@.OfferCode=='${ClientMomentData#AROfferCode}')].SysOfferId[0]</con:sourcePath>
-        <con:targetType>SysOfferId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:targetPath/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>OfferStatus</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetProgramOffers</con:sourceStep>
-        <con:sourcePath>[?(@.OfferCode=='${ClientMomentData#AROfferCode}')].Status[0]</con:sourcePath>
-        <con:targetType>OfferStatus</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:targetPath/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="UpsertOfferCond" id="375c0c4a-bbcc-467a-b3da-cddf9b02dbcd">
-    <con:settings/>
-    <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse
-
-def offerId = context.expand( '${#TestCase#SysOfferId}' )
-def offerStatus = context.expand( '${#TestCase#OfferStatus}' )
-
-if (offerId == "")  testRunner.gotoStepByName("CreateProgramOffer")
-else if (offerStatus == "I")   testRunner.gotoStepByName("ActivateProgramOffer")
-else
-testRunner.gotoStepByName("SysOfferId")</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="ActivateProgramOffer" id="7e49f12a-a113-4da3-916e-cec2dff45521">
-    <con:settings/>
-    <con:config service="RestAPIs" methodName="Update Program Offer" resourcePath="/api/v1/referencedata/programs/sysoffers/{sysOfferId}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ActivateProgramOffer" id="e7bcd237-e551-4ca9-97ff-c3907142051d" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:encoding>UTF-8</con:encoding>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-    "OfferCode": "${ClientMomentData#AROfferCode}",
-    "ProgramCode": "PP",
-    "OfferDescription": "${ClientMomentData#AROfferCode}",
-    "OfferStartDate": "2019-03-01T00:00:00Z",
-    "OfferEndDate": "2031-12-31T00:00:00Z",
-    "OfferShortDescription": "${ClientMomentData#AROfferCode}",
-    "OptInRequired": false,
-    "OfferName": "${ClientMomentData#AROfferCode}",
-    "OfferTermsAndConditions": "${ClientMomentData#AROfferCode}",
-    "OfferTimeZone": "UTC",
-    "IsCouponOffer": true,
-    "Status": "A",
-    "isNew": false,
-    "UsageLimit": 1,
-    "RedemptionCodeReqInPurchase": false,
-    "RedemptionCodeReqInPurchaseOpposite": true,
-    "IsAvailable": "AVAILABLE",
-    "IsEligibleOffer": false
-  }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers/0fb9d2bc-d39b-433e-b5de-3bbd674082bf</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="8c4b4ef2-f219-4b5d-a009-6df9440e98cb" name="Smart Assertion Status code">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Metadata</con:mode>
-            <con:elements>
-              <con:path>$['Headers']['date']</con:path>
-              <con:element>date</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Tue, 12 Jul 2022 10:44:07 GMT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['server']</con:path>
-              <con:element>server</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-length']</con:path>
-              <con:element>content-length</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1596</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['language-code']</con:path>
-              <con:element>language-code</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-frame-options']</con:path>
-              <con:element>x-frame-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['pragma']</con:path>
-              <con:element>pragma</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-content-type-options']</con:path>
-              <con:element>x-content-type-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-xss-protection']</con:path>
-              <con:element>x-xss-protection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['connection']</con:path>
-              <con:element>connection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>keep-alive</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['correlationid']</con:path>
-              <con:element>correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>9bca638e-67c9-7f08-2fbb-0cc94e0aa171</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-type']</con:path>
-              <con:element>content-type</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['process-time']</con:path>
-              <con:element>process-time</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>28ms</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['#status#']</con:path>
-              <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['cache-control']</con:path>
-              <con:element>cache-control</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-store,no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['new-correlationid']</con:path>
-              <con:element>new-correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMJ3H8Q79859:00000052</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Tue, 12 Jul 2022 10:44:07 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1596","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"9bca638e-67c9-7f08-2fbb-0cc94e0aa171","content-type":"application/json; charset=utf-8","process-time":"28ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMJ3H8Q79859:00000052"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="sysOfferId" value="${#TestCase#SysOfferId}"/>
-        </con:parameters>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="ActivateOfferCond" id="e0bb0b07-75a8-466b-8e72-a260a29088f9">
-    <con:settings/>
-    <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse
-
-def status = context.expand( '${ActivateProgramOffer#HarResponse#$[\'status\']}' ).toInteger()
-
-if (status == 200)  testRunner.gotoStepByName("SysOfferId")</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="CreateProgramOffer" id="1fff01cc-c91c-4e15-9845-4f0d19864adf">
-    <con:settings/>
-    <con:config service="RestAPIs" methodName="Add Program Offer" resourcePath="/api/v1/referencedata/programs/sysoffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="CreateProgramOffer" id="cb905896-b1a6-44d3-b5d2-46423084627e" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:encoding>UTF-8</con:encoding>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-    "OfferCode": "${ClientMomentData#AROfferCode}",
-    "ProgramCode": "PP",
-    "OfferDescription": "${ClientMomentData#AROfferCode}",
-    "OfferStartDate": "2019-01-01T00:00:00Z",
-    "OfferEndDate": "2031-12-31T00:00:00Z",
-    "OfferShortDescription": "${ClientMomentData#AROfferCode}",
-    "OptInRequired": false,
-    "OfferName": "${ClientMomentData#AROfferCode}",
-    "OfferTermsAndConditions": "${ClientMomentData#AROfferCode}",
-    "OfferTimeZone": "UTC",
-    "IsCouponOffer": true,
-    "Status": "A",
-    "isNew": false,
-    "UsageLimit": 1,
-    "RedemptionCodeReqInPurchase": false,
-    "RedemptionCodeReqInPurchaseOpposite": true,
-    "IsAvailable": "AVAILABLE",
-    "IsEligibleOffer": false
-  }</con:request>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="content-type" value="application/json"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-        </con:parameters>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep id="bf2db706-5be9-4d76-a28b-8d8e33fe1021" name="SysOfferId" type="groovy">
-    <con:settings/>
-    <con:config>
-      <script>//return sys offer id extracted from get offers if it exists, else get it from create offers response
-return context.expand( '${#TestCase#SysOfferId}' ) ?: context.expand( '${CreateProgramOffer#Response#$.SysOfferId}')</script>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>888b30ab-b834-4837-bd74-f8d6cd0f916f</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Program-Code</con:name>
+          <con:value>${#Project#ProgramCode}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>offerCode</con:name>
+          <con:value>${ClientMomentData#AROfferCode}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>UpdateProgramOffersBody</con:name>
+          <con:value>{     "OfferCode": "${ClientMomentData#AROfferCode}",     "ProgramCode": "PP",     "OfferDescription": "${ClientMomentData#AROfferCode}",     "OfferStartDate": "2019-03-01T00:00:00Z",     "OfferEndDate": "2031-12-31T00:00:00Z",     "OfferShortDescription": "${ClientMomentData#AROfferCode}",     "OptInRequired": false,     "OfferName": "${ClientMomentData#AROfferCode}",     "OfferTermsAndConditions": "${ClientMomentData#AROfferCode}",     "OfferTimeZone": "UTC",     "IsCouponOffer": true,     "Status": "A",     "isNew": false,     "UsageLimit": 1,     "RedemptionCodeReqInPurchase": false,     "RedemptionCodeReqInPurchaseOpposite": true,     "IsAvailable": "AVAILABLE",     "IsEligibleOffer": false   }</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AddProgramOffersBody</con:name>
+          <con:value>{     "OfferCode": "${ClientMomentData#AROfferCode}",     "ProgramCode": "PP",     "OfferDescription": "${ClientMomentData#AROfferCode}",     "OfferStartDate": "2019-01-01T00:00:00Z",     "OfferEndDate": "2031-12-31T00:00:00Z",     "OfferShortDescription": "${ClientMomentData#AROfferCode}",     "OptInRequired": false,     "OfferName": "${ClientMomentData#AROfferCode}",     "OfferTermsAndConditions": "${ClientMomentData#AROfferCode}",     "OfferTimeZone": "UTC",     "IsCouponOffer": true,     "Status": "A",     "isNew": false,     "UsageLimit": 1,     "RedemptionCodeReqInPurchase": false,     "RedemptionCodeReqInPurchaseOpposite": true,     "IsAvailable": "AVAILABLE",     "IsEligibleOffer": false   }</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="AddProfileRGR" id="200f4639-6ba8-42af-8385-882e3be782d0">
@@ -1755,7 +1453,7 @@ return context.expand( '${#TestCase#SysOfferId}' ) ?: context.expand( '${CreateP
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-    "SysOfferId": "${SysOfferId#result}",
+    "SysOfferId": "${#[ProgramOffers#UpsertTargettedProgramOffers#SysOfferId]#result}",
     "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
     "Offsettime": 0,
     "RedemptionCodeReqInPurchase": false
@@ -2396,7 +2094,7 @@ return context.expand( '${#TestCase#SysOfferId}' ) ?: context.expand( '${CreateP
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="sysOfferId" value="${SysOfferId#result}"/>
+          <con:entry key="sysOfferId" value="${#[ProgramOffers#UpsertTargettedProgramOffers#SysOfferId]#result}"/>
         </con:parameters>
       </con:restRequest>
     </con:config>

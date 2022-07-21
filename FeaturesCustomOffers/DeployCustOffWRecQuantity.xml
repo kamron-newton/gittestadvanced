@@ -23,6 +23,12 @@
       <script>def quantityEventId = context.expand( '${#[OffersPrerequisite#GetEventAttributesByEventType#GetEventAttributesByEventType]#Response#$[?(@.AttributeName==\'Quantity\')].EventAttributeId[0]}' )</script>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="quantityEventIdParent" id="a7b20e25-2ad8-4a7c-9dbf-24a1b34245fe">
+    <con:settings/>
+    <con:config>
+      <script>def quantityEventIdParent = context.expand( '${#[OffersPrerequisite#GetEventAttributesByEventType#GetEventAttributesByEventType]#Response#$[?(@.AttributeName==\'Quantity\')].ParentAttributeId[0]}' )</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="UpdateEventAttributes(Quantity)" id="46a03367-4bd4-4356-bb8f-20e4ddf0e157">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -30,7 +36,7 @@
       <con:properties>
         <con:property>
           <con:name>AttributeJSON</con:name>
-          <con:value>{       "EventAttributeId" : "c2151ab3-6151-4bdd-9912-4dcda83ac7fb",       "ParentAttributeId" : "f6a425ee-5ba7-4d3b-9a53-611a5327aeba",       "EventType" : "PurchaseTxn",       "AttributeName" : "Quantity",       "DataTypeUi" : "Number",       "DataTypeDrl" : "Double",       "AttributeFqn" : "PurchaseTxn.TransactionDetails.Quantity",       "DroolsVariableName" : "$PurchaseTxnTransactionDetails",       "CyclicIndicator" : true,       "CyclicMapField" : "LineItemQuantity",       "CollectionAttribute" : true,       "Status" : "A",    }</con:value>
+          <con:value>{ "EventAttributeId" : "${quantityEventId#result}", "ParentAttributeId" : "${quantityEventIdParent#result}", "EventType" : "PurchaseTxn", "AttributeName" : "Quantity", "DataTypeUi" : "Number", "DataTypeDrl" : "Double", "AttributeFqn" : "PurchaseTxn.TransactionDetails.Quantity", "DroolsVariableName" : "$PurchaseTxnTransactionDetails", "CyclicIndicator" : true, "CyclicMapField" : "LineItemQuantity", "CollectionAttribute" : true, "Status" : "A", }</con:value>
         </con:property>
         <con:property>
           <con:name>eventType</con:name>
@@ -900,6 +906,28 @@
         <con:property>
           <con:name>SysOfferId</con:name>
           <con:value>${#[OffersPrerequisite#GetProgramOffers#GetProgramOffers]#Response#$[0]['SysOfferId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="UpdateEventAttributes(Quantity)Revert" id="17d90ef2-3913-4c66-9523-41fd3900c284">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>73646b48-d758-4ca3-82ee-3a8ec2812b9b</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>AttributeJSON</con:name>
+          <con:value>{ "EventAttributeId" : "${quantityEventId#result}", "ParentAttributeId" : "${quantityEventIdParent#result}", "EventType" : "PurchaseTxn", "AttributeName" : "Quantity", "DataTypeUi" : "Number", "DataTypeDrl" : "Double", "AttributeFqn" : "PurchaseTxn.TransactionDetails.Quantity", "DroolsVariableName" : "$PurchaseTxnTransactionDetails", "CyclicIndicator" : false, "CyclicMapField" : "LineItemQuantity", "CollectionAttribute" : true, "Status" : "A", }</con:value>
+        </con:property>
+        <con:property>
+          <con:name>eventType</con:name>
+          <con:value>PurchaseTxn</con:value>
+        </con:property>
+        <con:property>
+          <con:name>attributeName</con:name>
+          <con:value>Quantity</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>

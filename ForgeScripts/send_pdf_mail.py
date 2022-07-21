@@ -18,11 +18,11 @@ SENDER = "Deepika Vangapally <Deepika.Vangapally@epsilon.com>"
 
 recipients = {
 		"Basic" : ["anish.sekhar@epsilon.com","Deepika.Vangapally@epsilon.com"],
-		"Newton" : ["anish.sekhar@epsilon.com","amresh.kumar@epsilon.com","Deepika.Vangapally@epsilon.com"],
-		"CrimsonHawks" : ["anish.sekhar@epsilon.com","Deepika.Vangapally@epsilon.com"],
-		"Synergy" : ["anish.sekhar@epsilon.com","Deepika.Vangapally@epsilon.com"],
-		"People" : ["anish.sekhar@epsilon.com","Deepika.Vangapally@epsilon.com"],
-		"Delta" : ["anish.sekhar@epsilon.com","Deepika.Vangapally@epsilon.com"],
+		"Newton" : ["AgilityLoyalty_Newton@epsilon.com","Deepika.Vangapally@epsilon.com"],
+		"CrimsonHawks" : ["AgilityLoyalty_CrimsonHawks@epsilon.com","Deepika.Vangapally@epsilon.com"],
+		"Synergy" : ["AgilityLoyalty_Synergy@epsilon.com","Deepika.Vangapally@epsilon.com"],
+		"People" : ["AgilityLoyalty_ThePeople@epsilon.com","Deepika.Vangapally@epsilon.com"],
+		"Delta" : ["AgilityLoyalty_Delta@epsilon.com","Deepika.Vangapally@epsilon.com"],
 }
 
 RECIPIENT = ', '.join(recipients[sys.argv[1]])
@@ -36,7 +36,7 @@ RECIPIENT = ', '.join(recipients[sys.argv[1]])
 AWS_REGION = "us-east-1"
 
 # The subject line for the email.
-SUBJECT = f"Test report for {sys.argv[1]}"
+SUBJECT = f"{sys.argv[2]} - Test report for {sys.argv[1]}"
 
 # The full path to the file that will be attached to the email.
 ATTACHMENT = f"/home/ec2-user/testEngine/reports/{sys.argv[1]}.pdf"

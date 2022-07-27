@@ -1,20 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="f8268479-fc3a-45ec-8b2b-d6126a5601c9" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Upsert Script" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="6de9c4a6-f997-41d3-b07c-5180a9422b5c" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ScriptProcessorAWS" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="f8268479-fc3a-45ec-8b2b-d6126a5601c9fileName">Upsert-Script</con:setting>
+    <con:setting id="6de9c4a6-f997-41d3-b07c-5180a9422b5cfileName">ScriptProcessorAWS</con:setting>
   </con:settings>
-  <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="restrequest" name="Get Script" id="af8c1b90-54e1-4990-b7d9-63b86f2caf65">
+  <con:testStep type="calltestcase" name="RunEnableBatchS3DefaultSetting" id="80cfc2ea-31ce-4bfd-8927-d32c02119206">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/defaultcontent" methodName="Get Default Content" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Get Script" id="56c8e44c-c91e-4648-b535-a4187cbec73a" mediaType="application/json">
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>691913d9-d56f-409d-bc92-80cc04799067</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>BatchS3DefaultSettingId</con:name>
+          <con:value>712a1b34-9c52-db49-8034-6010ab6fe88e</con:value>
+        </con:property>
+        <con:property>
+          <con:name>BatchS3EnabledOriginal</con:name>
+          <con:value>N</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>BatchS3DefaultSettingId</con:entry>
+        <con:entry>BatchS3EnabledOriginal</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="AWSScripts" id="f5c00da3-f987-4fca-bf26-ef61876c0e07">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Directory">
+        <con:configuration>
+          <directory>${#Project#ProjectPath}/References/StandaloneScriptsAWS/ScriptProcessor</directory>
+          <filter>*ScriptProcessorAWS.cs</filter>
+          <encoding/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:preload>true</con:preload>
+      <con:property>data</con:property>
+      <con:property>fileName</con:property>
+      <con:startRow/>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Upsert Script" id="c5ab26c0-b315-40e3-9df8-ac8fef71cd54">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>f8268479-fc3a-45ec-8b2b-d6126a5601c9</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ScriptName</con:name>
+          <con:value>${#TestCase#scriptName}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ScriptContent</con:name>
+          <con:value>${AWSScripts#data}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ScriptId</con:name>
+          <con:value>b6ae607f-3a18-4fcc-b4d3-7a736abb3f89</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ScriptId</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="Loop Script Files" id="f4ceffa0-fd05-41cb-8d79-c98cc4edc649">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>AWSScripts</dataSourceStep>
+      <targetStep>Trim Filename</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Reload Scripts" id="ca5f1176-3359-4b0f-9d02-5e2608bccb77">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/reload" methodName="Reload Scripts" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Reload Scripts" id="20103559-4d5a-49a1-bb29-ef55cb6e2ddf" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/defaultcontent</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="a8d1fcfd-3d80-4090-8de5-3b61698a8fac" name="Smart Assertion for HTTP Status Codes">
+        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/reload</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="ac0b7c79-6fca-40c3-9d4d-96a929a92dc3" name="Smart Assertion for HTTP Status Codes">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -22,635 +99,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Wed, 09 Mar 2022 18:12:46 GMT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['server']</con:path>
-              <con:element>server</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-length']</con:path>
-              <con:element>content-length</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1002</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['language-code']</con:path>
-              <con:element>language-code</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-frame-options']</con:path>
-              <con:element>x-frame-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['pragma']</con:path>
-              <con:element>pragma</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-content-type-options']</con:path>
-              <con:element>x-content-type-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-xss-protection']</con:path>
-              <con:element>x-xss-protection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['connection']</con:path>
-              <con:element>connection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>keep-alive</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['correlationid']</con:path>
-              <con:element>correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>62daead2-9aa6-709b-7a44-ebe8543f062e</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-type']</con:path>
-              <con:element>content-type</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['process-time']</con:path>
-              <con:element>process-time</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>14ms</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['#status#']</con:path>
-              <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['cache-control']</con:path>
-              <con:element>cache-control</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-store,no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['new-correlationid']</con:path>
-              <con:element>new-correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMG1OK8GNBU2:00000018</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Wed, 09 Mar 2022 18:12:46 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1002","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"62daead2-9aa6-709b-7a44-ebe8543f062e","content-type":"application/json; charset=utf-8","process-time":"14ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMG1OK8GNBU2:00000018"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="prePostEvent" value=""/>
-          <con:entry key="scriptName" value="${#TestCase#ScriptName}"/>
-          <con:entry key="Environment" value=""/>
-          <con:entry key="content-type" value=""/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="fusionWebApiId" value=""/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>Authorization</con:entry>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>fusionWebApiId</con:entry>
-          <con:entry>scriptName</con:entry>
-          <con:entry>prePostEvent</con:entry>
-          <con:entry>version</con:entry>
-          <con:entry>Environment</con:entry>
-          <con:entry>content-type</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="Encode Script Content" id="d76cbadf-a9ed-4630-81ff-bc4bf5360153">
-    <con:settings/>
-    <con:config>
-      <script>def script  = context.expand('${#TestCase#ScriptContent}');
-def encodedScript = URLEncoder.encode(script,"UTF-8");
-encodedScript.replace("+","%20");</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="groovy" name="Update if Exists" id="567e9fd9-4419-47d0-ad68-d39651acd26f">
-    <con:settings/>
-    <con:config>
-      <script>def response = context.expand( '${Get Script#Response#$.ScriptId}' )
-
-if(response!="") {
-	context.testCase.setPropertyValue('ScriptId',response)
-	testRunner.gotoStepByName("Update Script")
-}</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="Add Script" id="41f9439e-9334-42e6-8e69-f30eb91cbde6">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts" methodName="Add Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Add Script" id="fb7ff48c-d0bf-4b4e-b695-4721c097882f" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "ScriptName": "${#TestCase#ScriptName}",
-  "ScriptType": "Standalone",
-  "IsStandalone": true,
-  "IsPlaceholder": false,
-  "Content": "${Encode Script Content#result}",
-}</con:request>
-        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="bd04b9c1-1c71-43df-910b-48ff7e645048" name="Smart Assertion for HTTP Status Codes">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Metadata</con:mode>
-            <con:elements>
-              <con:path>$['Headers']['date']</con:path>
-              <con:element>date</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Wed, 09 Mar 2022 18:15:04 GMT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['server']</con:path>
-              <con:element>server</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-length']</con:path>
-              <con:element>content-length</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>904</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['language-code']</con:path>
-              <con:element>language-code</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-frame-options']</con:path>
-              <con:element>x-frame-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['pragma']</con:path>
-              <con:element>pragma</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-content-type-options']</con:path>
-              <con:element>x-content-type-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-xss-protection']</con:path>
-              <con:element>x-xss-protection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['connection']</con:path>
-              <con:element>connection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>keep-alive</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['correlationid']</con:path>
-              <con:element>correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>2769c816-3569-6708-b439-b69fec11fcfa</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-type']</con:path>
-              <con:element>content-type</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['location']</con:path>
-              <con:element>location</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>http://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['process-time']</con:path>
-              <con:element>process-time</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>166ms</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['#status#']</con:path>
-              <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 201 Created</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['cache-control']</con:path>
-              <con:element>cache-control</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-store,no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['new-correlationid']</con:path>
-              <con:element>new-correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMG1OK8GNBTQ:00000844</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Wed, 09 Mar 2022 18:15:04 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"904","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"2769c816-3569-6708-b439-b69fec11fcfa","content-type":"application/json; charset=utf-8","location":"http://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts","process-time":"166ms","#status#":"HTTP/1.1 201 Created","cache-control":"no-store,no-cache","new-correlationid":"0HMG1OK8GNBTQ:00000844"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>Authorization</con:entry>
-          <con:entry>Accept-Language</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="transfer" name="Extract Script Id" id="175f0ceb-86ac-4b41-8942-0c7f52d532a1">
-    <con:settings/>
-    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="false" ignoreEmpty="true" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>ScriptId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>Add Script</con:sourceStep>
-        <con:sourcePath>ScriptId</con:sourcePath>
-        <con:targetType>ScriptId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:targetPath/>
-        <con:type>JSONPATH</con:type>
-        <con:targetTransferType>JSONPATH</con:targetTransferType>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="Update Script" id="ca57747f-41ea-4a40-88d9-b409996f14a9">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptId}" methodName="Update Script" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Update Script" id="9e8e04e4-a1f1-43f0-bdfe-9bdabc1de796" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{
-  "Content": "${Encode Script Content#result}",
-}</con:request>
-        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/4a6646d4-d6a5-4faa-9f70-1db648a464f6</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="10de4720-3683-4dc8-8bfc-212f46a7943e" name="Smart Assertion for HTTP Status Codes">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Metadata</con:mode>
-            <con:elements>
-              <con:path>$['Headers']['date']</con:path>
-              <con:element>date</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Wed, 09 Mar 2022 18:12:46 GMT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['server']</con:path>
-              <con:element>server</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-length']</con:path>
-              <con:element>content-length</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>904</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['language-code']</con:path>
-              <con:element>language-code</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-frame-options']</con:path>
-              <con:element>x-frame-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['pragma']</con:path>
-              <con:element>pragma</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-content-type-options']</con:path>
-              <con:element>x-content-type-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-xss-protection']</con:path>
-              <con:element>x-xss-protection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['connection']</con:path>
-              <con:element>connection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>keep-alive</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['correlationid']</con:path>
-              <con:element>correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>db03f7d7-f460-9c80-daf3-6180bbda9b40</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-type']</con:path>
-              <con:element>content-type</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['process-time']</con:path>
-              <con:element>process-time</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>91ms</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['#status#']</con:path>
-              <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['cache-control']</con:path>
-              <con:element>cache-control</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-store,no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['new-correlationid']</con:path>
-              <con:element>new-correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMG1OK8GNBU2:00000019</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Wed, 09 Mar 2022 18:12:46 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"904","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"db03f7d7-f460-9c80-daf3-6180bbda9b40","content-type":"application/json; charset=utf-8","process-time":"91ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMG1OK8GNBU2:00000019"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="scriptId" value="${#TestCase#ScriptId}"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>scriptId</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>Accept-Language</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="Deploy Script" id="7081e84c-19a2-4c0a-96a1-3855714e333f">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/{scriptId}/deploy" methodName="Deploy Script by Script Id" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Deploy Script" id="601ddb8f-c563-453f-a034-55f59a364a6d" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/4a6646d4-d6a5-4faa-9f70-1db648a464f6/deploy</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="abc3e9f6-f4af-46a5-966b-ceadaa4197da" name="Smart Assertion for HTTP Status Codes">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Metadata</con:mode>
-            <con:elements>
-              <con:path>$['Headers']['date']</con:path>
-              <con:element>date</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Wed, 09 Mar 2022 18:12:46 GMT</con:expectedValue>
+              <con:expectedValue>Wed, 09 Mar 2022 18:12:48 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -730,7 +179,7 @@ if(response!="") {
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>8b8577ed-8395-165f-8f16-90954b06b2fd</con:expectedValue>
+              <con:expectedValue>9f819bea-f3ce-426e-fec8-84123dbb0d2b</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -740,7 +189,7 @@ if(response!="") {
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>15ms</con:expectedValue>
+              <con:expectedValue>1856ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -770,12 +219,12 @@ if(response!="") {
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMG1OK8GNBU2:0000001A</con:expectedValue>
+              <con:expectedValue>0HMG1OK8GNBU2:0000001B</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Wed, 09 Mar 2022 18:12:46 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"8b8577ed-8395-165f-8f16-90954b06b2fd","process-time":"15ms","#status#":"HTTP/1.1 204 No Content","cache-control":"no-store,no-cache","new-correlationid":"0HMG1OK8GNBU2:0000001A"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Wed, 09 Mar 2022 18:12:48 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"9f819bea-f3ce-426e-fec8-84123dbb0d2b","process-time":"1856ms","#status#":"HTTP/1.1 204 No Content","cache-control":"no-store,no-cache","new-correlationid":"0HMG1OK8GNBU2:0000001B"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -785,13 +234,15 @@ if(response!="") {
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="scriptId" value="${Update Script#Response#$.ScriptId}"/>
+          <con:entry key="reloadAllServers" value="true"/>
+          <con:entry key="compile" value="true"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>scriptId</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Accept-Language</con:entry>
+          <con:entry>compile</con:entry>
+          <con:entry>reloadAllServers</con:entry>
         </con:parameterOrder>
         <con:environmentSpec>
           <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
@@ -801,34 +252,679 @@ if(response!="") {
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="restrequest" name="Invoke ScriptProcessorAWS Script" id="7137b128-0c18-4e16-8054-3507acebb422">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="Invoke Script" resourcePath="/api/v1/infrastructure/scripts/{scriptName}/invoke" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Invoke ScriptProcessorAWS Script" id="bebe9c30-9e5d-46e3-8cd1-b6c8d87d5751" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{  
+  "JobName": "ScriptProcessorS3Test",
+  "FileInputLocation": "s3://${#Project#S3Bucket}/ScriptProcessor/Input",
+  "FileOutputLocation": "s3://${#Project#S3Bucket}/ScriptProcessor/Output"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/infrastructure/scripts/VerifyTradeAreaAppend/invoke</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="93c5f1b5-59d3-46af-8f32-106438631583" name="Smart Assertion - Check External Properties">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Data</con:mode>
+            <con:elements>
+              <con:path>$['JobName']</con:path>
+              <con:element>JobName</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ScriptProcessorS3Test</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['FileInputLocation']</con:path>
+              <con:element>FileInputLocation</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>s3://q3alin-al-files/ScriptProcessor/Input</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['FileOutputLocation']</con:path>
+              <con:element>FileOutputLocation</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>s3://q3alin-al-files/ScriptProcessor/Output</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['FileContents']</con:path>
+              <con:element>FileContents</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>4fc6fb27-d43a-4b4c-82dd-1d77f80c41e1*** TOTALCUSTOMERS*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_PTDTOTALCUSTOMERS*** 8abbd1c0-ddc6-d84e-9446-5f19be296e44*** MONTHENROLLMENTS*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_MTDENROLLMENTS*** a139bb55-d364-4042-b24c-1443a1741e21*** MONTHTRANSACTIONS*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_MTDTRANSACTIONS*** 1dd6e686-ec8b-7b43-a6fd-d921a1cdaf1d*** MONTHPOINTS*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_MTDPOINTSEARNED*** f6544145-4ba0-0041-b884-c5da19f5820c*** DAILYPROGRAMSUMMARY*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** f2ce440e-8f8d-4a43-a2d7-5a05f4d442ac*** KPI_DAILYPROGRAMSUMMARY*** dcb4345e-8f08-2340-9196-4ffd435c03ea*** TOPBONUS*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** f2ce440e-8f8d-4a43-a2d7-5a05f4d442ac*** KPI_TOPSIXBONUSES*** ee8bb08f-27a6-7335-e053-5ca8e70a9c05*** TOPREWARDCATEGORY*** A*** SEED_DATA*** 8/9/2019 8:56:53 AM*** SEED_DATA*** 8/9/2019 8:56:53 AM*** f2ce440e-8f8d-4a43-a2d7-5a05f4d442ac*** KPI_TOPREWARDCATEGORY*** ee8bb08f-27a6-8335-e053-5ca8e70a9c05*** CURRENTCERTIFICATES*** A*** SEED_DATA*** 8/9/2019 8:56:53 AM*** SEED_DATA*** 8/9/2019 8:56:53 AM*** f2ce440e-8f8d-4a43-a2d7-5a05f4d442ac*** KPI_CURRENTCERTIFICATES*** ee8bb08f-27a6-9335-e053-5ca8e70a9c05*** TOPREWARDSISSUED*** A*** SEED_DATA*** 8/9/2019 8:56:53 AM*** SEED_DATA*** 8/9/2019 8:56:53 AM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_TOPREWARDSISSUED*** ee8bb08f-27a6-6335-e053-5ca8e70a9c05*** CERTREDEMPTIONRATE*** A*** SEED_DATA*** 8/9/2019 8:56:53 AM*** SEED_DATA*** 8/9/2019 8:56:53 AM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_CERTREDEMPTIONRATE*** bc00b990-7926-6955-e053-5ca8e70a732d*** AVGTRANSAMT*** A*** SEED_DATA*** 8/22/2019 2:54:16 PM*** SEED_DATA*** 8/22/2019 2:54:16 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_AVGTRANSAMT*** bc00b990-7a26-6955-e053-5ca8e70a732d*** CERTIFICATESTATUS*** A*** SEED_DATA*** 8/22/2019 2:54:20 PM*** SEED_DATA*** 8/22/2019 2:54:20 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_CERTIFICATESTATUS*** 369b6257-ea5d-ae4c-9c49-90eefa2e856c*** TIERDISTRIBUTION*** A*** SEED_DATA*** 8/22/2019 2:54:20 PM*** SEED_DATA*** 8/22/2019 2:54:20 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_TIERDISTRIBUTION*** 5bcd2492-7cf0-cf79-e053-5ca8e70a5326*** CUSTOMERBASE*** A*** SEED_DATA*** 9/10/2019 3:49:18 AM*** SEED_DATA*** 9/10/2019 3:49:18 AM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_CUSTOMERBASE***</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['locationCheckResults']['IsExternal']</con:path>
+              <con:element>IsExternal</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>true</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>3</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['locationCheckResults']['LocalFolderTempId']</con:path>
+              <con:element>LocalFolderTempId</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>30e6ea09-b8c9-424c-ae58-3847b071fb54</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['InputLocalFolder']</con:path>
+              <con:element>InputLocalFolder</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>C:\TmpBatch\30e6ea09-b8c9-424c-ae58-3847b071fb54\ScriptProcessor\Input</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['tempFolderExistsAfterCreate']</con:path>
+              <con:element>tempFolderExistsAfterCreate</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>True</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['transferLocalResults']['ActionSuccess']</con:path>
+              <con:element>ActionSuccess</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>true</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>3</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['transferLocalResults']['ActionMessage']</con:path>
+              <con:element>ActionMessage</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1 File(s) transferred</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['transferLocalResults']['ActionObject']</con:path>
+              <con:element>ActionObject</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>ScriptProcessorS3Test_637944682839801767.txt</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['transferLocalResults']['ErrorMessage']</con:path>
+              <con:element>ErrorMessage</con:element>
+              <con:operatorId>9</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue xsi:nil="true"/>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['transferExternalResults']['ActionSuccess']</con:path>
+              <con:element>ActionSuccess</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>true</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>3</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['transferExternalResults']['ActionMessage']</con:path>
+              <con:element>ActionMessage</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Files transferred</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['transferExternalResults']['ErrorMessage']</con:path>
+              <con:element>ErrorMessage</con:element>
+              <con:operatorId>9</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue xsi:nil="true"/>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['removeFolderResults']['ActionSuccess']</con:path>
+              <con:element>ActionSuccess</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>true</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>3</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['removeFolderResults']['ActionMessage']</con:path>
+              <con:element>ActionMessage</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Removed C:\TmpBatch\30e6ea09-b8c9-424c-ae58-3847b071fb54\ScriptProcessor\Input</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['removeFolderResults']['ErrorMessage']</con:path>
+              <con:element>ErrorMessage</con:element>
+              <con:operatorId>9</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue xsi:nil="true"/>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['tempFolderExistsPostRemove']</con:path>
+              <con:element>tempFolderExistsPostRemove</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>False</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{
+  "JobName": "ScriptProcessorS3Test",
+  "FileInputLocation": "s3://q3alin-al-files/ScriptProcessor/Input",
+  "FileOutputLocation": "s3://q3alin-al-files/ScriptProcessor/Output",
+  "FileContents": "4fc6fb27-d43a-4b4c-82dd-1d77f80c41e1*** TOTALCUSTOMERS*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_PTDTOTALCUSTOMERS*** 8abbd1c0-ddc6-d84e-9446-5f19be296e44*** MONTHENROLLMENTS*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_MTDENROLLMENTS*** a139bb55-d364-4042-b24c-1443a1741e21*** MONTHTRANSACTIONS*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_MTDTRANSACTIONS*** 1dd6e686-ec8b-7b43-a6fd-d921a1cdaf1d*** MONTHPOINTS*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_MTDPOINTSEARNED*** f6544145-4ba0-0041-b884-c5da19f5820c*** DAILYPROGRAMSUMMARY*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** f2ce440e-8f8d-4a43-a2d7-5a05f4d442ac*** KPI_DAILYPROGRAMSUMMARY*** dcb4345e-8f08-2340-9196-4ffd435c03ea*** TOPBONUS*** A*** SEED_DATA*** 7/8/2019 3:36:43 PM*** SEED_DATA*** 7/8/2019 3:36:43 PM*** f2ce440e-8f8d-4a43-a2d7-5a05f4d442ac*** KPI_TOPSIXBONUSES*** ee8bb08f-27a6-7335-e053-5ca8e70a9c05*** TOPREWARDCATEGORY*** A*** SEED_DATA*** 8/9/2019 8:56:53 AM*** SEED_DATA*** 8/9/2019 8:56:53 AM*** f2ce440e-8f8d-4a43-a2d7-5a05f4d442ac*** KPI_TOPREWARDCATEGORY*** ee8bb08f-27a6-8335-e053-5ca8e70a9c05*** CURRENTCERTIFICATES*** A*** SEED_DATA*** 8/9/2019 8:56:53 AM*** SEED_DATA*** 8/9/2019 8:56:53 AM*** f2ce440e-8f8d-4a43-a2d7-5a05f4d442ac*** KPI_CURRENTCERTIFICATES*** ee8bb08f-27a6-9335-e053-5ca8e70a9c05*** TOPREWARDSISSUED*** A*** SEED_DATA*** 8/9/2019 8:56:53 AM*** SEED_DATA*** 8/9/2019 8:56:53 AM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_TOPREWARDSISSUED*** ee8bb08f-27a6-6335-e053-5ca8e70a9c05*** CERTREDEMPTIONRATE*** A*** SEED_DATA*** 8/9/2019 8:56:53 AM*** SEED_DATA*** 8/9/2019 8:56:53 AM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_CERTREDEMPTIONRATE*** bc00b990-7926-6955-e053-5ca8e70a732d*** AVGTRANSAMT*** A*** SEED_DATA*** 8/22/2019 2:54:16 PM*** SEED_DATA*** 8/22/2019 2:54:16 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_AVGTRANSAMT*** bc00b990-7a26-6955-e053-5ca8e70a732d*** CERTIFICATESTATUS*** A*** SEED_DATA*** 8/22/2019 2:54:20 PM*** SEED_DATA*** 8/22/2019 2:54:20 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_CERTIFICATESTATUS*** 369b6257-ea5d-ae4c-9c49-90eefa2e856c*** TIERDISTRIBUTION*** A*** SEED_DATA*** 8/22/2019 2:54:20 PM*** SEED_DATA*** 8/22/2019 2:54:20 PM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_TIERDISTRIBUTION*** 5bcd2492-7cf0-cf79-e053-5ca8e70a5326*** CUSTOMERBASE*** A*** SEED_DATA*** 9/10/2019 3:49:18 AM*** SEED_DATA*** 9/10/2019 3:49:18 AM*** 75657f46-2502-46e6-b8af-572239abbca2*** KPI_CUSTOMERBASE*** ",
+  "locationCheckResults": {
+    "IsExternal": true,
+    "LocalFolderTempId": "30e6ea09-b8c9-424c-ae58-3847b071fb54"
+  },
+  "InputLocalFolder": "C:\\TmpBatch\\30e6ea09-b8c9-424c-ae58-3847b071fb54\\ScriptProcessor\\Input",
+  "tempFolderExistsAfterCreate": "True",
+  "transferLocalResults": {
+    "ActionSuccess": true,
+    "ActionMessage": "1 File(s) transferred",
+    "ActionObject": "ScriptProcessorS3Test_637944682839801767.txt",
+    "ErrorMessage": ""
+  },
+  "transferExternalResults": {
+    "ActionSuccess": true,
+    "ActionMessage": "Files transferred",
+    "ErrorMessage": ""
+  },
+  "removeFolderResults": {
+    "ActionSuccess": true,
+    "ActionMessage": "Removed C:\\TmpBatch\\30e6ea09-b8c9-424c-ae58-3847b071fb54\\ScriptProcessor\\Input",
+    "ErrorMessage": ""
+  },
+  "tempFolderExistsPostRemove": "False"
+}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="scriptName" value="${#TestCase#scriptName}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="DeleteScript" id="77649b68-ea6e-4224-9d67-c1a3733d54d6">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>5dad7f25-4040-47ca-b1c1-09b306892da2</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ScriptName</con:name>
+          <con:value>${#TestCase#scriptName}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ScriptId</con:name>
+          <con:value>${Upsert Script#ScriptId}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>ScriptDeleted</con:name>
+          <con:value>true</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ScriptDeleted</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Reload Scripts - After Delete" id="50340044-15dc-47f0-8e27-d5db456ca087">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/infrastructure/scripts/reload" methodName="Reload Scripts" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Reload Scripts - After Delete" id="20103559-4d5a-49a1-bb29-ef55cb6e2ddf" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q7intg-pveapi.epsilonagilityloyalty.com/api/v1/infrastructure/scripts/reload</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="ac0b7c79-6fca-40c3-9d4d-96a929a92dc3" name="Smart Assertion for HTTP Status Codes">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Wed, 09 Mar 2022 18:12:48 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>9f819bea-f3ce-426e-fec8-84123dbb0d2b</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1856ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 204 No Content</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMG1OK8GNBU2:0000001B</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Wed, 09 Mar 2022 18:12:48 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"9f819bea-f3ce-426e-fec8-84123dbb0d2b","process-time":"1856ms","#status#":"HTTP/1.1 204 No Content","cache-control":"no-store,no-cache","new-correlationid":"0HMG1OK8GNBU2:0000001B"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="reloadAllServers" value="true"/>
+          <con:entry key="compile" value="true"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>compile</con:entry>
+          <con:entry>reloadAllServers</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="BatchS3SettingReset" id="6c4769da-022d-47a2-aac0-556c2f7e05e0">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateDefaultSetting" resourcePath="/api/v1/referencedata/programs/defaultsettings/{defaultSettingId}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="BatchS3SettingReset" id="02982e52-8357-4991-a1c4-561796f8ba25" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+    "ParameterName":  "BATCH_S3_ENABLED",
+    "ParameterValue":  "${RunEnableBatchS3DefaultSetting#BatchS3EnabledOriginal}"
+ }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/defaultsettings/</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="104c53ca-2c52-48c7-b829-b4ab6fd88301" name="Smart Assertion - Validating HTTP Status Code 200">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Mon, 04 Apr 2022 18:59:20 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>205</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>f7cc8727-75e1-c658-f7b8-2021d1a7f498</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>30ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMGM5CF41RO7:0000027E</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Mon, 04 Apr 2022 18:59:20 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"205","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"f7cc8727-75e1-c658-f7b8-2021d1a7f498","content-type":"application/json; charset=utf-8","process-time":"30ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGM5CF41RO7:0000027E"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="defaultSettingId" value="${RunEnableBatchS3DefaultSetting#BatchS3DefaultSettingId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="content" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
   <con:properties>
-    <con:property userSpecific="true">
-      <con:name>ScriptName</con:name>
-      <con:value/>
-    </con:property>
-    <con:property userSpecific="true">
-      <con:name>ScriptContent</con:name>
-      <con:value>var sql = "UPDATE T_RETAIL_MATCHBACK_QUEUE SET CURRENT_STATUS = 'R' WHERE ANON_TRANSACTION_ID = :transactionId"; var parameters = new DbParameterCollection();  parameters.Add(new DbParameter("transactionId", input.TransactionId, DbType.String)); verb.ModifyDatabase(sql, parameters);var blah = 1+2;</con:value>
-    </con:property>
-    <con:property userSpecific="true">
-      <con:name>ScriptId</con:name>
-      <con:value>542072b7-847a-48f4-8d9e-2eca9cefbfbd</con:value>
+    <con:property>
+      <con:name>scriptName</con:name>
+      <con:value>ScriptProcessorAWS</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>
   <con:breakPoints>
-    <con:testStepId>af8c1b90-54e1-4990-b7d9-63b86f2caf65</con:testStepId>
+    <con:testStepId>80cfc2ea-31ce-4bfd-8927-d32c02119206</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
   <con:breakPoints>
-    <con:testStepId>175f0ceb-86ac-4b41-8942-0c7f52d532a1</con:testStepId>
+    <con:testStepId>f5c00da3-f987-4fca-bf26-ef61876c0e07</con:testStepId>
     <con:status>NONE</con:status>
     <con:properties/>
   </con:breakPoints>
-  <con:environmentSpec>
-    <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-      <con:authProfile>Inherit From Parent</con:authProfile>
-    </con:entry>
-  </con:environmentSpec>
+  <con:breakPoints>
+    <con:testStepId>c5ab26c0-b315-40e3-9df8-ac8fef71cd54</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f4ceffa0-fd05-41cb-8d79-c98cc4edc649</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>ca5f1176-3359-4b0f-9d02-5e2608bccb77</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>7137b128-0c18-4e16-8054-3507acebb422</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>77649b68-ea6e-4224-9d67-c1a3733d54d6</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>6c4769da-022d-47a2-aac0-556c2f7e05e0</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
 </con:testCase>

@@ -319,7 +319,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>28c2a127-29f7-42c1-8711-b169c797280c</con:value>
+          <con:value>e7736e6b-6387-40c5-a656-165155265764</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -328,17 +328,17 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessProfileProgramOffer" id="9220fa62-de57-4d0b-9f89-d30582451470">
+  <con:testStep type="restrequest" name="ProcessProfileProgramOfferWithCustomAttributes" id="9220fa62-de57-4d0b-9f89-d30582451470">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/profiles/sysoffers" methodName="Process Profile Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ProcessProfileProgramOffer" id="0896945e-1d87-42cf-9d01-21a267eb9d20" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="ProcessProfileProgramOfferWithCustomAttributes" id="0896945e-1d87-42cf-9d01-21a267eb9d20" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
   "SysOfferId": "${GetProgramOffers#Response#$[?(@.ProgramCode=='PP')].['SysOfferId'][0]}",
-  "ProfileId": "${AddProfile#ProfileId}",
+  "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
    "ProfileOfferCustomDataGroup": {
     "EntityName": "PROFILE_OFFER",
     "CustomData": [
@@ -382,10 +382,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileProgramOffersCustomDataValueRequired" id="b57e4c07-5565-4352-ad47-58f090e42b39">
+  <con:testStep type="restrequest" name="GetProfileProgramOffersByCustomDataName" id="b57e4c07-5565-4352-ad47-58f090e42b39">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/sysoffers" methodName="GetProfileProgramOffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProfileProgramOffersCustomDataValueRequired" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
+      <con:restRequest name="GetProfileProgramOffersByCustomDataName" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -413,12 +413,12 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="customDataName" value="${ProfileOffer#CustomDataName2}"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="customDataName" value="${ProfileOffer#CustomDataName2}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>profileId</con:entry>
@@ -444,10 +444,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileProgramOffersCustomDataNameRequired" id="b63faa51-35ee-42be-bcf9-72647bbc3cfb">
+  <con:testStep type="restrequest" name="GetProfileProgramOffersByCustomDataValue" id="b63faa51-35ee-42be-bcf9-72647bbc3cfb">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/sysoffers" methodName="GetProfileProgramOffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProfileProgramOffersCustomDataNameRequired" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
+      <con:restRequest name="GetProfileProgramOffersByCustomDataValue" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -477,7 +477,7 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="customDataValue" value="${ProfileOffer#CustomDataValue2}"/>
-          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -506,10 +506,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileProgramOffersCustomAttributes" id="686a850b-3790-4321-ad0a-98803201d283">
+  <con:testStep type="restrequest" name="GetProfileProgramOffersByCustomAttributes2" id="686a850b-3790-4321-ad0a-98803201d283">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/sysoffers" methodName="GetProfileProgramOffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProfileProgramOffersCustomAttributes" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
+      <con:restRequest name="GetProfileProgramOffersByCustomAttributes2" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -539,7 +539,7 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="customDataValue" value="${ProfileOffer#CustomDataValue2}"/>
-          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="customDataName" value="${ProfileOffer#CustomDataName2}"/>
@@ -602,7 +602,7 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="customDataValue" value="Yes"/>
-          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="customDataName" value="${ProfileOffer#CustomDataName1}"/>
@@ -632,10 +632,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileProgramOffersBooleanCustomAttributes" id="a5d3d560-404e-4224-9fa5-f752b75e9edf">
+  <con:testStep type="restrequest" name="GetProfileProgramOffersByCustomAttributes1" id="a5d3d560-404e-4224-9fa5-f752b75e9edf">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/sysoffers" methodName="GetProfileProgramOffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProfileProgramOffersBooleanCustomAttributes" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
+      <con:restRequest name="GetProfileProgramOffersByCustomAttributes1" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -657,7 +657,127 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" name="Validate OfferCode 2" id="993e0424-900e-4265-94d1-e85237488a30">
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="customDataValue" value="${ProfileOffer#CustomDataValue1}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="customDataName" value="${ProfileOffer#CustomDataName1}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>shortDescription</con:entry>
+          <con:entry>offerCode</con:entry>
+          <con:entry>offerName</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>expirationStartDate</con:entry>
+          <con:entry>expirationEndDate</con:entry>
+          <con:entry>isCouponOffer</con:entry>
+          <con:entry>offerType</con:entry>
+          <con:entry>customDataName</con:entry>
+          <con:entry>customDataValue</con:entry>
+          <con:entry>sortBy</con:entry>
+          <con:entry>numberPerPage</con:entry>
+          <con:entry>pageNumber</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfile2" id="5c685998-53e3-44ee-a2bb-1c6dc96f9e31">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>4feb33bd-a28f-4f85-a240-f12c3daacf8b</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessProfileProgramOfferWithCustomAttributesProfile2" id="f6a8b940-ba01-423d-9ead-4611506fa1db">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/profiles/sysoffers" methodName="Process Profile Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessProfileProgramOfferWithCustomAttributesProfile2" id="0896945e-1d87-42cf-9d01-21a267eb9d20" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SysOfferId": "${GetProgramOffers#Response#$[?(@.ProgramCode=='PP')].['SysOfferId'][0]}",
+  "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
+   "ProfileOfferCustomDataGroup": {
+    "EntityName": "PROFILE_OFFER",
+    "CustomData": [
+      {
+        "CustomDataName": "${ProfileOffer#CustomDataName1}",
+        "CustomDataValue": "${ProfileOffer#CustomDataValue1}"
+      }
+  ]}
+  }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles/sysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="36047709-622e-4c93-8f22-0946d9d2fda2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileProgramOffersByCustomAttributesProfile2" id="4ca5ce71-1e7c-42a5-b151-366151a61f52">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/sysoffers" methodName="GetProfileProgramOffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileProgramOffersByCustomAttributesProfile2" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/sysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="8be5c791-9e54-4bb7-8527-95a13412a5c2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="Validate OfferCode" id="732acf2c-8d79-41ae-883b-4e130cb78dac">
           <con:configuration>
             <path>$.[?(@.SysOfferCode=='${ProgramOffers#OfferCode}')].SysOfferCode[0]</path>
             <content>${ProgramOffers#OfferCode}</content>
@@ -674,7 +794,374 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="customDataValue" value="${ProfileOffer#CustomDataValue1}"/>
-          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="customDataName" value="${ProfileOffer#CustomDataName1}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>shortDescription</con:entry>
+          <con:entry>offerCode</con:entry>
+          <con:entry>offerName</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>expirationStartDate</con:entry>
+          <con:entry>expirationEndDate</con:entry>
+          <con:entry>isCouponOffer</con:entry>
+          <con:entry>offerType</con:entry>
+          <con:entry>customDataName</con:entry>
+          <con:entry>customDataValue</con:entry>
+          <con:entry>sortBy</con:entry>
+          <con:entry>numberPerPage</con:entry>
+          <con:entry>pageNumber</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfile3" id="6fa369e2-db8a-41bb-9b0b-64db54927119">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>d97bb2ae-c55e-4b54-859d-2dce176d4550</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessProfileProgramOfferWithCustomAttributesProfile3" id="8ea29d41-8c01-49d1-9488-117809c18ddb">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/profiles/sysoffers" methodName="Process Profile Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessProfileProgramOfferWithCustomAttributesProfile3" id="0896945e-1d87-42cf-9d01-21a267eb9d20" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SysOfferId": "${GetProgramOffers#Response#$[?(@.ProgramCode=='PP')].['SysOfferId'][0]}",
+  "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
+   "ProfileOfferCustomDataGroup": {
+    "EntityName": "PROFILE_OFFER",
+    "CustomData": [
+      {
+        "CustomDataName": "${ProfileOffer#CustomDataName1}",
+        "CustomDataValue": "${ProfileOffer#CustomDataValue1}"
+      }
+  ]}
+  }</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles/sysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="36047709-622e-4c93-8f22-0946d9d2fda2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileProgramOffersByCustomDataNameProfile3" id="230bda47-9450-4ab7-83a2-a31bb33c1660">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/sysoffers" methodName="GetProfileProgramOffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileProgramOffersByCustomDataNameProfile3" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/sysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="8be5c791-9e54-4bb7-8527-95a13412a5c2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="Validate SysOffers" id="732acf2c-8d79-41ae-883b-4e130cb78dac">
+          <con:configuration>
+            <path>$.ProfileSysOffers</path>
+            <content/>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="customDataValue" value="TRUE"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="customDataName" value="${ProfileOffer#CustomDataName1}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>shortDescription</con:entry>
+          <con:entry>offerCode</con:entry>
+          <con:entry>offerName</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>expirationStartDate</con:entry>
+          <con:entry>expirationEndDate</con:entry>
+          <con:entry>isCouponOffer</con:entry>
+          <con:entry>offerType</con:entry>
+          <con:entry>customDataName</con:entry>
+          <con:entry>customDataValue</con:entry>
+          <con:entry>sortBy</con:entry>
+          <con:entry>numberPerPage</con:entry>
+          <con:entry>pageNumber</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfile4" id="e736f0e0-2beb-4a0b-95d1-0fb8f3ac6d31">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>6d063139-f09a-49e1-8eea-ba1273579a41</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessProfileProgramOfferProfile4" id="b3d2769e-d5a5-42a7-b14f-94da9de9e95e">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/profiles/sysoffers" methodName="Process Profile Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessProfileProgramOfferProfile4" id="0896945e-1d87-42cf-9d01-21a267eb9d20" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SysOfferId": "${GetProgramOffers#Response#$[?(@.ProgramCode=='PP')].['SysOfferId'][0]}",
+  "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles/sysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="36047709-622e-4c93-8f22-0946d9d2fda2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileProgramOffersByCustomAttributesProfile4" id="ebf63bd9-d3f4-416d-833d-828d74294487">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/sysoffers" methodName="GetProfileProgramOffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileProgramOffersByCustomAttributesProfile4" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/sysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="8be5c791-9e54-4bb7-8527-95a13412a5c2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple Contains" id="0446c081-08ad-4da1-abbc-19751a89034d" name="Contains ProfileSysOfferId">
+          <con:configuration>
+            <token>${ProcessProfileProgramOfferProfile4#Response#ProfileSysOfferId}</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="customDataValue" value="${ProfileOffer#CustomDataValue1}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="customDataName" value="${ProfileOffer#CustomDataName1}"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>shortDescription</con:entry>
+          <con:entry>offerCode</con:entry>
+          <con:entry>offerName</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>expirationStartDate</con:entry>
+          <con:entry>expirationEndDate</con:entry>
+          <con:entry>isCouponOffer</con:entry>
+          <con:entry>offerType</con:entry>
+          <con:entry>customDataName</con:entry>
+          <con:entry>customDataValue</con:entry>
+          <con:entry>sortBy</con:entry>
+          <con:entry>numberPerPage</con:entry>
+          <con:entry>pageNumber</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfile5" id="3b1db061-f73a-4d9c-92a4-89f55ad4ef11">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>3a1f9ec9-1c10-40f1-a473-b6e5c3c0dfd1</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessProfileProgramOfferProfile5" id="b55ba455-cfd8-4bb1-9717-c00ac94da296">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/profiles/sysoffers" methodName="Process Profile Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessProfileProgramOfferProfile5" id="0896945e-1d87-42cf-9d01-21a267eb9d20" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SysOfferId": "${GetProgramOffers#Response#$[?(@.ProgramCode=='PP')].['SysOfferId'][0]}",
+  "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}",
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles/sysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="36047709-622e-4c93-8f22-0946d9d2fda2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>201</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProfileProgramOffersByCustomAttributesProfile5" id="96f4be42-cbc6-4318-a328-ea6506c9e8d5">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/sysoffers" methodName="GetProfileProgramOffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileProgramOffersByCustomAttributesProfile5" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profileId/sysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="8be5c791-9e54-4bb7-8527-95a13412a5c2" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple Contains" id="0446c081-08ad-4da1-abbc-19751a89034d" name="Contains ProfileSysOfferId">
+          <con:configuration>
+            <token>${ProcessProfileProgramOfferProfile4#Response#ProfileSysOfferId}</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="customDataValue" value="TRUE"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="customDataName" value="${ProfileOffer#CustomDataName1}"/>

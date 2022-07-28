@@ -36,7 +36,7 @@ RECIPIENT = ', '.join(recipients[sys.argv[1]])
 AWS_REGION = "us-east-1"
 
 # The subject line for the email.
-SUBJECT = f"{sys.argv[2]} - Test report - {sys.argv[3]} ({sys.argv[4]}) - {sys.argv[1]}"
+SUBJECT = f"{sys.argv[2]} - Test report - {sys.argv[3]} ({sys.argv[4]}) - {sys.argv[1]} - {sys.argv[5]} {sys.argv[6]} {sys.argv[7]}"
              
          
 # The full path to the file that will be attached to the email.

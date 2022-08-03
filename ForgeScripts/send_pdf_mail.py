@@ -40,10 +40,10 @@ SUBJECT = f"{Test report - {sys.argv[2]}}"
              
         
 # The full path to the file that will be attached to the email.
-ATTACHMENT = f"/home/ec2-user/testEngine/reports/{sys.argv[2].pdf}"
+ATTACHMENT = f"/home/ec2-user/testEngine/reports/{sys.argv[2]}.pdf"
 
 # The email body for recipients with non-HTML email clients.
-BODY_TEXT = f"Hello,\r\nPlease see the attached test run report {sys.argv[2].pdf}"
+BODY_TEXT = f"Hello,\r\nPlease see the attached test run report {sys.argv[2]}.pdf"
 
 # The character encoding for the email.
 CHARSET = "utf-8"

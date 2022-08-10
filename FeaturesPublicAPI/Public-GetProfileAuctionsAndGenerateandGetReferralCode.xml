@@ -28,11 +28,11 @@
         </con:property>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>8a5a5fbd-dabb-474d-967e-fadddf898408</con:value>
+          <con:value>d4227782-2305-4720-a3cc-70abf055d0d2</con:value>
         </con:property>
         <con:property>
           <con:name>AccessToken</con:name>
-          <con:value>6a948521-32f9-4690-aac2-c127cb198f50</con:value>
+          <con:value>b27dcdc6-5c70-4c71-8c83-b1be2df477bc</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -223,7 +223,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
-          <con:entry key="profileId" value="${#[Profile#PublicAddProfile#PublicAddProfile]#Response#$['ProfileId']}"/>
+          <con:entry key="profileId" value="${CreateProfileToken#ProfileId}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="auctionCode" value="PPPRINCESS_JEFF"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -415,7 +415,7 @@
             <con:originalMessage>{"Headers":{"date":"Mon, 08 Aug 2022 19:56:09 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"409","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"68137be0-2cc8-4203-d43c-2ab0dac61277","content-type":"application/json; charset=utf-8","location":"http://q3alin-pcapi.skynetlowerenv.com/api/v1/profiles/085c2ab5-5041-43ef-8c80-aecd8c001ed8/referral/code","process-time":"29ms","#status#":"HTTP/1.1 201 Created","cache-control":"no-store,no-cache","new-correlationid":"0HMJP5OB55FH4:00000194"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="DataAndMetadataAssertion" id="0a372745-0b36-4508-8af6-68fdc745ecca" name="Smart Assertion">
+        <con:assertion type="DataAndMetadataAssertion" id="0a372745-0b36-4508-8af6-68fdc745ecca" name="Validating program code">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Data</con:mode>
             <con:elements>
@@ -528,7 +528,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
-          <con:entry key="profileId" value="${#[Profile#PublicAddProfile#PublicAddProfile]#Response#$['ProfileId']}"/>
+          <con:entry key="profileId" value="${CreateProfileToken#ProfileId}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
@@ -709,19 +709,19 @@
             <con:originalMessage>{"Headers":{"date":"Mon, 08 Aug 2022 20:39:52 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"390","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"3449c068-a3b6-a7bd-35b1-8ccb73e5a953","content-type":"application/json; charset=utf-8","process-time":"9ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMJP5OB55FH3:000001D6"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="fd01e1c1-276c-4090-9d14-7a0e3e882771" name="JSONPath Match">
+        <con:assertion type="JsonPath Match" id="fd01e1c1-276c-4090-9d14-7a0e3e882771" name="Validating ProfileID">
           <con:configuration>
-            <path>${GetReferralByCode#Response#$['ProfileId']}</path>
-            <content/>
+            <path>$['ProfileId']</path>
+            <content>${#[Profile#PublicAddProfile#PublicAddProfile]#Response#$['ProfileId']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="e21e7438-b51a-4c41-a7bd-ca3f9b79e6c2" name="JSONPath Match 2">
+        <con:assertion type="JsonPath Match" id="e21e7438-b51a-4c41-a7bd-ca3f9b79e6c2" name="Validating ReferralCode ">
           <con:configuration>
-            <path>${GetReferralByCode#Response#$['ReferralCode']}</path>
-            <content/>
+            <path>$['ReferralCode']</path>
+            <content>${GenerateProfileReferralCode#Response#$['ReferralCode']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>

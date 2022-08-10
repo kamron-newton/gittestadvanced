@@ -359,6 +359,46 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
+  <con:testStep id="61c2c9d3-90e5-44b6-ab61-8002c0bbe777" name="Programs" type="datasource">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Programs.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>true</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>OrganizationCode</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>PointTypeCode1</con:property>
+      <con:property>IsDefaultPointType1</con:property>
+      <con:property>PointTypeCode2</con:property>
+      <con:property>IsDefaultPointType2</con:property>
+      <con:property>PointTypeCode3</con:property>
+      <con:property>IsDefaultPointType3</con:property>
+      <con:property>ProgramName</con:property>
+      <con:property>ProgramDescription</con:property>
+      <con:property>IsCrmProgram</con:property>
+      <con:property>ProgramBusinessAllianceManager</con:property>
+      <con:property>DefaultCalendarType</con:property>
+      <con:property>TermsAndConditions1</con:property>
+      <con:property>TermsAndConditions2</con:property>
+      <con:property>TermsAndConditions3</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="GetPointTypes" id="df0dbd1e-200c-4d6a-8afb-5e3057c5a095">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes" methodName="GetPointTypes" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -436,6 +476,228 @@
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="node1Value" value="${GetPointTypes#Response#$[0]['RefPointTypeId']}"/>
         </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="bd7c4b3a-36d9-4b29-b5ab-0b1fb3c68dc2" name="UpdateProgram" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="UpdateProgram" resourcePath="/api/v1/referencedata/programs/programs" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="bd535db1-3698-4b73-b908-a3a99845318f" mediaType="application/json" name="UpdateProgram" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "OrgCode":"${Programs#OrganizationCode}",
+  "ProgramCode": "${Programs#ProgramCode}",  
+  "Name": "${Programs#ProgramName}",
+  "Description": "${Programs#ProgramDescription}",
+  "BusinessAllianceManager": "${Programs#ProgramBusinessAllianceManager}",
+  "DefaultCalendarType":"${Programs#DefaultCalendarType}",
+  "TermsAndConditions1": "${Programs#TermsAndConditions1}",
+  "TermsAndConditions2": "${Programs#TermsAndConditions2}",
+  "TermsAndConditions3": "${Programs#TermsAndConditions3}",
+  "Status": "A",
+  "StartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
+  "PointTypes": [
+    {
+      "PointTypeCode": "${Programs#PointTypeCode1}",
+      "DefaultIndicator": "${Programs#IsDefaultPointType1}",
+    },
+  {
+      "PointTypeCode": "${Programs#PointTypeCode2}",
+      "DefaultIndicator": "${Programs#IsDefaultPointType2}",
+    },
+		{
+		  "PointTypeCode": "${Programs#PointTypeCode3}",
+		  "DefaultIndicator": "${Programs#IsDefaultPointType3}"
+		}
+  ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/programs</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="2579dff6-dfd3-4205-b63c-61da96a25afa" name="Smart Assertion for HTTP Status Code">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Mon, 07 Mar 2022 17:38:06 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>2345</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>50a754d1-ae91-cc94-a1d6-0e1cc3ca738e</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>22ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMG0BF8LVV99:000002DE</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Mon, 07 Mar 2022 17:38:06 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"2345","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"50a754d1-ae91-cc94-a1d6-0e1cc3ca738e","content-type":"application/json; charset=utf-8","process-time":"22ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMG0BF8LVV99:000002DE"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${Programs#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
@@ -535,7 +797,7 @@ else testRunner.gotoStepByName("AddProfile")</script>
           <con:value>40b300be-98d0-44a1-b908-c9ec2a3d2d73</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties></con:returnProperties>
+      <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
@@ -1069,7 +1331,7 @@ return lastYearDate;</script>
           <con:value>d30110e0-ac95-4a52-8068-f9ef0c3d681a</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties></con:returnProperties>
+      <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
@@ -1084,7 +1346,7 @@ return lastYearDate;</script>
         </con:property>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>${AddSourceProfile#ProfileId}</con:value>
+          <con:value>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</con:value>
         </con:property>
         <con:property>
           <con:name>AdjustmentReason</con:name>
@@ -1915,7 +2177,7 @@ return lastYearDate;</script>
           <con:value>64f14902-e215-4eea-866c-dd1d21c74c06</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties></con:returnProperties>
+      <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>

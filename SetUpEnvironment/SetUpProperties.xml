@@ -68,6 +68,40 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
+  <con:testStep type="datasource" name="BasicTestUserSettings" id="b666be9a-bc53-456e-b31d-8f124774d097">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${=project.path}/References/BasicTestUserSettings.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>BaseWebApiAddress</con:property>
+      <con:property>BasicAuthorization</con:property>
+      <con:property>SystemUser</con:property>
+      <con:property>SystemUserPassword</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>AnonymousWebApiAddress</con:property>
+      <con:property>AnonymousBasicAuthorization</con:property>
+      <con:property>PublicBaseWebApiAddress</con:property>
+      <con:property>PublicBasicAuthorization</con:property>
+      <con:property>S3Bucket</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
   <con:testStep id="32b32239-f917-4903-a48f-c1f6562f2608" name="DatahubSettingsOrchestration" type="datasource">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -144,6 +178,20 @@ def systemUserPasswordOrchestration = context.expand( '${DatahubSettingsOrchestr
 testRunner.testCase.testSuite.project.setPropertyValue( "BasicAuthorizationOrchestration", basicAuthorizationOrchestration) 
 testRunner.testCase.testSuite.project.setPropertyValue( "SystemUserOrchestration", systemUserOrchestration) 
 testRunner.testCase.testSuite.project.setPropertyValue( "SystemUserPasswordOrchestration", systemUserPasswordOrchestration)</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="LoadBasicTestUserSettingsToProject" id="72dc935a-89f3-4fb4-9d77-afa33c8662ec">
+    <con:settings/>
+    <con:config>
+      <script>def basicAuthorizationTestUser = context.expand( '${BasicTestUserSettings#BasicAuthorization}' )
+def systemTestUser = context.expand( '${BasicTestUserSettings#SystemUser}' )
+def systemTestUserPassword = context.expand( '${BasicTestUserSettings#SystemUserPassword}' )
+def programCode= context.expand( '${BasicTestUserSettings#ProgramCode}' )
+
+testRunner.testCase.testSuite.project.setPropertyValue( "BasicAuthorizationTestUser", basicAuthorizationTestUser) 
+testRunner.testCase.testSuite.project.setPropertyValue( "SystemTestUser", systemTestUser) 
+testRunner.testCase.testSuite.project.setPropertyValue( "SystemTestUserPassword", systemTestUserPassword)
+testRunner.testCase.testSuite.project.setPropertyValue("ProgramCode",programCode)</script>
     </con:config>
   </con:testStep>
   <con:properties/>

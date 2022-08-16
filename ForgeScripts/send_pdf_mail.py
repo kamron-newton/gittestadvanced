@@ -9,9 +9,17 @@ from email.mime.application import MIMEApplication
 #the first CLI argument must be the team name. It should  be in the exact same format as report names, with first letter capitalized (Newton, Synergy, etc.)
 print(f"The input team is {sys.argv[1]}")
 
+senders = {
+		"Basic" : ["AgilityLoyalty_Delta@epsilon.com"],
+		"Newton" : ["AgilityLoyalty_Newton@epsilon.com"],
+		"CrimsonHawks" : ["AgilityLoyalty_CrimsonHawks@epsilon.com"],
+		"Synergy" : ["AgilityLoyalty_Synergy@epsilon.com"],
+		"People" : ["AgilityLoyalty_ThePeople@epsilon.com"],
+		"Delta" : ["AgilityLoyalty_Delta@epsilon.com"],
+}
 # Replace sender@example.com with your "From" address.
 # This address must be verified with Amazon SES.
-SENDER = "Deepika Vangapally <Deepika.Vangapally@epsilon.com>"
+SENDER = ', '.join(senders[sys.argv[1]])
 
 # Replace recipient@example.com with a "To" address. If your account 
 # is still in the sandbox, this address must be verified.

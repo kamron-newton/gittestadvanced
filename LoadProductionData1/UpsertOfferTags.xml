@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="000f7d0d-80c6-4ff6-8d9b-d82676e824aa" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertOfferTags" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="000f7d0d-80c6-4ff6-8d9b-d82676e824aafileName">UpsertOfferTags</con:setting>
+  </con:settings>
+  <con:testStep type="datasource" name="OfferTag" id="38923bda-389c-49ab-abb2-a17338c44953">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/OfferTag.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>TagCode</con:property>
+      <con:property>CategoryCode</con:property>
+      <con:property>TagName</con:property>
+      <con:property>TagDescription</con:property>
+      <con:property>Status</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetOfferTagByCode" id="031e12b9-3b54-42de-8a67-d6f7d8230f23">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/offers/tags/{tagCode}" methodName="GetOfferTagByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetOfferTagByCode" id="85708b6d-1945-4288-9385-aae762a1881c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/offers/tags/tagCode</con:originalUri>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="tagCode" value="${OfferTag#TagCode}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>tagCode</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="OfferCondition" id="c50149c7-95fa-4def-b74a-82b8fc38d61a">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${GetOfferTagByCode#HarResponse#$[\'status\']}' ).toInteger()
+if (status != 200) testRunner.gotoStepByName("AddOfferTag")
+ else
+ 	testRunner.gotoStepByName("UpdateOfferTag")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddOfferTag" id="116df4f2-24fa-4de7-b882-4ac933e9b895">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/offers/tags" methodName="ProcessOfferTags" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddOfferTag" id="e2995e7c-e577-4240-80ee-ead1c1d5a030" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[{
+	"TagCode": "${OfferTag#TagCode}",
+	"CategoryCode": "${OfferTag#CategoryCode}",
+	"TagName": "${OfferTag#TagName}",
+	"TagDescription": "${OfferTag#TagDescription}"
+}]</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/offers/tags</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f3d2b36a-ec50-4fd8-b1f4-7cea06cc8a05" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="9f3d4f92-ee24-4a33-93dd-ca1bc4765034" name="Validate Tag Status">
+          <con:configuration>
+            <path>$[0]['Status']</path>
+            <content>${AddOfferTag#Response#$[0]['Status']}</content>
+            <allowWildcards>true</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateOfferTag" id="b585b68f-696a-4f70-96c7-c0ac08bdea1c">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/offers/tags" methodName="ProcessOfferTags" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateOfferTag" id="e2995e7c-e577-4240-80ee-ead1c1d5a030" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[{
+	"TagCode": "${OfferTag#TagCode}",
+	"CategoryCode": "${OfferTag#CategoryCode}",
+	"TagName": "${OfferTag#TagName}",
+	"TagDescription": "${OfferTag#TagDescription}",
+	"Status": "A"
+}]</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/offers/tags</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f3d2b36a-ec50-4fd8-b1f4-7cea06cc8a05" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="OfferTagLoop" id="48ade98f-b842-4486-b736-00eb699d4e43">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>OfferTag</dataSourceStep>
+      <targetStep>GetOfferTagByCode</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

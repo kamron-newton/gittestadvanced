@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="8999a980-0418-4f71-8a4f-e191090aec55" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="OfferTagsTranslations" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="8999a980-0418-4f71-8a4f-e191090aec55fileName">OfferTagsTranslations</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="UpsertOfferTags" id="7bd26bba-169f-4c01-971d-bbc9513c9e90">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" ignoreEmptyProperties="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>3a2aa9c5-a1b7-447d-8db8-8c5d4eee004a</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>TagId</con:name>
+          <con:value>34b7a038-a81d-4d8e-a215-486242f1efd7</con:value>
+        </con:property>
+        <con:property>
+          <con:name>TagCode</con:name>
+          <con:value>US_Holiday220826192845307</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>TagId</con:entry>
+        <con:entry>TagCode</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="TransferEntityId" id="8d980f11-ec05-40c0-b706-318cb2f5c182">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>EntityId</con:name>
+        <con:sourceType>TagId</con:sourceType>
+        <con:sourceStep>UpsertOfferTags</con:sourceStep>
+        <con:sourcePath/>
+        <con:targetType>EntityId</con:targetType>
+        <con:targetStep>ProcessTranslations</con:targetStep>
+        <con:targetPath/>
+        <con:type>XPATH</con:type>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="ProcessTranslations" id="cd21c87a-2146-47c6-ac95-4562140cba29">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" ignoreEmptyProperties="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>73c62997-e67d-41b2-9d0b-6438a6007fff</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EntityName</con:name>
+          <con:value>OFFER_TAGS</con:value>
+        </con:property>
+        <con:property>
+          <con:name>EntityId</con:name>
+          <con:value>34b7a038-a81d-4d8e-a215-486242f1efd7</con:value>
+        </con:property>
+        <con:property>
+          <con:name>InvalidLanguageLocaleToTranslate</con:name>
+          <con:value>WRONG</con:value>
+        </con:property>
+        <con:property>
+          <con:name>LanguageCodeToTranslate</con:name>
+          <con:value>DE_DE</con:value>
+        </con:property>
+        <con:property>
+          <con:name>InvalidEntityNameToTranslate</con:name>
+          <con:value>InvalidEntityName</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetOfferTagByCodeForEnUs" id="11cb07d5-76bd-4a12-8d9f-40eb12899a44">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/offers/tags/{tagCode}" methodName="GetOfferTagByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetOfferTagByCodeForEnUs" id="85708b6d-1945-4288-9385-aae762a1881c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/offers/tags/tagCode</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9d9c28ab-396f-44df-8b57-9bcf722fa2a8" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="dba70a33-d3ee-404a-a112-a2b82d910701" name="Validate Attribute Value in en-US">
+          <con:configuration>
+            <path>$['TagDescription']</path>
+            <content>${#[FeaturesProfileOffersAndRecommendation#UpsertOfferTags#Add_OfferTag]#Response#$[0]['TagDescription']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="tagCode" value="${UpsertOfferTags#TagCode}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>tagCode</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetOfferTagByCodeForDeDe" id="d319cf20-56e9-4972-895e-71def2bfd53e">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/offers/tags/{tagCode}" methodName="GetOfferTagByCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetOfferTagByCodeForDeDe" id="85708b6d-1945-4288-9385-aae762a1881c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/offers/tags/tagCode</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9d9c28ab-396f-44df-8b57-9bcf722fa2a8" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="dba70a33-d3ee-404a-a112-a2b82d910701" name="Validate Attribute Value in de-DE">
+          <con:configuration>
+            <path>$['TagName']</path>
+            <content>${#[ReferenceData#ProcessTranslations#UpdateTranslation]#Response#$['TranslationEntityAttributes'][0]['AttributeValue']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="tagCode" value="${UpsertOfferTags#TagCode}"/>
+          <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>tagCode</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

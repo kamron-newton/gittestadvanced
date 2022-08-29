@@ -548,10 +548,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Add_OfferTag" id="619bff22-9ae1-42d0-99f3-bd7026bac589">
+  <con:testStep type="restrequest" name="Add_Multiple_OfferTags" id="619bff22-9ae1-42d0-99f3-bd7026bac589">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/offers/tags" methodName="ProcessOfferTags" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Add_OfferTag" id="e2995e7c-e577-4240-80ee-ead1c1d5a030" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="Add_Multiple_OfferTags" id="e2995e7c-e577-4240-80ee-ead1c1d5a030" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -561,6 +561,12 @@
 	"CategoryCode": "${OfferTag#CategoryCode}",
 	"TagName": "${OfferTag#TagName}",
 	"TagDescription": "${OfferTag#TagDescription}"
+},
+{
+	"TagCode": "${OtherOfferTag#TagCode}${=new java.text.SimpleDateFormat('yyMMddHHmmssSSS').format(new Date())}",
+	"CategoryCode": "${OtherOfferTag#CategoryCode}",
+	"TagName": "${OtherOfferTag#TagName}",
+	"TagDescription": "${OtherOfferTag#TagDescription}"
 }]</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/offers/tags</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="f3d2b36a-ec50-4fd8-b1f4-7cea06cc8a05" name="Valid HTTP Status Codes">
@@ -572,7 +578,7 @@
         <con:assertion type="JsonPath Match" id="9f3d4f92-ee24-4a33-93dd-ca1bc4765034" name="Validate Tag Status">
           <con:configuration>
             <path>$[0]['Status']</path>
-            <content>${Add_OfferTag#Response#$[0]['Status']}</content>
+            <content>${Add_Multiple_OfferTags#Response#$[0]['Status']}</content>
             <allowWildcards>true</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -605,11 +611,11 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>[{
-	"TagCode": "${Add_OfferTag#Response#$[0].TagCode}",
+	"TagCode": "${Add_Multiple_OfferTags#Response#$[0].TagCode}",
 	"CategoryCode": "${OtherOfferTag#CategoryCode}",
-	"TagName": "${Add_OfferTag#Response#$[0].TagName}",
-	"TagDescription": "${Add_OfferTag#Response#$[0].TagDescription}",
-	"Status": "${Add_OfferTag#Response#$[0].Status}"
+	"TagName": "${Add_Multiple_OfferTags#Response#$[0].TagName}",
+	"TagDescription": "${Add_Multiple_OfferTags#Response#$[0].TagDescription}",
+	"Status": "${Add_Multiple_OfferTags#Response#$[0].Status}"
 }]</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/offers/tags</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="f3d2b36a-ec50-4fd8-b1f4-7cea06cc8a05" name="Valid HTTP Status Codes">
@@ -630,10 +636,94 @@
         <con:assertion type="JsonPath Match" id="6e21c4d8-19f6-462d-8d7f-93eadcd65ec3" name="Validate Tag Code">
           <con:configuration>
             <path>$[0]['TagCode']</path>
-            <content>${Add_OfferTag#Response#$[0]['TagCode']}</content>
+            <content>${Add_Multiple_OfferTags#Response#$[0]['TagCode']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="Update_TagName_Validate_MaxLength" id="c1a7bf1e-2dad-449b-875a-8e3589ba4a32">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/offers/tags" methodName="ProcessOfferTags" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Update_TagName_Validate_MaxLength" id="e2995e7c-e577-4240-80ee-ead1c1d5a030" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[{
+	"TagCode": "${Add_Multiple_OfferTags#Response#$[0].TagCode}",
+	"CategoryCode": "${OtherOfferTag#CategoryCode}",
+	"TagName": "${OfferTag#TagName}${=new java.text.SimpleDateFormat('yyyyMMd').format(new Date())}${=java.util.UUID.randomUUID()}",
+	"TagDescription": "${OfferTag#TagDescription}",
+	"Status": "${Add_Multiple_OfferTags#Response#$[0].Status}"
+}]</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/offers/tags</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f3d2b36a-ec50-4fd8-b1f4-7cea06cc8a05" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>400</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="DataAndMetadataAssertion" id="1283da7b-e33e-4e09-83d1-bcfe86c3de89" name="Validate Error">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Data</con:mode>
+            <con:elements>
+              <con:path>$['ErrorCode']</con:path>
+              <con:element>ErrorCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>ModelStateValidation</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Message']</con:path>
+              <con:element>Message</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>The request is invalid.</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['ModelState'][0]['Message']</con:path>
+              <con:element>Message</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>The field TagName must be a string or array type with a maximum length of '50'.</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{
+  "ErrorCode": "ModelStateValidation",
+  "Message": "The request is invalid.",
+  "ModelState": [
+    {
+      "Message": "The field TagName must be a string or array type with a maximum length of '50'."
+    }
+  ]
+}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -663,11 +753,11 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>[{
-	"TagCode": "${Add_OfferTag#Response#$[0].TagCode}",
+	"TagCode": "${Add_Multiple_OfferTags#Response#$[0].TagCode}",
 	"CategoryCode": "${OtherOfferTag#CategoryCode}",
 	"TagName": "Updated Tag Name",
 	"TagDescription": "Updated Tag Desciption",
-	"Status": "${Add_OfferTag#Response#$[0].Status}"
+	"Status": "${Add_Multiple_OfferTags#Response#$[0].Status}"
 }]</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/offers/tags</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="f3d2b36a-ec50-4fd8-b1f4-7cea06cc8a05" name="Valid HTTP Status Codes">
@@ -679,7 +769,7 @@
         <con:assertion type="JsonPath Match" id="6e21c4d8-19f6-462d-8d7f-93eadcd65ec3" name="Validate Tag Code">
           <con:configuration>
             <path>$[0]['TagCode']</path>
-            <content>${Add_OfferTag#Response#$[0]['TagCode']}</content>
+            <content>${Add_Multiple_OfferTags#Response#$[0]['TagCode']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -1397,7 +1487,7 @@
         <con:assertion type="JsonPath Match" id="a5de3399-b5d8-4cc4-b096-f9a2fa3ab085" name="Validate Offer Tag">
           <con:configuration>
             <path>$['OfferTags'][0]['OfferTagId']</path>
-            <content>${Add_OfferTag#Response#$[0]['TagId']}</content>
+            <content>${GetOfferTags_Active_Status#Response#$[0]['TagId']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -1490,8 +1580,8 @@
 		{ 	"CustomDataName": "OFFER_BOL", 	"CustomDataValue": "FALSE"               }   ]},   
 		"Status": "A",
 		"OfferTags" :[
-			{"OfferTagId" : "${Add_OfferTag#Response#$[0]['TagId']}"},
-			{"OfferTagId" : "${Add_OfferTag#Response#$[0]['TagId']}"}
+			{"OfferTagId" : "${Add_Multiple_OfferTags#Response#$[0]['TagId']}"},
+			{"OfferTagId" : "${Add_Multiple_OfferTags#Response#$[0]['TagId']}"}
 		] 
 		}</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
@@ -2208,10 +2298,17 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>[{
-	"TagCode": "${Add_OfferTag#Response#$[0].TagCode}",
-	"CategoryCode": "${Add_OfferTag#Response#$[0].CategoryCode}",
-	"TagName": "${Add_OfferTag#Response#$[0].TagName}",
-	"TagDescription": "${Add_OfferTag#Response#$[0].TagDescription}",
+	"TagCode": "${Add_Multiple_OfferTags#Response#$[0].TagCode}",
+	"CategoryCode": "${Add_Multiple_OfferTags#Response#$[0].CategoryCode}",
+	"TagName": "${Add_Multiple_OfferTags#Response#$[0].TagName}",
+	"TagDescription": "${Add_Multiple_OfferTags#Response#$[0].TagDescription}",
+	"Status": "I"
+},
+{
+	"TagCode": "${Add_Multiple_OfferTags#Response#$[1].TagCode}",
+	"CategoryCode": "${Add_Multiple_OfferTags#Response#$[1].CategoryCode}",
+	"TagName": "${Add_Multiple_OfferTags#Response#$[1].TagName}",
+	"TagDescription": "${Add_Multiple_OfferTags#Response#$[1].TagDescription}",
 	"Status": "I"
 }]</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/offers/tags</con:originalUri>
@@ -2233,7 +2330,7 @@
         <con:assertion type="JsonPath Match" name="Validate Tag Code" id="427893d5-9485-430f-b650-ab4777945b36">
           <con:configuration>
             <path>$[0]['TagCode']</path>
-            <content>${Add_OfferTag#Response#$[0]['TagCode']}</content>
+            <content>${Add_Multiple_OfferTags#Response#$[0]['TagCode']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -2519,7 +2616,7 @@
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
         <con:name>Id</con:name>
         <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>Add_OfferTag</con:sourceStep>
+        <con:sourceStep>Add_Multiple_OfferTags</con:sourceStep>
         <con:sourcePath>$[0]['TagId']</con:sourcePath>
         <con:targetType>TagId</con:targetType>
         <con:targetStep>#TestCase#</con:targetStep>
@@ -2536,7 +2633,7 @@
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
         <con:name>Id</con:name>
         <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>Add_OfferTag</con:sourceStep>
+        <con:sourceStep>Add_Multiple_OfferTags</con:sourceStep>
         <con:sourcePath>$[0]['TagCode']</con:sourcePath>
         <con:targetType>TagCode</con:targetType>
         <con:targetStep>#TestCase#</con:targetStep>
@@ -2548,11 +2645,11 @@
     </con:config>
   </con:testStep>
   <con:properties>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>TagId</con:name>
       <con:value>419c863a-fccc-456c-a442-74373e10086c</con:value>
     </con:property>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>TagCode</con:name>
       <con:value>US_Holiday220829130042623</con:value>
     </con:property>

@@ -882,6 +882,12 @@ return EventStatus</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="delay" name="Delay" id="858610f9-735c-413a-97b2-aa57a77c7ac5">
+    <con:settings/>
+    <con:config>
+      <delay>10000</delay>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="ProcessTransaction" id="26dcbe2f-003b-4bd1-8260-26afe3e0eb01">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/transaction" methodName="ProcessTransaction" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1110,13 +1116,7 @@ return EventStatus</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="delay" name="Delay" id="858610f9-735c-413a-97b2-aa57a77c7ac5">
-    <con:settings/>
-    <con:config>
-      <delay>5000</delay>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="GetPointsSummary 2" id="7115cdbc-85cb-4dea-bceb-1cfee8c5f72b" disabled="true">
+  <con:testStep type="restrequest" name="GetPointsSummary 2" id="7115cdbc-85cb-4dea-bceb-1cfee8c5f72b">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/points/summary" methodName="GetPointsSummary" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetPointsSummary 2" id="90aa5f43-a530-41eb-9446-2dde6c33780e" mediaType="application/json">
@@ -1284,7 +1284,7 @@ return EventStatus</script>
         </con:assertion>
         <con:assertion type="JsonPath Match" id="986d2105-9117-458e-a36f-cf90bd56e406" name="PointAmount Validation">
           <con:configuration>
-            <path>$.[?(@.ActTransactionId == '${PurchaseTransaction#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${#[OffersPrerequisite#GetMomentByCode#GetMomentByCode]#Response#$['MomentId']}')].PointsAmount</path>
+            <path>$.[?(@.ActTransactionId == '${ProcessTransaction#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${#[OffersPrerequisite#GetMomentByCode#GetMomentByCode]#Response#$['MomentId']}')].PointsAmount</path>
             <content>[15.0]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -1298,7 +1298,7 @@ return EventStatus</script>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${#[Profile#AddProfileRGRDiffPrgCode#AddProfileRGRDiffPrgCode]#Response#$['ProfileId']}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="status" value="A"/>
         </con:parameters>

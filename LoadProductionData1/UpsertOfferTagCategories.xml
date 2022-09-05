@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="33ff60bc-83b9-4ca5-85bb-d1b2a6741f12" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertOfferTagCategories" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="33ff60bc-83b9-4ca5-85bb-d1b2a6741f12fileName">UpsertOfferTagCategories</con:setting>
+  </con:settings>
+  <con:testStep type="datasource" name="OfferTagCategory" id="792ec0a7-4d40-4462-9f48-97ab940b66fe" disabled="true">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/OfferTagCategory.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>CategoryCode</con:property>
+      <con:property>CategoryName</con:property>
+      <con:property>CategoryDescription</con:property>
+      <con:property>Status</con:property>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetOfferTagCategoryByCode" id="7398c8a5-6ce9-4afc-8062-d6f364a249eb" disabled="true">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetOfferTagCategoryByCode" resourcePath="/api/v1/referencedata/offers/tags/categories/{categoryCode}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetOfferTagCategoryByCode" id="0a3da303-6bdd-43d1-88b6-9e1b80dc14a1" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:assertion type="Valid HTTP Status Codes" id="43b98177-0aad-4441-8cad-7f149f64cdd9" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="categoryCode" value="categoryCode"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="CategoryCondition" id="22055a68-deb4-433d-926c-125d723350e2" disabled="true">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def status = context.expand( '${GetOfferTagByCode#HarResponse#$[\'status\']}' ).toInteger()
+if (status != 200) testRunner.gotoStepByName("AddOfferTag")
+ else
+ 	testRunner.gotoStepByName("UpdateOfferTag")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddOfferTagCategory" id="3700e195-1c0b-47b6-a2bc-46834cd32aa3" disabled="true">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="ProcessOfferTagCategories" resourcePath="/api/v1/referencedata/offers/tags/categories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddOfferTagCategory" id="6cd46706-c8e7-487f-a615-551928b25152" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[{
+	"TagCategoryCode": "${OfferTagCategory#CategoryCode}",
+	"TagCategoryName": "${OfferTagCategory#CategoryName}",
+	"TagCategoryDescription": "${OfferTagCategory#CategoryDescription}"
+}]</con:request>
+        <con:assertion type="Valid HTTP Status Codes" id="bcc2c51a-d3ef-4277-9bc2-9fde201bcf26" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateOfferTagCategory" id="3697c37f-5def-42ab-ab66-04cc99a662bc" disabled="true">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="ProcessOfferTagCategories" resourcePath="/api/v1/referencedata/offers/tags/categories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateOfferTagCategory" id="6cd46706-c8e7-487f-a615-551928b25152" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[{
+	"TagCategoryCode": "${OfferTagCategory#CategoryCode}",
+	"TagCategoryName": "${OfferTagCategory#CategoryName}",
+	"TagCategoryDescription": "${OfferTagCategory#CategoryDescription}",
+	"Status": "A"
+}]</con:request>
+        <con:assertion type="Valid HTTP Status Codes" id="bcc2c51a-d3ef-4277-9bc2-9fde201bcf26" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="OfferTagCategoryLoop" id="7d81e6e8-2180-424a-a783-1db07f966bab" disabled="true">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>OfferTagCategory</dataSourceStep>
+      <targetStep>GetOfferTagCategoryByCode</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

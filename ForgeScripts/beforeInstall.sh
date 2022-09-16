@@ -1,6 +1,8 @@
 #clean out code deploy directory 
 cd /home/ec2-user/testEngine/codeDeploy
 sudo rm -rf *
+sudo rm -rf .git
+sudo rm -rf .gitignore
 
 #clean out the reports directory
 cd /home/ec2-user/testEngine/reports

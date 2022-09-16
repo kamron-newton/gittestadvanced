@@ -25,7 +25,7 @@ SENDER = ', '.join(senders[sys.argv[1]])
 # is still in the sandbox, this address must be verified.
 
 recipients = {
-		"Basic" : ["AgilityLoyalty_Delta@epsilon.com","Deepika.Vangapally@epsilon.com"],
+		"Basic" : ["raksha.s@epsilon.com"],
 		"Newton" : ["AgilityLoyalty_Newton@epsilon.com","Deepika.Vangapally@epsilon.com"],
 		"CrimsonHawks" : ["AgilityLoyalty_CrimsonHawks@epsilon.com","Deepika.Vangapally@epsilon.com"],
 		"Synergy" : ["AgilityLoyalty_Synergy@epsilon.com","Deepika.Vangapally@epsilon.com"],

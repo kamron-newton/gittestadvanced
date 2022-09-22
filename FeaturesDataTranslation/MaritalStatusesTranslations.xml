@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="123b8c3c-7721-48bb-94c7-d0a71357d827" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="MaritalStatusesTranslations" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="123b8c3c-7721-48bb-94c7-d0a71357d827fileName">MaritalStatusesTranslations</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="UpsertMaritalStatus" id="f4862903-19dc-4342-937d-433ccf7e871e">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>e2641413-7a6e-4e31-b0cb-7eb339c4e1d0</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="GetEntityId" id="7dbadcd2-4c77-406e-af69-4eb5a234f74c">
+    <con:settings/>
+    <con:config>
+      <script>def EntityId = context.expand( '${#[LoadProductionData#UpsertMaritalStatus#GetMaritalStatuses]#Response#$[0][\'MaritalStatus\']}' )
+
+testRunner.testCase.setPropertyValue("EntityId",EntityId);
+
+def entityId = context.expand( '${#TestCase#EntityId}' )</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="ProcessTranslations" id="4279cf2c-9e7e-4033-84df-d4eca12f6a71">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" ignoreEmptyProperties="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>73c62997-e67d-41b2-9d0b-6438a6007fff</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EntityName</con:name>
+          <con:value>${#TestCase#EntityName}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>EntityId</con:name>
+          <con:value>${#TestCase#EntityId}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>InvalidLanguageLocaleToTranslate</con:name>
+          <con:value>WRONG</con:value>
+        </con:property>
+        <con:property>
+          <con:name>LanguageCodeToTranslate</con:name>
+          <con:value>DE_DE</con:value>
+        </con:property>
+        <con:property>
+          <con:name>InvalidEntityNameToTranslate</con:name>
+          <con:value>InvalidEntityName</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>EntityId</con:name>
+      <con:value>X</con:value>
+    </con:property>
+    <con:property>
+      <con:name>EntityName</con:name>
+      <con:value>MARITAL_STATUS</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

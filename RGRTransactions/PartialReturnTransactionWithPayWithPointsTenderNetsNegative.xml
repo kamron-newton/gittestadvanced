@@ -461,7 +461,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>9daf9ce9-343f-44a3-b0f3-73cb1b84f338</con:value>
+          <con:value>49978e08-4899-413a-a1cb-d2195ce0b7a4</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -1283,6 +1283,239 @@
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
             <con:originalMessage>{"Headers":{"date":"Tue, 20 Sep 2022 18:55:35 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","transfer-encoding":"chunked","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"314706c8-6590-19cb-d8d1-5d82596c6a9d","content-type":"application/json","process-time":"229ms","#status#":"HTTP/1.1 400 Bad Request","cache-control":"no-store,no-cache","new-correlationid":"0HMKR4M9RA38M:000000E3"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="ab8e2bb9-0c6a-43d2-8538-247fd092edd7" name="Partial Return with Cash tender net negative" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="Partial Return with Cash tender net negative" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "ProfileId":"${AddProfile#ProfileId}",
+  "TransactionTypeCode": "RT",
+  "TransactionNetTotal": "-${PurchaseTransaction#DollarValueNet}",
+  "ShippingAndHandling": "-${PurchaseTransaction#ShippingAndHandling}",
+  "TransactionTotalTax": "-${PurchaseTransaction#TransactionTotalTax}",
+  "TransactionNumber": "${Generate Guid#result}_RT",
+  "CurrencyCode": "${PurchaseTransaction#CurrencyCode}",
+  "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
+  "TransactionDescription": "${PurchaseTransaction#TransactionDescription}",
+  "StoreCode": "${PurchaseTransaction#StoreCode}",
+  "ProgramCode": "${#Project#ProgramCode}",
+  "GrossAmount": "-${PurchaseTransaction#DollarValueGross}",
+  "TransactionDetails": [
+    {
+      "TaxAmount": "-${PurchaseTransaction#TaxAmount}",
+      "DollarValueGross": "-${PurchaseTransaction#DollarValueGross}",
+      "DollarValueNet": "-${PurchaseTransaction#DollarValueNet}",
+      "ItemNumber": "${PurchaseTransaction#ItemNumber1}",
+      "ItemNumberTypeCode": "${PurchaseTransaction#ItemNumberTypeCode}",
+      "Quantity": "${PurchaseTransaction#Quantity}",
+      "OriginalTransactionNumber": "${Generate Guid#result}_PR",
+      "OriginalTransactionDateTime": "${Generate Date#result}",
+      "OriginalStoreCode": "${PurchaseTransaction#StoreCode}",
+      "LineNumber": 1
+    }
+  ],
+  "Tenders": [
+    {
+      "TenderCode": "${Process Tender Type#Response#$['TenderCode']}",
+      "TransactionTenderCode":"TEST",
+      "TenderAmount": "-50"
+    },
+     {
+      "TenderCode": "CASH",
+      "TransactionTenderCode":"TEST",
+      "TenderAmount": "-60"
+    }
+  ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="ba5d871a-0802-4bc7-ac48-51f4c7eaf79b" name="Http Success Status Code">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Fri, 23 Sep 2022 15:25:49 GMT</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>10897</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>3a098ad7-d924-89cc-d400-46562eac022a</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>279ms</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMKTEB4FHLEK:00000087</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Fri, 23 Sep 2022 15:25:49 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"10897","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"3a098ad7-d924-89cc-d400-46562eac022a","content-type":"application/json; charset=utf-8","process-time":"279ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMKTEB4FHLEK:00000087"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>

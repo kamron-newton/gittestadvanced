@@ -1,28 +1,272 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="e77a8efe-84f6-4aca-915e-df5b15ee7d80" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RewardCategoryTranslations" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="f5326401-7ee8-41d8-a1e3-4af20edb3a4c" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="AuctionTranslations" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="e77a8efe-84f6-4aca-915e-df5b15ee7d80fileName">RewardCategoryTranslations</con:setting>
+    <con:setting id="f5326401-7ee8-41d8-a1e3-4af20edb3a4cfileName">AuctionTranslations</con:setting>
   </con:settings>
-  <con:testStep type="groovy" name="GetEntityId" id="d75159e8-9510-4420-a337-e81a3c4c573a">
+  <con:testStep type="datasource" name="Auctions" id="c43f995e-b0d3-472f-b8a8-097ad176b3c3">
     <con:settings/>
-    <con:config>
-      <script>def entityId = context.expand( '${#[LoadProductionData#UpsertRewardCategory#UpdateRewardCategory]#Response#$[\'CategoryId\']}' )
-
-testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Auctions.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>true</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>PointTypeCode</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>Quantity</con:property>
+      <con:property>AuctionCode</con:property>
+      <con:property>RewardCode</con:property>
+      <con:property>AuctionName</con:property>
+      <con:property>StartDate</con:property>
+      <con:property>EndDate</con:property>
+      <con:property>BidMinPoint</con:property>
+      <con:property>BidIncrementThreshold</con:property>
+      <con:property>ImageNameSmall</con:property>
+      <con:property>ImageNameMedium</con:property>
+      <con:property>ImageNameLarge</con:property>
+      <con:property>Description</con:property>
+      <con:property>TermsAndCondition</con:property>
+      <con:property>Rules</con:property>
+      <con:property>ImageNameSmallAltText</con:property>
+      <con:property>ImageNameMediumAltText</con:property>
+      <con:property>ImageNameLargeAltText</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="ProcessTranslations" id="26fcff25-3825-4032-a566-92d0bf4b598e">
+  <con:testStep type="restrequest" name="GetAuctions" id="3f4a5313-c63f-4762-b0ba-dcc69b816cca">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" ignoreEmptyProperties="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/auctions" methodName="GetAuctions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAuctions" id="e32bc68c-1510-48ce-9749-157bfe97edfc" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/auctions</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="a809f231-133f-4863-8f67-88b67ca4fd26" name="Smart Assertion for HTTP Status Codes">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Wed, 09 Mar 2022 17:39:08 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1236</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0275cc36-9178-07d6-ae82-cec4cc520f13</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>12ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>3</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK,HTTP/1.1 400 Bad Request</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMG1OK8GNBTQ:000007C5</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Wed, 09 Mar 2022 17:39:08 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1236","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"0275cc36-9178-07d6-ae82-cec4cc520f13","content-type":"application/json; charset=utf-8","process-time":"12ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMG1OK8GNBTQ:000007C5"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${Auctions#ProgramCode}"/>
+          <con:entry key="auctionCode" value="${Auctions#AuctionCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>auctionCode</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>pointTypeId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="transfer" name="ExtractId" id="68502aaa-8fc5-4cb2-adb6-3be5721019d6">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>Id</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>GetAuctions</con:sourceStep>
+        <con:sourcePath>$[0]['AuctionId']</con:sourcePath>
+        <con:targetType>EntityId</con:targetType>
+        <con:targetStep>ProcessTranslations</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:targetTransferType>XPATH</con:targetTransferType>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="ProcessTranslations" id="6177428a-02ec-4031-87c1-e67a3c43e1c9">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>73c62997-e67d-41b2-9d0b-6438a6007fff</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>EntityName</con:name>
-          <con:value>${#TestCase#EntityName}</con:value>
+          <con:value>AUCTION</con:value>
         </con:property>
         <con:property>
           <con:name>EntityId</con:name>
-          <con:value>${#TestCase#EntityId}</con:value>
+          <con:value>1f2d2a05-af39-48a0-bc76-b8af5d54f477</con:value>
         </con:property>
         <con:property>
           <con:name>InvalidLanguageLocaleToTranslate</con:name>
@@ -41,17 +285,17 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetRewardCategoriesWithenUS" id="6a7cebf8-59d4-4ce2-bac2-41eb0369e8df">
+  <con:testStep type="restrequest" name="GetAuctionsWithEnUs" id="04c98db4-ced6-44b6-83d4-a9ca9cd79fd8" disabled="true">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewardcategories" methodName="GetRewardCategories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetRewardCategoriesWithenUS" id="1af506d8-f4c5-4c01-81e4-8923adf716a1" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/auctions" methodName="GetAuctions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAuctionsWithEnUs" id="e32bc68c-1510-48ce-9749-157bfe97edfc" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/rewards/rewardcategories</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="ee5bc91f-6bc5-4083-8812-9457320cd876" name="Smart Assertion for HTTP Status Code">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/auctions</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="a809f231-133f-4863-8f67-88b67ca4fd26" name="Smart Assertion for HTTP Status Codes">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -59,7 +303,7 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Fri, 23 Sep 2022 06:13:57 GMT</con:expectedValue>
+              <con:expectedValue>Wed, 09 Mar 2022 17:39:08 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -79,7 +323,7 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>16796</con:expectedValue>
+              <con:expectedValue>1236</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -149,7 +393,7 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>a8a9dd33-e772-fc2c-aaec-396b1a37bd04</con:expectedValue>
+              <con:expectedValue>0275cc36-9178-07d6-ae82-cec4cc520f13</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -169,7 +413,7 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>16ms</con:expectedValue>
+              <con:expectedValue>12ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -177,9 +421,9 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
             <con:elements>
               <con:path>$['Headers']['#status#']</con:path>
               <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
+              <con:operatorId>3</con:operatorId>
               <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:expectedValue>HTTP/1.1 200 OK,HTTP/1.1 400 Bad Request</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -199,21 +443,12 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMKSSOFF0I3C:000001E9</con:expectedValue>
+              <con:expectedValue>0HMG1OK8GNBTQ:000007C5</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Fri, 23 Sep 2022 06:13:57 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"16796","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"a8a9dd33-e772-fc2c-aaec-396b1a37bd04","content-type":"application/json; charset=utf-8","process-time":"16ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMKSSOFF0I3C:000001E9"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="6394837c-7398-42fc-811d-2029dd1f4661" name="Validate Category Description">
-          <con:configuration>
-            <path>$.[?(@.CategoryId=='${#TestCase#EntityId}')].CategoryDescription</path>
-            <content>[${#[LoadProductionData#UpsertRewardCategory#UpdateRewardCategory]#Response#$['CategoryDescription']}]</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
+            <con:originalMessage>{"Headers":{"date":"Wed, 09 Mar 2022 17:39:08 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1236","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"0275cc36-9178-07d6-ae82-cec4cc520f13","content-type":"application/json; charset=utf-8","process-time":"12ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMG1OK8GNBTQ:000007C5"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -224,40 +459,35 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${Auctions#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
           <con:entry key="status" value="A"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>profileId</con:entry>
-          <con:entry>rewardCode</con:entry>
-          <con:entry>title</con:entry>
-          <con:entry>manufacturer</con:entry>
-          <con:entry>fixedPointsGreaterThan</con:entry>
-          <con:entry>fixedPointsLessThan</con:entry>
-          <con:entry>categoryCode</con:entry>
+          <con:entry>auctionCode</con:entry>
           <con:entry>status</con:entry>
-          <con:entry>rewardType</con:entry>
-          <con:entry>displayInCatalog</con:entry>
           <con:entry>startDate</con:entry>
           <con:entry>endDate</con:entry>
           <con:entry>pointTypeId</con:entry>
-          <con:entry>certificateInd</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+          <con:entry>Program-Code</con:entry>
         </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetRewardCategoriesWithdeDE" id="39c53169-61d8-4607-9ce1-425c09752efd">
+  <con:testStep type="restrequest" name="GetAuctionsWithdeDE" id="7727f7ef-8108-4743-a2d0-b6af7c9ed0f1" disabled="true">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewardcategories" methodName="GetRewardCategories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetRewardCategoriesWithdeDE" id="1af506d8-f4c5-4c01-81e4-8923adf716a1" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/auctions" methodName="GetAuctions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAuctionsWithdeDE" id="e32bc68c-1510-48ce-9749-157bfe97edfc" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/rewards/rewardcategories</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="ee5bc91f-6bc5-4083-8812-9457320cd876" name="Smart Assertion for HTTP Status Code">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/auctions</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="a809f231-133f-4863-8f67-88b67ca4fd26" name="Smart Assertion for HTTP Status Codes">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -265,7 +495,7 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Fri, 23 Sep 2022 06:13:57 GMT</con:expectedValue>
+              <con:expectedValue>Wed, 09 Mar 2022 17:39:08 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -285,7 +515,7 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>16796</con:expectedValue>
+              <con:expectedValue>1236</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -355,7 +585,7 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>a8a9dd33-e772-fc2c-aaec-396b1a37bd04</con:expectedValue>
+              <con:expectedValue>0275cc36-9178-07d6-ae82-cec4cc520f13</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -375,7 +605,7 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>16ms</con:expectedValue>
+              <con:expectedValue>12ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -383,9 +613,9 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
             <con:elements>
               <con:path>$['Headers']['#status#']</con:path>
               <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
+              <con:operatorId>3</con:operatorId>
               <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:expectedValue>HTTP/1.1 200 OK,HTTP/1.1 400 Bad Request</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -405,21 +635,12 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMKSSOFF0I3C:000001E9</con:expectedValue>
+              <con:expectedValue>0HMG1OK8GNBTQ:000007C5</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Fri, 23 Sep 2022 06:13:57 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"16796","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"a8a9dd33-e772-fc2c-aaec-396b1a37bd04","content-type":"application/json; charset=utf-8","process-time":"16ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMKSSOFF0I3C:000001E9"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="6394837c-7398-42fc-811d-2029dd1f4661" name="Validate Category Description">
-          <con:configuration>
-            <path>$.[?(@.CategoryId=='${#TestCase#EntityId}')].CategoryDescription</path>
-            <content>[${#[ReferenceData#ProcessTranslations#UpdateTranslation]#Response#$['TranslationEntityAttributes'][0]['AttributeValue']}]</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
+            <con:originalMessage>{"Headers":{"date":"Wed, 09 Mar 2022 17:39:08 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1236","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"0275cc36-9178-07d6-ae82-cec4cc520f13","content-type":"application/json; charset=utf-8","process-time":"12ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMG1OK8GNBTQ:000007C5"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -430,421 +651,37 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
+          <con:entry key="Program-Code" value="${Auctions#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
           <con:entry key="status" value="A"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>Accept-Language</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>profileId</con:entry>
-          <con:entry>rewardCode</con:entry>
-          <con:entry>title</con:entry>
-          <con:entry>manufacturer</con:entry>
-          <con:entry>fixedPointsGreaterThan</con:entry>
-          <con:entry>fixedPointsLessThan</con:entry>
-          <con:entry>categoryCode</con:entry>
+          <con:entry>auctionCode</con:entry>
           <con:entry>status</con:entry>
-          <con:entry>rewardType</con:entry>
-          <con:entry>displayInCatalog</con:entry>
           <con:entry>startDate</con:entry>
           <con:entry>endDate</con:entry>
           <con:entry>pointTypeId</con:entry>
-          <con:entry>certificateInd</con:entry>
-        </con:parameterOrder>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="GetRewardCategoryByCodeWithenUs" id="4dc8b8de-53c0-43b2-bbb9-43fd5e3261d0">
-    <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewardcategories/{categoryCode}" methodName="GetRewardCategorybyCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetRewardCategoryByCodeWithenUs" id="87b9bd1d-35d9-4b8f-abe1-6306469c0551" mediaType="application/json">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewardcategories/categoryCode</con:originalUri>
-        <con:assertion type="JsonPath Match" name="Validate Category Description" id="077b58f0-afd2-4104-a374-990b43bef0bc">
-          <con:configuration>
-            <path>$['CategoryDescription']</path>
-            <content>${#[LoadProductionData#UpsertRewardCategory#UpdateRewardCategory]#Response#$['CategoryDescription']}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="DataAndMetadataAssertion" name="Smart Assertion for HTTP Status Code" id="0a2f968f-d4bd-4be4-b1eb-ba5960f5e2c6">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Metadata</con:mode>
-            <con:elements>
-              <con:path>$['Headers']['date']</con:path>
-              <con:element>date</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Fri, 23 Sep 2022 06:13:57 GMT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['server']</con:path>
-              <con:element>server</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-length']</con:path>
-              <con:element>content-length</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>16796</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['language-code']</con:path>
-              <con:element>language-code</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-frame-options']</con:path>
-              <con:element>x-frame-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['pragma']</con:path>
-              <con:element>pragma</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-content-type-options']</con:path>
-              <con:element>x-content-type-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-xss-protection']</con:path>
-              <con:element>x-xss-protection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['connection']</con:path>
-              <con:element>connection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>keep-alive</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['correlationid']</con:path>
-              <con:element>correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>a8a9dd33-e772-fc2c-aaec-396b1a37bd04</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-type']</con:path>
-              <con:element>content-type</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['process-time']</con:path>
-              <con:element>process-time</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>16ms</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['#status#']</con:path>
-              <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['cache-control']</con:path>
-              <con:element>cache-control</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-store,no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['new-correlationid']</con:path>
-              <con:element>new-correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMKSSOFF0I3C:000001E9</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Fri, 23 Sep 2022 06:13:57 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"16796","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"a8a9dd33-e772-fc2c-aaec-396b1a37bd04","content-type":"application/json; charset=utf-8","process-time":"16ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMKSSOFF0I3C:000001E9"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="055516f0-857a-4a67-8abb-da02df66b861" name="Validating Category Description">
-          <con:configuration>
-            <path>$['CategoryDescription']</path>
-            <content>${#[LoadProductionData#UpsertRewardCategory#UpdateRewardCategory]#Response#$['CategoryDescription']}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="categoryCode" value="${#[LoadProductionData#UpsertRewardCategory#UpdateRewardCategory]#Response#$['CategoryCode']}"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="Content-Type" value="application/json"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>categoryCode</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Accept-Language</con:entry>
           <con:entry>Content-Type</con:entry>
           <con:entry>Program-Code</con:entry>
         </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetRewardCategoryByCodeWithdeDE" id="b6fb4418-05d0-4bfc-8322-824a232bef39">
+  <con:testStep type="restrequest" name="GetAuctionsWithFilters" id="d23a7bf3-8f5d-4eeb-8f75-7968079ae938">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/rewards/rewardcategories/{categoryCode}" methodName="GetRewardCategorybyCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetRewardCategoryByCodeWithdeDE" id="87b9bd1d-35d9-4b8f-abe1-6306469c0551" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/auctions" methodName="GetAuctions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAuctionsWithFilters" id="e32bc68c-1510-48ce-9749-157bfe97edfc" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/rewards/rewardcategories/categoryCode</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" name="Smart Assertion for HTTP Status Code" id="0a2f968f-d4bd-4be4-b1eb-ba5960f5e2c6">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Metadata</con:mode>
-            <con:elements>
-              <con:path>$['Headers']['date']</con:path>
-              <con:element>date</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Fri, 23 Sep 2022 06:13:57 GMT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['server']</con:path>
-              <con:element>server</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-length']</con:path>
-              <con:element>content-length</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>16796</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['language-code']</con:path>
-              <con:element>language-code</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-frame-options']</con:path>
-              <con:element>x-frame-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['pragma']</con:path>
-              <con:element>pragma</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-content-type-options']</con:path>
-              <con:element>x-content-type-options</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['x-xss-protection']</con:path>
-              <con:element>x-xss-protection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['connection']</con:path>
-              <con:element>connection</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>keep-alive</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['correlationid']</con:path>
-              <con:element>correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>a8a9dd33-e772-fc2c-aaec-396b1a37bd04</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['content-type']</con:path>
-              <con:element>content-type</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['process-time']</con:path>
-              <con:element>process-time</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>16ms</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['#status#']</con:path>
-              <con:element>#status#</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['cache-control']</con:path>
-              <con:element>cache-control</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>no-store,no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Headers']['new-correlationid']</con:path>
-              <con:element>new-correlationid</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMKSSOFF0I3C:000001E9</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Fri, 23 Sep 2022 06:13:57 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"16796","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"a8a9dd33-e772-fc2c-aaec-396b1a37bd04","content-type":"application/json; charset=utf-8","process-time":"16ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMKSSOFF0I3C:000001E9"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" name="Validate Category Description" id="282229d4-171b-4d08-8974-4b05ebab1c6b">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/auctions</con:originalUri>
+        <con:assertion type="JsonPath Match" name="Validate AuctionName in de-DE" id="e31a7eb4-7afd-4d9a-9948-47a5e6387ef3">
           <con:configuration>
-            <path>$['CategoryDescription']</path>
-            <content>${#[ReferenceData#ProcessTranslations#UpdateTranslation]#Response#$['TranslationEntityAttributes'][1]['AttributeValue']}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="8a10dd24-cd70-416c-ba1d-3e72dcd3bd52" name="Validating Category Description">
-          <con:configuration>
-            <path>$['CategoryName']</path>
+            <path>$[0]['AuctionName']</path>
             <content>${#[ReferenceData#ProcessTranslations#UpdateTranslation]#Response#$['TranslationEntityAttributes'][0]['AttributeValue']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -858,38 +695,131 @@ testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="pointTypeId" value="${GetAuctions#Response#$[0]['PointTypeId']}"/>
           <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
-          <con:entry key="categoryCode" value="${#[LoadProductionData#UpsertRewardCategory#UpdateRewardCategory]#Response#$['CategoryCode']}"/>
-          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Program-Code" value="${Auctions#ProgramCode}"/>
+          <con:entry key="auctionCode" value="${Auctions#AuctionCode}"/>
           <con:entry key="Content-Type" value="application/json"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>categoryCode</con:entry>
+          <con:entry>auctionCode</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>pointTypeId</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Accept-Language</con:entry>
           <con:entry>Content-Type</con:entry>
           <con:entry>Program-Code</con:entry>
         </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties>
-    <con:property userSpecific="true">
-      <con:name>EntityId</con:name>
-      <con:value>c5fa3038-0b32-4f29-9698-7ab0f422157a</con:value>
-    </con:property>
-    <con:property userSpecific="true">
-      <con:name>EntityName</con:name>
-      <con:value>REWARD_CATEGORY</con:value>
-    </con:property>
-  </con:properties>
+  <con:testStep type="restrequest" name="GetAuctionbyIDforEnUS" id="7f729884-b70a-44d0-a754-fc451bd29633">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/auctions/{auctionId}" methodName="GetAuctionbyID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAuctionbyIDforEnUS" id="fd1ed4f3-b5e8-4546-8001-6d75fa84173f" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/auctions/1f2d2a05-af39-48a0-bc76-b8af5d54f477</con:originalUri>
+        <con:assertion type="JsonPath Match" name="Validate AuctionName in en-US" id="b8ca20b8-d307-42ab-b709-6cf89e54ac4c">
+          <con:configuration>
+            <path>$['AuctionName']</path>
+            <content>"Princess Jeff Signed Dress"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="auctionId" value="${GetAuctions#Response#$[0]['AuctionId']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>auctionId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetAuctionbyIDFordeDE" id="44c808e9-37ee-43b6-9b45-6d3393081bf7">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/auctions/{auctionId}" methodName="GetAuctionbyID" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetAuctionbyIDFordeDE" id="fd1ed4f3-b5e8-4546-8001-6d75fa84173f" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/auctions/1f2d2a05-af39-48a0-bc76-b8af5d54f477</con:originalUri>
+        <con:assertion type="JsonPath Match" name="Validate AuctionName in de-DE" id="569e101b-83f8-415c-aa8b-45dccb84a0e3">
+          <con:configuration>
+            <path>$['AuctionName']</path>
+            <content>${#[ReferenceData#ProcessTranslations#UpdateTranslation]#Response#$['TranslationEntityAttributes'][0]['AttributeValue']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="9bee4446-fa17-4807-b453-203fa114aed6" name="Validate Description in de-DE">
+          <con:configuration>
+            <path>$['Description']</path>
+            <content>${#[ReferenceData#ProcessTranslations#UpdateTranslation]#Response#$['TranslationEntityAttributes'][1]['AttributeValue']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="b6bd5f98-a45e-477f-964b-3760845e21c1" name="JSONPath Match" disabled="true">
+          <con:configuration>
+            <path>$['TermsAndCondition']</path>
+            <content>${#[ReferenceData#ProcessTranslations#UpdateTranslation]#Response#$['TranslationEntityAttributes'][2]['AttributeValue']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="db64d316-ddb5-4c52-b55e-ea7484c958ae" name="Validate Rules in de-DE">
+          <con:configuration>
+            <path>$['Rules']</path>
+            <content>${#[ReferenceData#ProcessTranslations#UpdateTranslation]#Response#$['TranslationEntityAttributes'][3]['AttributeValue']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="auctionId" value="${GetAuctions#Response#$[0]['AuctionId']}"/>
+          <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>auctionId</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
   <con:reportParameters/>
 </con:testCase>

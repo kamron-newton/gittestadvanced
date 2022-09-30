@@ -3,41 +3,23 @@
   <con:settings>
     <con:setting id="8999a980-0418-4f71-8a4f-e191090aec55fileName">OfferTagsTranslations</con:setting>
   </con:settings>
-  <con:testStep type="calltestcase" name="UpsertOfferTags" id="7bd26bba-169f-4c01-971d-bbc9513c9e90">
+  <con:testStep type="calltestcase" name="UpsertOfferTags" id="b240d61b-89fa-40b0-a0f8-5813082fea2c">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" ignoreEmptyProperties="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>3a2aa9c5-a1b7-447d-8db8-8c5d4eee004a</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>TagId</con:name>
-          <con:value>41c56284-bfed-48ad-853f-0073aa096563</con:value>
-        </con:property>
-        <con:property>
-          <con:name>TagCode</con:name>
-          <con:value>Tag_1220926170034700</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties>
-        <con:entry>TagId</con:entry>
-        <con:entry>TagCode</con:entry>
-      </con:returnProperties>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>000f7d0d-80c6-4ff6-8d9b-d82676e824aa</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="transfer" name="TransferEntityId" id="8d980f11-ec05-40c0-b706-318cb2f5c182">
+  <con:testStep type="groovy" name="GetEntityId" id="2b21f3f7-e03f-4abd-8122-32080fe7c9b7">
     <con:settings/>
-    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>EntityId</con:name>
-        <con:sourceType>TagId</con:sourceType>
-        <con:sourceStep>UpsertOfferTags</con:sourceStep>
-        <con:sourcePath/>
-        <con:targetType>EntityId</con:targetType>
-        <con:targetStep>ProcessTranslations</con:targetStep>
-        <con:targetPath/>
-        <con:type>XPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
+    <con:config>
+      <script>def EntityId = context.expand( '${#[LoadProductionData1#UpsertOfferTags#UpdateOfferTag]#Response#$[0][\'TagId\']}' )
+def TagCode = context.expand( '${#[LoadProductionData1#UpsertOfferTags#UpdateOfferTag]#Response#$[0][\'TagCode\']}' )
+
+testRunner.testCase.setPropertyValue("EntityId",EntityId);
+testRunner.testCase.setPropertyValue("TagCode",TagCode);</script>
     </con:config>
   </con:testStep>
   <con:testStep type="calltestcase" name="ProcessTranslations" id="cd21c87a-2146-47c6-ac95-4562140cba29">
@@ -51,7 +33,7 @@
         </con:property>
         <con:property>
           <con:name>EntityId</con:name>
-          <con:value>41c56284-bfed-48ad-853f-0073aa096563</con:value>
+          <con:value>${#TestCase#EntityId}</con:value>
         </con:property>
         <con:property>
           <con:name>InvalidLanguageLocaleToTranslate</con:name>
@@ -238,7 +220,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" name="Validate TagDescription Value in en-US" id="31edec4c-b9fb-4fb8-a642-8c94a7d44f96">
           <con:configuration>
-            <path>$[?(@.TagId=='${UpsertOfferTags#TagId}')]['TagDescription']</path>
+            <path>$[?(@.TagId=='${#TestCase#EntityId}')]['TagDescription']</path>
             <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='OfferTagDescription')]['AttributeValueBaseLanguage']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -247,7 +229,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" name="Validate TagName Value in en-US" id="53f19665-3d4b-4bab-8671-747c039e3647">
           <con:configuration>
-            <path>$[?(@.TagId=='${UpsertOfferTags#TagId}')]['TagName']</path>
+            <path>$[?(@.TagId=='${#TestCase#EntityId}')]['TagName']</path>
             <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='OfferTagName')]['AttributeValueBaseLanguage']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -262,6 +244,7 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Accept-Language</con:entry>
@@ -439,7 +422,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" name="Validate TagDescription Value in de-DE" id="3fa98185-208c-42e1-9107-bb447df11316">
           <con:configuration>
-            <path>$[?(@.TagId=='${UpsertOfferTags#TagId}')]['TagDescription']</path>
+            <path>$[?(@.TagId=='${#TestCase#EntityId}')]['TagDescription']</path>
             <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='OfferTagDescription')]['AttributeValue']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -448,7 +431,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" name="Validate TagName Value in de-DE" id="64603a13-8493-4e32-85dc-9decc7d40171">
           <con:configuration>
-            <path>$[?(@.TagId=='${UpsertOfferTags#TagId}')]['TagName']</path>
+            <path>$[?(@.TagId=='${#TestCase#EntityId}')]['TagName']</path>
             <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='OfferTagName')]['AttributeValue']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -463,6 +446,7 @@
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
+          <con:entry key="status" value="A"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Accept-Language</con:entry>
@@ -513,7 +497,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="tagCode" value="${UpsertOfferTags#TagCode}"/>
+          <con:entry key="tagCode" value="${#TestCase#TagCode}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -565,7 +549,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="tagCode" value="${UpsertOfferTags#TagCode}"/>
+          <con:entry key="tagCode" value="${#TestCase#TagCode}"/>
           <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
         </con:parameters>
         <con:parameterOrder>
@@ -576,6 +560,15 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties/>
+  <con:properties>
+    <con:property>
+      <con:name>EntityId</con:name>
+      <con:value>c3a55c37-09f6-4a12-977f-2850b24d4521</con:value>
+    </con:property>
+    <con:property>
+      <con:name>TagCode</con:name>
+      <con:value>Tag_3</con:value>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
 </con:testCase>

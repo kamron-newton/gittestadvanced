@@ -661,7 +661,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="007a3482-a3ce-4d92-8ac9-7833c20f88e5" name="Is Default Offer Check">
           <con:configuration>
-            <path>$.[?(@.OfferCode=='${ProgramOffersWithDefaultOffer#OfferCode}')].IsDefaultOffer[0]</path>
+            <path>$.[?(@.OfferCode=='${#[ProgramOffers#UpsertProgramDefaultOffer#OfferCode]#result}')].IsDefaultOffer[0]</path>
             <content>true</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -1468,8 +1468,8 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="8f50a27c-e745-4d7b-9900-216f3c1804d1" name="Default Offer Start Date Validation">
           <con:configuration>
-            <path>$.[?(@.OfferCode=='${ProgramOffersWithDefaultOffer#OfferCode}')].OfferStartDate[0]</path>
-            <content>${GetDefaultOfferbyOfferCode#Response#$[0]['OfferStartDate']}</content>
+            <path>$.[?(@.OfferCode=='${#[ProgramOffers#UpsertProgramDefaultOffer#OfferCode]#result}')].OfferStartDate[0]</path>
+            <content>${#TestCase#StartDate}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -2122,13 +2122,13 @@
     </con:config>
   </con:testStep>
   <con:properties>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>StartDate</con:name>
-      <con:value>${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()-1)}</con:value>
+      <con:value>${=new java.text.SimpleDateFormat("yyyy-MM-ddT00:00:00Z").format(new Date()-1)}</con:value>
     </con:property>
-    <con:property>
+    <con:property userSpecific="true">
       <con:name>EndDate</con:name>
-      <con:value>${=new java.text.SimpleDateFormat("MM/dd/yyyy").format(new Date()+1000)}</con:value>
+      <con:value>${=new java.text.SimpleDateFormat("yyyy-MM-ddT00:00:00Z").format(new Date()+1000)}</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>

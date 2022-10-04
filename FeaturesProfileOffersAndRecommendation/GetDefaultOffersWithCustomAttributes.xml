@@ -1118,8 +1118,8 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" name="Validate Offer Code" id="8e0d8c94-8752-4ad1-a189-3aeafd210ece">
           <con:configuration>
-            <path>$.[?(@.OfferCode=='${ProgramOffersWithDefaultOffer#OfferCode}')].OfferCode[0]</path>
-            <content>"DEFAULT_OFFER_8122021"</content>
+            <path>$.[?(@.OfferCode=='${#[ProgramOffers#UpsertProgramDefaultOffer#OfferCode]#result}')].OfferCode[0]</path>
+            <content>${#[ProgramOffers#UpsertProgramDefaultOffer#OfferCode]#result}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -1127,7 +1127,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" name="Validate Is Default Offer" id="2f842d50-4c02-40b0-955f-feaa9d3f1e1a">
           <con:configuration>
-            <path>$.[?(@.OfferCode=='${ProgramOffersWithDefaultOffer#OfferCode}')].IsDefaultOffer[0]</path>
+            <path>$.[?(@.OfferCode=='${#[ProgramOffers#UpsertProgramDefaultOffer#OfferCode]#result}')].IsDefaultOffer[0]</path>
             <content>true</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -1141,7 +1141,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="customDataValue" value="${=new java.text.SimpleDateFormat('MM/dd/yyyy').format(new Date()+10)}"/>
+          <con:entry key="customDataValue" value="${=new java.text.SimpleDateFormat('MM-dd-yyyy').format(new Date()-1)}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="customDataName" value="${ProgramOffersWithDefaultOffer#CustomDataName1}"/>

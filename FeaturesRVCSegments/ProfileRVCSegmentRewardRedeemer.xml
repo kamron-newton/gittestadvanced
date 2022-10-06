@@ -208,6 +208,12 @@ def formattedDate = activitydate.format("MM/dd/yyyy")
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="delay" name="Delay" id="fcffd1f5-c909-4d68-b47a-d00def7518f8">
+    <con:settings/>
+    <con:config>
+      <delay>5000</delay>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="ProcessRVCSegment-SingleRedeemer" id="62cdeb8a-ad53-4094-8543-de54cbbe5c85">
     <con:settings/>
     <con:config service="RestAPIs" methodName="ProcessRVCSegment" resourcePath="/api/v1/profiles/{profileId}/segmentdata/rvc" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -269,12 +275,6 @@ def formattedDate = activitydate.format("MM/dd/yyyy")
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
       </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="delay" name="Delay" id="fcffd1f5-c909-4d68-b47a-d00def7518f8">
-    <con:settings/>
-    <con:config>
-      <delay>5000</delay>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="VerifySegmentHistory-SingleRewardRedeemer" id="6854cfa9-ec6b-49ea-9c9f-7412268e9fe1">
@@ -431,6 +431,12 @@ def formattedDate = activitydate.format("MM/dd/yyyy")
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="delay" name="Delay 2" id="8f6e38c7-2df7-4767-8e9b-8802f286f347">
+    <con:settings/>
+    <con:config>
+      <delay>5000</delay>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="ProcessRVCSegment-MultipleRedeemer" id="a9dcc79f-4c08-4df6-bc78-cb48ddfdf4f0">
     <con:settings/>
     <con:config service="RestAPIs" methodName="ProcessRVCSegment" resourcePath="/api/v1/profiles/{profileId}/segmentdata/rvc" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -494,12 +500,6 @@ def formattedDate = activitydate.format("MM/dd/yyyy")
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="delay" name="Delay 2" id="8f6e38c7-2df7-4767-8e9b-8802f286f347">
-    <con:settings/>
-    <con:config>
-      <delay>5000</delay>
-    </con:config>
-  </con:testStep>
   <con:testStep type="restrequest" name="VerifySegmentHistory-MultipleRewardRedeemer" id="f082699f-933a-4070-a336-0c3abee94c3b">
     <con:settings/>
     <con:config service="RestAPIs" methodName="GetProfileSegmentHistory" resourcePath="/api/v1/profiles/{profileId}/segmentdata/segment/segmentHistory" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -517,30 +517,13 @@ def formattedDate = activitydate.format("MM/dd/yyyy")
             <codes>200</codes>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="DataAndMetadataAssertion" id="9cb089fc-752e-4d49-a312-cdacd3083712" name="Smart Assertion">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Data</con:mode>
-            <con:elements>
-              <con:path>$[0]['SegmentDataValue']</con:path>
-              <con:element>SegmentDataValue</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>${RVCSegments#SingleRedeemer}</con:expectedValue>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>[
-  {
-    "SegmentDataId": "29f985c1-90aa-f845-9309-3e04e14c81a0",
-    "SegmentDataName": "RVC_SEGMENT",
-    "SegmentDataValue": "SINGLE_REDEEMER",
-    "Status": "A",
-    "CreateUser": "AUTO_USER",
-    "CreateDate": "2022-08-31T10:43:10.588168Z",
-    "UpdateUser": "AUTO_USER",
-    "UpdateDate": "2022-08-31T10:43:10.588168Z"
-  }
-]</con:originalMessage>
+        <con:assertion type="JsonPath Match" id="59f89772-af18-428d-a1df-4905421da10e" name="JSONPath Match for Multiple Redeemer">
+          <con:configuration>
+            <path>$[?(@.SegmentDataValue=="MULTIPLE_REDEEMER")]['SegmentDataValue']</path>
+            <content>["MULTIPLE_REDEEMER"]</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
         <con:credentials>

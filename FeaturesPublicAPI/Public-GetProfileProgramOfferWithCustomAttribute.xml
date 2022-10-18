@@ -10,7 +10,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>64293642-63c9-47ea-89c1-64eafbccde74</con:value>
+          <con:value>15cf4e57-7975-4fef-8c09-8f20865adde6</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -30,11 +30,11 @@
         </con:property>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>64293642-63c9-47ea-89c1-64eafbccde74</con:value>
+          <con:value>15cf4e57-7975-4fef-8c09-8f20865adde6</con:value>
         </con:property>
         <con:property>
           <con:name>AccessToken</con:name>
-          <con:value>b416a18e-bf79-410d-a359-96cd26c67a91</con:value>
+          <con:value>d7c6306e-8848-4705-9df9-07837bd654f2</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -292,7 +292,7 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{\r
-   "SysOfferId" : "${GetProgramOffers#Response#$[0]['SysOfferId']}",\r
+   "SysOfferId" : "${GetProgramOffers#Response#$[?(@.OptInRequired==true)].SysOfferId[0]}",\r
    "ProfileId" : "${AddProfile#ProfileId}",
    "OptInDate": "${=new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()+1)}"
 }</con:request>
@@ -1074,7 +1074,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
-          <con:entry key="customDataValue" value="TRUE"/>
+          <con:entry key="customDataValue" value="FALSE"/>
           <con:entry key="profileId" value="${CreateProfileToken#ProfileId}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
@@ -1908,7 +1908,7 @@
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="sysOfferId" value="${GetProgramOffers#Response#$[0]['SysOfferId']}"/>
+          <con:entry key="sysOfferId" value="${ProcessProfileProgramOfferToAddOfferWithoutCustomAttributes#Response#$['SysOfferId']}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>profileId</con:entry>

@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="82e2fcf4-2cda-42ef-88de-05465817c41c" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="EarnPointOnTrxnForDataHub" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="82e2fcf4-2cda-42ef-88de-05465817c41cfileName">EarnPointOnTrxnForDataHub</con:setting>
+  </con:settings>
+  <con:testStep type="datasource" name="ProcessMarketingEventData" id="4743b361-5f3a-4b5d-9a34-8c482edae5ee">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/ProcessMarketingEvent.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>MarketingEventChannelId</con:property>
+      <con:property>ChannelName</con:property>
+      <con:property>PackagedAudienceId</con:property>
+      <con:property>AudienceName</con:property>
+      <con:property>AudienceSource</con:property>
+      <con:property>PanelIdCustAct</con:property>
+      <con:property>PanelCodeCustAct</con:property>
+      <con:property>PanelIdCustRew</con:property>
+      <con:property>PanelCodeCustRew</con:property>
+      <con:property>PanelIdOfferLim</con:property>
+      <con:property>PanelCodeOfferLim</con:property>
+      <con:property>PackagedOfferCategoryId</con:property>
+      <con:property>PackagedOfferCategoryCode</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="ProcessMarketingEventErnPtnTrxn" id="dcfa5b81-0852-42d0-b89c-f1bd79b248e3">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessMarketingEventErnPtnTrxn" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{ 	 	
+	"MarketingEventChannels": 
+		[ 		
+			{ 		
+         	"MarketingEventChannelId": "${ProcessMarketingEventData#MarketingEventChannelId}", 
+			"ChannelName": "${ProcessMarketingEventData#ChannelName}",
+			} 	
+		], 	
+		"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 	
+		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 
+		"PackagedAudience": {  		
+			"PackagedAudienceId": "${ProcessMarketingEventData#PackagedAudienceId}",
+               "AudienceName": "${ProcessMarketingEventData#AudienceName}",
+			}, 
+			"AudienceSource": "${ProcessMarketingEventData#AudienceSource}", 	
+			"PackagedOffer": 
+		{ 		
+			"PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6", 		 
+			"PackagedOfferCode": "EARN_POINTS_ON_TXN", 		 	
+			"PackagedOfferName": "Earn Points on a Transaction",  
+	 		"PackagedOfferParams":
+			[ 	
+			{ 				 				
+			"PackagedOfferParamId": "fa7588bf-06ee-4541-b9c5-4d03adcf7c61", 		
+			"PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6", 			
+			"ParamName": "Minimum transaction amount", 			
+			"ParamCode": "MIN_TXN_AMT",  				
+			"Value": "100",  				
+			"PanelId": "${ProcessMarketingEventData#PanelIdCustAct}",  			
+			"PanelCode":  "${ProcessMarketingEventData#PanelCodeCustAct}", 
+			}, 		
+			{ 				 				
+			"PackagedOfferParamId":"a1579fd2-2a7c-44e6-88bc-ed7d6319de83",  		
+			"PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6",			
+			"ParamName": "Point amount", 	
+			"ParamCode": "POINT_AMT_REWARDED",			
+			"Value": "5", 	
+			"PanelId": "${ProcessMarketingEventData#PanelIdCustRew}",				
+			"PanelCode": "${ProcessMarketingEventData#PanelCodeCustRew}",		
+			}		
+			], 		
+			"PackagedOfferCategoryId": "${ProcessMarketingEventData#PackagedOfferCategoryId}",
+			"PackagedOfferCategoryCode": "${ProcessMarketingEventData#PackagedOfferCategoryCode}",
+		}, 
+			"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+			"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}", 
+			"Status": "A", 
+}</con:request>
+        <con:originalUri>https://d2aldv-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="8e1f7e14-fc8b-44ae-92e1-3c5612b3e206" name="Smart Assertion for HTTP status code">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Thu, 07 Apr 2022 08:33:10 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>4158</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0e985d84-f292-048a-32e0-7e763d68804e</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1228ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMGO2R2EGJ6S:000001C3</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Thu, 07 Apr 2022 08:33:10 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"4158","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"0e985d84-f292-048a-32e0-7e763d68804e","content-type":"application/json; charset=utf-8","process-time":"1228ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGO2R2EGJ6S:000001C3"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="validateOffer" value="false"/>
+          <con:entry key="validateAudience" value="false"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>validateAudience</con:entry>
+          <con:entry>validateOffer</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="738ae072-0e87-4ef8-a260-f8f15fd48404">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EventCode</con:name>
+          <con:value>${ProcessMarketingEventErnPtnTrxn#Response#$['EventCode']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="StartProcess" id="e97dc9e5-5bfc-4d56-a46e-b6442a1c5540">
+    <con:settings/>
+    <con:config service="DatahubAPIs" resourcePath="/orchestration/v1/process-definition/key/{DataHubProcessDefinitionKey}/start" methodName="StartProcess" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="StartProcess" id="b4180f31-bb0b-4a75-b82d-a80d297d00e0" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://u-stgapi.datahub.epsilon.com</con:endpoint>
+        <con:request>{
+    "businessKey": "string",
+    "variables": {
+        "additionalProp1": {
+            "type": "string",
+            "value": "string"
+        },
+        "additionalProp2": {
+            "type": "string",
+            "value": "string"
+        },
+        "additionalProp3": {
+            "type": "string",
+            "value": "string"
+        },
+"FileNameExt":{
+"type":"string",
+"value":"string"
+}
+    },
+    "withVariablesInReturn": true
+}</con:request>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="Bearer ${#Project#DatahubOrchestrationToken}"/>
+          <con:entry key="X-ADH-Tenant-Code" value="${#Project#Tenant}"/>
+          <con:entry key="Accept" value="application/json"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>DataHubProcessDefinitionKey</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>X-ADH-Tenant-Code</con:entry>
+          <con:entry>Accept</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="LoopValidationExecutionStatus" id="a62b3a51-f1e4-4d46-9961-6380b232b149">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="Data Generator">
+        <con:configuration>
+          <generatedDataCount>${#TestCase#LoopCount}</generatedDataCount>
+          <generatorsTotalNumber>1</generatorsTotalNumber>
+          <lastSelectedProperty>0</lastSelectedProperty>
+          <GeneratorType0>INT</GeneratorType0>
+          <PropertyName0>LoopCount</PropertyName0>
+          <repetitionCountLoopCount>0</repetitionCountLoopCount>
+          <repeatValuesLoopCount>false</repeatValuesLoopCount>
+          <IntegerDataGeneratorMinValueLoopCount>1</IntegerDataGeneratorMinValueLoopCount>
+          <IntegerDataGeneratorMaxValueLoopCount>60</IntegerDataGeneratorMaxValueLoopCount>
+          <IntegerDataGeneratorStepValueLoopCount>1</IntegerDataGeneratorStepValueLoopCount>
+          <IntegerDataGeneratorConsequentValuesLoopCount>true</IntegerDataGeneratorConsequentValuesLoopCount>
+          <escapeSpaceSequence/>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>LoopCount</con:property>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:restartOnRun>true</con:restartOnRun>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="DataHubValidateExecutePipelineTaskStatus" id="e25fcf8b-7526-4ed4-a6b2-aadfae4e9305">
+    <con:settings/>
+    <con:config service="DatahubAPIs" resourcePath="/orchestration/v1/process-instance/{DatahubProcessId}/status" methodName="GetDatahubProcessStatus" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="DataHubValidateExecutePipelineTaskStatus" id="01270cc9-8610-4c84-a37f-b4f303f4ce81" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request/>
+        <con:originalUri>https://u-acpapi.datahub.epsilon.com/orchestration/v1/process-instance/3f31c891-7ae1-11ec-920f-028e85891005/status</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="f4cc0b66-6962-40f9-b464-6f00dfaf7268" name="Smart Assertion - Validating HTTP Status Code 200">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Mon, 04 Apr 2022 17:37:08 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['expires']</con:path>
+              <con:element>expires</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['transfer-encoding']</con:path>
+              <con:element>transfer-encoding</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>chunked</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['vary']</con:path>
+              <con:element>vary</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>accept-encoding</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['set-cookie']</con:path>
+              <con:element>set-cookie</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>[XSRF-TOKEN=aa802f17-2b37-4a84-8e1b-ed3f6e0d9beb; Path=/, SERVERID=nodeA; path=/]</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1; mode=block</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-client-request-id']</con:path>
+              <con:element>x-client-request-id</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>cf4cc537-47b2-470f-8e68-b0d3674c01c6</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json;charset=UTF-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache, no-store, max-age=0, must-revalidate</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Mon, 04 Apr 2022 17:37:08 GMT","expires":"0","transfer-encoding":"chunked","vary":"accept-encoding","x-frame-options":"DENY","pragma":"no-cache","set-cookie":"[XSRF-TOKEN=aa802f17-2b37-4a84-8e1b-ed3f6e0d9beb; Path=/, SERVERID=nodeA; path=/]","x-content-type-options":"nosniff","x-xss-protection":"1; mode=block","x-client-request-id":"cf4cc537-47b2-470f-8e68-b0d3674c01c6","connection":"keep-alive","content-type":"application/json;charset=UTF-8","#status#":"HTTP/1.1 200 OK","cache-control":"no-cache, no-store, max-age=0, must-revalidate"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="X-ADH-Tenant-Code" value="${#Project#Tenant}"/>
+          <con:entry key="Authorization" value="Bearer ${#Project#Datahub Orchestration Token}"/>
+          <con:entry key="Accept" value="application/json"/>
+          <con:entry key="DatahubProcessId" value="${#TestCase#DatahubProcessId}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>DatahubProcessId</con:entry>
+          <con:entry>X-ADH-Tenant-Code</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="goto" name="ValidatePipelineStatus" id="09d82ee8-fc76-4f66-a619-a8da578e27d9">
+    <con:settings/>
+    <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:condition>
+        <con:name>PipeLineExecutionStatus</con:name>
+        <con:type>XPATH</con:type>
+        <con:expression>(//*:Response/*:status  = 'Failed') or  (//*:Response/*:status  = 'Complete')</con:expression>
+        <con:targetStep>AssertDatahubWorkflowStatus</con:targetStep>
+      </con:condition>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="delay" name="WaitForPipelineToCompleteExecution" id="5006bbb1-f4d0-4d90-b29d-0426ef6ead93">
+    <con:settings/>
+    <con:config>
+      <delay>10000</delay>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasourceloop" name="LoopPipelineStatus" id="c34fc46e-0c79-4f38-90da-75e939e5bd9f">
+    <con:settings/>
+    <con:config>
+      <dataSourceStep>LoopValidationExecutionStatus</dataSourceStep>
+      <targetStep>DataHubValidateExecutePipelineTaskStatus</targetStep>
+      <discardResults>true</discardResults>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="assertionteststep" name="AssertDatahubWorkflowStatus" id="66de9604-10de-4514-8ba3-0f124756ff7e">
+    <con:settings/>
+    <con:config xsi:type="con:AssertionTestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:entry>
+        <con:id>5a7c36ae-8236-407e-b64f-d4c6390c454f</con:id>
+        <con:isGroup>false</con:isGroup>
+        <con:sourceId>dcfa5b81-0852-42d0-b89c-f1bd79b248e3</con:sourceId>
+        <con:propertyName>Response</con:propertyName>
+        <con:assertion type="JsonPath Match" name="JSONPath Match" id="49ccec6f-01d4-4271-8147-aaa87d541132">
+          <con:configuration>
+            <path>$['status']</path>
+            <content>"Complete"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+      </con:entry>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

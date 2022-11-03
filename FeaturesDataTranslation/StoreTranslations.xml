@@ -3,17 +3,80 @@
   <con:settings>
     <con:setting id="e7c76f54-7f2e-4f12-a4fe-747872ae4ceafileName">StoreTranslations</con:setting>
   </con:settings>
-  <con:testStep type="restrequest" name="GetStores" id="03863492-282d-44ef-b688-32d9685a217a">
+  <con:testStep type="datasource" name="Stores" id="e6537d5a-a84e-4b3a-b7d7-207ec99804ce">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/chains/stores" methodName="GetStores" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetStores" id="6b85d648-acd7-41de-bd35-6eef7c930df5" mediaType="application/json">
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Stores.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ChainName</con:property>
+      <con:property>FranchiseCode</con:property>
+      <con:property>ChainPriority</con:property>
+      <con:property>StoreCode</con:property>
+      <con:property>StoreName</con:property>
+      <con:property>StoreType</con:property>
+      <con:property>AddressLine1</con:property>
+      <con:property>AddressLine2</con:property>
+      <con:property>City</con:property>
+      <con:property>StateCode</con:property>
+      <con:property>PostalCode</con:property>
+      <con:property>CountryCode</con:property>
+      <con:property>ManagerFirstName</con:property>
+      <con:property>ManagerLastName</con:property>
+      <con:property>ManagerEmailAddr</con:property>
+      <con:property>GeofenceRadius</con:property>
+      <con:property>Latitude</con:property>
+      <con:property>Longitude</con:property>
+      <con:property>WrongAddressLine1</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateStore" id="5bba8dea-aac9-4842-9875-3ad3ec6c7946">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/chains/stores/{storeCode}" methodName="UpdateStore" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateStore" id="7ccd7736-c9ea-497b-bf6f-3a93dfeaef58" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/transactions/chains/stores</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="61cc475b-d5af-48c8-bb0d-eea8925efbae" name="Smart Assertion for HTTP Status Code">
+        <con:request>{\r
+   "ChainName" : "${Stores#ChainName}",\r
+   "FranchiseCode" : "${Stores#FranchiseCode}",\r
+   "ChainPriority" : "${Stores#ChainPriority}",\r
+   "StoreCode" : "${Stores#StoreCode}",\r
+   "StoreName" : "${Stores#StoreName}",\r
+   "StoreType" : "${Stores#StoreType}",\r
+   "AddressLine1" : "${Stores#AddressLine1}",\r
+   "AddressLine2" : "${Stores#AddressLine2}",\r
+   "City" : "${Stores#City}",\r
+   "StateCode" : "${Stores#StateCode}",\r
+   "PostalCode" : "${Stores#PostalCode}",\r
+   "CountryCode" : "${Stores#CountryCode}",\r
+   "ManagerFirstName" : "${Stores#ManagerFirstName}",\r
+   "ManagerLastName" : "${Stores#ManagerLastName}",\r
+   "ManagerEmailAddr" : "${Stores#ManagerEmailAddr}",\r
+   "GeofenceRadius" : "${Stores#GeofenceRadius}",\r
+   "Latitude" : "${Stores.Stores#csv.Latitude}",\r
+   "Longitude" : "${Stores.Stores#csv.Longitude}",\r
+   "Status" : "A"\r
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/chains/stores/storeCode</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="97f0772c-0c57-4d81-96bc-4c38c94f98e7" name="Smart Assertion for HTTP Status Codes">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -21,7 +84,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Wed, 02 Nov 2022 05:06:41 GMT</con:expectedValue>
+              <con:expectedValue>Tue, 08 Mar 2022 16:35:19 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -41,7 +104,7 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>201101</con:expectedValue>
+              <con:expectedValue>653</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -111,7 +174,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0063ca1b-386f-5c71-5f96-0838f231113d</con:expectedValue>
+              <con:expectedValue>e4cd39d5-f6ce-6860-1416-803931f7195e</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -131,7 +194,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>66ms</con:expectedValue>
+              <con:expectedValue>37ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -161,12 +224,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMLRVF4IR2N4:000011B0</con:expectedValue>
+              <con:expectedValue>0HMG0VG76BPK0:000005A5</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Wed, 02 Nov 2022 05:06:41 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"201101","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"0063ca1b-386f-5c71-5f96-0838f231113d","content-type":"application/json; charset=utf-8","process-time":"66ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMLRVF4IR2N4:000011B0"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Tue, 08 Mar 2022 16:35:19 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"653","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"e4cd39d5-f6ce-6860-1416-803931f7195e","content-type":"application/json; charset=utf-8","process-time":"37ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMG0VG76BPK0:000005A5"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -178,18 +241,22 @@
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="status" value="A"/>
+          <con:entry key="storeCode" value="${Stores#StoreCode}"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>Accept-Language</con:entry>
+          <con:entry>storeCode</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>content-type</con:entry>
-          <con:entry>chainName</con:entry>
-          <con:entry>franchiseCode</con:entry>
-          <con:entry>parentStoreCode</con:entry>
-          <con:entry>status</con:entry>
-          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
         </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
@@ -199,8 +266,8 @@
       <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="true" transferChildNodes="false">
         <con:name>Id</con:name>
         <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetStores</con:sourceStep>
-        <con:sourcePath>$[0]['StoreCode']</con:sourcePath>
+        <con:sourceStep>UpdateStore</con:sourceStep>
+        <con:sourcePath>$['StoreCode']</con:sourcePath>
         <con:targetType>EntityId</con:targetType>
         <con:targetStep>ProcessTranslations</con:targetStep>
         <con:targetPath/>
@@ -221,7 +288,7 @@
         </con:property>
         <con:property>
           <con:name>EntityId</con:name>
-          <con:value>ZO1OA02U</con:value>
+          <con:value>PP15001</con:value>
         </con:property>
         <con:property>
           <con:name>InvalidLanguageLocaleToTranslate</con:name>
@@ -408,7 +475,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="e3665cf9-f7b0-45a4-b5b3-40c003d5519e" name=" JSONPath Match for StoreName">
           <con:configuration>
-            <path>$[?(@.StoreId=='${GetStores#Response#$[0]['StoreId']}')]['StoreName']</path>
+            <path>$[?(@.StoreId=='${UpdateStore#Response#$['StoreId']}')]['StoreName']</path>
             <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='StoreName')]['AttributeValueBaseLanguage']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -607,7 +674,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="e3665cf9-f7b0-45a4-b5b3-40c003d5519e" name=" JSONPath Match for StoreName">
           <con:configuration>
-            <path>$[?(@.StoreId=='${GetStores#Response#$[0]['StoreId']}')]['StoreName']</path>
+            <path>$[?(@.StoreId=='${UpdateStore#Response#$['StoreId']}')]['StoreName']</path>
             <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='StoreName')]['AttributeValue']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -822,7 +889,7 @@
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="storeCode" value="${GetStores#Response#$[0]['StoreCode']}"/>
+          <con:entry key="storeCode" value="${UpdateStore#Response#$['StoreCode']}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>storeCode</con:entry>
@@ -1025,7 +1092,7 @@
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
-          <con:entry key="storeCode" value="${GetStores#Response#$[0]['StoreCode']}"/>
+          <con:entry key="storeCode" value="${UpdateStore#Response#$['StoreCode']}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>storeCode</con:entry>
@@ -1212,8 +1279,8 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" name=" JSONPath Match for StoreName" id="ed129dba-55fc-47d4-bab6-81792d4c38c4">
           <con:configuration>
-            <path>$[?(@.StoreId=='${GetStores#Response#$[0]['StoreId']}')]['StoreName']</path>
-            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='StoreName')]['AttributeValueBaseLanguage']}</content>
+            <path>$[?(@.StoreId=='${UpdateStore#Response#$['StoreId']}')]['StoreName'][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='StoreName')]['AttributeValueBaseLanguage'][0]}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -1226,10 +1293,10 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="chainName" value="${GetStores#Response#$[0]['ChainName']}"/>
-          <con:entry key="latitude" value="${GetStores#Response#$[0]['Latitude']}"/>
+          <con:entry key="chainName" value="${UpdateStore#Response#$['ChainName']}"/>
+          <con:entry key="latitude" value="${UpdateStore#Response#$['Latitude']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="longitude" value="${GetStores#Response#$[0]['Longitude']}"/>
+          <con:entry key="longitude" value="${UpdateStore#Response#$['Longitude']}"/>
           <con:entry key="miles" value="1"/>
         </con:parameters>
         <con:parameterOrder>
@@ -1411,8 +1478,8 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" name=" JSONPath Match for StoreName" id="ed129dba-55fc-47d4-bab6-81792d4c38c4">
           <con:configuration>
-            <path>$[?(@.StoreId=='${GetStores#Response#$[0]['StoreId']}')]['StoreName']</path>
-            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='StoreName')]['AttributeValue']}</content>
+            <path>$[?(@.StoreId=='${UpdateStore#Response#$['StoreId']}')]['StoreName'][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='StoreName')]['AttributeValue'][0]}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -1425,10 +1492,10 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="chainName" value="${GetStores#Response#$[0]['ChainName']}"/>
-          <con:entry key="latitude" value="${GetStores#Response#$[0]['Latitude']}"/>
+          <con:entry key="chainName" value="${UpdateStore#Response#$['ChainName']}"/>
+          <con:entry key="latitude" value="${UpdateStore#Response#$['Latitude']}"/>
           <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
-          <con:entry key="longitude" value="${GetStores#Response#$[0]['Longitude']}"/>
+          <con:entry key="longitude" value="${UpdateStore#Response#$['Longitude']}"/>
           <con:entry key="miles" value="1"/>
         </con:parameters>
         <con:parameterOrder>
@@ -1610,7 +1677,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" name=" JSONPath Match for StoreName" id="1399ec9c-3cb4-4f49-b471-2bfe5c107d9b">
           <con:configuration>
-            <path>$[?(@.StoreId=='${GetStores#Response#$[0]['StoreId']}')]['StoreName']</path>
+            <path>$[?(@.StoreId=='${UpdateStore#Response#$['StoreId']}')]['StoreName']</path>
             <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='StoreName')]['AttributeValueBaseLanguage']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -1624,8 +1691,8 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="chainName" value="${GetStores#Response#$[0]['ChainName']}"/>
-          <con:entry key="franchiseCode" value="${GetStores#Response#$[0]['FranchiseCode']}"/>
+          <con:entry key="chainName" value="${UpdateStore#Response#$['ChainName']}"/>
+          <con:entry key="franchiseCode" value="${UpdateStore#Response#$['FranchiseCode']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
         </con:parameters>
         <con:parameterOrder>
@@ -1806,7 +1873,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" name=" JSONPath Match for StoreName" id="1399ec9c-3cb4-4f49-b471-2bfe5c107d9b">
           <con:configuration>
-            <path>$[?(@.StoreId=='${GetStores#Response#$[0]['StoreId']}')]['StoreName']</path>
+            <path>$[?(@.StoreId=='${UpdateStore#Response#$['StoreId']}')]['StoreName']</path>
             <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='StoreName')]['AttributeValue']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -1820,8 +1887,8 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="chainName" value="${GetStores#Response#$[0]['ChainName']}"/>
-          <con:entry key="franchiseCode" value="${GetStores#Response#$[0]['FranchiseCode']}"/>
+          <con:entry key="chainName" value="${UpdateStore#Response#$['ChainName']}"/>
+          <con:entry key="franchiseCode" value="${UpdateStore#Response#$['FranchiseCode']}"/>
           <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
         </con:parameters>
         <con:parameterOrder>

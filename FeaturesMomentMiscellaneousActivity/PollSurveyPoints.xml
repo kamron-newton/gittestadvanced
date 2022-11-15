@@ -56,27 +56,27 @@
       <con:properties>
         <con:property>
           <con:name>PointsId</con:name>
-          <con:value>e10e901e-4f80-4b7d-8a6c-5e3d7e225c7b</con:value>
+          <con:value>25774608-8fc9-48dd-b0f0-027465bec080</con:value>
         </con:property>
         <con:property>
           <con:name>EggsId</con:name>
-          <con:value>77bfa98a-f052-4e44-baac-8fd01d96a187</con:value>
+          <con:value>2e5af117-9e6b-4869-a7b1-af1b7ed1d7ab</con:value>
         </con:property>
         <con:property>
           <con:name>StdPointsId</con:name>
-          <con:value>2dc5cb10-5b43-42e3-a07b-d5dffb513186</con:value>
+          <con:value>e2608366-3e6c-40f3-b304-534d0a222a99</con:value>
         </con:property>
         <con:property>
           <con:name>PromoPointsId</con:name>
-          <con:value>f7b232c6-c7fa-455d-a92e-244910607fcf</con:value>
+          <con:value>31ee7bda-74a7-48b3-a967-f8a10a170877</con:value>
         </con:property>
         <con:property>
           <con:name>HatchedEggsId</con:name>
-          <con:value>c1c35858-8c74-4fa5-8b33-1522ebce4265</con:value>
+          <con:value>128c2ae6-20d2-45ec-9dcb-e421a98c79eb</con:value>
         </con:property>
         <con:property>
           <con:name>UnhatchedEggsId</con:name>
-          <con:value>9fbaf637-0d60-4ecc-a942-5397a0dc1df7</con:value>
+          <con:value>875f14dc-609b-4ec2-9a6d-214bf22847b9</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -736,7 +736,7 @@ return AnswerId</script>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
 
-def AnswerId = context.expand( '${GetAnswer2#Response#$[0][\'AnswerId\']}' )
+def AnswerId = context.expand( '${GetAnswer2#Response#$[1][\'AnswerId\']}' )
 
 
 def status = context.expand( '${GetAnswer2#HarResponse#$[\'status\']}' ).toInteger();  
@@ -1333,7 +1333,7 @@ return AnswerId</script>
   "SurveyCode": "${=new java.text.SimpleDateFormat("MMddyyyyhhmmssmmm").format(new Date())}",
   "SurveyTypeId": "${GetSurveyType#Response#$[0]['SurveyTypeId']}",
   "CategoryId": "${GetSurveyCategory#Response#$[0]['CategoryId']}",
-  "IsDefaultSurvey": "${SurveyMoment#IsDefaultSurvey}",
+  "IsDefaultSurvey": false,
   "DisplayCorrectInd": false,
   "DisplayCorrectAnswerInd": false,
   "SurveyClassId": "${GetStdSurveyClass#Response#$[0]['SurveyClassId']}",
@@ -1523,10 +1523,10 @@ return AnswerId</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="BuildStdSurvey" id="ab6e479d-f043-4e9e-9ac4-3bac6005e3a7">
+  <con:testStep type="restrequest" name="BuildQuizSurvey" id="ab6e479d-f043-4e9e-9ac4-3bac6005e3a7">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/surveys/surveys/{surveyId}/buildsurvey" methodName="BuildSurvey" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="BuildStdSurvey" id="201bd69c-e11f-42b6-b3b9-63c5df03369f" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="BuildQuizSurvey" id="201bd69c-e11f-42b6-b3b9-63c5df03369f" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -1535,24 +1535,34 @@ return AnswerId</script>
   "SurveyId": "${AddSurvey#Response#$['SurveyId']}",
   "ProgramCode": "PP",
   "Questions": [
-    {
+   
+      {
       "QuestionId": "${ChkForQuestionnID#result}",
-      "QuestionDescription": "${SurveyMoment#StdQuestion}",
+      "QuestionDescription": "${SurveyMoment#SpecQuestion2}",
       "IsRequired": false,
-      "ResponseTypeCode": "Text",
+      "ResponseTypeCode": "Radio Button",
       "ValidationTypeCode": "Required",
       "QuestionOrder": 1,
       "Answers": [
         {
           "AnswerId": "${ChkForAnsId#result}",
-          "AnswerDescription": "${SurveyMoment#StdAnswerDescription}",
-          "AnswerType": "${SurveyMoment#AnswerType}",
+          "AnswerDescription": "${SurveyMoment#QzAnswerDescription}",
+          "AnswerType": "${SurveyMoment#AnswerTypeB}",
           "Selected": false,
-          "AnswerOrder": 1,
-          "IsCorrectAnswer": true,
+          "AnswerOrder": 1
+        
+        },
+         {
+          "AnswerId": "${ChkfroAns2#result}",
+          "AnswerDescription": "${SurveyMoment#QzAnswerDescription2}",
+          "AnswerType": "${SurveyMoment#AnswerTypeB}",
+          "Selected": false,
+          "AnswerOrder": 2
+       
         }
       ]
     }
+
   ],
   "Status": "A"
 }</con:request>

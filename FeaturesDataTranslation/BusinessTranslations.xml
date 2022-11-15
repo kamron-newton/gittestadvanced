@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="f8c1e6cb-cfad-47b2-abe9-dee8b8ab655c" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="BusinessTranslations" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="f8c1e6cb-cfad-47b2-abe9-dee8b8ab655cfileName">BusinessTranslations</con:setting>
+  </con:settings>
+  <con:testStep type="calltestcase" name="UpsertBusiness" id="e5a0f7bb-91f9-46b4-bcd0-27831b234731">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>06d17208-b77f-4477-b793-82502f88a19c</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="GetEntityID" id="dc1bacb0-12b9-4f49-af9f-370ad52d8eba">
+    <con:settings/>
+    <con:config>
+      <script>def entityId = context.expand( '${#[LoadProductionData1#UpsertBusiness#UpdateBusiness]#Response#$[\'BusinessId\']}' )
+testRunner.testCase.setPropertyValue("EntityId",entityId);</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Process Translations" id="9db7cbcf-3703-4aba-9783-05a235905fa5">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>73c62997-e67d-41b2-9d0b-6438a6007fff</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EntityName</con:name>
+          <con:value>BUSINESS</con:value>
+        </con:property>
+        <con:property>
+          <con:name>EntityId</con:name>
+          <con:value>${#TestCase#EntityId}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>InvalidLanguageLocaleToTranslate</con:name>
+          <con:value>WRONG</con:value>
+        </con:property>
+        <con:property>
+          <con:name>LanguageCodeToTranslate</con:name>
+          <con:value>DE_DE</con:value>
+        </con:property>
+        <con:property>
+          <con:name>InvalidEntityNameToTranslate</con:name>
+          <con:value>InvalidEntityName</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetBusinessWithEn-US" id="f7c6a3a7-b77d-413a-9434-6b1fd4e12f99">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/businesses" methodName="GetBusinesses" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetBusinessWithEn-US" id="ef4ea5fe-831f-44a6-94e5-1e8c151585ec" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/programs/businesses</con:originalUri>
+        <con:assertion type="JsonPath Match" id="9eb99998-57da-42ee-9a90-33221bd49151" name="Validation for Business Name">
+          <con:configuration>
+            <path>$[0]['BusinessName']</path>
+            <content>"Two Business"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>businessCode</con:entry>
+          <con:entry>businessName</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetBusinessWithde-DE" id="0cc06f66-91d4-42bb-87d5-74f7ae35299d">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/businesses" methodName="GetBusinesses" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetBusinessWithde-DE" id="ef4ea5fe-831f-44a6-94e5-1e8c151585ec" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/programs/businesses</con:originalUri>
+        <con:assertion type="JsonPath Match" id="7ddd06c8-59d6-4edb-885e-6eb02ef5bb00" name="Validation for Business Name">
+          <con:configuration>
+            <path>$[0]['BusinessName']</path>
+            <content>"Two Business"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="de-DE"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>businessCode</con:entry>
+          <con:entry>businessName</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetBusinessByCodeWithen-US" id="159ff899-3ddb-4f61-b3cc-ef4988fb9594">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/businesses" methodName="GetBusinesses" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetBusinessByCodeWithen-US" id="ef4ea5fe-831f-44a6-94e5-1e8c151585ec" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/programs/businesses</con:originalUri>
+        <con:assertion type="JsonPath Match" id="7ddd06c8-59d6-4edb-885e-6eb02ef5bb00" name="Validation for Business Name">
+          <con:configuration>
+            <path>$[0]['BusinessName']</path>
+            <content>"Two Business"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="businessCode" value="${GetBusinessWithEn-US#Response#$[0]['BusinessCode']}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>businessCode</con:entry>
+          <con:entry>businessName</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetBusinessByCodeWithde-DE" id="9a42c89f-4afe-41c4-bfe4-a24e538fcadd">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/businesses" methodName="GetBusinesses" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetBusinessByCodeWithde-DE" id="ef4ea5fe-831f-44a6-94e5-1e8c151585ec" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/programs/businesses</con:originalUri>
+        <con:assertion type="JsonPath Match" id="23dd9b9b-bac3-4a09-8e1d-78f9cf4dcc75" name="JSONPath Match">
+          <con:configuration>
+            <path>$[0]['BusinessName']</path>
+            <content>"Two Business"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="businessCode" value="${GetBusinessWithEn-US#Response#$[0]['BusinessCode']}"/>
+          <con:entry key="Accept-Language" value="de-DE"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>businessCode</con:entry>
+          <con:entry>businessName</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>EntityId</con:name>
+      <con:value>3492b80b-bb8d-4fe7-9b56-139162b96a54</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="46d4e2ed-a791-4728-a010-551557161a08" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertDeliveryStatus" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="32b627e5-131e-4132-adf5-efcffbcd1fc4" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertProdCatOfferRecommendation" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="46d4e2ed-a791-4728-a010-551557161a08fileName">UpsertDeliveryStatus</con:setting>
+    <con:setting id="32b627e5-131e-4132-adf5-efcffbcd1fc4fileName">UpsertProdCatOfferRecommendation</con:setting>
   </con:settings>
-  <con:testStep type="datasource" name="DeliveryStatuses" id="cb735a6e-2c8c-4c06-8c3d-4b352577d778">
+  <con:savedRecentRuns>1</con:savedRecentRuns>
+  <con:testStep type="datasource" name="Products" id="3e14c0a9-5a91-47b2-98f6-ced1e117ddb4">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
         <con:configuration>
-          <fileName>${#Project#ProjectPath}/References/DeliveryStatuses.csv</fileName>
+          <fileName>${#Project#ProjectPath}/References/ProductsForOfferRecommendation.csv</fileName>
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
@@ -17,8 +18,14 @@
       </con:dataSource>
       <con:shared>true</con:shared>
       <con:restartShared>true</con:restartShared>
-      <con:property>DeliveryStatusCode</con:property>
-      <con:property>DeliveryStatusDescription</con:property>
+      <con:property>Level1Description</con:property>
+      <con:property>Level1Code</con:property>
+      <con:property>Level2Code</con:property>
+      <con:property>Level2Description</con:property>
+      <con:property>SKU</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>ExcludeFromBaseInd</con:property>
+      <con:property>ChainName</con:property>
       <con:startRow>1</con:startRow>
       <con:endRow/>
       <con:recordsPerIteration>1</con:recordsPerIteration>
@@ -29,18 +36,36 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetDeliveryStatuses" id="38458d99-800d-4726-a794-bb385a1d4342">
+  <con:testStep type="restrequest" name="GetProductCategories" id="3f3ca085-e67e-4a69-9e25-5966691a43c1">
     <con:settings/>
-    <con:config service="RestAPIs" methodName="GetDeliveryStatuses" resourcePath="/api/v1/referencedata/profiles/deliverystatuses" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetDeliveryStatuses" id="3466e191-57a3-4676-94e9-9a557c3b0443" mediaType="application/json">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/products/search" methodName="GetProductCategories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProductCategories" id="61bc1157-65c9-4305-8bb7-3b2f482c3221" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/profiles/deliverystatuses</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="e761b347-9897-46d2-9161-70df34641708" name="Smart Assertion">
+        <con:request>[
+    {
+      "ProductLevelNumber": "1",
+      "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level1Description}",
+          "ProductLevelValueCode": "${Products#Level1Code}",
+        }
+      ]
+    },
+    {
+      "ProductLevelNumber": "2",
+          "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level2Description}",
+          "ProductLevelValueCode": "${Products#Level2Code}",
+        }
+      ]
+    }
+  ]</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/products/products/search</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="a151e024-fb0e-4505-afd3-aa746774e740" name="Smart Assertion for HTTP Status Codes">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -48,7 +73,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Mon, 28 Mar 2022 18:53:08 GMT</con:expectedValue>
+              <con:expectedValue>Tue, 08 Mar 2022 17:36:56 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -68,7 +93,7 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>3222</con:expectedValue>
+              <con:expectedValue>1140</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -138,7 +163,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>ee2740e7-f4b4-b63b-624c-f2ef93fdf860</con:expectedValue>
+              <con:expectedValue>3834f442-48cd-4250-bc35-c1078398cf33</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -158,7 +183,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>12ms</con:expectedValue>
+              <con:expectedValue>11ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -188,12 +213,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMGGMNAJ6VB1:000002E2</con:expectedValue>
+              <con:expectedValue>0HMG0VG76BPJH:00000A61</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Mon, 28 Mar 2022 18:53:08 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"3222","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"ee2740e7-f4b4-b63b-624c-f2ef93fdf860","content-type":"application/json; charset=utf-8","process-time":"12ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGGMNAJ6VB1:000002E2"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Tue, 08 Mar 2022 17:36:56 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1140","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"3834f442-48cd-4250-bc35-c1078398cf33","content-type":"application/json; charset=utf-8","process-time":"11ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMG0VG76BPJH:00000A61"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -202,58 +227,83 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="chainName" value="${Products#ChainName}"/>
+          <con:entry key="productCode" value="${Products#SKU}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Content-Type" value="application/json"/>
-          <con:entry key="status" value=""/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>
           <con:entry>Accept-Language</con:entry>
           <con:entry>Content-Type</con:entry>
-          <con:entry>status</con:entry>
+          <con:entry>chainName</con:entry>
+          <con:entry>productCode</con:entry>
         </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="DeliveryStatusCondition" id="472b5373-4c48-42a9-b78b-29923a8a8ece">
+  <con:testStep type="groovy" name="ProductIdCond" id="25a209b2-62a7-4366-83ea-e5a51306ea1b">
     <con:settings/>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
 
-//Get the parsed json of GetSources test step response
-def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetDeliveryStatuses#Response}'))
-
-//datasource
-def DeliveryStatusDatasource =context.expand( '${DeliveryStatuses#DeliveryStatusCode}')
-
-//PrefixId
-def GetRefDeliveryStatusIdByStatusCode = { code ->  json.find {it?.DeliveryStatusCode == DeliveryStatusDatasource}?.RefDeliveryStatusId}
-
-def RefDeliveryStatusId= (GetRefDeliveryStatusIdByStatusCode('DeliveryStatusDatasource'))
-
-if ( RefDeliveryStatusId == "" || RefDeliveryStatusId== null ) 
-    testRunner.gotoStepByName("AddDeliveryStatus")
+//Get the productId
+def productId = context.expand( '${GetProductCategories#Response#$[0][\'ProductId\']}' )
+ 
+if ( productId == "" || productId== null ) 
+    testRunner.gotoStepByName("AddProductCategories")
 else{
-	testRunner.gotoStepByName("RefDeliveryStatusId")
-}</script>
+	testRunner.gotoStepByName("ProductID")
+  }</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddDeliveryStatus" id="d6c04af6-6300-4f16-a0b8-253468c6e012">
+  <con:testStep type="restrequest" name="AddProductCategories" id="9eca666f-4cb6-4daa-bf82-60883748d642">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/profiles/deliverystatuses" methodName="AddDeliveryStatus" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="AddDeliveryStatus" id="f3d1dc52-acb9-44bb-a070-00bc0c70f262" mediaType="application/json" postQueryString="false">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/products" methodName="AddProductCategories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddProductCategories" id="f0641689-19d1-49a0-8455-15edfea4e143" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
+        <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
- "DeliveryStatusCode" : "${DeliveryStatuses#DeliveryStatusCode}",
- "DeliveryStatusDescription" : "${DeliveryStatuses#DeliveryStatusDescription}",
- "Status": "A"
+	"Status": "A",
+	"BrandCode":  "${Products#BrandCode}",
+	"SKU": "${Products#SKU}",
+	"ChainName": "${Products#ChainName}",
+	"ExcludeFromBaseInd": "${Products#ExcludeFromBaseInd}",
+	"ProductLevels": [
+    {
+      "ProductLevelNumber": "1",
+      "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level1Description}",
+          "ProductLevelValueCode": "${Products#Level1Code}"
+        }
+      ]
+    },
+    {
+      "ProductLevelNumber": "2",
+          "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level2Description}",
+          "ProductLevelValueCode": "${Products#Level2Code}"
+        }
+      ]
+    }
+  ] 
 }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/profiles/deliverystatuses</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="9b1a5140-1077-4747-8052-b97c720aada2" name="Smart Assertion">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/products/products</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="3a97b10c-8a0f-4549-a0cf-99a8bbf9e6ce" name="Smart Assertion for HTTP Status Codes">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -261,7 +311,7 @@ else{
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Mon, 28 Mar 2022 18:54:08 GMT</con:expectedValue>
+              <con:expectedValue>Tue, 08 Mar 2022 17:40:21 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -277,11 +327,11 @@ else{
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
             <con:elements>
-              <con:path>$['Headers']['transfer-encoding']</con:path>
-              <con:element>transfer-encoding</con:element>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>chunked</con:expectedValue>
+              <con:expectedValue>373</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -351,7 +401,7 @@ else{
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>5e8dc928-9fb7-99a2-c4af-eed917b69de4</con:expectedValue>
+              <con:expectedValue>c70ef6c2-c058-5be0-36d7-3acd773aceef</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -361,7 +411,7 @@ else{
               <con:element>content-type</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>application/json</con:expectedValue>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -371,7 +421,7 @@ else{
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>13ms</con:expectedValue>
+              <con:expectedValue>22ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -401,12 +451,12 @@ else{
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMGGMNAJ6VB5:0000019E</con:expectedValue>
+              <con:expectedValue>0HMG0VG76BPK0:00000BBB</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Mon, 28 Mar 2022 18:54:08 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","transfer-encoding":"chunked","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"5e8dc928-9fb7-99a2-c4af-eed917b69de4","content-type":"application/json","process-time":"13ms","#status#":"HTTP/1.1 400 Bad Request","cache-control":"no-store,no-cache","new-correlationid":"0HMGGMNAJ6VB5:0000019E"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Tue, 08 Mar 2022 17:40:21 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"373","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"c70ef6c2-c058-5be0-36d7-3acd773aceef","content-type":"application/json; charset=utf-8","process-time":"22ms","#status#":"HTTP/1.1 400 Bad Request","cache-control":"no-store,no-cache","new-correlationid":"0HMG0VG76BPK0:00000BBB"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -415,60 +465,76 @@ else{
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="Content-Type" value="application/json"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>
           <con:entry>Accept-Language</con:entry>
-          <con:entry>Content-Type</con:entry>
         </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="RefDeliveryStatusId" id="9b7dfe0a-65c5-46d0-ab10-7966f435e100">
+  <con:testStep type="groovy" name="ProductID" id="141828c7-781c-4a2e-8827-98da7878182a">
     <con:settings/>
     <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse
-
-//Get the parsed json of GetSources test step response
-def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetDeliveryStatuses#Response}'))
-
-//datasource
-def DeliveryStatusDatasource =context.expand( '${DeliveryStatuses#DeliveryStatusCode}')
-
-//PrefixId
-def GetRefDeliveryStatusIdByStatusCode = { code ->  json.find {it?.DeliveryStatusCode == DeliveryStatusDatasource}?.RefDeliveryStatusId}
-
-def RefDeliveryStatusId= (GetRefDeliveryStatusIdByStatusCode('DeliveryStatusDatasource'))
-def response = context.expand( '${AddDeliveryStatus#Response}' )
+      <script>//Get the productId
+def productId = context.expand( '${GetProductCategories#Response#$[0][\'ProductId\']}' )
+def response = context.expand( '${AddProductCategories#Response}' )
 
 if(response==null || response =="")
-  	return RefDeliveryStatusId;
-
+  	return productId;
  else
  {
-    RefDeliveryStatusId = context.expand( '${AddDeliveryStatus#Response#$[\'RefDeliveryStatusId\']}' )
-    return RefDeliveryStatusId;
+    productId = context.expand( '${AddProductCategories#Response#$[\'ProductId\']}' )
+    return productId;
  }</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="UpdateDeliveryStatus" id="8c540228-0d23-4b40-9ff2-f3e01aade0e4">
+  <con:testStep type="restrequest" name="UpdateProductCategories" id="3216ee21-d72f-477f-9154-0d1e82aece6a">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/profiles/deliverystatuses/{deliveryStatusId}" methodName="UpdateDeliveryStatus" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="UpdateDeliveryStatus" id="6988e169-f66d-4c0a-bafe-f3986fd768e5" mediaType="application/json" postQueryString="false">
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/products/products/{productId}" methodName="UpdateProductCategories" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateProductCategories" id="dd918164-f7ff-4ece-987d-9b1b7315ad57" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
- "DeliveryStatusCode" : "${DeliveryStatuses#DeliveryStatusCode}",
- "DeliveryStatusDescription" : "${DeliveryStatuses#DeliveryStatusDescription}",
- "Status": "A"
+	"Status": "A",
+	"SKU": "${Products#SKU}",
+	"ChainName": "${Products#ChainName}",
+	"ExcludeFromBaseInd": "${Products#ExcludeFromBaseInd}",
+	"ProductLevels": [
+    {
+      "ProductLevelNumber": "1",
+      "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level1Description}",
+          "ProductLevelValueCode": "${Products#Level1Code}"
+        }
+      ]
+    },
+    {
+      "ProductLevelNumber": "2",
+          "ProductLevelValues": [
+        {
+          "ProductLevelValueDesc": "${Products#Level2Description}",
+          "ProductLevelValueCode": "${Products#Level2Code}"
+        }
+      ]
+    }
+  ] 
 }</con:request>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/profiles/deliverystatuses/deliveryStatusId</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="3c99cbcb-0c3f-4895-9059-84ca82a6b97b" name="Smart Assertion">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/products/products/productId</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="85391d49-be86-4acc-abe9-94a95a7f85ac" name="Smart Assertion for HTTP Status Codes">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -476,7 +542,7 @@ if(response==null || response =="")
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Mon, 28 Mar 2022 18:53:09 GMT</con:expectedValue>
+              <con:expectedValue>Tue, 08 Mar 2022 17:36:56 GMT</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -496,7 +562,7 @@ if(response==null || response =="")
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>310</con:expectedValue>
+              <con:expectedValue>2207</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -566,7 +632,7 @@ if(response==null || response =="")
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>1185aefe-fa77-b047-73e7-c8e5e581b2ed</con:expectedValue>
+              <con:expectedValue>4a58e5a1-4241-3c42-4ab8-322ff4709196</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -586,7 +652,7 @@ if(response==null || response =="")
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>18ms</con:expectedValue>
+              <con:expectedValue>58ms</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -616,12 +682,12 @@ if(response==null || response =="")
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMGGMNAJ6VB1:000002E3</con:expectedValue>
+              <con:expectedValue>0HMG0VG76BPJH:00000A62</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Mon, 28 Mar 2022 18:53:09 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"310","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"1185aefe-fa77-b047-73e7-c8e5e581b2ed","content-type":"application/json; charset=utf-8","process-time":"18ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGGMNAJ6VB1:000002E3"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Tue, 08 Mar 2022 17:36:56 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"2207","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"4a58e5a1-4241-3c42-4ab8-322ff4709196","content-type":"application/json; charset=utf-8","process-time":"58ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMG0VG76BPJH:00000A62"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -631,27 +697,68 @@ if(response==null || response =="")
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
-          <con:entry key="deliveryStatusId" value="${RefDeliveryStatusId#result}"/>
+          <con:entry key="productId" value="${ProductID#result}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Content-Type" value="application/json"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>deliveryStatusId</con:entry>
+          <con:entry>productId</con:entry>
           <con:entry>Authorization</con:entry>
           <con:entry>Accept-Language</con:entry>
           <con:entry>Content-Type</con:entry>
         </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="datasourceloop" name="DeliveryStatusLoop" id="c959527e-e7b6-466f-9bd5-dcf78273097d">
+  <con:testStep type="datasourceloop" name="ProductsLoop" id="c9ca52fa-a3c1-48ee-b291-f0fe04017194">
     <con:settings/>
     <con:config>
-      <dataSourceStep>DeliveryStatuses</dataSourceStep>
-      <targetStep>GetDeliveryStatuses</targetStep>
+      <dataSourceStep>Products</dataSourceStep>
+      <targetStep>GetProductCategories</targetStep>
       <discardResults>true</discardResults>
     </con:config>
   </con:testStep>
   <con:properties/>
   <con:reportParameters/>
+  <con:breakPoints>
+    <con:testStepId>24fa9221-33d8-4f35-88eb-a9fe07fcd15c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>6156f37d-e965-4161-a2fe-6fa597d2a43c</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>f1dc550e-5a8b-4a18-885c-9d9dc1163986</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>8f1f23ae-c01a-474e-b02c-13044ff766e7</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:breakPoints>
+    <con:testStepId>2ad24d1d-41f3-4d23-8aae-538f20fba4f4</con:testStepId>
+    <con:status>NONE</con:status>
+    <con:properties/>
+  </con:breakPoints>
+  <con:environmentSpec>
+    <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+    <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+      <con:authProfile>Inherit From Parent</con:authProfile>
+    </con:entry>
+  </con:environmentSpec>
 </con:testCase>

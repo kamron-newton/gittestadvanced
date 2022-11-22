@@ -1,0 +1,998 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="ed33644a-87e4-42b1-a201-c52cea4573ce" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="SubscriptionTranslations" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="ed33644a-87e4-42b1-a201-c52cea4573cefileName">SubscriptionTranslations</con:setting>
+  </con:settings>
+  <con:testStep type="datasource" name="SubscriptionCategory" id="37bff311-35b3-4560-a66a-cbd3138e3db1">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/SubscriptionCategory.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>Program-Code</con:property>
+      <con:property>CategoryName</con:property>
+      <con:property>CategoryDescription</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSubscriptionCategories" id="baa99179-00fd-4ca8-80c2-19a32c57de74">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetSubscriptionCategories" resourcePath="/api/v1/referencedata/subscriptions/subscriptioncategory" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSubscriptionCategories" id="f9be0ebf-85a8-470a-bf3d-65a2f8134ee6" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptioncategory</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="7f44f133-6f6e-4a1c-b164-60267a2c3142" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken} "/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="GetCategoryID" id="00d5c5e5-61da-4df3-884e-7aac657e56dd">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+def categoryID = context.expand( '${GetSubscriptionCategories#Response#$[0][\'SubscriptionCategoryId\']}' )
+
+if (categoryID == " " ||categoryID == null)
+{
+categoryID = context.expand( '${AddSubscriptionCategory#Response#$[\'SubscriptionCategoryId\']}' )
+}
+return categoryID;</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="SubCategoryCondition" id="ea3660e3-d639-45c1-9417-b9d27aee404a">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+def subCategoryName = context.expand( '${GetSubscriptionCategories#Response#$[0][\'SubscriptionCategoryName\']}' )
+
+log.info(subCategoryName)
+if (subCategoryName == " " ||subCategoryName == null)
+{
+	testRunner.gotoStepByName("AddSubscriptionCategory")
+}
+else
+{
+	testRunner.gotoStepByName("Subscription")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddSubscriptionCategory" id="a9072c80-2a04-4d6c-8c3a-6677bf3d371c">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/subscriptions/subscriptioncategory" methodName="AddSubscriptionCategory" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddSubscriptionCategory" id="da5c2574-9d62-42b1-af05-58f607b5c2dc" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SubscriptionCategoryName": "${SubscriptionCategory#CategoryName}",
+  "SubscriptionCategoryDescription": "${SubscriptionCategory#CategoryDescription}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptioncategory</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="d414b470-6901-4cae-9201-929d755bc505" name="Smart Assertion">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Tue, 22 Nov 2022 09:12:17 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>335</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>fee3b091-f92f-5771-d6ac-b74666024a18</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['location']</con:path>
+              <con:element>location</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>http://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptioncategory</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>21ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 201 Created</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMMC2JSN55BS:0000014E</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Tue, 22 Nov 2022 09:12:17 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"335","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"fee3b091-f92f-5771-d6ac-b74666024a18","content-type":"application/json; charset=utf-8","location":"http://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptioncategory","process-time":"21ms","#status#":"HTTP/1.1 201 Created","cache-control":"no-store,no-cache","new-correlationid":"0HMMC2JSN55BS:0000014E"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="Subscription" id="57763cfa-897a-4cee-bfee-d5fcfb012243">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/Subscription.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>SubscriptionName</con:property>
+      <con:property>SubscriptionDescription</con:property>
+      <con:property>SubscriptionChannelCode1</con:property>
+      <con:property>SubscriptionChannelCode2</con:property>
+      <con:property>SubscriptionChannelCode3</con:property>
+      <con:property>SubscriptionChannelCode4</con:property>
+      <con:property>OptStatus</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSubscriptions" id="9d9719a4-a51b-4d93-8cdc-804d96819b29">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/subscriptions/subscriptions" methodName="GetSubscriptions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSubscriptions" id="b0ea969c-720f-4baa-81ca-86fa81425dce" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptions</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="aec54763-8764-4f1f-8f61-152e3c1ac177" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>status</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="SubscriptionCondition" id="7dff059d-6c82-4a20-bc38-66de4e750fbe">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+def subscriptionName = context.expand( '${GetSubscriptions#Response#$[0][\'SubscriptionName\']}' )
+
+log.info(subscriptionName)
+if (subscriptionName == "" ||subscriptionName == null)
+	testRunner.gotoStepByName("AddSubscription")
+	else
+	testRunner.gotoStepByName("ProcessTranslation")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddSubscription" id="7628a780-f5c1-4ca5-978a-821c7dd0bfac">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="AddSubscription" resourcePath="/api/v1/referencedata/subscriptions/subscriptions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddSubscription" id="320962ce-96f9-4790-b3f3-859b971a5617" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SubscriptionName": "${Subscription#SubscriptionName}",
+  "SubscriptionDescription": "${Subscription#SubscriptionDescription}",
+  "SubscriptionCategoryId": "${GetCategoryID#result}",
+  "SubscriptionChannels": [
+    {
+      "ChannelCode": "${Subscription#SubscriptionChannelCode1}"
+    },
+    {
+      "ChannelCode": "${Subscription#SubscriptionChannelCode2}"
+    },
+    {
+      "ChannelCode": "${Subscription#SubscriptionChannelCode3}"
+    },
+    {
+      "ChannelCode": "${Subscription#SubscriptionChannelCode4}"
+    }
+  ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptions</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" name="Smart Assertion" id="92105ab7-7bca-4b20-80dd-63518c5e3c12">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Tue, 22 Nov 2022 09:12:17 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>335</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>fee3b091-f92f-5771-d6ac-b74666024a18</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['location']</con:path>
+              <con:element>location</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>http://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptioncategory</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>21ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 201 Created</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMMC2JSN55BS:0000014E</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Tue, 22 Nov 2022 09:12:17 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"335","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"fee3b091-f92f-5771-d6ac-b74666024a18","content-type":"application/json; charset=utf-8","location":"http://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptioncategory","process-time":"21ms","#status#":"HTTP/1.1 201 Created","cache-control":"no-store,no-cache","new-correlationid":"0HMMC2JSN55BS:0000014E"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${Subscription#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="ProcessTranslation" id="50ea19bd-0a9c-42bd-b585-2d314df0c79b">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>73c62997-e67d-41b2-9d0b-6438a6007fff</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>EntityName</con:name>
+          <con:value>SUBSCRIPTION</con:value>
+        </con:property>
+        <con:property>
+          <con:name>EntityId</con:name>
+          <con:value>${GetSubscriptions#Response#$[0]['SubscriptionId']}</con:value>
+        </con:property>
+        <con:property>
+          <con:name>InvalidLanguageLocaleToTranslate</con:name>
+          <con:value>WRONG</con:value>
+        </con:property>
+        <con:property>
+          <con:name>LanguageCodeToTranslate</con:name>
+          <con:value>DE_DE</con:value>
+        </con:property>
+        <con:property>
+          <con:name>InvalidEntityNameToTranslate</con:name>
+          <con:value>InvalidEntityName</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSubscriptionsWithEnUS" id="75761917-bcc1-412d-b4a7-4d61e821cda4">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetSubscriptions" resourcePath="/api/v1/referencedata/subscriptions/subscriptions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSubscriptionsWithEnUS" id="763e1fb3-9a00-4227-84e2-503ae3b92268" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptions</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="e55db50b-5fc1-4ce2-bd45-0cebe75fc52a" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="80eec106-d3d8-432d-a894-c846ce3ab78e" name="JSONPath Match for SubscriptionName">
+          <con:configuration>
+            <path>$[?(@.SubscriptionId=='${GetSubscriptionsWithEnUS#Response#$[0]['SubscriptionId']}')][SubscriptionName][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[1]['AttributeValueBaseLanguage']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSubscriptionsWithDeDE" id="84182436-4fce-4fe2-bbac-c382c9976351">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetSubscriptions" resourcePath="/api/v1/referencedata/subscriptions/subscriptions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSubscriptionsWithDeDE" id="763e1fb3-9a00-4227-84e2-503ae3b92268" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptions</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="e55db50b-5fc1-4ce2-bd45-0cebe75fc52a" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="a66cb2e8-adfe-4857-9d92-221b100d1d4e" name="JSONPath Match for SubscriptionName">
+          <con:configuration>
+            <path>$[?(@.SubscriptionId=='${GetSubscriptionsWithEnUS#Response#$[0]['SubscriptionId']}')][SubscriptionName][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='SubscriptionName')]['AttributeValue'][0]}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="8addb78e-29d0-484d-8238-060736e4bd11" name="JSONPath Match for SubscriptionDescription">
+          <con:configuration>
+            <path>$[?(@.SubscriptionId=='${GetSubscriptionsWithEnUS#Response#$[0]['SubscriptionId']}')][SubscriptionDescription][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='SubscriptionDescription')]['AttributeValue'][0]}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
+          <con:entry key="status" value="A"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSubscriptionbyIDWithEnUS" id="94a94f9f-814c-482d-9235-f4112f697386">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetSubscriptionbyID" resourcePath="/api/v1/referencedata/subscriptions/subscriptions/{subscriptionId}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSubscriptionbyIDWithEnUS" id="0dd6e107-049d-4946-801d-d7d58399e6c2" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptions/subscriptionId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="0076916c-81e6-4be1-a7e3-a1870ab89eea" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match for SubscriptionName" id="0e76e8e8-0ace-4b1f-82ef-e8711918abb5">
+          <con:configuration>
+            <path>$['SubscriptionName']</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[1]['AttributeValueBaseLanguage']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="subscriptionId" value="${GetSubscriptions#Response#$[0]['SubscriptionId']}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSubscriptionbyIDWithDeDE" id="f480e948-c814-40ee-8178-da94ffd44b96">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetSubscriptionbyID" resourcePath="/api/v1/referencedata/subscriptions/subscriptions/{subscriptionId}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSubscriptionbyIDWithDeDE" id="0dd6e107-049d-4946-801d-d7d58399e6c2" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptions/subscriptionId</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="0076916c-81e6-4be1-a7e3-a1870ab89eea" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="c4a1657d-f23a-4a8a-b6e3-1bee884d1d19" name="JSONPath Match for SubscriptionDescription">
+          <con:configuration>
+            <path>$['SubscriptionDescription']</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='SubscriptionDescription')]['AttributeValue'][0]}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="663f9ac4-6e51-46f9-af2e-050b370facb7" name="JSONPath Match For SubscriptionName">
+          <con:configuration>
+            <path>$['SubscriptionName']</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='SubscriptionName')]['AttributeValue'][0]}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
+          <con:entry key="subscriptionId" value="${GetSubscriptions#Response#$[0]['SubscriptionId']}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSubscriptionHierarchywithEnUS" id="c51c5c5d-dca0-4c1c-aedc-e275ce33d12c">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetSubscriptionHierarchy" resourcePath="/api/v1/referencedata/subscriptions/subscriptions/hierarchy" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSubscriptionHierarchywithEnUS" id="2c3ab728-6fd3-4638-b567-5163cb9405d5" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptions/hierarchy</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="ca1dc57c-e3fc-4f52-a1d5-cf5e0bec80c8" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="2973493b-d438-4dca-a5f1-6465b9442fc4" name="JSONPath Match For SubscriptionDescription">
+          <con:configuration>
+            <path>$[0]['SubscriptionDescription']</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[0]['AttributeValueBaseLanguage']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="b18f1717-9f07-4cbe-ad78-98b7c5fe8387" name="JSONPath Match For SubscriptionName">
+          <con:configuration>
+            <path>$[0]['SubscriptionName']</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[1]['AttributeValueBaseLanguage']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetSubscriptionHierarchywithDeDE" id="2f489673-22dd-42f0-9985-bca3e1eb86a5">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetSubscriptionHierarchy" resourcePath="/api/v1/referencedata/subscriptions/subscriptions/hierarchy" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSubscriptionHierarchywithDeDE" id="2c3ab728-6fd3-4638-b567-5163cb9405d5" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptions/hierarchy</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="ca1dc57c-e3fc-4f52-a1d5-cf5e0bec80c8" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="c9228dbc-b70c-46ed-a643-73b37f550001" name="JSONPath Match For SubscriptionDescription">
+          <con:configuration>
+            <path>$[?(@.SubscriptionId=='${GetSubscriptionHierarchywithDeDE#Response#$[0]['SubscriptionId']}')][SubscriptionDescription][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='SubscriptionDescription')]['AttributeValue'][0]}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match For SubscriptionName" id="d06a0841-ab0e-4134-a898-4396d9ec43ae">
+          <con:configuration>
+            <path>$[?(@.SubscriptionId=='${GetSubscriptionHierarchywithDeDE#Response#$[0]['SubscriptionId']}')][SubscriptionName][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[?(@.AttributeName=='SubscriptionName')]['AttributeValue'][0]}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetParentSubscriptionsWithEnUS" id="c72b186c-cd49-4e72-b507-6788727c1fe2">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/subscriptions/subscriptions/parents" methodName="GetParentSubscriptions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetParentSubscriptionsWithEnUS" id="37e436d7-1815-4425-888d-9b43e9cb1b17" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptions/parents</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a60a44eb-55af-458a-bf54-964b4f2b6411" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match For SubscriptionName" id="5991cc31-e5f7-4591-a146-7cfe90d82dc3">
+          <con:configuration>
+            <path>$[?(@.SubscriptionId=='${GetSubscriptionHierarchywithDeDE#Response#$[0]['SubscriptionId']}')][SubscriptionName][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[1]['AttributeValueBaseLanguage']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match For SubscriptionDescription" id="6fa09be9-dacb-4b1a-b143-9b625fc14ce2">
+          <con:configuration>
+            <path>$[?(@.SubscriptionId=='${GetSubscriptionHierarchywithDeDE#Response#$[0]['SubscriptionId']}')][SubscriptionDescription][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[0]['AttributeValueBaseLanguage']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${Subscription#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>subscriptionId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetParentSubscriptionsWithDeDE" id="6d5c3d26-06c6-4d68-9b5f-c88132355779">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/subscriptions/subscriptions/parents" methodName="GetParentSubscriptions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetParentSubscriptionsWithDeDE" id="37e436d7-1815-4425-888d-9b43e9cb1b17" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/subscriptions/subscriptions/parents</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="a60a44eb-55af-458a-bf54-964b4f2b6411" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match For SubscriptionName" id="c9191cf6-546b-4b4b-868a-ab43dc4487e7">
+          <con:configuration>
+            <path>$[?(@.SubscriptionId=='${GetSubscriptionHierarchywithDeDE#Response#$[0]['SubscriptionId']}')][SubscriptionName][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[1]['AttributeValue']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match For SubscriptionDescription" id="cc5abb5e-c45c-40ed-96ef-2bbeb6ab1f6f">
+          <con:configuration>
+            <path>$[?(@.SubscriptionId=='${GetSubscriptionHierarchywithDeDE#Response#$[0]['SubscriptionId']}')][SubscriptionDescription][0]</path>
+            <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[0]['AttributeValue']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="${#TestSuite#LanguageLocaleToTranslate}"/>
+          <con:entry key="Program-Code" value="${Subscription#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>subscriptionId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

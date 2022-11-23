@@ -3250,15 +3250,15 @@
 		{ 	"CustomDataName": "OFFER_BOL", 	"CustomDataValue": "FALSE"               }   ]},   
 		"Status": "A",
 		"OfferTags" :[
-			{"OfferTagId" : "${GetOfferTags_Active_Status#Response#$[0]['TagId']}"},
-			{"OfferTagId" : "${GetOfferTags_Active_Status#Response#$[1]['TagId']}"}
+			{"OfferTagId" : "${GetOfferTags_Active_Status#Response#$[?(@.TagCode=='Tag_2221123182849864')]['TagId'][0]}"},
+			{"OfferTagId" : "${GetOfferTags_Active_Status#Response#$[?(@.TagCode=='Tag_1221123111248446')]['TagId'][0]}"}
 		] 
 		}</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
         <con:assertion type="JsonPath Match" id="a5de3399-b5d8-4cc4-b096-f9a2fa3ab085" name="Validate Offer Tag">
           <con:configuration>
             <path>$['OfferTags'][0]['OfferTagId']</path>
-            <content>${GetOfferTags_Active_Status#Response#$[0]['TagId']}</content>
+            <content>${GetOfferTags_Active_Status#Response#$[?(@.TagCode=='Tag_2221123182849864')]['TagId'][0]}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -3476,9 +3476,13 @@
     "Status": "${AddProgramOfferWithOfferTags#Response#$['Status']}",
     "IsCouponOffer":"FALSE", 
     "OfferTags": [{
-           "OfferTagId": "${AddProgramOfferWithOfferTags#Response#$['OfferTags'][0]['OfferTagId']}",
+           "OfferTagId" : "${GetOfferTags_Active_Status#Response#$[?(@.TagCode=='Tag_2221123182849864')]['TagId'][0]}",
            "Status": "I"
-    }]
+    },
+    {
+    	"OfferTagId" : "${GetOfferTags_Active_Status#Response#$[?(@.TagCode=='Tag_1221123211648804')]['TagId'][0]}",
+    	"Status": "A"
+    	}]
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/programs/programs/sysoffers/syOfferId</con:originalUri>
         <con:assertion type="DataAndMetadataAssertion" id="d8ceb124-98a8-4531-abbb-be661d41354f" name="Validate HTTP Status">
@@ -3639,7 +3643,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="10177d45-ea83-4a2d-a94f-fae4ca4d3377" name="Validate Tag Inactive Status">
           <con:configuration>
-            <path>$['OfferTags'][?(@.OfferTagId=='7ce6e48d-1bb4-408c-b628-0382ae673057')]['Status'][0]</path>
+            <path>$['OfferTags'][0]['Status']</path>
             <content>"I"</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -3687,7 +3691,7 @@
     "Status": "${AddProgramOfferWithOfferTags#Response#$['Status']}",
     "IsCouponOffer":"FALSE", 
     "OfferTags": [{
-           "OfferTagId": "${AddProgramOfferWithOfferTags#Response#$['OfferTags'][0]['OfferTagId']}",
+           "OfferTagId" : "${GetOfferTags_Active_Status#Response#$[?(@.TagCode=='Tag_2221123182849864')]['TagId'][0]}",
            "Status": "A"
     }]
 }</con:request>
@@ -3848,9 +3852,27 @@
             <con:originalMessage>{"Headers":{"date":"Mon, 21 Nov 2022 16:21:52 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"6581","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"594cfda4-89c2-e897-bd7c-bd0b8bec778f","content-type":"application/json; charset=utf-8","process-time":"46ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMMBNCO1CR9I:00000062"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="0cf488a6-6511-4b4a-88fa-cd6511a7fde0" name="Validate Tag Active Status">
+        <con:assertion type="JsonPath Match" id="0cf488a6-6511-4b4a-88fa-cd6511a7fde0" name="Validate Tag Active Status 1">
           <con:configuration>
-            <path>$['OfferTags'][?(@.OfferTagId=='7ce6e48d-1bb4-408c-b628-0382ae673057')]['Status'][0]</path>
+            <path>$['OfferTags'][0]['Status']</path>
+            <content>"A"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="04010c65-e990-47ea-bce4-24785e08c923" name="Validate Tag Active Status 2">
+          <con:configuration>
+            <path>$['OfferTags'][1]['Status']</path>
+            <content>"A"</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="70a72745-db4a-47c3-8932-3f34d288abbe" name="Validate Tag Active Status 3">
+          <con:configuration>
+            <path>$['OfferTags'][2]['Status']</path>
             <content>"A"</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>

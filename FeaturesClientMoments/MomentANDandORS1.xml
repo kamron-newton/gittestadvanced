@@ -524,7 +524,9 @@
           <con:value/>
         </con:property>
       </con:properties>
-      <con:returnProperties/>
+      <con:returnProperties>
+        <con:entry>MomentId</con:entry>
+      </con:returnProperties>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
@@ -714,8 +716,8 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="fe8d1b56-9dd2-4a0a-9749-ea5861c05d93" name="PointAmount Validation">
           <con:configuration>
-            <path>$.[?(@.ActTransactionId == '${#[ActivityCertificate#PurchaseTransaction#PurchaseTransaction]#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${#[Moment#UpsertMoment#GetMomentByMomentCode]#Response#$['MomentId']}')].PointsAmount[0]</path>
-            <content>${ClientMoments#MomentCodeForARPoints}.0</content>
+            <path>$.[?(@.ActTransactionId == '${#[ActivityCertificate#PurchaseTransaction#PurchaseTransaction]#Response#$['TransactionId']}' &amp;&amp; @.MomentId == '${UpsertMoment#MomentId}')].PointsAmount</path>
+            <content>[${ClientMoments#MomentCodeForARPoints}.0]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -753,7 +755,7 @@
       <con:properties>
         <con:property>
           <con:name>MomentId</con:name>
-          <con:value>${#[Moment#UpsertMoment#GetMomentByMomentCode]#Response#$['MomentId']}</con:value>
+          <con:value>${#[Moment#UpsertMoment#MomentId]#result}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>

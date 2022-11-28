@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="62020e05-c4bc-44ce-8ec5-1e374a8d4eb9" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Public-GetProfileAuctionsAndGenerateandGetReferralCode" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="b3976903-51fb-4f31-9ccb-7aeeb116deb5" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Public-GetProfileDisProgOfferPaginationSorting" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="62020e05-c4bc-44ce-8ec5-1e374a8d4eb9fileName">Public-GetProfileAuctionsAndGenerateandGetReferralCode</con:setting>
+    <con:setting id="b3976903-51fb-4f31-9ccb-7aeeb116deb5fileName">Public-GetProfileDisProgOfferPaginationSorting</con:setting>
   </con:settings>
-  <con:testStep type="calltestcase" name="AddProfile" id="391898ea-2149-4f71-8365-a7d2edc3b62d">
+  <con:testStep type="calltestcase" name="AddProfile" id="fc11a9e6-e88f-4b21-bbb7-955163985e8b">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>7961d684-b422-456b-b2b8-5dfee4558b84</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value/>
+          <con:value>45c45038-80b4-4607-9172-ba30b945f60b</con:value>
         </con:property>
       </con:properties>
-      <con:returnProperties/>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="CreateProfileToken" id="e542b3f7-e0b1-414f-a392-b7ec791a3bfb">
+  <con:testStep type="calltestcase" name="CreateProfileToken" id="5cb56b96-0a39-422f-b7cc-e5871ad802e4">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>1bcd4a1b-98d1-4dc0-ae9c-daf287bdcdb3</con:targetTestCase>
@@ -28,11 +30,11 @@
         </con:property>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>be362a96-8ca3-4770-a224-c817c1f60721</con:value>
+          <con:value>45c45038-80b4-4607-9172-ba30b945f60b</con:value>
         </con:property>
         <con:property>
           <con:name>AccessToken</con:name>
-          <con:value>b12c9e88-e979-4173-b42f-90cefc3813e6</con:value>
+          <con:value>32373d66-d630-412a-bcdd-1b106b71675b</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -42,16 +44,47 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetProfileAuctions" id="10a6bbfb-b062-468f-9bce-228170855cae">
+  <con:testStep type="datasource" name="ProfileOffer" id="ee278a39-e6f5-4597-8d23-0ffbe63c79b0">
     <con:settings/>
-    <con:config service="RestApiPublic" resourcePath="/api/v1/profiles/{profileId}/auctions" methodName="GetProfileAuctions" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetProfileAuctions" id="af5fe6d5-ee88-4da6-8587-67d472344f7e" mediaType="application/json">
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/ProfileOffer.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>ProgramCode</con:property>
+      <con:property>RedemptionCodeReqInPurchase</con:property>
+      <con:property>CustomDataName1</con:property>
+      <con:property>CustomDataValue1</con:property>
+      <con:property>CustomDataName2</con:property>
+      <con:property>CustomDataValue2</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="GetProgramOffers" id="3e8a5e1c-1b77-4acb-b040-18b94b8a8a5d">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers" methodName="Get Program Offers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProgramOffers" id="01b55446-a40a-4369-9fab-5cac544244cc" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://q3alin-pcapi.skynetlowerenv.com/api/v1/profiles/profileId/auctions</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="44387202-e704-4913-bcbc-93fdf6001792" name="Smart Assertion for HTTP status code 200 OK">
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="fd803570-3102-43d5-b264-0b635e3d8f69" name="Smart Assertion for HTTP Status Code">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -59,8 +92,8 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Wed, 27 Jul 2022 20:55:49 GMT</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:expectedValue>Mon, 04 Apr 2022 18:48:31 GMT</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -70,7 +103,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -79,8 +112,8 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>1432</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:expectedValue>1374</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -90,7 +123,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -100,7 +133,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -110,7 +143,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -120,7 +153,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -130,7 +163,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -140,7 +173,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>keep-alive</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -149,8 +182,8 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>e88418f4-261c-629c-1e83-5155ea9561f4</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:expectedValue>08c70b01-a539-a417-dbdb-bddce234d9f2</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -160,7 +193,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -169,8 +202,8 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>10ms</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:expectedValue>28ms</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -190,7 +223,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>no-store,no-cache</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -199,21 +232,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMJFUG7GQSHQ:00000150</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:expectedValue>0HMGM5CF41RO6:00000159</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Wed, 27 Jul 2022 20:55:49 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1432","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"e88418f4-261c-629c-1e83-5155ea9561f4","content-type":"application/json; charset=utf-8","process-time":"10ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMJFUG7GQSHQ:00000150"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="59905ab9-15cd-4c51-9bfc-df35b155effb" name="JSONPath Match">
-          <con:configuration>
-            <path>[?(@.AuctionCode=='PPPRINCESS_JEFF')].AuctionName</path>
-            <content>[Princess Jeff Signed Dress]</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
+            <con:originalMessage>{"Headers":{"date":"Mon, 04 Apr 2022 18:48:31 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1374","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"08c70b01-a539-a417-dbdb-bddce234d9f2","content-type":"application/json; charset=utf-8","process-time":"28ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGM5CF41RO6:00000159"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -222,34 +246,67 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
-          <con:entry key="profileId" value="${CreateProfileToken#ProfileId}"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="offerCode" value="100_EGGS"/>
+          <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="auctionCode" value="PPPRINCESS_JEFF"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="Content-Type" value="application/json"/>
+          <con:entry key="status" value="A"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>profileId</con:entry>
-          <con:entry>auctionCode</con:entry>
-          <con:entry>Program-Code</con:entry>
           <con:entry>Accept-Language</con:entry>
           <con:entry>Authorization</con:entry>
-          <con:entry>Content-Type</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>offerCode</con:entry>
+          <con:entry>offerName</con:entry>
+          <con:entry>status</con:entry>
+          <con:entry>shortDescription</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>isCouponOffer</con:entry>
+          <con:entry>offerType</con:entry>
+          <con:entry>isDefaultOffer</con:entry>
+          <con:entry>customDataName</con:entry>
+          <con:entry>customDataValue</con:entry>
+          <con:entry>sortBy</con:entry>
+          <con:entry>numberPerPage</con:entry>
+          <con:entry>pageNumber</con:entry>
         </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GenerateProfileReferralCode" id="2e762493-f587-4109-b7b8-4ad4f56c2e22">
+  <con:testStep type="restrequest" name="ProcessProfileProgramOfferToAddOfferWithoutCustomAttributes" id="7a84ba38-6f2c-4fd4-b12e-d949346b88ae" disabled="true">
     <con:settings/>
-    <con:config service="RestApiPublic" resourcePath="/api/v1/profiles/{profileId}/referral/code" methodName="GenerateProfileReferralCode" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GenerateProfileReferralCode" id="6565ae0c-0a9e-4ce7-9fc3-6f34ea6808e0" mediaType="application/json" postQueryString="false">
+    <con:config service="RestAPIs" resourcePath="/api/v2/profiles/sysoffers" methodName="Process Profile Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="ProcessProfileProgramOfferToAddOfferWithoutCustomAttributes" id="0896945e-1d87-42cf-9d01-21a267eb9d20" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:request/>
-        <con:originalUri>https://q3alin-pcapi.skynetlowerenv.com/api/v1/profiles/referral/code</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="21c60460-d1db-40f6-8713-793f9150c12d" name="Smart Assertion to validate HTTP status code 201">
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "SysOfferId": "${GetProgramOffers#Response#$[?(@.OptInRequired==true)].SysOfferId[0]}",
+  "ProfileId": "${AddProfile#ProfileId}",
+  "OptInDate": "${=new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()+2)}",
+  "ProfileOfferCustomDataGroup": {
+    "EntityName": "PROFILE_OFFER",
+    "CustomData": [
+       {
+            "CustomDataName" : "${ProfileOffer#CustomDataName2}",
+            "CustomDataValue" : "${ProfileOffer#CustomDataValue1}"
+       },
+  ]}
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/profiles/sysoffers</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="a60427c0-b5bc-4420-898a-a86b9ca0b305" name="Smart Assertion">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -257,7 +314,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Mon, 08 Aug 2022 19:56:09 GMT</con:expectedValue>
+              <con:expectedValue>Mon, 22 Aug 2022 20:41:21 GMT</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -277,7 +334,7 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>409</con:expectedValue>
+              <con:expectedValue>2030</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -347,7 +404,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>68137be0-2cc8-4203-d43c-2ab0dac61277</con:expectedValue>
+              <con:expectedValue>aabe8b67-93c5-eaf6-17d8-95ed221fb7d0</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -367,7 +424,7 @@
               <con:element>location</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>http://q3alin-pcapi.skynetlowerenv.com/api/v1/profiles/085c2ab5-5041-43ef-8c80-aecd8c001ed8/referral/code</con:expectedValue>
+              <con:expectedValue>http://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/profiles/sysoffers</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -377,7 +434,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>29ms</con:expectedValue>
+              <con:expectedValue>44ms</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -388,7 +445,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>true</con:enabled>
               <con:expectedValue>HTTP/1.1 201 Created</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -407,118 +464,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMJP5OB55FH4:00000194</con:expectedValue>
+              <con:expectedValue>0HMK465190256:00000881</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Mon, 08 Aug 2022 19:56:09 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"409","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"68137be0-2cc8-4203-d43c-2ab0dac61277","content-type":"application/json; charset=utf-8","location":"http://q3alin-pcapi.skynetlowerenv.com/api/v1/profiles/085c2ab5-5041-43ef-8c80-aecd8c001ed8/referral/code","process-time":"29ms","#status#":"HTTP/1.1 201 Created","cache-control":"no-store,no-cache","new-correlationid":"0HMJP5OB55FH4:00000194"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="DataAndMetadataAssertion" id="0a372745-0b36-4508-8af6-68fdc745ecca" name="Validating program code">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Data</con:mode>
-            <con:elements>
-              <con:path>$['ProfileReferralCodeId']</con:path>
-              <con:element>ProfileReferralCodeId</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>60b4aca5-1ea6-431f-8030-34d8fbb8e59f</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['ReferralCode']</con:path>
-              <con:element>ReferralCode</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>ms45Cz2rT</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['ProfileId']</con:path>
-              <con:element>ProfileId</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>75531a4b-bab1-4a9e-a3a0-be7180887c6c</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['ProgramCode']</con:path>
-              <con:element>ProgramCode</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>PP</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Status']</con:path>
-              <con:element>Status</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>A</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['CreateUser']</con:path>
-              <con:element>CreateUser</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>FLETCHERD361637A-565A-40E4-9EE8-E94564EEE2CD</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['CreateDate']</con:path>
-              <con:element>CreateDate</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>2022-08-08T20:41:20.9180356Z</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['UpdateUser']</con:path>
-              <con:element>UpdateUser</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>FLETCHERD361637A-565A-40E4-9EE8-E94564EEE2CD</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['UpdateDate']</con:path>
-              <con:element>UpdateDate</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>2022-08-08T20:41:20.9180361Z</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{
-  "ProfileReferralCodeId": "60b4aca5-1ea6-431f-8030-34d8fbb8e59f",
-  "ReferralCode": "ms45Cz2rT",
-  "ProfileId": "75531a4b-bab1-4a9e-a3a0-be7180887c6c",
-  "ProgramCode": "PP",
-  "Status": "A",
-  "CreateUser": "FLETCHERD361637A-565A-40E4-9EE8-E94564EEE2CD",
-  "CreateDate": "2022-08-08T20:41:20.9180356Z",
-  "UpdateUser": "FLETCHERD361637A-565A-40E4-9EE8-E94564EEE2CD",
-  "UpdateDate": "2022-08-08T20:41:20.9180361Z"
-}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Mon, 22 Aug 2022 20:41:21 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"2030","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"aabe8b67-93c5-eaf6-17d8-95ed221fb7d0","content-type":"application/json; charset=utf-8","location":"http://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/profiles/sysoffers","process-time":"44ms","#status#":"HTTP/1.1 201 Created","cache-control":"no-store,no-cache","new-correlationid":"0HMK465190256:00000881"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -527,33 +478,36 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
-          <con:entry key="profileId" value="${CreateProfileToken#ProfileId}"/>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
         <con:parameterOrder>
-          <con:entry>profileId</con:entry>
           <con:entry>Authorization</con:entry>
-          <con:entry>Accept-Language</con:entry>
           <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
         </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetReferralByCode" id="35a561d8-7262-4de4-b841-320c7aa40143">
+  <con:testStep type="restrequest" name="GetProfileProgramOffersWithCustomAttributes" id="ac5645a4-dc81-48c0-a47c-0375af1ce674" disabled="true">
     <con:settings/>
-    <con:config service="RestApiPublic" methodName="GetReferralByCode" resourcePath="/api/v1/profiles/referral/code" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetReferralByCode" id="65f0eed6-0d00-41be-8db1-93a3f18f73b6" mediaType="application/json" postQueryString="false">
+    <con:config service="RestApiPublic" resourcePath="/api/v1/profiles/{profileId}/sysoffers" methodName="GetProfileProgramOffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetProfileProgramOffersWithCustomAttributes" id="a5917bea-5ed3-449f-9e22-c34893d2ba10" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:encoding>UTF-8</con:encoding>
-        <con:request>{
-    "ReferralCode": "${GenerateProfileReferralCode#Response#$['ReferralCode']}"
-}</con:request>
-        <con:originalUri>https://q3alin-pcapi.skynetlowerenv.com/api/v1/profiles/referral/code</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="24f06bc7-a3fc-48b4-8588-7a4695be1c58" name="Smart Assertion validation HTTP status code 200">
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pcapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/profiles/a19b7bb4-598e-4fec-807d-ff2e2610090a/sysoffers</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="09e9924d-6f83-4c2f-ab1d-2a43059ac813" name="Smart Assertion to Validate HTTP Status Code 200">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -561,7 +515,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Mon, 08 Aug 2022 20:39:52 GMT</con:expectedValue>
+              <con:expectedValue>Tue, 06 Sep 2022 23:37:19 GMT</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -581,7 +535,7 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>390</con:expectedValue>
+              <con:expectedValue>1843</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -651,7 +605,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>3449c068-a3b6-a7bd-35b1-8ccb73e5a953</con:expectedValue>
+              <con:expectedValue>7c612a07-150c-8fdb-3d6c-005a187efa88</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -671,7 +625,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>9ms</con:expectedValue>
+              <con:expectedValue>27ms</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -701,30 +655,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMJP5OB55FH3:000001D6</con:expectedValue>
+              <con:expectedValue>0HMKGAIVO5MR1:000000B3</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Mon, 08 Aug 2022 20:39:52 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"390","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"3449c068-a3b6-a7bd-35b1-8ccb73e5a953","content-type":"application/json; charset=utf-8","process-time":"9ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMJP5OB55FH3:000001D6"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="fd01e1c1-276c-4090-9d14-7a0e3e882771" name="Validating ProfileID">
-          <con:configuration>
-            <path>$['ProfileId']</path>
-            <content>${#[Profile#PublicAddProfile#PublicAddProfile]#Response#$['ProfileId']}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="JsonPath Match" id="e21e7438-b51a-4c41-a7bd-ca3f9b79e6c2" name="Validating ReferralCode ">
-          <con:configuration>
-            <path>$['ReferralCode']</path>
-            <content>${GenerateProfileReferralCode#Response#$['ReferralCode']}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
+            <con:originalMessage>{"Headers":{"date":"Tue, 06 Sep 2022 23:37:19 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"1843","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"7c612a07-150c-8fdb-3d6c-005a187efa88","content-type":"application/json; charset=utf-8","process-time":"27ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMKGAIVO5MR1:000000B3"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -734,10 +670,36 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
+          <con:entry key="customDataValue" value="${ProfileOffer#CustomDataValue2}"/>
+          <con:entry key="profileId" value="${CreateProfileToken#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="customDataName" value="${ProfileOffer#CustomDataName2}"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
           <con:entry key="status" value="A"/>
         </con:parameters>
+        <con:parameterOrder>
+          <con:entry>profileId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>shortDescription</con:entry>
+          <con:entry>offerCode</con:entry>
+          <con:entry>offerName</con:entry>
+          <con:entry>startDate</con:entry>
+          <con:entry>endDate</con:entry>
+          <con:entry>expirationStartDate</con:entry>
+          <con:entry>expirationEndDate</con:entry>
+          <con:entry>isCouponOffer</con:entry>
+          <con:entry>offerType</con:entry>
+          <con:entry>customDataName</con:entry>
+          <con:entry>customDataValue</con:entry>
+          <con:entry>sortBy</con:entry>
+          <con:entry>numberPerPage</con:entry>
+          <con:entry>pageNumber</con:entry>
+          <con:entry>status</con:entry>
+        </con:parameterOrder>
       </con:restRequest>
     </con:config>
   </con:testStep>

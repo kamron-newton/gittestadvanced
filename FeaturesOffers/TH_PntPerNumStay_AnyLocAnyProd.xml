@@ -2345,24 +2345,32 @@ GROUP BY PROFILE_ID
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="WaitForBatchJob" id="09cb784f-e41c-4b8d-8a93-d5f580f291f8" disabled="true">
+  <con:testStep type="calltestcase" name="DataHubDeploymentStatusCheck" id="427b5841-3006-494a-a752-d5537424bb8e">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>1525e308-cfae-4277-af49-4908cfbd9e1d</con:targetTestCase>
+      <con:targetTestCase>5fa17f73-0dd8-4800-a9dc-33a05d2f1144</con:targetTestCase>
       <con:properties>
         <con:property>
-          <con:name>JobId</con:name>
-          <con:value>${#[OffersPrerequisite#DeployMarketingPromotion#DeployMarketingPromotion]#Response#$['BatchJobId']}</con:value>
+          <con:name>DataHubProcessId</con:name>
+          <con:value>${#[OffersPrerequisite#DeployMarketingPromotion#DeployMarketingPromotion]#Response#$['WorkflowId']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="delay" name="Delay" id="045b5b3d-6ffa-44fb-8ace-be8f2128ba19">
+  <con:testStep type="calltestcase" name="UpdateProgramOffer" id="b936a5e2-987e-4987-9d2d-7d7cc608c069">
     <con:settings/>
-    <con:config>
-      <delay>40000</delay>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>25d1254f-0637-4596-a5bf-1eba1aeac44c</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>SysOfferId</con:name>
+          <con:value>${#[OffersPrerequisite#GetProgramOffers#GetProgramOffers]#Response#$[0]['SysOfferId']}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="ProcessTransaction after Offer EndDate" id="328c35ab-e188-49e1-9ea8-6093a3a7b668">
@@ -3520,20 +3528,6 @@ GROUP BY PROFILE_ID
         <con:property>
           <con:name>EventCode</con:name>
           <con:value>${ProcessMarketingEvent#Response#$['EventCode']}</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties/>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="UpdateProgramOffer" id="b936a5e2-987e-4987-9d2d-7d7cc608c069">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>25d1254f-0637-4596-a5bf-1eba1aeac44c</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>SysOfferId</con:name>
-          <con:value>${#[OffersPrerequisite#GetProgramOffers#GetProgramOffers]#Response#$[0]['SysOfferId']}</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties/>

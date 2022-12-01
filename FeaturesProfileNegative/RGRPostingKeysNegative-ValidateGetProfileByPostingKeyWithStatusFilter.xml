@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="7d047ad9-f628-47f7-9cb5-18da9cde776d" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGRPostingKeysNegative-ValidateGetProfileByPostingKeyWithStatusFilter" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="7d047ad9-f628-47f7-9cb5-18da9cde776dfileName">RGRPostingKeysNegative-ValidateGetProfileByPostingKeyWithStatusFilter</con:setting>
+  </con:settings>
+  <con:testStep type="datasource" name="AddPostingKeys" id="d647c8ff-25a6-4299-bee8-92153a01091b">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/AddPostingKeys.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>PostingKeyValue</con:property>
+      <con:property>StartDate</con:property>
+      <con:property>EndDate</con:property>
+      <con:property>PostingKeyCode</con:property>
+      <con:property>Program-Code</con:property>
+      <con:property>UpdatedPostingKeyValue</con:property>
+      <con:property>ExpiredEndDate</con:property>
+      <con:property>SecurePostingKeyCode</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfile" id="5becdb29-54ff-4082-8212-5c41f4b0644b">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>b8bc9930-dba5-43b3-a7dd-d34ce7bdd724</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddFirstActivePostingKey" id="2e744a49-0744-4d26-a703-4e7ec5ce020c">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateProfilePostingKeys" resourcePath="/api/v1/profiles/profiles/postingkeys" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddFirstActivePostingKey" id="ac8ed5e5-21c0-4ac0-a4f9-ec2af5548799" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "PostingKeys": [
+    {
+      "PostingKeyCode": "${AddPostingKeys#PostingKeyCode}",
+      "PostingKeyValue": "${=java.util.UUID.randomUUID()}",
+      "StartDate": "${AddPostingKeys#StartDate}",
+      "EndDate": "${AddPostingKeys#EndDate}",
+      "Status": "A"
+    }
+  ],
+  "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/profiles/profiles/postingkeys</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f63c67a5-46ce-4098-8793-61621125fdcb" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${AddPostingKeys#Program-Code}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddSecondActivePostingKey" id="2ae755fd-fe60-48ea-ae77-11f33d3df430">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateProfilePostingKeys" resourcePath="/api/v1/profiles/profiles/postingkeys" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddSecondActivePostingKey" id="ac8ed5e5-21c0-4ac0-a4f9-ec2af5548799" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "PostingKeys": [
+    {
+      "PostingKeyCode": "${#TestCase#PostingKeyCode1}",
+      "PostingKeyValue": "${=java.util.UUID.randomUUID()}",
+      "StartDate": "${AddPostingKeys#StartDate}",
+      "EndDate": "${AddPostingKeys#EndDate}",
+      "Status": "A"
+    }
+  ],
+  "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/profiles/profiles/postingkeys</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f63c67a5-46ce-4098-8793-61621125fdcb" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${AddPostingKeys#Program-Code}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateSecondPostingKeyToInactive" id="9db49453-5c69-4110-a104-5da724a65eeb">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateProfilePostingKeys" resourcePath="/api/v1/profiles/profiles/postingkeys" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateSecondPostingKeyToInactive" id="ac8ed5e5-21c0-4ac0-a4f9-ec2af5548799" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "PostingKeys": [
+    {
+      "PostingKeyId": "${AddSecondActivePostingKey#Response#$['PostingKeys'][0]['PostingKeyId']}",
+      "PostingKeyCode": "${AddSecondActivePostingKey#Response#$['PostingKeys'][0]['PostingKeyCode']}",
+      "PostingKeyValue": "${=java.util.UUID.randomUUID()}",
+      "StartDate": "${AddPostingKeys#StartDate}",
+      "EndDate": "${AddPostingKeys#EndDate}",
+      "Status": "I"
+    }
+  ],
+  "CardNumber": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['CardNumber']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/profiles/profiles/postingkeys</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f63c67a5-46ce-4098-8793-61621125fdcb" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${AddPostingKeys#Program-Code}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="VerifyGetProfileByPostingKeyWithOutFilter" id="0b68c5a2-4b7b-4b32-b528-c94c6c3a9be1">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetProfileByPostingKey" resourcePath="/api/v1/profiles/postingkey/{postingKeyCode}/{postingKeyValue}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="VerifyGetProfileByPostingKeyWithOutFilter" id="c88e0f80-72b2-428b-83a6-97f7f0ecedaa" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/profiles/postingkey/PK1239/072af7d6-faf9-4590-a3bc-755c70c62cc2</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f9b96a64-4bc0-4f89-8696-0cf5a310c6ff" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="3cd3f99b-7808-45b5-ad2b-20c7cb18de20" name="JSONPath Match For ProfileId">
+          <con:configuration>
+            <path>$['ProfileId']</path>
+            <content>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple Contains" id="dd46f8b0-943b-4c8f-92f5-b9c9ed235c5b" name="Contains PostingKeyCode1">
+          <con:configuration>
+            <token>${#TestCase#PostingKeyCode1}</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple Contains" id="60636699-4034-4706-90ec-af157eb575c4" name="Contains  PostingKeyCode2">
+          <con:configuration>
+            <token>${#TestCase#PostingKeyCode2}</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="postingKeyCode" value="${AddFirstActivePostingKey#Response#$['PostingKeys'][0]['PostingKeyCode']}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="postingKeyValue" value="${AddFirstActivePostingKey#Response#$['PostingKeys'][0]['PostingKeyValue']}"/>
+          <con:entry key="Program-Code" value="${AddPostingKeys#Program-Code}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="VerifyGetProfileByPostingKeyWithStatusActiveFilter" id="e85b218e-d811-42d0-9277-ba91cbd3df1e">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetProfileByPostingKey" resourcePath="/api/v1/profiles/postingkey/{postingKeyCode}/{postingKeyValue}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="VerifyGetProfileByPostingKeyWithStatusActiveFilter" id="82b3084d-d53a-47d1-b4ea-c3762b50286c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/profiles/postingkey/PK1239/072af7d6-faf9-4590-a3bc-755c70c62cc2</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="47629e9c-9c01-4a25-a3f3-dabda51457c1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match For ProfileId" id="6dd75ede-b9cc-4f79-bda2-e3af9e83eeaa">
+          <con:configuration>
+            <path>$['ProfileId']</path>
+            <content>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple Contains" name="Contains  PostingKeyCode" id="815def10-1f0e-428d-a817-8428b6e401c2">
+          <con:configuration>
+            <token>${#TestCase#PostingKeyCode2}</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple NotContains" id="d7e4419d-e611-4988-aa62-2cc97e703f84" name="Not Contains PostingKeyCode">
+          <con:configuration>
+            <token>${#TestCase#PostingKeyCode1}</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="postingKeyCode" value="${AddFirstActivePostingKey#Response#$['PostingKeys'][0]['PostingKeyCode']}"/>
+          <con:entry key="profilePostingKeyStatus" value="A"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="postingKeyValue" value="${AddFirstActivePostingKey#Response#$['PostingKeys'][0]['PostingKeyValue']}"/>
+          <con:entry key="Program-Code" value="${AddPostingKeys#Program-Code}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="VerifyGetProfileByPostingKeyWithStatusInActiveFilter" id="68a1111f-f822-44ad-882d-5287e7ecd290">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetProfileByPostingKey" resourcePath="/api/v1/profiles/postingkey/{postingKeyCode}/{postingKeyValue}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="VerifyGetProfileByPostingKeyWithStatusInActiveFilter" id="82b3084d-d53a-47d1-b4ea-c3762b50286c" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/profiles/postingkey/PK1239/072af7d6-faf9-4590-a3bc-755c70c62cc2</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="47629e9c-9c01-4a25-a3f3-dabda51457c1" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" name="JSONPath Match For ProfileId" id="6dd75ede-b9cc-4f79-bda2-e3af9e83eeaa">
+          <con:configuration>
+            <path>$['ProfileId']</path>
+            <content>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple NotContains" id="1f2f82e1-e2b5-4c00-b136-134bc2e6ed35" name="Not Contains PostingKeyCode">
+          <con:configuration>
+            <token>${#TestCase#PostingKeyCode2}</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple Contains" name="Contains" id="d8f8b64c-91be-4419-8ecb-8771bf5ca295">
+          <con:configuration>
+            <token>${#TestCase#PostingKeyCode1}</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="postingKeyCode" value="${AddFirstActivePostingKey#Response#$['PostingKeys'][0]['PostingKeyCode']}"/>
+          <con:entry key="profilePostingKeyStatus" value="I"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="postingKeyValue" value="${AddFirstActivePostingKey#Response#$['PostingKeys'][0]['PostingKeyValue']}"/>
+          <con:entry key="Program-Code" value="${AddPostingKeys#Program-Code}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateSecondPostingKeyToActive" id="d562867e-6771-4ea1-ade4-6634e9c584d1">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateProfilePostingKeys" resourcePath="/api/v1/profiles/profiles/postingkeys" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateSecondPostingKeyToActive" id="ac8ed5e5-21c0-4ac0-a4f9-ec2af5548799" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "PostingKeys": [
+    {
+      "PostingKeyId": "${AddSecondActivePostingKey#Response#$['PostingKeys'][0]['PostingKeyId']}",
+      "PostingKeyCode": "${AddSecondActivePostingKey#Response#$['PostingKeys'][0]['PostingKeyCode']}",
+      "PostingKeyValue": "${=java.util.UUID.randomUUID()}",
+      "StartDate": "${AddPostingKeys#StartDate}",
+      "EndDate": "${AddPostingKeys#EndDate}",
+      "Status": "A"
+    }
+  ],
+  "CardNumber": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['CardNumber']}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/profiles/profiles/postingkeys</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="f63c67a5-46ce-4098-8793-61621125fdcb" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${AddPostingKeys#Program-Code}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property>
+      <con:name>PostingKeyCode1</con:name>
+      <con:value>PK2239</con:value>
+    </con:property>
+    <con:property>
+      <con:name>PostingKeyCode2</con:name>
+      <con:value>PK1239</con:value>
+    </con:property>
+  </con:properties>
+  <con:reportParameters/>
+</con:testCase>

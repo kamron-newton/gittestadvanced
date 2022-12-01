@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="d770f558-4670-44ed-853c-572c31f2335e" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGRPostingKeysNegative-NegAddPostingKeyOverlapSameReq" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="90a54acb-a7c1-41da-969a-4b5cfacfc6f8" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGRPostingKeysNegative-NegAddPostingKeyTooLongAndTooLongSecure" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="d770f558-4670-44ed-853c-572c31f2335efileName">RGRPostingKeysNegative-NegAddPostingKeyOverlapSameReq</con:setting>
+    <con:setting id="90a54acb-a7c1-41da-969a-4b5cfacfc6f8fileName">RGRPostingKeysNegative-NegAddPostingKeyTooLongAndTooLongSecure</con:setting>
   </con:settings>
-  <con:testStep type="datasource" name="AddPostingKeys" id="4c133c21-ceef-44b7-b24f-86807c1c18cb">
+  <con:testStep type="datasource" name="AddPostingKeys" id="4825c484-9b47-4b7d-9417-ab1ce9b0b404">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -35,16 +35,10 @@
       <con:expandProperties>false</con:expandProperties>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="PostingKeyValue" id="efda99f6-a314-4b17-95b5-cbaa17c4960f">
-    <con:settings/>
-    <con:config>
-      <script>java.util.UUID.randomUUID()</script>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="AddTwoDuplicateProfilePostingKeys" id="cc3166ac-bdee-42a4-a18f-86bf2deeedfe">
+  <con:testStep type="restrequest" name="AddProfilePostingKey" id="10bbbd10-269e-45cc-942c-d13aa9d597e0">
     <con:settings/>
     <con:config service="RestAPIs" methodName="UpdateProfilePostingKeys" resourcePath="/api/v1/profiles/profiles/postingkeys" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="AddTwoDuplicateProfilePostingKeys" id="4d766a44-1c13-43fb-adf5-85b20e1d013d" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="AddProfilePostingKey" id="4d766a44-1c13-43fb-adf5-85b20e1d013d" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -54,14 +48,7 @@
    "PostingKeys": [
     {
       "PostingKeyCode": "${AddPostingKeys#PostingKeyCode}",
-      "PostingKeyValue": "${PostingKeyValue#result}",
-      "StartDate": "${AddPostingKeys#StartDate}",
-      "EndDate": "${AddPostingKeys#EndDate}",
-      "Status": "A"
-    },
-    {
-      "PostingKeyCode": "${AddPostingKeys#PostingKeyCode}",
-      "PostingKeyValue": "${PostingKeyValue#result}",
+      "PostingKeyValue": "${AddPostingKeys#PostingKeyValue}${=java.util.UUID.randomUUID()}",
       "StartDate": "${AddPostingKeys#StartDate}",
       "EndDate": "${AddPostingKeys#EndDate}",
       "Status": "A"
@@ -70,7 +57,7 @@
    "ProfileId": "${#[Profile#AddProfileRGR]#ProfileId}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profiles/postingkeys</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="c128dd36-1486-4b01-8463-dc9e92179b1b" name="Smart Assertion">
+        <con:assertion type="DataAndMetadataAssertion" id="879e0013-4c12-41a0-b8c4-acd7e9971b33" name="Smart Assertion">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Data</con:mode>
             <con:elements>
@@ -78,7 +65,7 @@
               <con:element>ErrorCode</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>true</con:enabled>
-              <con:expectedValue>ProfilePostingKeyValueShouldBeUnique</con:expectedValue>
+              <con:expectedValue>ProfilePostingKeyValueExceededCharLimit</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -88,7 +75,7 @@
               <con:element>Message</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Profile posting key value should be unique in the overlapping date range</con:expectedValue>
+              <con:expectedValue>Profile posting key value has exceeded max char limit</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -98,27 +85,54 @@
               <con:element>Value</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>c68e6886-97b7-44c5-bf8f-42178a32bda6</con:expectedValue>
+              <con:expectedValue>5680f8a1e65d-d490-4248-a11a-1ee1b19351e1</con:expectedValue>
               <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
             <con:originalMessage>{
-  "ErrorCode": "ProfilePostingKeyValueShouldBeUnique",
-  "Message": "Profile posting key value should be unique in the overlapping date range",
-  "Value": "c68e6886-97b7-44c5-bf8f-42178a32bda6"
+  "ErrorCode": "ProfilePostingKeyValueExceededCharLimit",
+  "Message": "Profile posting key value has exceeded max char limit",
+  "Value": "5680f8a1e65d-d490-4248-a11a-1ee1b19351e1"
 }</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="4420f652-a42b-409a-8867-8462ffe694f5" name="Validate PostingKeyValue">
-          <con:configuration>
-            <path>$['Value']</path>
-            <content>${PostingKeyValue#result}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddProfileSecurePostingKey" id="b1ab9eae-f01d-42bb-84a3-91781ef7eae3">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateProfilePostingKeys" resourcePath="/api/v1/profiles/profiles/postingkeys" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddProfileSecurePostingKey" id="4d766a44-1c13-43fb-adf5-85b20e1d013d" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+   "PostingKeys": [
+    {
+      "PostingKeyCode": "${AddPostingKeys#SecurePostingKeyCode}",
+      "PostingKeyValue": "${=java.util.UUID.randomUUID()}${=java.util.UUID.randomUUID()}",
+      "StartDate": "${AddPostingKeys#StartDate}",
+      "EndDate": "${AddPostingKeys#EndDate}",
+      "Status": "A"
+    }
+  ],
+   "ProfileId": "${#[Profile#AddProfileRGR]#ProfileId}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profiles/postingkeys</con:originalUri>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>

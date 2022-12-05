@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="1af6a4d1-9212-4d9b-811b-5505dd299cbb" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RGRPostingKeysNegative-NegAddInvalidPostingKey" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+  <con:settings>
+    <con:setting id="1af6a4d1-9212-4d9b-811b-5505dd299cbbfileName">RGRPostingKeysNegative-NegAddInvalidPostingKey</con:setting>
+  </con:settings>
+  <con:testStep type="datasource" name="AddPostingKeys" id="0b74874a-a035-414c-95e8-e739bc34093d">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>${#Project#ProjectPath}/References/AddPostingKeys.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>PostingKeyValue</con:property>
+      <con:property>StartDate</con:property>
+      <con:property>EndDate</con:property>
+      <con:property>PostingKeyCode</con:property>
+      <con:property>Program-Code</con:property>
+      <con:property>UpdatedPostingKeyValue</con:property>
+      <con:property>ExpiredEndDate</con:property>
+      <con:property>SecurePostingKeyCode</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow/>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddProfilePostingKey-InvalidPostingKey" id="aa5ac4e3-5de5-4900-ab49-01950edd7039">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateProfilePostingKeys" resourcePath="/api/v1/profiles/profiles/postingkeys" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddProfilePostingKey-InvalidPostingKey" id="4d766a44-1c13-43fb-adf5-85b20e1d013d" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+   "PostingKeys": [
+    {
+      "PostingKeyCode": "PK${AddPostingKeys#PostingKeyCode}",
+      "PostingKeyValue": "${=java.util.UUID.randomUUID()}",
+      "StartDate": "${AddPostingKeys#StartDate}",
+      "EndDate": "${AddPostingKeys#EndDate}",
+      "Status": "A"
+    }
+  ],
+   "ProfileId": "${#[Profile#AddProfileRGR]#ProfileId}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/profiles/postingkeys</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9807bff6-e4ee-481b-837e-f8d10530f0cb" name="HTTP 400">
+          <con:settings/>
+          <con:configuration>
+            <codes>400</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="DataAndMetadataAssertion" id="6031b2dd-66ee-4b4b-ba19-9f3766adba88" name="Smart Assertion">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Data</con:mode>
+            <con:elements>
+              <con:path>$['ErrorCode']</con:path>
+              <con:element>ErrorCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>PostingKeyCodeIsInvalid</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Message']</con:path>
+              <con:element>Message</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>The Posting Key Code is invalid.</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{
+  "ErrorCode": "PostingKeyCodeIsInvalid",
+  "Message": "The Posting Key Code is invalid."
+}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+          <con:entry key="Content-Type" value="application/json"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
+  <con:reportParameters/>
+</con:testCase>

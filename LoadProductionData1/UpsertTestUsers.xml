@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="662f9f7b-4946-46e6-81d7-d06517a52c57" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="GetPointTypeId" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="8ec57e14-b8e7-4997-8bbb-f327d660cde0" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UpsertTestUsers" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="662f9f7b-4946-46e6-81d7-d06517a52c57fileName">GetPointTypeId</con:setting>
+    <con:setting id="8ec57e14-b8e7-4997-8bbb-f327d660cde0fileName">UpsertTestUsers</con:setting>
   </con:settings>
-  <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep id="2ea3c826-1cfb-4f65-9ec8-46db88d66880" name="PointTypes" type="datasource">
+  <con:testStep type="datasource" name="TestUser" id="5306bd46-2d95-4311-9300-e73085d5e917">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
         <con:configuration>
-          <fileName>${#Project#ProjectPath}/References/PointTypes.csv</fileName>
+          <fileName>${#Project#ProjectPath}/References/TestUser.csv</fileName>
           <separator>,</separator>
           <trim>true</trim>
           <charset>Cp1252</charset>
@@ -18,27 +17,12 @@
       </con:dataSource>
       <con:shared>true</con:shared>
       <con:restartShared>true</con:restartShared>
-      <con:property>PointTypeCode</con:property>
-      <con:property>PointTypeDescription</con:property>
-      <con:property>PointTypeShortDescription</con:property>
-      <con:property>RedeemableInd</con:property>
-      <con:property>IsGiftable</con:property>
-      <con:property>SubType1Code</con:property>
-      <con:property>SubType1ShortDesc</con:property>
-      <con:property>SubType1Desc</con:property>
-      <con:property>SubType1ExpiryInd</con:property>
-      <con:property>SubType1ExpiryTimeUnit</con:property>
-      <con:property>SubType1ExpiryTimeValue</con:property>
-      <con:property>SubType2Code</con:property>
-      <con:property>SubType2ShortDesc</con:property>
-      <con:property>SubType2Desc</con:property>
-      <con:property>SubType2ExpiryInd</con:property>
-      <con:property>SubType2ExpiryTimeUnit</con:property>
-      <con:property>SubType2ExpiryTimeValue</con:property>
-      <con:property>CostPerPoint</con:property>
-      <con:property>CurrencyCode</con:property>
+      <con:property>Slno</con:property>
+      <con:property>TestUserName</con:property>
+      <con:property>TempPassword</con:property>
+      <con:property>PermPassword</con:property>
       <con:startRow>1</con:startRow>
-      <con:endRow>3</con:endRow>
+      <con:endRow/>
       <con:recordsPerIteration>1</con:recordsPerIteration>
       <con:completeLastOperation>true</con:completeLastOperation>
       <con:trimValues>false</con:trimValues>
@@ -48,16 +32,19 @@
       <con:stopDatasourceExhausted>false</con:stopDatasourceExhausted>
     </con:config>
   </con:testStep>
-  <con:testStep id="5fcab98a-4f80-4625-b770-25abbd6c8277" name="FetchingPointTypeId" type="restrequest">
+  <con:testStep type="restrequest" name="GetSystemUserByUserName" id="ba12db33-5f63-4e99-bf9e-68a9a6408876">
     <con:settings/>
-    <con:config xsi:type="con:RestRequestStep" methodName="GetPointTypes" resourcePath="/api/v1/referencedata/transactions/pointtypes" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="41d772c9-42ab-4326-8052-f61f2a44d3be" mediaType="application/json" name="FetchingPointTypeId">
+    <con:config service="RestAPIs" resourcePath="/api/v2/security/users/user" methodName="GetSystemUserbyUsername" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="GetSystemUserByUserName" id="c904ed06-f56e-423c-a0e4-df8d21707281" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
-        <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/transactions/pointtypes</con:originalUri>
-        <con:assertion type="DataAndMetadataAssertion" id="cd417023-5543-44cb-b04f-07112c0d9eed" name="Smart Assertion for HTTP Status Codes">
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+  "Username": "${TestUser#TestUserName}"
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/security/users/user</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="62d09bcd-7650-4c4a-bd56-6e6791a93b51" name="Smart Assertion for HTTP Status code">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -65,8 +52,8 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Thu, 31 Mar 2022 10:13:43 GMT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:expectedValue>Mon, 05 Dec 2022 21:04:25 GMT</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -76,7 +63,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -85,8 +72,8 @@
               <con:element>content-length</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>460</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:expectedValue>635</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -96,7 +83,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>EN_US</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -106,7 +93,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>DENY</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -116,7 +103,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -126,7 +113,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>nosniff</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -136,7 +123,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>1</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -146,7 +133,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>keep-alive</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -155,8 +142,8 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>91cfceb0-d52b-fe3c-c556-fdb9be5aa05f</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:expectedValue>1e55ec0e-ce07-d159-914e-944ec0453314</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -166,7 +153,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -175,18 +162,18 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>14ms</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:expectedValue>13ms</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
             <con:elements>
               <con:path>$['Headers']['#status#']</con:path>
               <con:element>#status#</con:element>
-              <con:operatorId>3</con:operatorId>
+              <con:operatorId>1</con:operatorId>
               <con:enabled>true</con:enabled>
-              <con:expectedValue>HTTP/1.1 200 OK, HTTP/1.1 404 Not Found</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -196,7 +183,7 @@
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
               <con:expectedValue>no-store,no-cache</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -205,12 +192,12 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMGINROUM151:00000276</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
+              <con:expectedValue>0HMMMNF11BP7H:0000082C</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Thu, 31 Mar 2022 10:13:43 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"460","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"91cfceb0-d52b-fe3c-c556-fdb9be5aa05f","content-type":"application/json; charset=utf-8","process-time":"14ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGINROUM151:00000276"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Mon, 05 Dec 2022 21:04:25 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"635","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"1e55ec0e-ce07-d159-914e-944ec0453314","content-type":"application/json; charset=utf-8","process-time":"13ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMMMNF11BP7H:0000082C"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>
@@ -220,26 +207,54 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="isGiftable" value=""/>
           <con:entry key="Accept-Language" value="en-US"/>
-          <con:entry key="pointTypeCode" value="${PointTypes#PointTypeCode}"/>
-          <con:entry key="status" value=""/>
-          <con:entry key="redeemableInd" value=""/>
-          <con:entry key="pointTypeShortDescription" value=""/>
+          <con:entry key="Content-Type" value="application/json"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>
           <con:entry>Accept-Language</con:entry>
-          <con:entry>pointTypeCode</con:entry>
-          <con:entry>status</con:entry>
-          <con:entry>isGiftable</con:entry>
-          <con:entry>redeemableInd</con:entry>
-          <con:entry>pointTypeShortDescription</con:entry>
+          <con:entry>Content-Type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="TestUserCondition" id="11c203d6-8675-48c9-a22c-895ca5a429e4">
+    <con:settings/>
+    <con:config>
+      <script>def UserName = context.expand( '${GetSystemUserByUserName#Response#$[\'Username\']}' )
+def status = context.expand( '${GetSystemUserByUserName#HarResponse#$[\'status\']}' )toInteger()
+
+if (status == 400  &amp;&amp; DayName== " " ) 
+	testRunner.gotoStepByName("AddTestUser") 
+else  	
+	testRunner.gotoStepByName("TestUserLoop")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddTestUser" id="a0c154f1-b57b-446b-ba27-a97a59543b1f">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/security/users" methodName="AddSystemUser" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddTestUser" id="d701cbeb-ef78-472e-bc14-d3e89903aad3" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
         </con:parameterOrder>
         <con:environmentSpec>
-          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
           <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
             <con:authProfile>Inherit From Parent</con:authProfile>
           </con:entry>
@@ -250,33 +265,27 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="transfer" name="Extract Response" id="adecb896-7e0f-424a-91a5-48dcddea0466">
+  <con:testStep type="datasourceloop" name="TestUserLoop" id="cf2868c7-9277-4430-ae10-0ff7ac915713">
     <con:settings/>
-    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>RefPointTypeId</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>FetchingPointTypeId</con:sourceStep>
-        <con:sourcePath>$[0]['RefPointTypeId']</con:sourcePath>
-        <con:targetType>RefPointTypeId</con:targetType>
-        <con:targetStep>#TestCase#</con:targetStep>
-        <con:targetPath/>
-        <con:type>JSONPATH</con:type>
-        <con:targetTransferType>JSONPATH</con:targetTransferType>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
+    <con:config>
+      <dataSourceStep>TestUser</dataSourceStep>
+      <targetStep>GetSystemUserByUserName</targetStep>
+      <discardResults>true</discardResults>
     </con:config>
   </con:testStep>
-  <con:properties>
-    <con:property userSpecific="true">
-      <con:name>RefPointTypeId</con:name>
-      <con:value>2696d697-b1fa-4788-bef9-a17b845b4290</con:value>
-    </con:property>
-  </con:properties>
+  <con:testStep type="calltestcase" name="TestRunAddprofile" id="26ad1c4f-4573-4624-be75-df225fc105af">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:properties/>
   <con:reportParameters/>
-  <con:breakPoints>
-    <con:testStepId>2ea3c826-1cfb-4f65-9ec8-46db88d66880</con:testStepId>
-    <con:status>NONE</con:status>
-    <con:properties/>
-  </con:breakPoints>
 </con:testCase>

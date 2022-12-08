@@ -742,7 +742,7 @@
   </con:testStep>
   <con:testStep type="restrequest" name="Get Logs To Verify Warning" id="5b7a5e6a-249b-4e79-8473-9d1e0a53471b">
     <con:settings/>
-    <con:config service="Elasticsearch" resourcePath="/{index}/_search" methodName="Method 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:config service="Elasticsearch" resourcePath="/{index}/_search" methodName="_search" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="Get Logs To Verify Warning" id="3baa83e2-0a08-4d44-90a3-665f979daf03" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
@@ -827,10 +827,12 @@
         </con:credentials>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
-          <con:entry key="index" value="logstash-fusionwebapi-d3aldv"/>
+          <con:entry key="Authorization" value="Basic ${#Project#ElasticsearchBasicAuthorization}"/>
+          <con:entry key="index" value="logstash-fusionwebapi-${= context.expand('${#Project#Tenant}').toLowerCase()}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>index</con:entry>
+          <con:entry>Authorization</con:entry>
         </con:parameterOrder>
         <con:environmentSpec>
           <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">

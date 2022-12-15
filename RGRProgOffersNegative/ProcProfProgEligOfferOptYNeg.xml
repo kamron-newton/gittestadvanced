@@ -38,6 +38,110 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfile" id="c02c1aee-92c3-4626-8e08-ed766b9c41ba">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>08905875-d78a-4739-bb13-d8c9b3f15dc7</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="delay" name="Delay" id="a2f87b3d-4e8b-4ded-8719-9b61d70f717c">
+    <con:settings/>
+    <con:config>
+      <delay>3000</delay>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="VerifyOfferAvailableForProfile" id="4ea59534-d62a-40cb-a4ab-d80f265045c9">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="Display sys offers" resourcePath="/api/v1/profiles/{profileId}/displaysysoffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="VerifyOfferAvailableForProfile" id="4b1ceec9-3206-4b51-98ad-a4737e0aefc5" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/profiles/293e8903-aa38-480f-9247-2204793f0b90/api/v2/profiles/293e8903-aa38-480f-9247-2204793f0b90/displaysysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="d297edc6-ad5b-47c3-aa91-6c6a28bd5a1a" name="HTTP 200">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple Contains" id="4394fe79-3c97-4a21-994d-13cc39290b72" name="Find Text OfferCode">
+          <con:configuration>
+            <token>OfferCode</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="accept-language" value="en-US"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="program-code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="VerifyOfferAvailableForProfile-GetProfileDisplayOffer-v2" id="e98af90b-ab2c-4568-b575-697209213e37">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="GetProfileDisplayProgramOffers" resourcePath="/api/v2/profiles/{profileId}/displaysysoffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="VerifyOfferAvailableForProfile-GetProfileDisplayOffer-v2" id="c0833448-b7aa-4973-9725-51b3eef16822" mediaType="application/json">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/profiles/08905875-d78a-4739-bb13-d8c9b3f15dc7/displaysysoffers</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="9ff97779-8552-42d9-a9e2-75842fd0715e" name="HTTP 200 ">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="Simple Contains" id="890d516e-3ab7-45a0-86cf-b09a71a97580" name="Contains Offer Code">
+          <con:configuration>
+            <token>OfferCode</token>
+            <ignoreCase>false</ignoreCase>
+            <useRegEx>false</useRegEx>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="delay" name="Delay 2" id="e74c4acf-5626-4fd6-ac35-dc1d8b5eead9">
+    <con:settings/>
+    <con:config>
+      <delay>3000</delay>
+    </con:config>
+  </con:testStep>
   <con:properties/>
   <con:reportParameters/>
 </con:testCase>

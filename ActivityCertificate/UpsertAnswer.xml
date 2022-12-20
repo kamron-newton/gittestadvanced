@@ -228,7 +228,11 @@ else{
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
+        <con:request>{
+"AnswerDescription":"${#TestCase#AnswerDescription}",
+"AnswerType":"${#TestCase#AnswerType}",
+"AnswerValue":"${#TestCase#AnswerValue}"
+}</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/surveys/answers</con:originalUri>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
@@ -274,13 +278,13 @@ def getAnsIdByAnsDescr = { code ->  json.find {it?.AnswerDescription == AnswerDe
 
 def AnswerId= (getAnsIdByAnsDescr( 'AnswerDescription'))
 
-def response = context.expand( '${GetAnswer#Response}' )
 
-if ( AnswerId == "" || AnswerId== null ) 
-    testRunner.gotoStepByName("UpdateAnswer")
-else{
-	testRunner.gotoStepByName("AnswerId")
-}</script>
+  if ( AnswerId == "" || AnswerId== null ) {
+    AnswerId = context.expand( '${AddAnswer#Response#$[\'AnswerId\']}' )
+     return AnswerId;
+  }
+  else
+      return AnswerId;</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="UpdateAnswer" id="938a007b-e015-4544-9f16-3ada0318edc8">
@@ -291,7 +295,12 @@ else{
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request/>
+        <con:request>{
+"AnswerDescription":"${#TestCase#AnswerDescription}",
+"AnswerType":"${#TestCase#AnswerType}",
+"AnswerValue":"${#TestCase#AnswerValue}",
+"Status":"A"
+}</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/surveys/answers/</con:originalUri>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
@@ -316,7 +325,7 @@ else{
   <con:properties>
     <con:property>
       <con:name>AnswerDescription</con:name>
-      <con:value>Blue</con:value>
+      <con:value>No</con:value>
     </con:property>
     <con:property>
       <con:name>AnswerType</con:name>
@@ -324,7 +333,7 @@ else{
     </con:property>
     <con:property>
       <con:name>AnswerValue</con:name>
-      <con:value>Blue</con:value>
+      <con:value>No</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>

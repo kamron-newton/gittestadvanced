@@ -196,7 +196,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="GetAnswerId" id="f947a822-4eb6-4364-89f5-c46e0cb80d26">
+  <con:testStep type="groovy" name="ChkForAnswer" id="519f8a6a-c31b-4058-8941-aad8617672da">
     <con:settings/>
     <con:config>
       <script>import static com.jayway.jsonpath.JsonPath.parse
@@ -208,32 +208,123 @@ def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetAnswer#R
 def AnswerDescription =context.expand( '${#TestCase#AnswerDescription}')
 
 //SourceId for a given SourceCode of the json
-def getAnsIdByAnsDescr = { code ->  json.find {it?.SourceCode == AnswerDescription}?.AnswerId }
+def getAnsIdByAnsDescr = { code ->  json.find {it?.AnswerDescription == AnswerDescription}?.AnswerId }
+
+
+def AnswerId= (getAnsIdByAnsDescr( 'AnswerDescription'))
+ 
+if ( AnswerId == "" || AnswerId== null ) 
+    testRunner.gotoStepByName("AddAnswer")
+else{
+	testRunner.gotoStepByName("AnswerId")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddAnswer" id="87bc9404-f127-4ba7-b182-c26a318cf2e8">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/surveys/answers" methodName="AddAnswer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="AddAnswer" id="ce9aeeaa-1dc6-478c-938a-d833f096bb7b" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/surveys/answers</con:originalUri>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value=" OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Status</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="6705507e-ac0c-4a4b-acac-36b4c8b57bc6">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="537e61a1-a742-4637-a094-8cad62ddccd2">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="AnswerId" id="f947a822-4eb6-4364-89f5-c46e0cb80d26">
+    <con:settings/>
+    <con:config>
+      <script>import static com.jayway.jsonpath.JsonPath.parse
+
+//Get the parsed json of GetSources test step response
+def json = new groovy.json.JsonSlurper().parseText(context.expand('${GetAnswer#Response}'))
+
+//datasource  
+def AnswerDescription =context.expand( '${#TestCase#AnswerDescription}')
+
+//SourceId for a given SourceCode of the json
+def getAnsIdByAnsDescr = { code ->  json.find {it?.AnswerDescription == AnswerDescription}?.AnswerId }
 
 
 def AnswerId= (getAnsIdByAnsDescr( 'AnswerDescription'))
 
 def response = context.expand( '${GetAnswer#Response}' )
 
-if(response==null || response =="")
-  	return QuestionId;
-
- else
- {
-    AnswerId = context.expand( '${GetAnswer#Response#$[\'AnswerId\']}' )
-    return AnswerId;
- }</script>
+if ( AnswerId == "" || AnswerId== null ) 
+    testRunner.gotoStepByName("UpdateAnswer")
+else{
+	testRunner.gotoStepByName("AnswerId")
+}</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="UpdateAnswer" id="938a007b-e015-4544-9f16-3ada0318edc8">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/surveys/answers/{answerId}" methodName="UpdateAnswer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="UpdateAnswer" id="7ce35a66-23b6-4fcc-96e0-d8899d16613f" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request/>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/referencedata/surveys/answers/</con:originalUri>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value=" OAuth ${#Project#AuthToken}"/>
+          <con:entry key="answerId" value="${AnswerId#result}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>answerId</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:properties>
     <con:property>
       <con:name>AnswerDescription</con:name>
+      <con:value>Blue</con:value>
     </con:property>
     <con:property>
       <con:name>AnswerType</con:name>
+      <con:value>Boolean</con:value>
     </con:property>
     <con:property>
       <con:name>AnswerValue</con:name>
+      <con:value>Blue</con:value>
     </con:property>
   </con:properties>
   <con:reportParameters/>

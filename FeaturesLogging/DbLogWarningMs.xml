@@ -852,7 +852,7 @@
   }
 }</con:request>
         <con:originalUri>https://elk-sso-lowerenv-ingest.skynetlowerenv.com/logstash-fusionwebapi-d3aldv/_search</con:originalUri>
-        <con:assertion type="Simple Contains" id="57de7beb-7862-402e-8553-d4a5b79159c5" name="Contains">
+        <con:assertion type="Simple Contains" id="57de7beb-7862-402e-8553-d4a5b79159c5" name="Contains &quot;Query execution time has exceeded the threshold&quot; message">
           <con:configuration>
             <token>Query execution time has exceeded the threshold</token>
             <ignoreCase>false</ignoreCase>
@@ -889,14 +889,15 @@
   <con:testStep type="groovy" name="Retry Log Query" id="b39d2f4d-63c8-44f4-815b-9ab2c0a739a0">
     <con:settings/>
     <con:config>
-      <script>int retries = 11
+      <script>def retry = "Get Logs To Verify Warning"
+int retries = 11
 int curr = 1
 sleep(10000)
-def tRun = testRunner.runTestStepByName("Get Logs To Verify Warning")
+def tRun = testRunner.runTestStepByName(retry)
 while (tRun.getStatus().toString() != "PASS" &amp;&amp; curr &lt;= retries) {
 	curr += 1
 	sleep(10000)
-     tRun = testRunner.runTestStepByName("Get Logs To Verify Warning")
+     tRun = testRunner.runTestStepByName(retry)
 }
 
 if(tRun.getStatus().toString() != "PASS") {

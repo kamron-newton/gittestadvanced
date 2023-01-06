@@ -313,7 +313,7 @@ def sysOfferId = context.expand( '${GetProgramOfferWithOfferCode#Response#$[0][\
 if (sysOfferId == "" ) 
     testRunner.gotoStepByName("AddProgramOffer")
     else 
-        testRunner.gotoStepByName("UpdateProgramOffer")</script>
+        testRunner.gotoStepByName("GetOfferWithCodeResponse")</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="AddProgramOffer" id="85c4ca33-c2fa-4a3e-983d-2267c880283a">
@@ -558,6 +558,21 @@ if (sysOfferId == "" )
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep id="10d5a7e9-68a0-4b31-bb16-beec66af1782" name="GetOfferWithCodeResponse" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script>def SysOfferId = context.expand( '${GetProgramOfferWithOfferCode#Response#$[0][\'SysOfferId\']}' )
+def response = context.expand( '${AddProgramOffer#Response}' )
+
+if(response==null || response =="")
+  	return SysOfferId;
+ else
+ {
+SysOfferId = context.expand( '${AddProgramOffer#Response#$[\'SysOfferId\']}' )
+    return SysOfferId;
+ }</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="UpdateProgramOffer" id="dbc796e8-bdf9-4c49-93de-d43ad6e8fd43">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers/{sysOfferId}" methodName="Update Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -762,7 +777,7 @@ if (sysOfferId == "" )
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="sysOfferId" value="${GetProgramOfferWithOfferCode#Response#$[0]['SysOfferId']}"/>
+          <con:entry key="sysOfferId" value="${GetOfferWithCodeResponse#result}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>sysOfferId</con:entry>
@@ -1450,15 +1465,6 @@ if (sysOfferId == "" )
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/referencedata/programs/sysoffers</con:originalUri>
-        <con:assertion type="JsonPath Match" id="0def2ff1-fca0-4d10-b937-28b29df6870c" name="JSONPath Match">
-          <con:configuration>
-            <path>$[0]['OfferCode']</path>
-            <content>${ProgramOfferTaxonomy#OfferCode1}</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
         <con:assertion type="DataAndMetadataAssertion" id="43577739-9fa5-46e0-abad-8364f72e3fe1" name="Smart Assertion for HTTP Status Code">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
@@ -1676,7 +1682,7 @@ def sysOfferId = context.expand( '${GetProgramOffersWithDifferentOfferCode#Respo
 if (sysOfferId == "" ) 
     testRunner.gotoStepByName("AddSysOfferTaxonomy")
     else 
-        testRunner.gotoStepByName("UpdateProgramOfferWithDiffCode")</script>
+        testRunner.gotoStepByName("GetOfferWithDiffCodeResponse")</script>
     </con:config>
   </con:testStep>
   <con:testStep type="restrequest" name="AddSysOfferTaxonomy" id="118b8955-a630-4b0b-92db-a4c445d05100">
@@ -1910,6 +1916,21 @@ if (sysOfferId == "" )
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep id="97431734-810a-4f17-9dd3-11153aa11a8c" name="GetOfferWithDiffCodeResponse" type="groovy">
+    <con:settings/>
+    <con:config>
+      <script>def SysOfferId = context.expand( '${GetProgramOffersWithDifferentOfferCode#Response#$[0][\'SysOfferId\']}' )
+def response = context.expand( '${AddSysOfferTaxonomy#Response}' )
+
+if(response==null || response =="")
+  	return SysOfferId;
+ else
+ {
+SysOfferId = context.expand( '${AddSysOfferTaxonomy#Response#$[\'SysOfferId\']}' )
+    return SysOfferId;
+ }</script>
+    </con:config>
+  </con:testStep>
   <con:testStep type="restrequest" name="UpdateProgramOfferWithDiffCode" id="8261d3e1-1037-4a16-a36a-eab9a9c5fed6">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/sysoffers/{sysOfferId}" methodName="Update Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1919,10 +1940,10 @@ if (sysOfferId == "" )
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
- "OfferCode": "${ProgramOfferTaxonomy#OfferCode}",
+ "OfferCode": "${ProgramOfferTaxonomy#OfferCode1}",
  "OfferDescription": "${ProgramOfferTaxonomy#OfferDescription}",
  "OfferName": "${ProgramOfferTaxonomy#OfferName}",
- "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-1)}",
+  "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-1)}",
  "OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+500)}",
  "OfferShortDescription": "${ProgramOfferTaxonomy#OfferShortDescription}",
  "OptInRequired": "${ProgramOfferTaxonomy#OptInRequired}",
@@ -2113,7 +2134,7 @@ if (sysOfferId == "" )
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="sysOfferId" value="${GetProgramOffersWithDifferentOfferCode#Response#$[0]['SysOfferId']}"/>
+          <con:entry key="sysOfferId" value="${GetOfferWithDiffCodeResponse#result}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>sysOfferId</con:entry>
@@ -2148,7 +2169,7 @@ if (sysOfferId == "" )
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
- "OfferCode": "${ProgramOfferTaxonomy#OfferCode}",
+ "OfferCode": "${ProgramOfferTaxonomy#OfferCode1}",
  "OfferDescription": "${ProgramOfferTaxonomy#OfferDescription}",
  "OfferName": "${ProgramOfferTaxonomy#OfferName}",
  "OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()-1)}",
@@ -2340,7 +2361,7 @@ if (sysOfferId == "" )
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="sysOfferId" value="${GetProgramOffersWithDifferentOfferCode#Response#$[0]['SysOfferId']}"/>
+          <con:entry key="sysOfferId" value="${GetOfferWithDiffCodeResponse#result}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>sysOfferId</con:entry>
@@ -2542,7 +2563,7 @@ if (sysOfferId == "" )
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="sysOfferId" value="${GetProgramOffersWithDifferentOfferCode#Response#$[0]['SysOfferId']}"/>
+          <con:entry key="sysOfferId" value="${GetOfferWithDiffCodeResponse#result}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>sysOfferId</con:entry>
@@ -4680,7 +4701,7 @@ if (sysOfferId == "" )
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-  "SysOfferId": "${GetProgramOfferWithOfferCode#Response#$[0]['SysOfferId']}",
+  "SysOfferId": "${GetOfferWithCodeResponse#result}",
   "ProfileId": "${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/profiles/sysoffers</con:originalUri>

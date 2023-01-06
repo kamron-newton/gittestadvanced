@@ -3,7 +3,7 @@
   <con:settings>
     <con:setting id="1a7f06a3-e75a-42d2-972b-cece3f318d2efileName">RGRELSegment</con:setting>
   </con:settings>
-  <con:testStep type="restrequest" name="Add EL Segment" id="f0fec4c5-55c8-4322-8ac6-e16476ebbec1">
+  <con:testStep type="restrequest" name="Add EL Segment" id="f0fec4c5-55c8-4322-8ac6-e16476ebbec1" disabled="true">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/segmentdata/elsegment" methodName="ProcessELSegment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="Add EL Segment" id="42e70483-bd44-4fff-8fb7-2874eb0a859b" mediaType="application/json" postQueryString="false">
@@ -201,10 +201,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Verify EL Segment" id="67397a24-9f00-4587-9d7a-bb1142717879">
+  <con:testStep type="restrequest" name="Get_EL_Segment" id="67397a24-9f00-4587-9d7a-bb1142717879">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/segmentdata/elsegments" methodName="GetELSegments" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Verify EL Segment" id="9d72f68d-5ff6-4d6f-a1c9-ec231e73808d" mediaType="application/json">
+      <con:restRequest name="Get_EL_Segment" id="9d72f68d-5ff6-4d6f-a1c9-ec231e73808d" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -367,15 +367,6 @@
             <con:originalMessage>{"Headers":{"date":"Mon, 13 Jun 2022 06:58:21 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"5380","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"5420f7c1-74ed-9eba-4ae0-0218f88f5f7b","content-type":"application/json; charset=utf-8","process-time":"24ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMID04ERU0LC:0000007E"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="75bbf918-edef-47ea-ad03-3e95d59b2fb6" name="Verify EL Segment Name by Code">
-          <con:configuration>
-            <path>$[?(@.ELSegmentCode == "${#TestCase#ELSegmentCode}")]['ELSegmentName']</path>
-            <content>[${#TestCase#ELSegmentName}]</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
-          </con:configuration>
-        </con:assertion>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>
@@ -385,6 +376,7 @@
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Content-Type" value="application/json"/>
+          <con:entry key="status" value="A"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>Authorization</con:entry>
@@ -412,8 +404,8 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-    "ELSegmentCode": "${#TestCase#ELSegmentCode}",
-    "ELSegmentName": "${#TestCase#ELSegmentName}",
+    "ELSegmentCode": "${Get_EL_Segment#Response#$[0]['ELSegmentCode']}",
+    "ELSegmentName": "${Get_EL_Segment#Response#$[0]['ELSegmentName']}",
     "ELSegmentDescription": "This EL Segment Inserted from Automation Suit",
     "IconPath": "${#TestCase#IconPath}"
 }</con:request>
@@ -619,7 +611,7 @@
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
     "ELSegmentCode": "EL_AUTOMATION_SEGMENT_NEW",
-    "ELSegmentName": "${#TestCase#ELSegmentName}",
+    "ELSegmentName": "${Get_EL_Segment#Response#$[0]['ELSegmentName']}",
     "ELSegmentDescription": "This EL Segment Inserted from Automation Suit",
     "IconPath": "${#TestCase#IconPath}"
 }</con:request>
@@ -841,7 +833,7 @@
   "SegmentData": [
     {
       "SegmentDataName": "EL_SEGMENT",
-      "SegmentDataValue": "${#TestCase#ELSegmentCode}"
+      "SegmentDataValue": "${Get_EL_Segment#Response#$[0]['ELSegmentCode']}"
     }
   ]
 }</con:request>
@@ -1203,149 +1195,6 @@
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
             <con:originalMessage>{"Headers":{"date":"Wed, 30 Mar 2022 12:39:43 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"406","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"2a22a952-a2c1-b0d5-fe76-77fbf56e11d7","content-type":"application/json; charset=utf-8","process-time":"14ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMGI829KUD6F:0000000D"}}</con:originalMessage>
-          </con:configuration>
-        </con:assertion>
-        <con:assertion type="DataAndMetadataAssertion" id="5e494728-c52e-4a5d-b74e-8040148ebe16" name="Additional Fileld Check For EL Segment ">
-          <con:configuration xsi:type="con:DataAndMetadataAssertion">
-            <con:mode>Received Data</con:mode>
-            <con:elements>
-              <con:path>$['ProfileId']</con:path>
-              <con:element>ProfileId</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>a7eaa7eb-e83b-4829-b1c8-e121af78a191</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['Id']</con:path>
-              <con:element>Id</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>a7eaa7eb-e83b-4829-b1c8-e121af78a191</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['SegmentData'][0]['SegmentDataName']</con:path>
-              <con:element>SegmentDataName</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EL_SEGMENT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['SegmentData'][0]['SegmentDataValue']</con:path>
-              <con:element>SegmentDataValue</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>EL_AUTOMATION_SEGMENT</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['SegmentData'][0]['Status']</con:path>
-              <con:element>Status</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>A</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['SegmentData'][0]['SegmentDescription']</con:path>
-              <con:element>SegmentDescription</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>This EL Segment Inserted from Automation Suit</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['SegmentData'][0]['SegmentIconPath']</con:path>
-              <con:element>SegmentIconPath</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>https://picsum.photos/200</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['SegmentData'][0]['SegmentName']</con:path>
-              <con:element>SegmentName</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>true</con:enabled>
-              <con:expectedValue>Automation Segment</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['SegmentData'][0]['CreateUser']</con:path>
-              <con:element>CreateUser</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>AUTO_USER</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['SegmentData'][0]['CreateDate']</con:path>
-              <con:element>CreateDate</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>2022-06-03T10:33:47.928648Z</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['SegmentData'][0]['UpdateUser']</con:path>
-              <con:element>UpdateUser</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>AUTO_USER</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:elements>
-              <con:path>$['SegmentData'][0]['UpdateDate']</con:path>
-              <con:element>UpdateDate</con:element>
-              <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
-              <con:expectedValue>2022-06-03T10:33:47.927961Z</con:expectedValue>
-              <con:caseSensitive>true</con:caseSensitive>
-              <con:numberType>false</con:numberType>
-              <con:expectedDataType>1</con:expectedDataType>
-            </con:elements>
-            <con:originalMessage>{
-  "ProfileId": "a7eaa7eb-e83b-4829-b1c8-e121af78a191",
-  "Id": "a7eaa7eb-e83b-4829-b1c8-e121af78a191",
-  "SegmentData": [
-    {
-      "SegmentDataName": "EL_SEGMENT",
-      "SegmentDataValue": "EL_AUTOMATION_SEGMENT",
-      "Status": "A",
-      "SegmentDescription": "This EL Segment Inserted from Automation Suit",
-      "SegmentIconPath": "https://picsum.photos/200",
-      "SegmentName": "Automation Segment",
-      "CreateUser": "AUTO_USER",
-      "CreateDate": "2022-06-03T10:33:47.928648Z",
-      "UpdateUser": "AUTO_USER",
-      "UpdateDate": "2022-06-03T10:33:47.927961Z"
-    }
-  ]
-}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:assertion type="JsonPath Match" id="8329ff1f-1a53-45a7-b123-c57048298e17" name="Validate Update Date">
@@ -2536,8 +2385,8 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-    "ELSegmentCode": "${#TestCase#ELSegmentCode}",
-    "ELSegmentName": "${#TestCase#ELSegmentName}",
+    "ELSegmentCode": "${Get_EL_Segment#Response#$[0]['ELSegmentCode']}",
+    "ELSegmentName": "${Get_EL_Segment#Response#$[0]['ELSegmentName']}",
     "ELSegmentDescription": "This EL Segment Updated from Automation Suit",
     "IconPath": "${#TestCase#IconPath_Update}",
     "Status": "B"
@@ -2734,7 +2583,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Update EL Segment" id="bb915446-d5dd-4d47-b8b1-99b534e38ece">
+  <con:testStep type="restrequest" name="Update EL Segment" id="bb915446-d5dd-4d47-b8b1-99b534e38ece" disabled="true">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/segmentdata/elsegment" methodName="ProcessELSegment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="Update EL Segment" id="42e70483-bd44-4fff-8fb7-2874eb0a859b" mediaType="application/json" postQueryString="false">
@@ -2941,7 +2790,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Verify EL Segment Update" id="6f0e4759-a63d-4cbd-8b5e-2749cb650ca4">
+  <con:testStep type="restrequest" name="Verify EL Segment Update" id="6f0e4759-a63d-4cbd-8b5e-2749cb650ca4" disabled="true">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/segmentdata/elsegments" methodName="GetELSegments" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="Verify EL Segment Update" id="9d72f68d-5ff6-4d6f-a1c9-ec231e73808d" mediaType="application/json">

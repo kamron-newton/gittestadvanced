@@ -10,23 +10,23 @@
       <con:properties>
         <con:property>
           <con:name>LINK_ONLY_ROLE</con:name>
-          <con:value>dbd7f722-999c-49c3-ac49-a8d53f36bcf4</con:value>
+          <con:value>ac456857-caa4-47c7-9184-53841e30dc66</con:value>
         </con:property>
         <con:property>
           <con:name>MERGE_ONLY_ROLE</con:name>
-          <con:value>1ca4f3ce-b36b-4e81-8223-0e82e5ec0357</con:value>
+          <con:value>0916791c-c685-43c6-b075-9eb9fbc56748</con:value>
         </con:property>
         <con:property>
           <con:name>LINK_MERGE_ROLE</con:name>
-          <con:value>6fed1b60-6642-40c1-9b89-f892a47f7a21</con:value>
+          <con:value>c9181afb-de2a-4902-82ab-0c15fcd54853</con:value>
         </con:property>
         <con:property>
           <con:name>NO_LINK_MERGE_ROLE</con:name>
-          <con:value>de2a81a7-40ce-4da6-8389-99aa0e5dcb86</con:value>
+          <con:value>ae7abf21-5154-467b-a1c7-72dd8b068708</con:value>
         </con:property>
         <con:property>
           <con:name>READONLY_LINK_MERGE_ROLE</con:name>
-          <con:value>d445b168-9c70-4113-a2ec-a78a044a524a</con:value>
+          <con:value>9c59f310-783d-418d-a9d5-c84f9ec24509</con:value>
         </con:property>
       </con:properties>
     </con:config>
@@ -237,13 +237,15 @@
   <con:testStep type="groovy" name="LinkOnlyRoleParameter" id="a8c3000d-be7b-49cb-a66e-496238de44ae">
     <con:settings/>
     <con:config>
-      <script>def LinkOnlyRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_ONLY\')].RoleId[0]}') 
+      <script>def LinkOnlyRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_ONLY\')].RoleCode[0]}') 
 
-if (LinkOnlyRole == "") {
-	(testRunner.gotoStepByName("AddSystemRoleToCreateLinkOnlyRole")) 
+if (LinkOnlyRole!="TEST_LNK_ONLY" ) 
+{
+ (testRunner.gotoStepByName("AddSystemRoleToCreateLinkOnlyRole"))
 }
-else {
-	(testRunner.gotoStepByName("RoleIdLinkOnly"))
+else
+{
+(testRunner.gotoStepByName("RoleIdLinkOnly"))
 }</script>
     </con:config>
   </con:testStep>
@@ -533,16 +535,15 @@ else {
   <con:testStep type="groovy" name="RoleIdLinkOnly" id="f75e933c-0f6d-449b-8773-6687331f3bf7">
     <con:settings/>
     <con:config>
-      <script>def RoleIdLinkOnly = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_ONLY\')].RoleId[0]}') 
+      <script>def RoleIdLinkOnly = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_ONLY\')].RoleCode[0]}') 
 
-if(RoleIdLinkOnly==null || RoleIdLinkOnly =="")
+if(RoleIdLinkOnly=="TEST_LNK_ONLY")
 {
-ReturnRoleIdLinkOnly==context.expand( '${AddSystemRoleToCreateLinkOnlyRole#Response#$[\'RoleId\']}')
-return RoleIdLinkOnly;
+return context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_ONLY\')].RoleId[0]}') 
 }
  else
  {
-     return RoleIdLinkOnly;
+ return context.expand( '${AddSystemRoleToCreateLinkOnlyRole#Response#$[\'RoleId\']}') 
  }</script>
     </con:config>
   </con:testStep>
@@ -828,12 +829,14 @@ return RoleIdLinkOnly;
   <con:testStep type="groovy" name="MergeOnlyRoleParameter" id="8d4a9aef-d928-438d-a5e5-5f7e754dfb20">
     <con:settings/>
     <con:config>
-      <script>def MergeOnlyRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_MRG_ONLY\')].RoleId[0]}') 
+      <script>def MergeOnlyRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_MRG_ONLY\')].RoleCode[0]}') 
 
-if (MergeOnlyRole == "") {
-	(testRunner.gotoStepByName("AddSystemRoleToCreateMergeOnlyRole")) 
+if (MergeOnlyRole!="TEST_MRG_ONLY" )
+{
+ 	(testRunner.gotoStepByName("AddSystemRoleToCreateMergeOnlyRole"))
 }
-else {
+else 
+{
 	(testRunner.gotoStepByName("RoleIdMergeOnly"))
 }</script>
     </con:config>
@@ -1115,16 +1118,15 @@ else {
   <con:testStep type="groovy" name="RoleIdMergeOnly" id="f1708251-0e2e-4de5-a8fa-6e6e474760ad">
     <con:settings/>
     <con:config>
-      <script>def RoleIdMergeOnly = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_MRG_ONLY\')].RoleId[0]}') 
+      <script>def RoleIdMergeOnly = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_MRG_ONLY\')].RoleCode[0]}')
 
-if(RoleIdMergeOnly==null || RoleIdMergeOnly =="")
-{
-RoleIdMergeOnly==context.expand( '${AddSystemRoleToCreateMergeOnlyRole#Response#$[\'RoleId\']}')
-return RoleIdMergeOnly;
+ if(RoleIdMergeOnly=="TEST_MRG_ONLY")
+ {
+return context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_MRG_ONLY\')].RoleId[0]}')
 }
  else
  {
-     return RoleIdMergeOnly;
+ return context.expand( '${AddSystemRoleToCreateMergeOnlyRole#Response#$[\'RoleId\']}')
  }</script>
     </con:config>
   </con:testStep>
@@ -1413,13 +1415,15 @@ return RoleIdMergeOnly;
   <con:testStep type="groovy" name="LinkMergeRoleParameter" id="bf2addb5-21b4-463d-ba32-d317b6a343ae">
     <con:settings/>
     <con:config>
-      <script>def LinkMergeRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK__MRG\')].RoleId[0]}') 
+      <script>def LinkMergeRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_MRG\')].RoleCode[0]}') 
 
-if (LinkMergeRole == "") {
-	(testRunner.gotoStepByName("AddSystemRoleToCreateLinkMergeRole")) 
+if (LinkMergeRole!="TEST_LNK_MRG" )
+{
+ (testRunner.gotoStepByName("AddSystemRoleToCreateLinkMergeRole"))
 }
-else {
-	(testRunner.gotoStepByName("RoleIdLinkMerge"))
+else 
+{
+(testRunner.gotoStepByName("RoleIdLinkMerge"))
 }</script>
     </con:config>
   </con:testStep>
@@ -1706,16 +1710,15 @@ else {
   <con:testStep type="groovy" name="RoleIdLinkMerge" id="b3ac539d-55d2-489d-b880-8bb94087948c">
     <con:settings/>
     <con:config>
-      <script>def RoleIdLinkMerge = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_MRG\')].RoleId[0]}') 
+      <script>def RoleIdLinkMerge = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_MRG\')].RoleCode[0]}') 
 
-if(RoleIdLinkMerge==null || RoleIdLinkMerge =="")
+if(RoleIdLinkMerge=="TEST_LNK_MRG")
 {
-RoleIdLinkMerge==context.expand( '${AddSystemRoleToCreateLinkMergeRole#Response#$[\'RoleId\']}')
-return RoleIdLinkMerge;
+return context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_MRG\')].RoleId[0]}') 
 }
  else
  {
-     return RoleIdLinkMerge;
+ return context.expand( '${AddSystemRoleToCreateLinkMergeRole#Response#$[\'RoleId\']}') 
  }</script>
     </con:config>
   </con:testStep>
@@ -2004,12 +2007,14 @@ return RoleIdLinkMerge;
   <con:testStep type="groovy" name="NoLinkMergeRoleParameter" id="07652eb5-df0d-404f-94bf-262d7debd7b4">
     <con:settings/>
     <con:config>
-      <script>def NoLinkMergeRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_NO_LNK_MRG\')].RoleId[0]}') 
+      <script>def NoLinkMergeRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_NO_LNK_MRG\')].RoleCode[0]}') 
 
-if (NoLinkMergeRole == "") {
-	(testRunner.gotoStepByName("AddSystemRoleToCreateNoLinkMergeRole")) 
+if (NoLinkMergeRole!="TEST_NO_LNK_MRG" ) 
+{
+ 	(testRunner.gotoStepByName("AddSystemRoleToCreateNoLinkMergeOnlyRole"))
 }
-else {
+else 
+{
 	(testRunner.gotoStepByName("RoleIdNoLinkMerge"))
 }</script>
     </con:config>
@@ -2285,16 +2290,15 @@ else {
   <con:testStep type="groovy" name="RoleIdNoLinkMerge" id="61845a69-3710-4b0a-a6dd-85d2ca4cf7f6">
     <con:settings/>
     <con:config>
-      <script>def RoleIdNoLinkMerge = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_NO_LNK_MRG\')].RoleId[0]}') 
+      <script>def RoleIdNoLinkMerge = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_NO_LNK_MRG\')].RoleCode[0]}') 
 
-if(RoleIdNoLinkMerge==null || RoleIdNoLinkMerge =="")
+if(RoleIdNoLinkMerge=="TEST_NO_LNK_MRG")
 {
-RoleIdNoLinkMerge==context.expand( '${AddSystemRoleToCreateNoLinkMergeRole#Response#$[\'RoleId\']}')
-return RoleIdNoLinkMerge;
+return context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_NO_LNK_MRG\')].RoleId[0]}') 
 }
  else
  {
-     return RoleIdNoLinkMerge;
+ return context.expand( '${AddSystemRoleToCreateNoLinkMergeRole#Response#$[\'RoleId\']}')
  }</script>
     </con:config>
   </con:testStep>
@@ -2571,13 +2575,15 @@ return RoleIdNoLinkMerge;
   <con:testStep type="groovy" name="ReadOnlyLinkMergeRoleParameter" id="a5834b7a-b1d8-4feb-a14f-6db6c85ca5e8">
     <con:settings/>
     <con:config>
-      <script>def ReadOnlyLinkMergeRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_MRG_RO\')].RoleId[0]}') 
+      <script>def LinkOnlyRole = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_MRG_RO\')].RoleCode[0]}') 
 
-if (ReadOnlyLinkMergeRole == "") {
+if (LinkOnlyRole!="TEST_LNK_MRG_RO" ) 
+{
 	(testRunner.gotoStepByName("AddSystemRoleToCreateReadOnlyLinkMergeRole")) 
 }
-else {
-	(testRunner.gotoStepByName("RoleIdReadOnlyLinkMerge"))
+else
+{
+(testRunner.gotoStepByName("RoleIdReadOnlyLinkMerge"))
 }</script>
     </con:config>
   </con:testStep>
@@ -2714,16 +2720,15 @@ else {
   <con:testStep type="groovy" name="RoleIdReadOnlyLinkMerge" id="22c940ad-c3c4-4dc3-a014-ea8eff998b17">
     <con:settings/>
     <con:config>
-      <script>def RoleIdReadOnlyLinkMerge = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_MRG_RO\')].RoleId[0]}') 
+      <script>def RoleIdLinkOnly = context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_MRG_RO\')].RoleCode[0]}') 
 
-if(RoleIdReadOnlyLinkMerge==null || RoleIdReadOnlyLinkMerge =="")
+if(RoleIdLinkOnly=="TEST_LNK_MRG_RO")
 {
-RoleIdReadOnlyLinkMerge==context.expand( '${AddSystemRoleToCreateReadOnlyLinkMergeRole#Response#$[\'RoleId\']}')
-return RoleIdReadOnlyLinkMerge;
+return context.expand( '${GetSystemRoles#Response#$[?(@.RoleCode==\'TEST_LNK_MRG_RO\')].RoleId[0]}') 
 }
  else
  {
-     return RoleIdReadOnlyLinkMerge;
+ return context.expand( '${AddSystemRoleToCreateReadOnlyLinkMergeRole#Response#$[\'RoleId\']}') 
  }</script>
     </con:config>
   </con:testStep>

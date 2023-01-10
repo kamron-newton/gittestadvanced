@@ -4,12 +4,6 @@
     <con:setting id="1525e308-cfae-4277-af49-4908cfbd9e1dfileName">Wait-for-Batch-Job</con:setting>
   </con:settings>
   <con:savedRecentRuns>1</con:savedRecentRuns>
-  <con:testStep type="delay" name="Wait For Job Complete" id="6544f74c-0e86-4d94-b4c9-f79b23098015">
-    <con:settings/>
-    <con:config>
-      <delay>1000</delay>
-    </con:config>
-  </con:testStep>
   <con:testStep type="restrequest" name="Get Batch Job By Id" id="6bbc1042-d316-4289-a605-76fde63a58b1">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/batch/jobs/{sysJobId}" methodName="Get Batch Job By Id" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -57,19 +51,35 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Check Batch Completion Status" id="0af4e74b-7230-40ab-96da-283e76271d55">
+  <con:testStep type="groovy" name="Check Batch Completion Status (Wait up to 2 minutes)" id="0af4e74b-7230-40ab-96da-283e76271d55">
     <con:settings/>
     <con:config>
-      <script>import static com.jayway.jsonpath.JsonPath.parse
+      <script><![CDATA[import static com.jayway.jsonpath.JsonPath.parse
+
+int retries = 11
+int curr = 1
 
 def response = context.expand( '${Get Batch Job By Id#Response}' )
 
-log.info response
-
-if(response!=null &amp;&amp; response!="null") {
+if(response != null && response != "null") {
 	def status = parse(response).read('JobStatus')
-	if(status!="C"&amp;&amp;status!="E") testRunner.gotoStepByName("Wait For Job Complete")
-}</script>
+	while (status !="C" && status != "E" && curr <= retries) {
+		curr += 1
+		sleep(10000)
+		testRunner.runTestStepByName("Get Batch Job By Id")
+		status = parse(response).read('JobStatus')
+	}
+
+	if(curr > retries) {
+		testRunner.fail("Retries: " + curr)
+	}
+	if(status == "E") {
+		testRunner.fail("Status: " + status)
+	}
+}
+else {
+	testRunner.fail("Null response")
+}]]></script>
     </con:config>
   </con:testStep>
   <con:properties>

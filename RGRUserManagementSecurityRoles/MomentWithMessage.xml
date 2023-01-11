@@ -216,6 +216,17 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="CurrentDate" id="268d5a06-b85a-4ad9-a2d9-3931ce39fd2a">
+    <con:settings/>
+    <con:config>
+      <script>use (groovy.time.TimeCategory)
+{
+def today = new Date()
+def todayNew = today+ 10.years
+def formattedDate = todayNew.format("yyyy-MM-dd'T'HH:mm:ssZ")
+}</script>
+    </con:config>
+  </con:testStep>
   <con:testStep id="b075b5f3-342a-453b-8fe0-d66455b0f1f7" name="UpsertMessageMomentCond" type="groovy">
     <con:settings/>
     <con:config>
@@ -245,16 +256,16 @@ testRunner.gotoStepByName("MomentId")]]></script>
    "MomentType" : "MESSAGE",\r
    "StartDate" : "2019-07-18T00:00:00Z",\r
    "StartDateString" : "07/18/2019 12:00:00 AM",\r
-   "EndDate" : "2033-12-31T23:59:00Z",\r
-   "EndDateString" : "12/31/2033 11:59:00 PM",\r
-   "OldEndDate" : "2033-12-31T23:59:59Z",\r
+   "EndDate" : "${CurrentDate#result}",\r
+   "EndDateString" : "${CurrentDate#result}",\r
+   "OldEndDate" : "${CurrentDate#result}",\r
    "TenantId" : "3e0da31e-4947-7616-e053-5ba8e70a2457",\r
    "MomentStatus" : "A",\r
    "MomentEvent" : {\r
       "MomentCode" : "${#TestCase#RGRMOMENTNAME}",\r
       "EventType" : "GetProfileById",\r
       "MomentQualifyingDateAttribute" : "CurrentDateTime",\r
-      "MomentQualifyingDateAttributeDrools" : "$GetProfileById:GetProfileByIdC(isItBetween( new Date() ,\"07/18/2019 12:00:00 AM\",\"12/31/2022 11:59:00 PM\"))",\r
+      "MomentQualifyingDateAttributeDrools" : "$GetProfileById:GetProfileByIdC(isItBetween( new Date(), CurrentDate()))",\r
       "MomentOffers" : [\r
          {\r
             "MomentCode" : "${#TestCase#RGRMOMENTNAME}",\r
@@ -508,14 +519,14 @@ if (status == 200)  testRunner.gotoStepByName("MomentId")</script>
   "MomentType": "MESSAGE",
   "StartDate": "2019-07-18T00:00:00Z",
   "StartDateString": "07/18/2019 12:00:00 AM",
-  "EndDate": "2033-12-31T23:59:59Z",
-  "EndDateString": "12/31/2033 11:59:59 PM",
+  "EndDate": "${CurrentDate#result}",
+  "EndDateString": "${CurrentDate#result}",
   "MomentStatus": "P",
    "MomentEvent": {
     "MomentCode": "${#TestCase#RGRMOMENTNAME}",
     "EventType": "GetProfileById",
     "MomentQualifyingDateAttribute": "CurrentDateTime",
-    "MomentQualifyingDateAttributeDrools": "$GetProfileById:GetProfileByIdC(isItBetween( new Date() ,\"07/18/2019 12:00:00 AM\",\"12/31/2022 11:59:59 PM\"))",
+    "MomentQualifyingDateAttributeDrools": "$GetProfileById:GetProfileByIdC(isItBetween( new Date() ,CurrentDate()))",
     "MomentOffers": [
       {
         "MomentCode": "${#TestCase#RGRMOMENTNAME}",

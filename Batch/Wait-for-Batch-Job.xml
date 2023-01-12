@@ -60,15 +60,16 @@ int retries = 11
 int curr = 1
 
 def response = context.expand( '${Get Batch Job By Id#Response}' )
-
 if(response != null && response != "null") {
 	def status = parse(response).read('JobStatus')
 	while (status !="C" && status != "E" && curr <= retries) {
 		curr += 1
 		sleep(10000)
 		testRunner.runTestStepByName("Get Batch Job By Id")
+		 response = context.expand( '${Get Batch Job By Id#Response}' )
 		status = parse(response).read('JobStatus')
 	}
+	
 
 	if(curr > retries) {
 		testRunner.fail("Retries: " + curr)
@@ -76,6 +77,7 @@ if(response != null && response != "null") {
 	if(status == "E") {
 		testRunner.fail("Status: " + status)
 	}
+
 }
 else {
 	testRunner.fail("Null response")

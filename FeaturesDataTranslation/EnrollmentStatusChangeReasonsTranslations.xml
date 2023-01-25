@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="acf38d05-801f-4794-8e23-96aed5ad1fd8" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="EnrollmentStatusChangeReasonsTranslations" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="00e0bbc2-b7a4-4428-80a4-a2669a90059d" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="EnrollmentStatusChangeReasonsTranslations" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
     <con:setting id="acf38d05-801f-4794-8e23-96aed5ad1fd8fileName">EnrollmentStatusChangeReasonsTranslations</con:setting>
+    <con:setting id="00e0bbc2-b7a4-4428-80a4-a2669a90059dfileName">EnrollmentStatusChangeReasonsTranslations</con:setting>
   </con:settings>
-  <con:testStep type="restrequest" name="GetEnrollmentStatusChangeReasons" id="cfaed97d-e2ab-4c9b-a6bc-41f7bae17fed">
+  <con:testStep type="restrequest" name="GetEnrollmentStatusChangeReasons" id="4c67617d-845c-4929-a3e2-5a7dad81cd24">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programs/statuschangereason" methodName="GetEnrollmentStatusChangeReasons" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetEnrollmentStatusChangeReasons" id="9d668fc0-3a27-45c8-a79f-187c63088354" mediaType="application/json">
@@ -47,23 +48,16 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="transfer" name="GetStatusChangeReasonCode" id="f74e1a4e-1d9c-4344-b3d1-25f61997b3a4">
+  <con:testStep type="groovy" name="GetEntityId" id="82a5b2e4-2896-4cb8-b8f9-2da98752fbfb">
     <con:settings/>
-    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
-        <con:name>GetStatusChangeReasonCode</con:name>
-        <con:sourceType>Response</con:sourceType>
-        <con:sourceStep>GetEnrollmentStatusChangeReasons</con:sourceStep>
-        <con:sourcePath>$[0]['StatusChangeReasonCode']</con:sourcePath>
-        <con:targetType>EntityId</con:targetType>
-        <con:targetStep>ProcessTranslation</con:targetStep>
-        <con:targetPath/>
-        <con:type>JSONPATH</con:type>
-        <con:upgraded>true</con:upgraded>
-      </con:transfers>
+    <con:config>
+      <script>def changeReason = context.expand( '${GetEnrollmentStatusChangeReasons#Response#$[0][\'StatusChangeReasonCode\']}' )
+
+
+testRunner.testCase.setPropertyValue("EntityId",changeReason);</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="ProcessTranslation" id="41cdebcf-738c-410c-85d0-c940b5f8e3c2">
+  <con:testStep type="calltestcase" name="ProcessTranslation" id="557e6881-9699-4d39-9015-328a8e9cd9b0">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>73c62997-e67d-41b2-9d0b-6438a6007fff</con:targetTestCase>
@@ -74,7 +68,7 @@
         </con:property>
         <con:property>
           <con:name>EntityId</con:name>
-          <con:value>SSPNDFRD</con:value>
+          <con:value>${#TestCase#EntityId}</con:value>
         </con:property>
         <con:property>
           <con:name>InvalidLanguageLocaleToTranslate</con:name>
@@ -93,7 +87,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetEnrollmentStatusChangeReasonsWithEnUS" id="331e1580-60ac-4ecd-80f8-c727481ceb50">
+  <con:testStep type="restrequest" name="GetEnrollmentStatusChangeReasonsWithEnUS" id="f45e444f-6baa-4ba0-8fe7-dcb993b5ab93">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programs/statuschangereason" methodName="GetEnrollmentStatusChangeReasons" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetEnrollmentStatusChangeReasonsWithEnUS" id="9d668fc0-3a27-45c8-a79f-187c63088354" mediaType="application/json">
@@ -111,7 +105,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="ce183550-689f-4d41-8bcc-dfc977d3783f" name="JSONPath Match For Description">
           <con:configuration>
-            <path>$[?(@.StatusChangeReasonCode=='${GetEnrollmentStatusChangeReasonsWithEnUS#Response#$[0]['StatusChangeReasonCode']}')][Description][0]</path>
+            <path>$[?(@.StatusChangeReasonCode=='${#TestCase#EntityId}')].Description[0]</path>
             <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[0]['AttributeValueBaseLanguage']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -146,7 +140,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetEnrollmentStatusChangeReasonsWithDeDE" id="d5e71f9a-20cb-4f1f-b6fe-f26f9d5afb96">
+  <con:testStep type="restrequest" name="GetEnrollmentStatusChangeReasonsWithDeDE" id="c3f939ec-299a-451a-b6ad-924002327027">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/programs/programs/statuschangereason" methodName="GetEnrollmentStatusChangeReasons" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetEnrollmentStatusChangeReasonsWithDeDE" id="9d668fc0-3a27-45c8-a79f-187c63088354" mediaType="application/json">
@@ -164,7 +158,7 @@
         </con:assertion>
         <con:assertion type="JsonPath Match" id="ce183550-689f-4d41-8bcc-dfc977d3783f" name="JSONPath Match For Description">
           <con:configuration>
-            <path>$[?(@.StatusChangeReasonCode=='${GetEnrollmentStatusChangeReasonsWithEnUS#Response#$[0]['StatusChangeReasonCode']}')][Description][0]</path>
+            <path>$[?(@.StatusChangeReasonCode=='${#TestCase#EntityId}')].Description[0]</path>
             <content>${#[ReferenceData#ProcessTranslations#GetTranslationsByEntityId]#Response#$[0]['AttributeValue']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
@@ -199,7 +193,12 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties/>
+  <con:properties>
+    <con:property>
+      <con:name>EntityId</con:name>
+      <con:value>SSPNDFRD</con:value>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
   <con:environmentSpec>
     <con:entry environmentId="6705507e-ac0c-4a4b-acac-36b4c8b57bc6">

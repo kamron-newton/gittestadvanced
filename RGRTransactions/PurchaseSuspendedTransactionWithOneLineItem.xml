@@ -10,7 +10,7 @@
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>69b146f1-2fa1-423b-9758-b7ffe541dba9</con:value>
+          <con:value>b13ebce8-15f1-4be6-ac1b-7d84cbb8394a</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -1147,10 +1147,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Get Suspended By ID" id="5e3d7256-0285-42e9-9719-40cbe5492762">
+  <con:testStep type="restrequest" name="Get Suspended Transaction By ID" id="5e3d7256-0285-42e9-9719-40cbe5492762">
     <con:settings/>
     <con:config service="RestAPIs" methodName="Get Suspended Transaction By ID" resourcePath="/api/v1/profiles/{profileId}/suspendedtransactions/{suspendTransactionId}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Get Suspended By ID" id="7ff0a243-3870-4038-b4a7-7496d6fef021" mediaType="application/json">
+      <con:restRequest name="Get Suspended Transaction By ID" id="7ff0a243-3870-4038-b4a7-7496d6fef021" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -2140,7 +2140,44 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:properties/>
+  <con:testStep type="transfer" name="Extract Response" id="7601582b-5932-4aab-8e0b-db8c6e4986be">
+    <con:settings/>
+    <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>ProfileId</con:name>
+        <con:sourceType>ProfileId</con:sourceType>
+        <con:sourceStep>Add Profile With Posting Key</con:sourceStep>
+        <con:sourcePath/>
+        <con:targetType>ProfileId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:targetPath/>
+        <con:type>JSONPATH</con:type>
+        <con:targetTransferType>JSONPATH</con:targetTransferType>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+      <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+        <con:name>TransactionId</con:name>
+        <con:sourceType>Response</con:sourceType>
+        <con:sourceStep>Get Suspended Transaction By ID</con:sourceStep>
+        <con:sourcePath>$['TransactionId']</con:sourcePath>
+        <con:targetType>TransactionId</con:targetType>
+        <con:targetStep>#TestCase#</con:targetStep>
+        <con:type>JSONPATH</con:type>
+        <con:targetTransferType>JSONPATH</con:targetTransferType>
+        <con:upgraded>true</con:upgraded>
+      </con:transfers>
+    </con:config>
+  </con:testStep>
+  <con:properties>
+    <con:property userSpecific="true">
+      <con:name>ProfileId</con:name>
+      <con:value/>
+    </con:property>
+    <con:property userSpecific="true">
+      <con:name>TransactionId</con:name>
+      <con:value/>
+    </con:property>
+  </con:properties>
   <con:reportParameters/>
   <con:environmentSpec>
     <con:entry environmentId="6705507e-ac0c-4a4b-acac-36b4c8b57bc6">

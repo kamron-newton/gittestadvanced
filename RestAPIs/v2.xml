@@ -514,7 +514,7 @@
       <con:resource name="suspendedtransactions" path="suspendedtransactions" id="730713f2-fd85-46e2-b129-4a4e40980b93">
         <con:settings/>
         <con:parameters/>
-        <con:resource name="unsuspend" path="unsuspend" id="50b834b3-4a05-4e11-bc24-2f4037375d48">
+        <con:resource name="unsuspend" path="{suspendTransactionId}/unsuspend" id="50b834b3-4a05-4e11-bc24-2f4037375d48">
           <con:settings>
             <con:setting id="50b834b3-4a05-4e11-bc24-2f4037375d48fileName">v2</con:setting>
           </con:settings>
@@ -528,16 +528,46 @@
                 <con:style>TEMPLATE</con:style>
                 <con:default/>
               </con:parameter>
+              <con:parameter required="true">
+                <con:name>Authorization</con:name>
+                <con:value/>
+                <con:style>HEADER</con:style>
+                <con:default/>
+              </con:parameter>
+              <con:parameter required="true">
+                <con:name>Accept-Language</con:name>
+                <con:value/>
+                <con:style>HEADER</con:style>
+                <con:default/>
+              </con:parameter>
+              <con:parameter required="true">
+                <con:name>Program-Code</con:name>
+                <con:value/>
+                <con:style>HEADER</con:style>
+                <con:default/>
+              </con:parameter>
             </con:parameters>
             <con:representation type="FAULT">
               <con:mediaType xsi:nil="true"/>
-              <con:status>404</con:status>
+              <con:status>404 401</con:status>
               <con:params/>
               <con:element>data</con:element>
             </con:representation>
             <con:representation type="REQUEST">
               <con:mediaType>application/json</con:mediaType>
               <con:params/>
+            </con:representation>
+            <con:representation type="FAULT">
+              <con:mediaType>application/json; charset=utf-8</con:mediaType>
+              <con:status>400</con:status>
+              <con:params/>
+              <con:element xmlns:uns="https://d3aldv-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/profiles/profileId/suspendedtransactions/suspendTransactionId/unsuspend">uns:Fault</con:element>
+            </con:representation>
+            <con:representation type="RESPONSE">
+              <con:mediaType>application/json; charset=utf-8</con:mediaType>
+              <con:status>200</con:status>
+              <con:params/>
+              <con:element xmlns:uns="https://d3aldv-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/profiles/profileId/suspendedtransactions/suspendTransactionId/unsuspend">uns:Response</con:element>
             </con:representation>
             <con:request name="unsuspend" id="d4ef80fc-b478-49b1-a476-e2d14706082c" mediaType="application/json" postQueryString="false">
               <con:settings>
@@ -546,15 +576,21 @@
               <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
               <con:request/>
               <con:credentials>
+                <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
                 <con:authType>No Authorization</con:authType>
               </con:credentials>
               <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
               <con:parameters>
+                <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
                 <con:entry key="suspendTransactionId" value="suspendTransactionId"/>
+                <con:entry key="Accept-Language" value="en-US"/>
               </con:parameters>
               <con:parameterOrder>
                 <con:entry>profileId</con:entry>
                 <con:entry>suspendTransactionId</con:entry>
+                <con:entry>Authorization</con:entry>
+                <con:entry>Accept-Language</con:entry>
+                <con:entry>Program-Code</con:entry>
               </con:parameterOrder>
             </con:request>
           </con:method>

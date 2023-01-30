@@ -3,47 +3,6 @@
   <con:settings>
     <con:setting id="22deecc1-6fae-4bd8-b03e-7958f464aeaafileName">Public-GetProfileDisplayProgOffersV2</con:setting>
   </con:settings>
-  <con:testStep type="calltestcase" name="AddProfile" id="0a616814-ddb0-4207-a48c-9c87ffc9923a">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>7961d684-b422-456b-b2b8-5dfee4558b84</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>ProfileId</con:name>
-          <con:value>b2235389-23b6-428b-a966-4c14ed656e61</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties>
-        <con:entry>ProfileId</con:entry>
-      </con:returnProperties>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="calltestcase" name="CreateProfileToken" id="72317f59-79fa-4131-8087-c17b31487704">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>1bcd4a1b-98d1-4dc0-ae9c-daf287bdcdb3</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>InputJSON</con:name>
-          <con:value>grant_type=password&amp;username=${#[Profile#PublicAddProfile#PublicAddProfile]#Response#$['Username']}&amp;password=Password.123&amp;response_type=token</con:value>
-        </con:property>
-        <con:property>
-          <con:name>ProfileId</con:name>
-          <con:value>b2235389-23b6-428b-a966-4c14ed656e61</con:value>
-        </con:property>
-        <con:property>
-          <con:name>AccessToken</con:name>
-          <con:value>97db43b0-c808-49ab-a364-d54ea888eea4</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties>
-        <con:entry>ProfileId</con:entry>
-        <con:entry>AccessToken</con:entry>
-      </con:returnProperties>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
   <con:testStep id="93b7c1cf-af62-4335-bc79-6dae7520cf76" name="CreateToken" type="restrequest">
     <con:settings/>
     <con:config xsi:type="con:RestRequestStep" methodName="CreateToken" resourcePath="/api/v1/authorization/tokens" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -257,13 +216,29 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfile" id="0a616814-ddb0-4207-a48c-9c87ffc9923a">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>7961d684-b422-456b-b2b8-5dfee4558b84</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>ProfileId</con:name>
+          <con:value>667974dc-37aa-4039-93f5-1d59d9344c12</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>ProfileId</con:entry>
+      </con:returnProperties>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
   <con:testStep type="groovy" name="GenerateCardNumber" id="9db65634-0dd8-4a0d-92cc-4ece29ac0dde">
     <con:settings/>
     <con:config>
       <script>java.util.UUID.randomUUID()</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="datasource" name="ProgOffersWithElig" id="a5a41075-6e2d-44e4-baf6-da88cec86b69">
+  <con:testStep type="datasource" name="ProgramOffersWithElig" id="a5a41075-6e2d-44e4-baf6-da88cec86b69">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -417,6 +392,59 @@
       <con:stopDatasourceExhausted>false</con:stopDatasourceExhausted>
     </con:config>
   </con:testStep>
+  <con:testStep type="groovy" name="StartDate" id="d16b6773-22ad-4769-af08-a92191ccc6b8">
+    <con:settings/>
+    <con:config>
+      <script>def today = new Date()
+//Integer endDateSpecification = context.expand( '${#TestCase#EndDateSpecification}' ) as Integer
+def StartDate = today - 1
+log.info today.format("MM/dd/yyyy")
+log.info StartDate.format("MM/dd/yyyy")
+return StartDate.format("MM/dd/yyyy")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="groovy" name="EndDate" id="6b6fb05a-f498-4a5b-8f1c-47860b7cabdb">
+    <con:settings/>
+    <con:config>
+      <script>def today = new Date()
+//Integer endDateSpecification = context.expand( '${#TestCase#EndDateSpecification}' ) as Integer
+def EndDate = today + 2000
+log.info today.format("MM/dd/yyyy")
+log.info EndDate.format("MM/dd/yyyy")
+return EndDate.format("MM/dd/yyyy")</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="UpsertProgOffWithElig" id="04adc85a-d9b8-4532-9e85-217a9a2e8191">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>888b30ab-b834-4837-bd74-f8d6cd0f916f</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Program-Code</con:name>
+          <con:value>PP</con:value>
+        </con:property>
+        <con:property>
+          <con:name>offerCode</con:name>
+          <con:value>800_EGGS</con:value>
+        </con:property>
+        <con:property>
+          <con:name>UpdateProgramOffersBody</con:name>
+          <con:value>{    "OfferCode": "800_EGGS",    "OfferDescription": "Spend $80 - get 80 Bonus Eggs",    "OfferStartDate": "01/29/2023",    "OfferEndDate": "10/26/2025",    "OfferShortDescription": "80 Bonus Eggs",    "OptInRequired": "TRUE",    "DaysValid": "60",    "OfferName": "80 Bonus Eggs",    "OfferTermsAndConditions": "Terms and Conditions Apply",    "OfferName1": "80 Bonus Eggs",    "OfferShortDescription1": "80 Bonus Eggs",    "OfferDescription1":"Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions1": "Terms and Conditions Apply",    "OfferName2": "80 Bonus Eggs",    "OfferShortDescription2": "80 Bonus Eggs",    "OfferDescription2": "Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions2": "Terms and Conditions Apply",    "OfferName3": "80 Bonus Eggs",    "OfferShortDescription3": "80 Bonus Eggs",    "OfferDescription3": "Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions3": "Terms and Conditions Apply",    "OfferName4": "80 Bonus Eggs",    "OfferShortDescription4": "80 Bonus Eggs",    "OfferDescription4": "Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions4": "Terms and Conditions Apply",    "OfferName5": "80 Bonus Eggs",    "OfferShortDescription5": "80 Bonus Eggs",    "OfferDescription5": "Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions5": "Terms and Conditions Apply",    "OfferName6": "80 Bonus Eggs",    "OfferShortDescription6": "80 Bonus Eggs",    "OfferDescription6": "Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions6": "Terms and Conditions Apply",    "UsageLimit": "1",    "RedemptionCodeReqInPurchase": "TRUE",    "ImageNameSmall": "fake.png",    "ImageNameMedium": "fake.png",    "ImageNameLarge": "fake.png",     "GlobalLimit":  "1",  "IsCouponOffer":"TRUE",  "IsEligibleOffer":"TRUE",     "Status": "A",     "OfferCustomDataGroup": {      "CustomData": [        {          "CustomDataName": "OFFER_NOPG",          "CustomDataValue": "FALSE"        }    ]}  }</con:value>
+        </con:property>
+        <con:property>
+          <con:name>AddProgramOffersBody</con:name>
+          <con:value>{    "OfferCode": "800_EGGS",    "OfferDescription": "Spend $80 - get 80 Bonus Eggs",    "OfferStartDate": "01/29/2023",    "OfferEndDate": "10/26/2025",    "OfferShortDescription": "80 Bonus Eggs",    "OptInRequired": "TRUE",    "DaysValid": "60",    "OfferName": "80 Bonus Eggs",    "OfferTermsAndConditions": "Terms and Conditions Apply",    "OfferName1": "80 Bonus Eggs",    "OfferShortDescription1": "80 Bonus Eggs",    "OfferDescription1":"Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions1": "Terms and Conditions Apply",    "OfferName2": "80 Bonus Eggs",    "OfferShortDescription2": "80 Bonus Eggs",    "OfferDescription2": "Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions2": "Terms and Conditions Apply",    "OfferName3": "80 Bonus Eggs",    "OfferShortDescription3": "80 Bonus Eggs",    "OfferDescription3": "Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions3": "Terms and Conditions Apply",    "OfferName4": "80 Bonus Eggs",    "OfferShortDescription4": "80 Bonus Eggs",    "OfferDescription4": "Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions4": "Terms and Conditions Apply",    "OfferName5": "80 Bonus Eggs",    "OfferShortDescription5": "80 Bonus Eggs",    "OfferDescription5": "Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions5": "Terms and Conditions Apply",    "OfferName6": "80 Bonus Eggs",    "OfferShortDescription6": "80 Bonus Eggs",    "OfferDescription6": "Spend $80 - get 80 Bonus Eggs",    "OfferTermsAndConditions6": "Terms and Conditions Apply",    "UsageLimit": "1",    "RedemptionCodeReqInPurchase": "TRUE",    "ImageNameSmall": "fake.png",    "ImageNameMedium": "fake.png",    "ImageNameLarge": "fake.png",     "GlobalLimit":  "1",  "IsCouponOffer":"TRUE",  "IsEligibleOffer":"TRUE",     "Status": "A",     "OfferCustomDataGroup": {      "CustomData": [        {          "CustomDataName": "OFFER_NOPG",          "CustomDataValue": "FALSE"        }    ]}  }</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties>
+        <con:entry>Program-Code</con:entry>
+        <con:entry>offerCode</con:entry>
+        <con:entry>UpdateProgramOffersBody</con:entry>
+        <con:entry>AddProgramOffersBody</con:entry>
+      </con:returnProperties>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
   <con:testStep type="calltestcase" name="UpsertMomProgOffWithElig" id="9b78149e-0d72-4d06-8e48-44c555af61fe">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -445,44 +473,44 @@
         <con:entry>UpdateBody</con:entry>
         <con:entry>MomentId</con:entry>
       </con:returnProperties>
-      <con:runMode>PARALLELL</con:runMode>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="UpsertProgOffWithElig" id="04adc85a-d9b8-4532-9e85-217a9a2e8191">
+  <con:testStep type="delay" name="Delay" id="6b6e3702-009f-415e-b292-6005798a3925">
+    <con:settings/>
+    <con:config>
+      <delay>2000</delay>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="CreateProfileToken" id="72317f59-79fa-4131-8087-c17b31487704">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>888b30ab-b834-4837-bd74-f8d6cd0f916f</con:targetTestCase>
+      <con:targetTestCase>1bcd4a1b-98d1-4dc0-ae9c-daf287bdcdb3</con:targetTestCase>
       <con:properties>
         <con:property>
-          <con:name>Program-Code</con:name>
-          <con:value>PP</con:value>
+          <con:name>InputJSON</con:name>
+          <con:value>grant_type=password&amp;username=${#[Profile#PublicAddProfile#PublicAddProfile]#Response#$['Username']}&amp;password=Password.123&amp;response_type=token</con:value>
         </con:property>
         <con:property>
-          <con:name>offerCode</con:name>
-          <con:value/>
+          <con:name>ProfileId</con:name>
+          <con:value>667974dc-37aa-4039-93f5-1d59d9344c12</con:value>
         </con:property>
         <con:property>
-          <con:name>UpdateProgramOffersBody</con:name>
-          <con:value>{   "OfferCode": "",   "": "PP",   "OfferDescription": "REFFERMOMOFFER",   "OfferStartDate": "2019-01-01T00:00:00Z",   "OfferEndDate": "2030-12-31T00:00:00Z",   "OfferShortDescription": "REFFERMOMOFFER",   "OptInRequired": false,   "OfferName": "REFFERMOMOFFER",   "OfferTermsAndConditions": "REFFERMOMOFFER",   "OfferTimeZone": "UTC",   "IsCouponOffer": true,   "Status": "A",   "isNew": false,   "UsageLimit": 1,   "RedemptionCodeReqInPurchase": false,   "RedemptionCodeReqInPurchaseOpposite": true,   "IsAvailable": "AVAILABLE",   "IsEligibleOffer": false }</con:value>
-        </con:property>
-        <con:property>
-          <con:name>AddProgramOffersBody</con:name>
-          <con:value>{   "OfferCode": "REFFERMOMOFFER",   "ProgramCode": "PP",   "OfferDescription": "REFFERMOMOFFER",   "OfferStartDate": "2019-01-01T00:00:00Z",   "OfferEndDate": "2030-12-31T00:00:00Z",   "OfferShortDescription": "REFFERMOMOFFER",   "OptInRequired": false,   "OfferName": "REFFERMOMOFFER",   "OfferTermsAndConditions": "REFFERMOMOFFER",   "OfferTimeZone": "UTC",   "IsCouponOffer": true,   "Status": "A",   "isNew": false,   "UsageLimit": 1,   "RedemptionCodeReqInPurchase": false,   "RedemptionCodeReqInPurchaseOpposite": true,   "IsAvailable": "AVAILABLE",   "IsEligibleOffer": false }</con:value>
+          <con:name>AccessToken</con:name>
+          <con:value>444fae19-81e8-45b6-baa1-a397dcea4ba3</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
-        <con:entry>Program-Code</con:entry>
-        <con:entry>offerCode</con:entry>
-        <con:entry>UpdateProgramOffersBody</con:entry>
-        <con:entry>AddProgramOffersBody</con:entry>
+        <con:entry>ProfileId</con:entry>
+        <con:entry>AccessToken</con:entry>
       </con:returnProperties>
-      <con:runMode>PARALLELL</con:runMode>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetPublicProfileDisplayProgramTargetedOffferV2BeforeAssociatingtoProfile" id="c03a2cd7-a613-4a2b-8854-22507c03fbe8">
+  <con:testStep type="restrequest" name="GetPublicProfileDisplayProgramEligibleOfferV2BeforeAssociatingtoProfile" id="c03a2cd7-a613-4a2b-8854-22507c03fbe8">
     <con:settings/>
     <con:config service="RestApiPublic" resourcePath="/api/v2/profiles/{profileId}/displaysysoffers" methodName="GetProfileDisplayProgramOffers" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetPublicProfileDisplayProgramTargetedOffferV2BeforeAssociatingtoProfile" id="3bddf180-8365-4a83-ba54-bbb58da0772b" mediaType="application/json">
+      <con:restRequest name="GetPublicProfileDisplayProgramEligibleOfferV2BeforeAssociatingtoProfile" id="3bddf180-8365-4a83-ba54-bbb58da0772b" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -585,9 +613,9 @@
               <con:path>$['Headers']['#status#']</con:path>
               <con:element>#status#</con:element>
               <con:operatorId>1</con:operatorId>
-              <con:enabled>false</con:enabled>
+              <con:enabled>true</con:enabled>
               <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
-              <con:caseSensitive>false</con:caseSensitive>
+              <con:caseSensitive>true</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
@@ -646,8 +674,8 @@
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-  "SysOfferId": "${GetPublicProfileDisplayProgramTargetedOffferV2BeforeAssociatingtoProfile#Response#$['ProfileSysOffers'][1]['SysOfferCode']}",
-  "ProfileId": "${CreateProfileToken#ProfileId}"
+  "SysOfferId": "ee1247e8-847b-46b7-911c-ef6f779b950f",
+  "ProfileId":"${AddProfile#ProfileId}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/profiles/sysoffers</con:originalUri>
         <con:assertion type="Valid HTTP Status Codes" id="ebf74fa7-bda3-4253-b2a2-b161f371db17" name="Valid HTTP Status Codes">
@@ -709,7 +737,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
-          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="profileId" value="${GenerateCardNumber#result}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
@@ -733,6 +761,150 @@
           </con:entry>
         </con:environmentSpec>
       </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="DeactivateMoment" id="ddb960d3-b364-4ee1-ae48-ae43b633c155">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>651271e1-2a50-4004-a3f0-feb6203b391a</con:targetTestCase>
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="Runactivatemonet" id="bb3dbc7a-6c64-49c8-94f4-7c23f072f4d7">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:properties/>
+      <con:returnProperties/>
+      <con:runMode>PARALLELL</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="datasource" name="Profile" id="aba3987f-a8b5-4a62-8c5f-23995cd5f67e">
+    <con:settings/>
+    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:dataSource type="File">
+        <con:configuration>
+          <fileName>FusionWebAPIAutomationV2/References/Profile.csv</fileName>
+          <separator>,</separator>
+          <trim>true</trim>
+          <charset>Cp1252</charset>
+          <quotedValues>false</quotedValues>
+        </con:configuration>
+      </con:dataSource>
+      <con:shared>true</con:shared>
+      <con:restartShared>true</con:restartShared>
+      <con:property>Row</con:property>
+      <con:property>ProgramCode</con:property>
+      <con:property>Prefix</con:property>
+      <con:property>FirstName</con:property>
+      <con:property>MiddleInit</con:property>
+      <con:property>LastName</con:property>
+      <con:property>MiddleName</con:property>
+      <con:property>Suffix</con:property>
+      <con:property>CardNumber</con:property>
+      <con:property>GlobalOptOut</con:property>
+      <con:property>GlobalOptDate</con:property>
+      <con:property>GlobalOptSource</con:property>
+      <con:property>LanguageCode</con:property>
+      <con:property>MaritalStatus</con:property>
+      <con:property>Gender</con:property>
+      <con:property>BirthDate</con:property>
+      <con:property>CompanyName</con:property>
+      <con:property>Country</con:property>
+      <con:property>GamingAvatar</con:property>
+      <con:property>Title</con:property>
+      <con:property>MaturitySuffix</con:property>
+      <con:property>ProfessionalSuffix</con:property>
+      <con:property>SrcFirmName</con:property>
+      <con:property>SrcUnparsedName</con:property>
+      <con:property>TitleCode</con:property>
+      <con:property>StdFirstName</con:property>
+      <con:property>StdMiddleName</con:property>
+      <con:property>StdLastName</con:property>
+      <con:property>SalutationId</con:property>
+      <con:property>SrcPhone3</con:property>
+      <con:property>SrcPhone2</con:property>
+      <con:property>SrcPhone1</con:property>
+      <con:property>SrcEmail3</con:property>
+      <con:property>SrcEmail2</con:property>
+      <con:property>SrcEmail1</con:property>
+      <con:property>SrcHardkey10</con:property>
+      <con:property>SrcHardkey9</con:property>
+      <con:property>SrcHardkey8</con:property>
+      <con:property>SrcHardkey7</con:property>
+      <con:property>SrcHardkey6</con:property>
+      <con:property>SrcHardkey5</con:property>
+      <con:property>SrcHardkey4</con:property>
+      <con:property>SrcHardkey3</con:property>
+      <con:property>SrcHardkey1</con:property>
+      <con:property>UpdatedCountry</con:property>
+      <con:property>AddressLine1</con:property>
+      <con:property>AddressLine2</con:property>
+      <con:property>AddressLine3</con:property>
+      <con:property>AddressLine4</con:property>
+      <con:property>City</con:property>
+      <con:property>StateCode</con:property>
+      <con:property>CountryCode</con:property>
+      <con:property>PostalCode</con:property>
+      <con:property>Zip4</con:property>
+      <con:property>Urbanization</con:property>
+      <con:property>AddressChannelCode</con:property>
+      <con:property>AddressLocationCode</con:property>
+      <con:property>AddressIsPreferred</con:property>
+      <con:property>AddressDeliveryStatus</con:property>
+      <con:property>DoNotStandardize</con:property>
+      <con:property>EmailAddress</con:property>
+      <con:property>EmailChannelCode</con:property>
+      <con:property>EmailLocationCode</con:property>
+      <con:property>EmailIsPreferred</con:property>
+      <con:property>EmailDeliveryStatus</con:property>
+      <con:property>PhoneNumber</con:property>
+      <con:property>PhoneCountryCode</con:property>
+      <con:property>Extension</con:property>
+      <con:property>AcceptsText</con:property>
+      <con:property>Frequency</con:property>
+      <con:property>PhoneChannelCode</con:property>
+      <con:property>PhoneLocationCode</con:property>
+      <con:property>PhoneIsPreferred</con:property>
+      <con:property>PhoneDeliveryStatus</con:property>
+      <con:property>SourceCode</con:property>
+      <con:property>JoinDate</con:property>
+      <con:property>EnrollChannelCode</con:property>
+      <con:property>TierCode</con:property>
+      <con:property>Username</con:property>
+      <con:property>Password</con:property>
+      <con:property>TermsConditionsAcceptedInd</con:property>
+      <con:property>ActivityDate</con:property>
+      <con:property>CreateFileId</con:property>
+      <con:property>CreateRecordNumber</con:property>
+      <con:property>UpdateFileId</con:property>
+      <con:property>UpdateRecordNumber</con:property>
+      <con:property>SocialAccountEmail</con:property>
+      <con:property>SocialAccountType</con:property>
+      <con:property>SocialAccountId</con:property>
+      <con:property>SocialToken</con:property>
+      <con:property>SocialTokenSecret</con:property>
+      <con:property>SocialNetworkUserName</con:property>
+      <con:property>SocialNetworkCode</con:property>
+      <con:property>AutoRewardOptInInd</con:property>
+      <con:property>GamerAlias</con:property>
+      <con:property>GamerAvatar</con:property>
+      <con:property>PostingKeyCode</con:property>
+      <con:property>PostingKeyValue</con:property>
+      <con:property>EnrollmentStoreCode</con:property>
+      <con:property>InvalidSourceCode</con:property>
+      <con:property>InVdProductlevelCode</con:property>
+      <con:property>InVdVulGarInd</con:property>
+      <con:startRow>1</con:startRow>
+      <con:endRow>1</con:endRow>
+      <con:recordsPerIteration>1</con:recordsPerIteration>
+      <con:completeLastOperation>true</con:completeLastOperation>
+      <con:trimValues>false</con:trimValues>
+      <con:entitizeValues>false</con:entitizeValues>
+      <con:restartOnRun>true</con:restartOnRun>
+      <con:expandProperties>false</con:expandProperties>
+      <con:stopDatasourceExhausted>false</con:stopDatasourceExhausted>
     </con:config>
   </con:testStep>
   <con:properties/>

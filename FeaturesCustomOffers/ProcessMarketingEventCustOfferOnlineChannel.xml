@@ -1,47 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="82e2fcf4-2cda-42ef-88de-05465817c41c" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="EarnPointOnTrxnForDataHub" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="f08d9b1d-e920-4c51-98a6-e076af4f619a" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ProcessMarketingEventCustOfferOnlineChannel" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="82e2fcf4-2cda-42ef-88de-05465817c41cfileName">EarnPointOnTrxnForDataHub</con:setting>
+    <con:setting id="f08d9b1d-e920-4c51-98a6-e076af4f619afileName">ProcessMarketingEventCustOfferOnlineChannel</con:setting>
   </con:settings>
-  <con:testStep type="datasource" name="ProcessMarketingEventData" id="4743b361-5f3a-4b5d-9a34-8c482edae5ee">
-    <con:settings/>
-    <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:dataSource type="File">
-        <con:configuration>
-          <fileName>${#Project#ProjectPath}/References/ProcessMarketingEvent.csv</fileName>
-          <separator>,</separator>
-          <trim>true</trim>
-          <charset>Cp1252</charset>
-          <quotedValues>false</quotedValues>
-        </con:configuration>
-      </con:dataSource>
-      <con:shared>true</con:shared>
-      <con:restartShared>true</con:restartShared>
-      <con:property>MarketingEventChannelId</con:property>
-      <con:property>ChannelName</con:property>
-      <con:property>PackagedAudienceId</con:property>
-      <con:property>AudienceName</con:property>
-      <con:property>AudienceSource</con:property>
-      <con:property>PanelIdCustAct</con:property>
-      <con:property>PanelCodeCustAct</con:property>
-      <con:property>PanelIdCustRew</con:property>
-      <con:property>PanelCodeCustRew</con:property>
-      <con:property>PanelIdOfferLim</con:property>
-      <con:property>PanelCodeOfferLim</con:property>
-      <con:property>PackagedOfferCategoryId</con:property>
-      <con:property>PackagedOfferCategoryCode</con:property>
-      <con:startRow>1</con:startRow>
-      <con:endRow/>
-      <con:recordsPerIteration>1</con:recordsPerIteration>
-      <con:completeLastOperation>true</con:completeLastOperation>
-      <con:trimValues>false</con:trimValues>
-      <con:entitizeValues>false</con:entitizeValues>
-      <con:restartOnRun>true</con:restartOnRun>
-      <con:expandProperties>false</con:expandProperties>
-      <con:stopDatasourceExhausted>false</con:stopDatasourceExhausted>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="restrequest" name="ProcessMarketingEventErnPtnTrxn" id="dcfa5b81-0852-42d0-b89c-f1bd79b248e3">
+  <con:testStep type="restrequest" name="ProcessMarketingEventErnPtnTrxn" id="6366640c-da6e-44ca-809b-77621e103e0a">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/engage/marketingevent" methodName="ProcessMarketingEvent" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="ProcessMarketingEventErnPtnTrxn" id="c3da61b0-81ba-449f-abb7-d1e58290c294" mediaType="application/json" postQueryString="false">
@@ -49,53 +11,103 @@
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
-        <con:request>{ 	 	
-	"MarketingEventChannels": 
-		[ 		
-			{ 		
-         	"MarketingEventChannelId": "${ProcessMarketingEventData#MarketingEventChannelId}", 
-			"ChannelName": "${ProcessMarketingEventData#ChannelName}",
-			} 	
-		], 	
+        <con:request>{
+	"MarketingEventChannels": [
+		{
+			"MarketingEventId": "cbd693fc-9edc-414d-81b2-a0e441faeb2f",
+			"MarketingEventChannelId": "df85ae0f-5596-6e49-96a4-ced889259511",
+			"ChannelName": "Online Message",
+			"ChannelCode": "ONLINE_MESSAGE"
+		}
+	],
 		"EventName": "OFFER_NAME${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 	
-		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}", 
-		"PackagedAudience": {  		
-			"PackagedAudienceId": "${ProcessMarketingEventData#PackagedAudienceId}",
-               "AudienceName": "${ProcessMarketingEventData#AudienceName}",
-			}, 
-			"AudienceSource": "${ProcessMarketingEventData#AudienceSource}", 	
-			"PackagedOffer": 
-		{ 		
-			"PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6", 		 
-			"PackagedOfferCode": "EARN_POINTS_ON_TXN", 		 	
-			"PackagedOfferName": "Earn Points on a Transaction",  
-	 		"PackagedOfferParams":
-			[ 	
-			{ 				 				
-			"PackagedOfferParamId": "fa7588bf-06ee-4541-b9c5-4d03adcf7c61", 		
-			"PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6", 			
-			"ParamName": "Minimum transaction amount", 			
-			"ParamCode": "MIN_TXN_AMT",  				
-			"Value": "100",  				
-			"PanelId": "${ProcessMarketingEventData#PanelIdCustAct}",  			
-			"PanelCode":  "${ProcessMarketingEventData#PanelCodeCustAct}", 
-			}, 		
-			{ 				 				
-			"PackagedOfferParamId":"a1579fd2-2a7c-44e6-88bc-ed7d6319de83",  		
-			"PackagedOfferId": "327a3e11-59eb-4867-9711-dbf011421ae6",			
-			"ParamName": "Point amount", 	
-			"ParamCode": "POINT_AMT_REWARDED",			
-			"Value": "5", 	
-			"PanelId": "${ProcessMarketingEventData#PanelIdCustRew}",				
-			"PanelCode": "${ProcessMarketingEventData#PanelCodeCustRew}",		
-			}		
-			], 		
-			"PackagedOfferCategoryId": "${ProcessMarketingEventData#PackagedOfferCategoryId}",
-			"PackagedOfferCategoryCode": "${ProcessMarketingEventData#PackagedOfferCategoryCode}",
-		}, 
-			"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
-			"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}", 
-			"Status": "A", 
+		"EventCode": "OFFER_CODE${=new java.text.SimpleDateFormat("mmddyyyyhhmmssmmm").format(new Date())}",
+	
+	"PackagedAudience": {
+		"PackagedAudienceId": "7ae1f987-515e-4669-e053-5ca8e70ad3ee",
+		"AudienceName": "All Members",
+		"PackagedAudienceParams": [
+			{
+				"MarketingEventId": "cbd693fc-9edc-414d-81b2-a0e441faeb2f",
+				"PackagedAudienceParamId": "f0a885b4-b773-5c52-e053-5dedef0a74de",
+				"PackagedAudienceId": "7ae1f987-515e-4669-e053-5ca8e70ad3ee",
+				"ParamName": "All Members",
+				"ParamCode": "ALLMEMBERS_AUDIPRAM",
+				"ParamDescription": "All Members",
+				"DataType": "Label",
+				"ParamControl": "Label",
+				"IsRequired": false
+			}
+		],
+		
+	},
+	"AudienceSource": "PACKAGED_AUDIENCE",
+	"PackagedOffer": {
+		"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+		"MarketingEventId": "cbd693fc-9edc-414d-81b2-a0e441faeb2f",
+		"PackagedOfferCode": "CUSTOM_OFFER",
+		"PackagedOfferName": "Custom Offer",
+		
+		"PackagedOfferParams": [
+			{
+				"MarketingEventId": "cbd693fc-9edc-414d-81b2-a0e441faeb2f",
+				"PackagedOfferParamId": "1d5c8eb6-b0b9-ed4e-e053-5dedef0ac6ca",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Spend amount is",
+				"ParamCode": "CUSTOM_TXN_AMT",
+				"ParamDescription": "0",
+				"DataType": "input",
+				"ParamControl": "decimal",
+				"IsRequired": true,
+				"Value": "100",
+				"PanelId": "e0e698ac-4191-d25d-e053-5dedef0ac6ef",
+				"PanelCode": "CUSTOMER_ACTIVITY",
+				"OfferParamCategoryCode": "TRANSACTIONAL",
+				"MarketingCusOfferMomentPartId": "8e9031b7-5459-b662-e053-5dedef0a7022",
+				"EventType": "PurchaseTxn",
+				"OfferParamCategoryName": "Transactional",
+				"DisplayParamName": "Spend an amount",
+				"ParamOperatorId": "8a4966d0-8f8d-4cd7-8bfe-7974a7b4cd00",
+				"OperatorName": "at least",
+				"OperatorCode": "AT_LEAST",
+				"OperatorSign": ">="
+			},
+			{
+				"MarketingEventId": "cbd693fc-9edc-414d-81b2-a0e441faeb2f",
+				"PackagedOfferParamId": "1d5c8eb6-b8b9-ed4e-e053-5dedef0ac6ca",
+				"PackagedOfferId": "1d5c8eb6-abb9-ed4e-e053-5dedef0ac6ca",
+				"ParamName": "Point amount",
+				"ParamCode": "CUSTOM_POINT_AMT_REWARDED",
+				"ParamDescription": "0",
+				"DataType": "input",
+				"ParamControl": "number",
+				"IsRequired": true,
+				"Value": "11",
+				"PanelId": "e0e698ac-4291-d25d-e053-5dedef0ac6ef",
+				"PanelCode": "CUSTOMER_REWARD",
+				"FormulaName": "FIXEDAMT",
+				"DisplayParamName": "Fixed point amount"
+			}
+		],
+		"PackagedOfferCategoryId": "ff2dcceb-cc72-9f45-abfa-eee67daafdf0",
+		"PackagedOfferCategoryCode": "CUSTOM_OFFER",
+		"CustomOfferActivityValue": {
+			"Type": "ATTRIBUTE",
+			"PackagedOfferParamId": "1d5c8eb6-b0b9-ed4e-e053-5dedef0ac6ca",
+			"Value": 100,
+			"ParamOperatorId": "8a4966d0-8f8d-4cd7-8bfe-7974a7b4cd00"
+		}
+	},
+	"OfferStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+	"OfferEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
+	"OnlineMessageCode": "CUSTOFFWITHONCHAL",
+	"OnlineMessageBriefDescription": "CustOffWithONChal",
+	"OptInStatus": false,
+	"OnlineMessageStartDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+2)}",
+	"OnlineMessageEndDate": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()+4)}",
+	"OnlineMessageDescription": "DeployOfferWithOnlineChannelforDH",
+	"OnlineMessageTermsAndConditions": "DeployOfferWithOnlineChannelforDH",
+
 }</con:request>
         <con:originalUri>https://d2aldv-pveapi.skynetlowerenv.com/api/v1/engage/marketingevent</con:originalUri>
         <con:assertion type="DataAndMetadataAssertion" id="8e1f7e14-fc8b-44ae-92e1-3c5612b3e206" name="Smart Assertion for HTTP status code">
@@ -291,7 +303,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="738ae072-0e87-4ef8-a260-f8f15fd48404">
+  <con:testStep type="calltestcase" name="ApproveMarketingEvent" id="f4e0a3e7-977d-454d-80ce-8a9e884d287d">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>ac44e245-733a-4139-a950-3f774b513c3b</con:targetTestCase>
@@ -305,7 +317,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="7eb0f38e-1550-4c13-b5f9-582e76f63965">
+  <con:testStep type="calltestcase" name="DeployMarketingEvent" id="32f54e90-7db1-4ba4-afd1-8df9bc2a9b71">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>4e31c31c-5e5f-4dab-8caf-7c5cf7fef68f</con:targetTestCase>
@@ -319,69 +331,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="StartProcess" id="e97dc9e5-5bfc-4d56-a46e-b6442a1c5540" disabled="true">
-    <con:settings/>
-    <con:config service="DatahubAPIs" resourcePath="/orchestration/v1/process-definition/key/{DataHubProcessDefinitionKey}/start" methodName="StartProcess" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="StartProcess" id="b4180f31-bb0b-4a75-b82d-a80d297d00e0" mediaType="application/json" postQueryString="false">
-        <con:settings>
-          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-        </con:settings>
-        <con:endpoint>https://u-stgapi.datahub.epsilon.com</con:endpoint>
-        <con:request>{
-  "businessKey": "string",
-  "variables": {
-    "event_code": {
-      "type": "string",
-      "value": "${ProcessMarketingEventErnPtnTrxn#Response#$['EventCode']}"
-    },
-    "deployment_status": {
-      "type": "string",
-      "value": "DEPLOY_IN_PROGRESS"
-    },
-     "job_program_code": {
-      "type": "string",
-      "value": "PP"
-    },
-     "job_tenant_code": {
-      "type": "string",
-      "value": "Q3ALIN"
-    }
-  },
-  "withVariablesInReturn": true
-}</con:request>
-        <con:originalUri>https://u-acpapi.datahub.epsilon.com/orchestration/v1/process-definition/key/start</con:originalUri>
-        <con:credentials>
-          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
-          <con:authType>No Authorization</con:authType>
-        </con:credentials>
-        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-        <con:parameters>
-          <con:entry key="Authorization" value=" Basic ZGF0YWh1Yl9wY2xfcTNhbGluOjVnQnMlQUlL"/>
-          <con:entry key="X-ADH-Tenant-Code" value=" Q3ALIN"/>
-          <con:entry key="Accept" value="application/json"/>
-          <con:entry key="DataHubProcessDefinitionKey" value="${ProcessMarketingEventErnPtnTrxn#Response#$['EventCode']}"/>
-        </con:parameters>
-        <con:parameterOrder>
-          <con:entry>DataHubProcessDefinitionKey</con:entry>
-          <con:entry>Authorization</con:entry>
-          <con:entry>X-ADH-Tenant-Code</con:entry>
-          <con:entry>Accept</con:entry>
-        </con:parameterOrder>
-        <con:environmentSpec>
-          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="6705507e-ac0c-4a4b-acac-36b4c8b57bc6">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-          <con:entry environmentId="537e61a1-a742-4637-a094-8cad62ddccd2">
-            <con:authProfile>Inherit From Parent</con:authProfile>
-          </con:entry>
-        </con:environmentSpec>
-      </con:restRequest>
-    </con:config>
-  </con:testStep>
-  <con:testStep type="datasource" name="LoopValidationExecutionStatus" id="a62b3a51-f1e4-4d46-9961-6380b232b149">
+  <con:testStep type="datasource" name="LoopValidationExecutionStatus" id="53cde6d3-cff3-4322-b9a8-c9eb72780f8c">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="Data Generator">
@@ -408,7 +358,7 @@
       <con:stopDatasourceExhausted>false</con:stopDatasourceExhausted>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="DataHubValidateExecutePipelineTaskStatus" id="e25fcf8b-7526-4ed4-a6b2-aadfae4e9305">
+  <con:testStep type="restrequest" name="DataHubValidateExecutePipelineTaskStatus" id="f49a9ad2-5364-4f97-bb89-9ac271877f06">
     <con:settings/>
     <con:config service="DatahubAPIs" resourcePath="/orchestration/v1/process-instance/{DatahubProcessId}/status" methodName="GetDatahubProcessStatus" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="DataHubValidateExecutePipelineTaskStatus" id="01270cc9-8610-4c84-a37f-b4f303f4ce81" mediaType="application/json">
@@ -591,7 +541,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="goto" name="ValidatePipelineStatus" id="09d82ee8-fc76-4f66-a619-a8da578e27d9">
+  <con:testStep type="goto" name="ValidatePipelineStatus" id="cc33a26b-d2c2-464e-af73-5ec046743582">
     <con:settings/>
     <con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:condition>
@@ -602,13 +552,13 @@
       </con:condition>
     </con:config>
   </con:testStep>
-  <con:testStep type="delay" name="WaitForPipelineToCompleteExecution" id="5006bbb1-f4d0-4d90-b29d-0426ef6ead93">
+  <con:testStep type="delay" name="WaitForPipelineToCompleteExecution" id="44f5abbe-f035-458b-a2ee-9bb228245f80">
     <con:settings/>
     <con:config>
       <delay>10000</delay>
     </con:config>
   </con:testStep>
-  <con:testStep type="datasourceloop" name="LoopPipelineStatus" id="c34fc46e-0c79-4f38-90da-75e939e5bd9f">
+  <con:testStep type="datasourceloop" name="LoopPipelineStatus" id="3c734842-db8a-455d-b3ed-b95d996c2328">
     <con:settings/>
     <con:config>
       <dataSourceStep>LoopValidationExecutionStatus</dataSourceStep>
@@ -616,15 +566,15 @@
       <discardResults>true</discardResults>
     </con:config>
   </con:testStep>
-  <con:testStep type="assertionteststep" name="AssertDatahubWorkflowStatus" id="66de9604-10de-4514-8ba3-0f124756ff7e">
+  <con:testStep type="assertionteststep" name="AssertDatahubWorkflowStatus" id="5ccaed61-dfb9-4d4f-ab8f-00c0ae78d71b">
     <con:settings/>
     <con:config xsi:type="con:AssertionTestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:entry>
-        <con:id>5a7c36ae-8236-407e-b64f-d4c6390c454f</con:id>
+        <con:id>a95e5f64-f7d5-4263-9c35-ee29cdc49020</con:id>
         <con:isGroup>false</con:isGroup>
-        <con:sourceId>dcfa5b81-0852-42d0-b89c-f1bd79b248e3</con:sourceId>
+        <con:sourceId>32f54e90-7db1-4ba4-afd1-8df9bc2a9b71</con:sourceId>
         <con:propertyName>Response</con:propertyName>
-        <con:assertion type="JsonPath Match" name="JSONPath Match" id="49ccec6f-01d4-4271-8147-aaa87d541132">
+        <con:assertion type="JsonPath Match" name="JSONPath Match" id="45618e26-39e2-47cc-96e2-bb7ab34a01ef">
           <con:configuration>
             <path>$['status']</path>
             <content>"Complete"</content>
@@ -636,7 +586,7 @@
       </con:entry>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode" id="9da0d715-7886-44d0-b0f6-dc761a83936c">
+  <con:testStep type="restrequest" name="GetMarketingEventbyEventCode" id="ba45c809-3dac-4d57-8049-c8b7762d78f3">
     <con:settings/>
     <con:config service="RestAPIs" methodName="GetMarketingEventbyEventCode" resourcePath="/api/v1/engage/marketingevent/eventdetails/{eventCode}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetMarketingEventbyEventCode" id="65238c02-5ba1-41b4-90f5-cc1d0ca30e98" mediaType="application/json">
@@ -835,12 +785,4 @@
   </con:testStep>
   <con:properties/>
   <con:reportParameters/>
-  <con:environmentSpec>
-    <con:entry environmentId="6705507e-ac0c-4a4b-acac-36b4c8b57bc6">
-      <con:authProfile>Inherit From Parent</con:authProfile>
-    </con:entry>
-    <con:entry environmentId="537e61a1-a742-4637-a094-8cad62ddccd2">
-      <con:authProfile>Inherit From Parent</con:authProfile>
-    </con:entry>
-  </con:environmentSpec>
 </con:testCase>

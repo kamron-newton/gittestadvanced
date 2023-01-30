@@ -511,6 +511,33 @@
             <con:originalMessage>{"Headers":{"date":"Thu, 28 Apr 2022 18:22:16 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"10284","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"cae73b56-cf0d-3c49-cec1-c52344fd5c69","content-type":"application/json; charset=utf-8","process-time":"37ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMH90T3K0S90:000003AF"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
+        <con:assertion type="JsonPath Existence Match" id="2293d786-1836-40da-b0c3-626b8c4b317c" name="Validating MomentCode does not exit">
+          <con:configuration>
+            <path>$.Moments[?(@.MomentCode=='${UpsertBestOfferLowPt#MomentName}')]</path>
+            <content>false</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="105032ce-bd99-434a-b0fd-25e8f89c6f21" name="TransactionId">
+          <con:configuration>
+            <path>$.TransactionId</path>
+            <content>${#[ActivityCertificate#PurchaseTransaction#PurchaseTransaction]#Response#$['TransactionId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
+        <con:assertion type="JsonPath Match" id="7cea4d96-32c4-4dc2-a292-794852f19150" name="ProfileId">
+          <con:configuration>
+            <path>$.ProfileId</path>
+            <content>${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}</content>
+            <allowWildcards>false</allowWildcards>
+            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+            <ignoreComments>false</ignoreComments>
+          </con:configuration>
+        </con:assertion>
         <con:credentials>
           <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
           <con:authType>No Authorization</con:authType>
@@ -518,7 +545,7 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
-          <con:entry key="profileId" value="${Add Profile B#ProfileId}"/>
+          <con:entry key="profileId" value="${#[Profile#AddProfileRGR#AddProfileRGR]#Response#$['ProfileId']}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
           <con:entry key="transactionId" value="${#[ActivityCertificate#PurchaseTransaction#PurchaseTransaction]#Response#$['TransactionId']}"/>

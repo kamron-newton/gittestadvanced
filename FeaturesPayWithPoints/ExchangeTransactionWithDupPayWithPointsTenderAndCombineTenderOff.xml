@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="37d7dbe2-9d20-47a6-919a-2fc39046d289" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="FullReturnTransactionWithPayWithPointsTender" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="d2438f0d-3f9f-42ab-8787-acf166a61769" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ExchangeTransactionWithDupPayWithPointsTenderAndCombineTenderOff" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="37d7dbe2-9d20-47a6-919a-2fc39046d289fileName">FullReturnTransactionWithPayWithPointsTender</con:setting>
+    <con:setting id="d2438f0d-3f9f-42ab-8787-acf166a61769fileName">ExchangeTransactionWithDupPayWithPointsTenderAndCombineTenderOff</con:setting>
   </con:settings>
-  <con:testStep type="restrequest" name="Get Point Type" id="da82911f-61c0-4d40-b263-2d812e73b7de">
+  <con:testStep type="restrequest" name="Get Point Type" id="68a59265-5d70-43f1-8d87-447ddfa7db42">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes" methodName="GetPointTypes" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest id="41d772c9-42ab-4326-8052-f61f2a44d3be" mediaType="application/json" name="Get Point Type">
@@ -208,7 +208,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Process Tender Type" id="65140353-1541-42c7-933d-e7fc75dee329">
+  <con:testStep type="restrequest" name="Process Tender Type" id="d6baa8ae-5845-44ea-9248-3026fb37d440">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/referencedata/transactions/tendertypes" methodName="ProcessTenderTypes" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="Process Tender Type" id="67f221cf-1165-4fd4-a5fb-b8800dfb142c" mediaType="application/json" postQueryString="false">
@@ -415,7 +415,40 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddPayWithPointRewardWithPointType" id="d5992ada-d2c5-41d0-a502-517d715dd9c3">
+  <con:testStep type="restrequest" name="Set Initial Program Settings for Transaction" id="8fac880e-eff1-4947-8329-5702b1bbddef">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateProgramSettings" resourcePath="/api/v1/referencedata/programs/programsettings" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Set Initial Program Settings for Transaction" id="4ee8f371-90e7-497d-9768-870c49ac81b6" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[ { "ParameterName": "COMBINE_TENDERS", "ParameterValue": "N" }  ]</con:request>
+        <con:originalUri>https://d9alqa-pveapi.epsilonagilityloyalty.com/api/v1/referencedata/programs/programsettings</con:originalUri>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:environmentSpec>
+          <con:entry environmentId="6705507e-ac0c-4a4b-acac-36b4c8b57bc6">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="537e61a1-a742-4637-a094-8cad62ddccd2">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddPayWithPointRewardWithPointType" id="d22d70c2-d56b-46d4-bd62-9879ceddaae0">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>bee6abb0-1d89-4492-8207-079891524be3</con:targetTestCase>
@@ -441,14 +474,14 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddProfile" id="f37c43e4-4e2e-489a-bb06-60ac3c345b99">
+  <con:testStep type="calltestcase" name="AddProfile" id="abec27af-338f-48e0-8e5d-443852004f3a">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>540275ae-218e-4dd8-9eeb-68f3be253b05</con:value>
+          <con:value>e85153ba-c813-4c9a-92c8-c5e8bc01a8b3</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -457,7 +490,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep id="ee9cf573-b4af-4811-9681-9e67bc1d5bff" name="PurchaseTransaction" type="datasource">
+  <con:testStep id="96334478-5061-49b1-8e17-a978b7a4419b" name="PurchaseTransaction" type="datasource">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -579,19 +612,19 @@
       <con:stopDatasourceExhausted>false</con:stopDatasourceExhausted>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Generate Guid" id="8f0c81d6-6458-490f-80fd-98e0730b8a18">
+  <con:testStep type="groovy" name="Generate Guid" id="8ed8d116-a0db-43a6-944b-9532f0963501">
     <con:settings/>
     <con:config>
       <script>java.util.UUID.randomUUID()</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Generate Date" id="a0bf2dbf-13ba-43e5-b53c-37436b6926d9">
+  <con:testStep type="groovy" name="Generate Date" id="e3b6a6ab-969c-416d-9b8e-d37caef2ffb5">
     <con:settings/>
     <con:config>
       <script>new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddAdjustment" id="defa67b6-d9b2-480c-a44b-62b265af023a">
+  <con:testStep type="restrequest" name="AddAdjustment" id="6ff5d476-5e03-4b51-a408-507bd0f48ee7">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/adjustments" methodName="AddAdjustment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest id="9a3422f2-f90a-4dcd-9195-4f82d76a9c75" mediaType="application/json" name="AddAdjustment" postQueryString="false">
@@ -811,7 +844,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep id="60bc5b33-bcf0-4d5e-ac30-d05a898a04d6" name="AddTransaction" type="restrequest">
+  <con:testStep id="5489c8ac-77ab-47fc-9db3-18f6cf7f2711" name="AddTransaction" type="restrequest">
     <con:settings/>
     <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="AddTransaction" postQueryString="false">
@@ -819,7 +852,7 @@
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request>{
-  "ProfileId":"${AddProfile#ProfileId}",
+  "ProfileId": "${AddProfile#ProfileId}",
   "TransactionTypeCode": "${PurchaseTransaction#TransactionTypeCode}",
   "TransactionNetTotal": "${PurchaseTransaction#TransactionNetTotal}",
   "ShippingAndHandling": "${PurchaseTransaction#ShippingAndHandling}",
@@ -856,7 +889,13 @@
   "Tenders": [
     {
       "TenderCode": "${Process Tender Type#Response#$['TenderCode']}",
-      "TenderAmount": "${PurchaseTransaction#GrossAmount}"
+      "TransactionTenderCode": "DISCOVER1",
+      "TenderAmount": "${PurchaseTransaction#TenderAmount1}"
+    },
+    {
+      "TenderCode": "${Process Tender Type#Response#$['TenderCode']}",
+      "TransactionTenderCode": "DISCOVER2",
+      "TenderAmount": "${PurchaseTransaction#TenderAmount1}"
     }
   ]
 }</con:request>
@@ -1052,7 +1091,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetPointsBalance - Verify 0 points" id="c273b0c1-70f7-4d5d-99ed-4de412162dfa">
+  <con:testStep type="restrequest" name="GetPointsBalance - Verify 0 points" id="8b48586a-c9a0-45e2-bbe9-31477c0c49a4">
     <con:settings/>
     <con:config service="RestAPIs" methodName="GetPointBalance" resourcePath="/api/v1/profiles/{profileId}/points/balance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="GetPointsBalance - Verify 0 points" id="579a2c67-8aaf-47ff-b3bb-2d4c01ab6c07" mediaType="application/json">
@@ -1072,7 +1111,7 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="DataAndMetadataAssertion" name="Http Success Status Code" id="e49c4447-1a9a-49f3-9834-b2679ed396b1">
+        <con:assertion type="DataAndMetadataAssertion" name="Http Success Status Code" id="498d34be-245f-45dc-bbf6-2ac2f14ce248">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -1257,26 +1296,26 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep id="ae378e1d-1a99-41d7-81aa-e22e2c35fa45" name="AddFullReturnTransaction" type="restrequest">
+  <con:testStep id="f8ebe45b-5afa-4ccb-9bc4-0bcccd35cc26" name="AddExchangeTransaction" type="restrequest">
     <con:settings/>
     <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="AddFullReturnTransaction" postQueryString="false">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="AddExchangeTransaction" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request>{
-  "ProfileId":"${AddProfile#ProfileId}",
-  "TransactionTypeCode": "RT",
-  "TransactionNetTotal": "-${PurchaseTransaction#TransactionNetTotal}",
-  "ShippingAndHandling": "-${PurchaseTransaction#ShippingAndHandling}",
-  "TransactionTotalTax": "-${PurchaseTransaction#TransactionTotalTax}",
-  "TransactionNumber": "${Generate Guid#result}_RT",
+  "ProfileId": "${AddProfile#ProfileId}",
+  "TransactionTypeCode": "EX",
+  "TransactionNetTotal": "${PurchaseTransaction#TransactionNetTotal}",
+  "ShippingAndHandling": "${PurchaseTransaction#ShippingAndHandling}",
+  "TransactionTotalTax": "${PurchaseTransaction#TransactionTotalTax}",
+   "TransactionNumber": "${Generate Guid#result}_EX",
   "CurrencyCode": "${PurchaseTransaction#CurrencyCode}",
-  "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
+  "TransactionDateTime": "${Generate Date#result}",
   "TransactionDescription": "${PurchaseTransaction#TransactionDescription}",
   "StoreCode": "${PurchaseTransaction#StoreCode}",
   "ProgramCode": "${#Project#ProgramCode}",
-  "GrossAmount": "-${PurchaseTransaction#GrossAmount}",
+  "GrossAmount": "${PurchaseTransaction#GrossAmount}",
   "TransactionDetails": [
     {
       "TaxAmount": "-${PurchaseTransaction#TaxAmount}",
@@ -1288,25 +1327,25 @@
       "OriginalTransactionNumber": "${Generate Guid#result}_PR",
       "OriginalTransactionDateTime": "${Generate Date#result}",
       "OriginalStoreCode": "${PurchaseTransaction#StoreCode}",
-      "LineNumber": 1
+      "LineNumber": 1,
+	  "ItemTransactionTypeCode": "RT"
     },
     {
-      "TaxAmount": "-${PurchaseTransaction#TaxAmount}",
-      "DollarValueGross": "-${PurchaseTransaction#DollarValueGross}",
-      "DollarValueNet": "-${PurchaseTransaction#DollarValueNet}",
+      "TaxAmount": "${PurchaseTransaction#TaxAmount}", 
+      "DollarValueGross": "${PurchaseTransaction#DollarValueGross}",
+      "DollarValueNet": "${PurchaseTransaction#DollarValueNet}",
       "ItemNumber": "${PurchaseTransaction#ItemNumber2}",
       "ItemNumberTypeCode": "${PurchaseTransaction#ItemNumberTypeCode}",
       "Quantity": "${PurchaseTransaction#Quantity}",
-      "OriginalTransactionNumber": "${Generate Guid#result}_PR",
-      "OriginalTransactionDateTime": "${Generate Date#result}",
-      "OriginalStoreCode": "${PurchaseTransaction#StoreCode}",
-      "LineNumber": 2
+      "LineNumber": 2,
+      "ItemTransactionTypeCode": "PR"
     }
   ],
   "Tenders": [
     {
       "TenderCode": "${Process Tender Type#Response#$['TenderCode']}",
-      "TenderAmount": "-${PurchaseTransaction#TenderAmount1}"
+      "TransactionTenderCode":"DISCOVER1",
+      "TenderAmount": "-25"
     }
   ]
 }</con:request>
@@ -1502,10 +1541,10 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="GetPointsBalance - Verify 1000 points" id="af5d2fbb-00ed-47f4-a665-fad0e9947417">
+  <con:testStep type="restrequest" name="GetPointsBalance - Verify 250 points After Ex Trans" id="ec1962e7-34c6-455d-a715-831d221938ac">
     <con:settings/>
     <con:config service="RestAPIs" methodName="GetPointBalance" resourcePath="/api/v1/profiles/{profileId}/points/balance" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="GetPointsBalance - Verify 1000 points" id="579a2c67-8aaf-47ff-b3bb-2d4c01ab6c07" mediaType="application/json">
+      <con:restRequest name="GetPointsBalance - Verify 250 points After Ex Trans" id="579a2c67-8aaf-47ff-b3bb-2d4c01ab6c07" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -1513,16 +1552,16 @@
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
         <con:originalUri>https://d3aldv-pveapi.skynetlowerenv.com/api/v1/profiles/ede194d2-c4bc-4b0f-8ea0-da2095fba26e/points/summary</con:originalUri>
-        <con:assertion type="JsonPath Match" id="f550b9b5-4924-431f-9796-46f27ecae89c" name="Verify 1000 points of POINTS point type">
+        <con:assertion type="JsonPath Match" id="f550b9b5-4924-431f-9796-46f27ecae89c" name="Verify 250 points of POINTS point type">
           <con:configuration>
             <path>$['PointsBalance'][?(@.PointTypeCode == 'POINTS')]['PointAmount']</path>
-            <content>[1000.0]</content>
+            <content>[250.0]</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="DataAndMetadataAssertion" name="Http Success Status Code" id="82c61618-d20d-42d3-b58b-9cd08ebf6602">
+        <con:assertion type="DataAndMetadataAssertion" name="Http Success Status Code" id="89abfb02-17e7-41e7-a30f-b63d3069e380">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>

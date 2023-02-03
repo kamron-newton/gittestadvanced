@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="1a35b9eb-fe84-4c89-b38f-f90563ae7780" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ReceiptlessReturnWithPayWithPointsTender-Negative" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="75bf2505-c7e6-4b66-8809-eb6f4cb9a266" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ExchangeTransactionWithPayWithPointsTenderNetsNegative" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="1a35b9eb-fe84-4c89-b38f-f90563ae7780fileName">ReceiptlessReturnWithPayWithPointsTender-Negative</con:setting>
+    <con:setting id="75bf2505-c7e6-4b66-8809-eb6f4cb9a266fileName">ExchangeTransactionWithPayWithPointsTenderNetsNegative</con:setting>
   </con:settings>
-  <con:testStep type="restrequest" name="Get Point Type" id="470de494-be0d-4a28-ac4d-792fcd77c0cd">
+  <con:testStep type="restrequest" name="Get Point Type" id="0d6ed0c7-9215-4344-83c1-f030f094c078">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/referencedata/transactions/pointtypes" methodName="GetPointTypes" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest id="41d772c9-42ab-4326-8052-f61f2a44d3be" mediaType="application/json" name="Get Point Type">
@@ -208,7 +208,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Process Tender Type" id="4a6aef6a-e52b-4602-a3ca-5572182d60b8">
+  <con:testStep type="restrequest" name="Process Tender Type" id="120e9fcf-395b-4d16-83db-949a0050fa2e">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/referencedata/transactions/tendertypes" methodName="ProcessTenderTypes" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest name="Process Tender Type" id="67f221cf-1165-4fd4-a5fb-b8800dfb142c" mediaType="application/json" postQueryString="false">
@@ -415,7 +415,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddPayWithPointRewardWithPointType" id="b8cedfa9-a56f-44b3-b6f9-7273bcc2c06e">
+  <con:testStep type="calltestcase" name="AddPayWithPointRewardWithPointType" id="9ddf13fc-868f-4ae2-9a7a-bc870811a951">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>bee6abb0-1d89-4492-8207-079891524be3</con:targetTestCase>
@@ -441,14 +441,47 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddProfile" id="b4412787-4ce1-4530-aaba-6e28efd336d4">
+  <con:testStep type="restrequest" name="Set Initial Program Settings for Transaction" id="c2d197b7-01ca-4784-8c1b-14aa3aa240bf">
+    <con:settings/>
+    <con:config service="RestAPIs" methodName="UpdateProgramSettings" resourcePath="/api/v1/referencedata/programs/programsettings" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Set Initial Program Settings for Transaction" id="4ee8f371-90e7-497d-9768-870c49ac81b6" mediaType="application/json" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>[ { "ParameterName": "COMBINE_TENDERS", "ParameterValue": "N" }  ]</con:request>
+        <con:originalUri>https://d9alqa-pveapi.epsilonagilityloyalty.com/api/v1/referencedata/programs/programsettings</con:originalUri>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:environmentSpec>
+          <con:entry environmentId="6705507e-ac0c-4a4b-acac-36b4c8b57bc6">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="537e61a1-a742-4637-a094-8cad62ddccd2">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="calltestcase" name="AddProfile" id="8177cb27-ac0c-426d-afc4-c63ba1356ae1">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>1e18a6ab-8c9a-40a7-b923-a11de2a57f46</con:value>
+          <con:value>ef0f4619-c1d6-4eb7-92f0-5416246042f0</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -457,7 +490,7 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep id="2a592478-7d02-4ee5-897d-4dcf4caecaff" name="PurchaseTransaction" type="datasource">
+  <con:testStep id="74a3ab09-56f9-4f12-9b7a-97517bcbfffe" name="PurchaseTransaction" type="datasource">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -579,19 +612,19 @@
       <con:stopDatasourceExhausted>false</con:stopDatasourceExhausted>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Generate Guid" id="6452275b-f66e-466b-9ee7-43a6189e9c57">
+  <con:testStep type="groovy" name="Generate Guid" id="a75e3f46-2520-42e7-83b7-0d6390ecd402">
     <con:settings/>
     <con:config>
       <script>java.util.UUID.randomUUID()</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Generate Date" id="f1434383-b431-4e4a-bdd5-f96072b174bb">
+  <con:testStep type="groovy" name="Generate Date" id="d08dad44-b24d-4b21-bb93-a8b5f39be33a">
     <con:settings/>
     <con:config>
       <script>new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="AddAdjustment" id="6f3005ff-7941-4c40-ae8f-2d7bafcd33cf">
+  <con:testStep type="restrequest" name="AddAdjustment" id="c254b8b4-fbb5-452b-b615-fb54f12606f5">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/adjustments" methodName="AddAdjustment" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest id="9a3422f2-f90a-4dcd-9195-4f82d76a9c75" mediaType="application/json" name="AddAdjustment" postQueryString="false">
@@ -811,7 +844,7 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep id="8013bb11-0c98-4fa5-a9e4-1e2db4e0fadf" name="AddTransaction" type="restrequest">
+  <con:testStep id="60b6eeee-68e6-4fc3-91a0-6e5298b2b54a" name="AddTransaction" type="restrequest">
     <con:settings/>
     <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="AddTransaction" postQueryString="false">
@@ -856,7 +889,12 @@
   "Tenders": [
     {
       "TenderCode": "${Process Tender Type#Response#$['TenderCode']}",
-      "TenderAmount": "${PurchaseTransaction#GrossAmount}"
+      "TransactionTenderCode":"TEST",
+      "TenderAmount": "50"
+    },
+    {
+      "TenderCode": "CASH",
+      "TenderAmount": "50"
     }
   ]
 }</con:request>
@@ -1052,26 +1090,26 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep id="a492be36-d35a-4a76-a0f6-46727a5d8e0a" name="AddFullReturnTransaction" type="restrequest">
+  <con:testStep id="99a541d3-e3a4-451a-bbc6-362b68128432" name="AddExchangeTransaction" type="restrequest">
     <con:settings/>
     <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="AddFullReturnTransaction" postQueryString="false">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="AddExchangeTransaction" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:request>{
   "ProfileId":"${AddProfile#ProfileId}",
-  "TransactionTypeCode": "RT",
-  "TransactionNetTotal": "-${PurchaseTransaction#TransactionNetTotal}",
-  "ShippingAndHandling": "-${PurchaseTransaction#ShippingAndHandling}",
-  "TransactionTotalTax": "-${PurchaseTransaction#TransactionTotalTax}",
-  "TransactionNumber": "${Generate Guid#result}_RT",
+  "TransactionTypeCode": "EX",
+  "TransactionNetTotal": "45",
+  "ShippingAndHandling": "0",
+  "TransactionTotalTax": "5",
+  "TransactionNumber": "${Generate Guid#result}_EX",
   "CurrencyCode": "${PurchaseTransaction#CurrencyCode}",
   "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
   "TransactionDescription": "${PurchaseTransaction#TransactionDescription}",
   "StoreCode": "${PurchaseTransaction#StoreCode}",
   "ProgramCode": "${#Project#ProgramCode}",
-  "GrossAmount": "-${PurchaseTransaction#GrossAmount}",
+  "GrossAmount": "50",
   "TransactionDetails": [
     {
       "TaxAmount": "-${PurchaseTransaction#TaxAmount}",
@@ -1080,36 +1118,65 @@
       "ItemNumber": "${PurchaseTransaction#ItemNumber1}",
       "ItemNumberTypeCode": "${PurchaseTransaction#ItemNumberTypeCode}",
       "Quantity": "${PurchaseTransaction#Quantity}",
-      "LineNumber": 1
+      "OriginalTransactionNumber": "${Generate Guid#result}_PR",
+      "OriginalTransactionDateTime": "${Generate Date#result}",
+      "OriginalStoreCode": "${PurchaseTransaction#StoreCode}",
+      "LineNumber": 1,
+	  "ItemTransactionTypeCode": "RT"
     },
-    {
-      "TaxAmount": "-${PurchaseTransaction#TaxAmount}",
-      "DollarValueGross": "-${PurchaseTransaction#DollarValueGross}",
-      "DollarValueNet": "-${PurchaseTransaction#DollarValueNet}",
+	 {
+      "TaxAmount": "10", 
+      "DollarValueGross": "100",
+      "DollarValueNet": "90",
       "ItemNumber": "${PurchaseTransaction#ItemNumber2}",
       "ItemNumberTypeCode": "${PurchaseTransaction#ItemNumberTypeCode}",
       "Quantity": "${PurchaseTransaction#Quantity}",
-      "LineNumber": 2
+      "LineNumber": 2,
+      "ItemTransactionTypeCode": "PR"
     }
   ],
   "Tenders": [
     {
       "TenderCode": "${Process Tender Type#Response#$['TenderCode']}",
-      "TenderAmount": "-${PurchaseTransaction#TenderAmount1}"
+      "TenderAmount": "-60",
+      "TransactionTenderCode":"TEST",
+      "OriginalTransactionNumber": "${Generate Guid#result}_PR",
+      "OriginalTransactionDateTime": "${Generate Date#result}",
+      "OriginalStoreCode": "${PurchaseTransaction#StoreCode}",
     }
   ]
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
-        <con:assertion type="JsonPath Match" id="1baea84f-9495-4c00-af0d-7ea47c494d23" name="Error message is ReceiptlessReturnsNotEligibleforPWP">
-          <con:configuration>
-            <path>$.ErrorCode</path>
-            <content>ReceiptlessReturnsNotEligibleforPWP</content>
-            <allowWildcards>false</allowWildcards>
-            <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
-            <ignoreComments>false</ignoreComments>
+        <con:assertion type="DataAndMetadataAssertion" id="9c76008f-91f7-4556-9a84-e1a8c45269c1" name="Smart Assertion">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Data</con:mode>
+            <con:elements>
+              <con:path>$['ErrorCode']</con:path>
+              <con:element>ErrorCode</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>InvalidTenderAmountForPWPTenderNetsNegative</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Message']</con:path>
+              <con:element>Message</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>InvalidTenderAmountForPWPTenderNetsNegative</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{
+  "ErrorCode": "InvalidTenderAmountForPWPTenderNetsNegative",
+  "Message": "InvalidTenderAmountForPWPTenderNetsNegative"
+}</con:originalMessage>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="DataAndMetadataAssertion" id="8f9d4100-c6d3-4f42-9a9e-991470a5bf4e" name="HTTP Status Code is Bad Request">
+        <con:assertion type="DataAndMetadataAssertion" id="32696abe-f0c3-45f9-8831-927277e58f8c" name="Smart Assertion 2">
           <con:configuration xsi:type="con:DataAndMetadataAssertion">
             <con:mode>Received Metadata</con:mode>
             <con:elements>
@@ -1117,7 +1184,7 @@
               <con:element>date</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>Fri, 26 Aug 2022 17:30:55 GMT</con:expectedValue>
+              <con:expectedValue>Tue, 20 Sep 2022 19:29:26 GMT</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1207,7 +1274,7 @@
               <con:element>correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>5f03dc51-b47f-90a9-0d3d-7e44a8970f1b</con:expectedValue>
+              <con:expectedValue>68ae7cc6-dad7-af88-141b-c1ce9d8ecac8</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1227,7 +1294,7 @@
               <con:element>process-time</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>26ms</con:expectedValue>
+              <con:expectedValue>239ms</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
@@ -1257,12 +1324,268 @@
               <con:element>new-correlationid</con:element>
               <con:operatorId>1</con:operatorId>
               <con:enabled>false</con:enabled>
-              <con:expectedValue>0HMK7EPHDT021:00000166</con:expectedValue>
+              <con:expectedValue>0HMKR4M9RA38M:0000011B</con:expectedValue>
               <con:caseSensitive>false</con:caseSensitive>
               <con:numberType>false</con:numberType>
               <con:expectedDataType>1</con:expectedDataType>
             </con:elements>
-            <con:originalMessage>{"Headers":{"date":"Fri, 26 Aug 2022 17:30:55 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","transfer-encoding":"chunked","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"5f03dc51-b47f-90a9-0d3d-7e44a8970f1b","content-type":"application/json","process-time":"26ms","#status#":"HTTP/1.1 400 Bad Request","cache-control":"no-store,no-cache","new-correlationid":"0HMK7EPHDT021:00000166"}}</con:originalMessage>
+            <con:originalMessage>{"Headers":{"date":"Tue, 20 Sep 2022 19:29:26 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","transfer-encoding":"chunked","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"68ae7cc6-dad7-af88-141b-c1ce9d8ecac8","content-type":"application/json","process-time":"239ms","#status#":"HTTP/1.1 400 Bad Request","cache-control":"no-store,no-cache","new-correlationid":"0HMKR4M9RA38M:0000011B"}}</con:originalMessage>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>Program-Code</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="6705507e-ac0c-4a4b-acac-36b4c8b57bc6">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="537e61a1-a742-4637-a094-8cad62ddccd2">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="ea553002-ee54-4906-894e-8b2e98d91ab6" name="Exchange with Cash tender net negative" type="restrequest">
+    <con:settings/>
+    <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="Exchange with Cash tender net negative" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:request>{
+  "ProfileId":"${AddProfile#ProfileId}",
+  "TransactionTypeCode": "EX",
+  "TransactionNetTotal": "45",
+  "ShippingAndHandling": "0",
+  "TransactionTotalTax": "5",
+  "TransactionNumber": "${Generate Guid#result}_EX",
+  "CurrencyCode": "${PurchaseTransaction#CurrencyCode}",
+  "TransactionDateTime": "${=new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())}",
+  "TransactionDescription": "${PurchaseTransaction#TransactionDescription}",
+  "StoreCode": "${PurchaseTransaction#StoreCode}",
+  "ProgramCode": "${#Project#ProgramCode}",
+  "GrossAmount": "50",
+  "TransactionDetails": [
+    {
+      "TaxAmount": "-${PurchaseTransaction#TaxAmount}",
+      "DollarValueGross": "-${PurchaseTransaction#DollarValueGross}",
+      "DollarValueNet": "-${PurchaseTransaction#DollarValueNet}",
+      "ItemNumber": "${PurchaseTransaction#ItemNumber1}",
+      "ItemNumberTypeCode": "${PurchaseTransaction#ItemNumberTypeCode}",
+      "Quantity": "${PurchaseTransaction#Quantity}",
+      "OriginalTransactionNumber": "${Generate Guid#result}_PR",
+      "OriginalTransactionDateTime": "${Generate Date#result}",
+      "OriginalStoreCode": "${PurchaseTransaction#StoreCode}",
+      "LineNumber": 1,
+	  "ItemTransactionTypeCode": "RT"
+    },
+	 {
+      "TaxAmount": "10", 
+      "DollarValueGross": "100",
+      "DollarValueNet": "90",
+      "ItemNumber": "${PurchaseTransaction#ItemNumber2}",
+      "ItemNumberTypeCode": "${PurchaseTransaction#ItemNumberTypeCode}",
+      "Quantity": "${PurchaseTransaction#Quantity}",
+      "LineNumber": 2,
+      "ItemTransactionTypeCode": "PR"
+    }
+  ],
+  "Tenders": [
+    {
+      "TenderCode": "${Process Tender Type#Response#$['TenderCode']}",
+      "TenderAmount": "-50",
+      "TransactionTenderCode":"TEST",
+      "OriginalTransactionNumber": "${Generate Guid#result}_PR",
+      "OriginalTransactionDateTime": "${Generate Date#result}",
+      "OriginalStoreCode": "${PurchaseTransaction#StoreCode}",
+    },
+
+      {
+      "TenderCode": "CASH",
+      "TenderAmount": "-60",
+        "OriginalTransactionNumber": "${Generate Guid#result}_PR",
+      "OriginalTransactionDateTime": "${Generate Date#result}",
+      "OriginalStoreCode": "${PurchaseTransaction#StoreCode}"
+    }
+  ]
+}</con:request>
+        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v2/transaction</con:originalUri>
+        <con:assertion type="DataAndMetadataAssertion" id="5730e988-53ca-4b82-9300-ac7cee4ae33b" name="Http Success Status Code">
+          <con:configuration xsi:type="con:DataAndMetadataAssertion">
+            <con:mode>Received Metadata</con:mode>
+            <con:elements>
+              <con:path>$['Headers']['date']</con:path>
+              <con:element>date</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Fri, 23 Sep 2022 16:53:02 GMT</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['server']</con:path>
+              <con:element>server</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-length']</con:path>
+              <con:element>content-length</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>13222</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['language-code']</con:path>
+              <con:element>language-code</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>EN_US</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-frame-options']</con:path>
+              <con:element>x-frame-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>DENY</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['pragma']</con:path>
+              <con:element>pragma</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-cache</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-content-type-options']</con:path>
+              <con:element>x-content-type-options</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>nosniff</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['x-xss-protection']</con:path>
+              <con:element>x-xss-protection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>1</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['connection']</con:path>
+              <con:element>connection</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>keep-alive</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['correlationid']</con:path>
+              <con:element>correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>3b787fc4-b0da-67af-16d2-35127cf38788</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['content-type']</con:path>
+              <con:element>content-type</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>application/json; charset=utf-8</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['process-time']</con:path>
+              <con:element>process-time</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>500ms</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['#status#']</con:path>
+              <con:element>#status#</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>true</con:enabled>
+              <con:expectedValue>HTTP/1.1 200 OK</con:expectedValue>
+              <con:caseSensitive>true</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['cache-control']</con:path>
+              <con:element>cache-control</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>no-store,no-cache</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:elements>
+              <con:path>$['Headers']['new-correlationid']</con:path>
+              <con:element>new-correlationid</con:element>
+              <con:operatorId>1</con:operatorId>
+              <con:enabled>false</con:enabled>
+              <con:expectedValue>0HMKTG6IPER48:0000001F</con:expectedValue>
+              <con:caseSensitive>false</con:caseSensitive>
+              <con:numberType>false</con:numberType>
+              <con:expectedDataType>1</con:expectedDataType>
+            </con:elements>
+            <con:originalMessage>{"Headers":{"date":"Fri, 23 Sep 2022 16:53:02 GMT","server":"Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips","content-length":"13222","language-code":"EN_US","x-frame-options":"DENY","pragma":"no-cache","x-content-type-options":"nosniff","x-xss-protection":"1","connection":"keep-alive","correlationid":"3b787fc4-b0da-67af-16d2-35127cf38788","content-type":"application/json; charset=utf-8","process-time":"500ms","#status#":"HTTP/1.1 200 OK","cache-control":"no-store,no-cache","new-correlationid":"0HMKTG6IPER48:0000001F"}}</con:originalMessage>
           </con:configuration>
         </con:assertion>
         <con:credentials>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:testCase id="3bf40b5e-dd4f-4c33-8c81-3f8be41fca9f" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="PurchaseTransactionWithCardNumberandProgramCode" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
+<con:testCase id="68cc0da4-8c83-4966-9cb8-dc6f376b3007" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="PurchaseSuspendedTransactionWithCardNumber" searchProperties="true" timeout="0" xmlns:con="http://eviware.com/soapui/config">
   <con:settings>
-    <con:setting id="3bf40b5e-dd4f-4c33-8c81-3f8be41fca9ffileName">PurchaseTransactionWithCardNumberandProgramCode</con:setting>
+    <con:setting id="68cc0da4-8c83-4966-9cb8-dc6f376b3007fileName">PurchaseSuspendedTransactionWithCardNumber</con:setting>
   </con:settings>
-  <con:testStep type="calltestcase" name="Add Profile" id="868dbee1-1981-43e7-9037-26e21f00b582">
+  <con:testStep type="calltestcase" name="Add Profile" id="f61a3090-b392-484a-8085-1767b68b82fd">
     <con:settings/>
     <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>09d0b29f-fbfa-4136-9573-3b813c1795b3</con:targetTestCase>
       <con:properties>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>49863c9d-0bbe-43c4-ae40-ca904664931c</con:value>
+          <con:value>7e12ec40-a576-403e-9b95-3ebcc8f85b68</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -19,7 +19,25 @@
       <con:runMode>SINGLETON_AND_WAIT</con:runMode>
     </con:config>
   </con:testStep>
-  <con:testStep id="cc69d792-dd32-405b-bf62-557106446c05" name="PurchaseTransaction" type="datasource">
+  <con:testStep type="calltestcase" name="EnrollmentStatusToSuspended" id="276e31a7-34a0-42d8-b50a-fd312afaf3f2">
+    <con:settings/>
+    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:targetTestCase>5ab8b497-f3e8-422b-bc70-516b894ba197</con:targetTestCase>
+      <con:properties>
+        <con:property>
+          <con:name>Body</con:name>
+          <con:value>{   "EnrollmentStatus":"S",   "StatusChangeReasonCode":"SSPNDFRD" }</con:value>
+        </con:property>
+        <con:property>
+          <con:name>profileId</con:name>
+          <con:value>${#[Profile#AddProfileRGR]#ProfileId}</con:value>
+        </con:property>
+      </con:properties>
+      <con:returnProperties/>
+      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
+    </con:config>
+  </con:testStep>
+  <con:testStep id="797d4711-e163-4fcf-9a06-6cc6cf1b51da" name="PurchaseTransaction" type="datasource">
     <con:settings/>
     <con:config xsi:type="con:DataSourceStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:dataSource type="File">
@@ -141,22 +159,22 @@
       <con:stopDatasourceExhausted>false</con:stopDatasourceExhausted>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Generate Date" id="a5c310eb-9b83-4a79-9b4c-a51ea1b0aaeb">
+  <con:testStep type="groovy" name="Generate Date" id="86ce9fef-d329-480d-8229-ba2023cdbccb">
     <con:settings/>
     <con:config>
       <script>new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date())</script>
     </con:config>
   </con:testStep>
-  <con:testStep type="groovy" name="Generate Guid" id="34d6ed08-a218-4ada-be3b-eee38176b2f6">
+  <con:testStep type="groovy" name="Generate Guid" id="99d12dda-b8a3-4893-841c-f44865460396">
     <con:settings/>
     <con:config>
       <script>java.util.UUID.randomUUID()</script>
     </con:config>
   </con:testStep>
-  <con:testStep id="470a75d3-db30-4fd0-be2f-7c06a9c188d6" name="Add transaction with card number and program code with no other identifiers" type="restrequest">
+  <con:testStep id="b94eac01-daaa-416f-b3dd-d00813fd26e6" name="Add Suspended Transaction" type="restrequest">
     <con:settings/>
     <con:config xsi:type="con:RestRequestStep" methodName="ProcessTransaction" resourcePath="/api/v2/transaction" service="RestAPIs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="Add transaction with card number and program code with no other identifiers" postQueryString="false">
+      <con:restRequest id="718bd064-a7af-4380-abb6-72819bd0b41a" mediaType="application/json" name="Add Suspended Transaction" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
@@ -389,17 +407,18 @@
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="Get Transaction By Id" id="959b8a03-2067-4d40-a1ca-37ff63d658b1">
+  <con:testStep type="restrequest" name="Get Suspended By ID" id="e46cb388-3693-46f6-8e29-85488572f5cd">
     <con:settings/>
-    <con:config service="RestAPIs" resourcePath="/api/v1/profiles/{profileId}/transactions/{transactionId}" methodName="Get Transaction By Id" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="Get Transaction By Id" id="7b9cb63f-ffbd-401a-a74c-85bfde65c90f" mediaType="application/json">
+    <con:config service="RestAPIs" methodName="Get Suspended Transaction By ID" resourcePath="/api/v1/profiles/{profileId}/suspendedtransactions/{suspendTransactionId}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest name="Get Suspended By ID" id="7ff0a243-3870-4038-b4a7-7496d6fef021" mediaType="application/json">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
+        <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request/>
-        <con:originalUri>https://q3alin-pveapi.skynetlowerenv.com/api/v1/profiles/6ea2df1c-f2fc-4664-929e-6aa39a6b0e06/transactions/21f2457b-b15f-4f1d-818a-7e37c54a838a</con:originalUri>
-        <con:assertion type="JsonPath Match" id="807640b8-4c0e-4850-ac98-bf47b3c0dc04" name="Profile Id Match">
+        <con:originalUri>https://d3aldv-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v1/profiles/53b36af3-4f2d-4ca9-9ce4-0bc147d3ddc4/suspendedtransactions/%7BsuspendTransactionId%7D</con:originalUri>
+        <con:assertion type="JsonPath Match" id="6ecfaa65-5832-4e0a-b3b3-d6a3786f12ce" name="Profile ID Match">
           <con:configuration>
             <path>$.['ProfileId']</path>
             <content>${Add Profile#ProfileId}</content>
@@ -408,19 +427,19 @@
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" id="92bb421b-b666-44a5-a960-fc4144559b3c" name="Transaction ID Match">
+        <con:assertion type="JsonPath Match" name="Transaction ID Match" id="8a402784-1703-4a40-854c-f0fc08351888">
           <con:configuration>
             <path>$.['TransactionId']</path>
-            <content>${Add transaction with card number and program code with no other identifiers#Response#$['TransactionId']}</content>
+            <content>${Add Suspended Transaction#Response#$['TransactionId']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
           </con:configuration>
         </con:assertion>
-        <con:assertion type="JsonPath Match" name="TransactionTypeCode Match" id="6d9723e4-fd2f-48a0-8749-f2104ff14454">
+        <con:assertion type="JsonPath Match" name="TransactionTypeCode Match" id="704d6258-9549-451a-b228-9a243e7877d6">
           <con:configuration>
-            <path>$['TransactionTypeCode']}</path>
-            <content>${Add transaction with card number and program code with no other identifiers#Response#$['TransactionTypeCode']}</content>
+            <path>$.['TransactionTypeCode']</path>
+            <content>${Add Suspended Transaction#Response#$['TransactionTypeCode']}</content>
             <allowWildcards>false</allowWildcards>
             <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
             <ignoreComments>false</ignoreComments>
@@ -433,16 +452,18 @@
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="suspendTransactionId" value="${Add Suspended Transaction#Response#$['TransactionId']}"/>
           <con:entry key="profileId" value="${Add Profile#ProfileId}"/>
+          <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
-          <con:entry key="transactionId" value="${Add transaction with card number and program code with no other identifiers#Response#$['TransactionId']}"/>
         </con:parameters>
         <con:parameterOrder>
           <con:entry>profileId</con:entry>
-          <con:entry>transactionId</con:entry>
           <con:entry>Accept-Language</con:entry>
           <con:entry>Authorization</con:entry>
+          <con:entry>content-type</con:entry>
+          <con:entry>suspendTransactionId</con:entry>
           <con:entry>Program-Code</con:entry>
         </con:parameterOrder>
         <con:environmentSpec>

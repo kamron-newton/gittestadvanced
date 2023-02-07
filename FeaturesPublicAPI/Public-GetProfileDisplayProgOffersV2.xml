@@ -130,26 +130,120 @@
       <con:stopDatasourceExhausted>false</con:stopDatasourceExhausted>
     </con:config>
   </con:testStep>
-  <con:testStep type="calltestcase" name="AddProfile" id="0a616814-ddb0-4207-a48c-9c87ffc9923a">
-    <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:targetTestCase>7961d684-b422-456b-b2b8-5dfee4558b84</con:targetTestCase>
-      <con:properties>
-        <con:property>
-          <con:name>ProfileId</con:name>
-          <con:value>a32bcfb3-e0af-4402-a331-97a42d9a87d9</con:value>
-        </con:property>
-      </con:properties>
-      <con:returnProperties>
-        <con:entry>ProfileId</con:entry>
-      </con:returnProperties>
-      <con:runMode>SINGLETON_AND_WAIT</con:runMode>
-    </con:config>
-  </con:testStep>
   <con:testStep type="groovy" name="GenerateCardNumber" id="9db65634-0dd8-4a0d-92cc-4ece29ac0dde">
     <con:settings/>
     <con:config>
       <script>java.util.UUID.randomUUID()</script>
+    </con:config>
+  </con:testStep>
+  <con:testStep type="restrequest" name="AddProfile" id="41383d86-57f0-4a6f-ac31-9faaa63c545c">
+    <con:settings/>
+    <con:config service="RestAPIs" resourcePath="/api/v2/profiles" methodName="ProcessProfile" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <con:restRequest id="7ffc0d09-b764-4db2-b34a-6840828b8ab9" mediaType="application/json" name="AddProfile" postQueryString="false">
+        <con:settings>
+          <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+        </con:settings>
+        <con:endpoint>https://q3alin-pveapi.skynetlowerenv.com/</con:endpoint>
+        <con:request>{
+    "Prefix":"Mr.",
+    "FirstName":"DISPOFFER10262018",
+    "MiddleInit":"",
+    "LastName":"Legas",
+    "CardNumber":"${GenerateCardNumber#result}",
+    "Suffix": "",
+    "GlobalOptOut": "FALSE",
+    "GlobalOptDate":  "6/26/2017 12:00:00 AM",
+    "GlobalOptSource": "",
+    "LanguageCode":  "EN_US",
+    "MaritalStatus": "S",
+    "Gender": "M",
+    "BirthDate": "1/22/1982 12:00:00 AM",
+    "CompanyName": "Epsilon",
+    "Addresses": [
+      {
+        "AddressLine1":"123 THE RD",
+        "AddressLine2": "# 3333",
+        "AddressLine3": "",
+        "City": "IRVING",
+        "StateCode": "TX",
+        "CountryCode":  "USA",
+        "PostalCode": "75080",
+        "ChannelCode": "DM",
+        "LocationCode": "H",
+        "IsPreferred": "TRUE",
+        "DeliveryStatus": "G",
+        "DoNotStandardize":  "FALSE"
+      }
+    ],
+    "Emails": [
+      {
+        "EmailAddress": "Test@dx2mail.co",
+        "ChannelCode":  "EM",
+        "LocationCode": "B",
+        "IsPreferred":  "TRUE",
+        "DeliveryStatus": "G"
+      }
+    ],
+    "Phones": [
+      {
+        "PhoneNumber":  "5025101947",
+        "PhoneCountryCode":  "USA",
+        "AcceptsText":"TRUE",
+        "Frequency": "7",
+        "ChannelCode":"SM",
+        "LocationCode":"H",
+        "IsPreferred": "TRUE",
+        "DeliveryStatus":"G"
+      }
+    ],
+    "SourceCode": "PP_WEB",
+     "EnrollChannelCode": "WEB",
+     "Username":  "${Profile#FirstName}${=java.util.UUID.randomUUID()}",
+       "Password": "Password.123",  
+       "TermsConditionsAcceptedInd": "True"
+   }</con:request>
+        <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/profiles</con:originalUri>
+        <con:assertion type="Valid HTTP Status Codes" id="0b7970c6-baec-48e3-b061-3d1a9d77adfa" name="Valid HTTP Status Codes">
+          <con:settings/>
+          <con:configuration>
+            <codes>200</codes>
+          </con:configuration>
+        </con:assertion>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+        <con:parameters>
+          <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
+          <con:entry key="content-type" value="application/json"/>
+          <con:entry key="Accept-Language" value="en-US"/>
+          <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
+        </con:parameters>
+        <con:parameterOrder>
+          <con:entry>Authorization</con:entry>
+          <con:entry>Program-Code</con:entry>
+          <con:entry>Accept-Language</con:entry>
+          <con:entry>content-type</con:entry>
+        </con:parameterOrder>
+        <con:environmentSpec>
+          <con:entry environmentId="d653788f-b849-4013-8db6-47ad297cdee5">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="3c955a23-3567-47af-b6e9-aacfcca8d9aa">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="47bb433b-fb70-41f0-b289-86004efd1deb">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="6705507e-ac0c-4a4b-acac-36b4c8b57bc6">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+          <con:entry environmentId="537e61a1-a742-4637-a094-8cad62ddccd2">
+            <con:authProfile>Inherit From Parent</con:authProfile>
+          </con:entry>
+        </con:environmentSpec>
+      </con:restRequest>
     </con:config>
   </con:testStep>
   <con:testStep type="datasource" name="ProgramOffersWithElig" id="a5a41075-6e2d-44e4-baf6-da88cec86b69">
@@ -460,15 +554,15 @@ return EndDate.format("MM/dd/yyyy")</script>
       <con:properties>
         <con:property>
           <con:name>InputJSON</con:name>
-          <con:value>grant_type=password&amp;username=${#[Profile#PublicAddProfile#PublicAddProfile]#Response#$['Username']}&amp;password=Password.123&amp;response_type=token</con:value>
+          <con:value>grant_type=password&amp;username=${AddProfile#Response#$['Username']}&amp;password=Password.123&amp;response_type=token</con:value>
         </con:property>
         <con:property>
           <con:name>ProfileId</con:name>
-          <con:value>a32bcfb3-e0af-4402-a331-97a42d9a87d9</con:value>
+          <con:value>6db34545-2fd6-4490-9e72-17565547048c</con:value>
         </con:property>
         <con:property>
           <con:name>AccessToken</con:name>
-          <con:value>b10c569f-7653-403f-b184-3e173bb2a3bd</con:value>
+          <con:value>333db0f1-219e-4089-bdfa-9622da127b71</con:value>
         </con:property>
       </con:properties>
       <con:returnProperties>
@@ -610,7 +704,7 @@ return EndDate.format("MM/dd/yyyy")</script>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
-          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="profileId" value="${CreateProfileToken#ProfileId}"/>
           <con:entry key="offerCode" value="800_EGGS"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -857,17 +951,17 @@ return EndDate.format("MM/dd/yyyy")</script>
       </con:restRequest>
     </con:config>
   </con:testStep>
-  <con:testStep type="restrequest" name="ProcessProfileProgramOffer" id="eb78127e-cde4-44e0-a4c3-56938621b428">
+  <con:testStep type="restrequest" name="ProcessProfileProgramEligibleOffer" id="eb78127e-cde4-44e0-a4c3-56938621b428">
     <con:settings/>
     <con:config service="RestAPIs" resourcePath="/api/v2/profiles/sysoffers" methodName="Process Profile Program Offer" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <con:restRequest name="ProcessProfileProgramOffer" id="0896945e-1d87-42cf-9d01-21a267eb9d20" mediaType="application/json" postQueryString="false">
+      <con:restRequest name="ProcessProfileProgramEligibleOffer" id="0896945e-1d87-42cf-9d01-21a267eb9d20" mediaType="application/json" postQueryString="false">
         <con:settings>
           <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
         </con:settings>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
    "SysOfferId" : "${#[ProgramOffers#UpsertTargettedProgramOffers#SysOfferId]#result}",
-   "ProfileId" : "${AddProfile#ProfileId}",
+   "ProfileId" : "${AddProfile#Response#$['ProfileId']}",
    "OptInDate": "${=new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()+2)}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/profiles/sysoffers</con:originalUri>
@@ -1240,7 +1334,7 @@ return EndDate.format("MM/dd/yyyy")</script>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
-          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="profileId" value="${AddProfile#Response#$['ProfileId']}"/>
           <con:entry key="offerCode" value=""/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -1270,7 +1364,7 @@ return EndDate.format("MM/dd/yyyy")</script>
   </con:testStep>
   <con:testStep type="calltestcase" name="Deactivate Moment" id="242021fa-9b36-480c-91eb-1452314c0c80">
     <con:settings/>
-    <con:config xsi:type="con:RunTestCaseStep" copyLoadTestProperties="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:config xsi:type="con:RunTestCaseStep" copyLoadTestProperties="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <con:targetTestCase>c903534c-32ad-44dc-9cb6-a72fc8de1482</con:targetTestCase>
       <con:properties>
         <con:property>
@@ -1456,6 +1550,7 @@ return EndDate.format("MM/dd/yyyy")</script>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${#Project#AuthToken}"/>
           <con:entry key="pageNumber" value=";`"/>
+          <con:entry key="offerCode" value="${ProgramOffers#OfferCode}"/>
           <con:entry key="content-type" value="application/json"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
@@ -1669,7 +1764,8 @@ return EndDate.format("MM/dd/yyyy")</script>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
-          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="profileId" value="${CreateProfileToken#ProfileId}"/>
+          <con:entry key="offerCode" value="100_EGGS"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
@@ -1706,8 +1802,8 @@ return EndDate.format("MM/dd/yyyy")</script>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>https://d3aldv-pveapi.skynetlowerenv.com/</con:endpoint>
         <con:request>{
-   "SysOfferId" : "${#[ProgramOffers#UpsertTargettedProgramOffers#SysOfferId]#result}",
-   "ProfileId" : "${AddProfile#ProfileId}",
+   "SysOfferId" : "${GetProgramOffers#Response#$[0]['SysOfferId']}",
+   "ProfileId" : "${AddProfile#Response#$['ProfileId']}",
    "OptInDate": "${=new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()+2)}"
 }</con:request>
         <con:originalUri>https://q3alin-pveapi.loyalty-lower.peoplecloud.epsilon.com/api/v2/profiles/sysoffers</con:originalUri>
@@ -2064,7 +2160,7 @@ return EndDate.format("MM/dd/yyyy")</script>
         <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
         <con:parameters>
           <con:entry key="Authorization" value="OAuth ${CreateProfileToken#AccessToken}"/>
-          <con:entry key="profileId" value="${AddProfile#ProfileId}"/>
+          <con:entry key="profileId" value="${CreateProfileToken#ProfileId}"/>
           <con:entry key="Accept-Language" value="en-US"/>
           <con:entry key="Program-Code" value="${#Project#ProgramCode}"/>
         </con:parameters>
